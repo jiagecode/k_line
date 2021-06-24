@@ -1,6 +1,17 @@
 <template>
 	<view>
-		<view style="height: 77rpx;"></view>
+		<view class="d-flex">
+			<view class="flex-1"></view>
+			<view class="flex-1 d-flex j-center a-center flex-column line-h">
+				<view class="iconf">BTC</view>
+				￥40,959.56亿
+			</view>
+			<view class="flex-1 d-flex j-center a-center flex-column line-h">
+				<view class="iconf">BTC</view>
+				￥40,959.56亿
+				</view>
+			<view class="flex: 2.5"></view>
+		</view>
 		<!-- marketsList -->
 		<view v-if="marketsList.length > 0" class="bg-color-white info-list">
 			<view class="info-item" v-for="(item, index) of marketsList" :key="index">

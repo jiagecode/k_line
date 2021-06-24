@@ -47,3 +47,8 @@
     "roi": null,
 	// last updated
     "last_updated": "2021-06-22T04:41:50.497Z"
+	
+	uni.css // 官方UI库
+	animate.css // css动画库
+	icon.css // 图标库
+	common.css // 公共样式
