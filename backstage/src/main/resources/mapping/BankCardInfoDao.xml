@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.BankCardInfoMapper">
+ 
+    <resultMap type="com.line.backstage.entity.BankCardInfo" id="BankCardInfoMap">
+        <result property="bankCardId" column="BANK_CARD_ID" jdbcType="INTEGER"/>
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+        <result property="bankName" column="BANK_NAME" jdbcType="VARCHAR"/>
+        <result property="province" column="PROVINCE" jdbcType="VARCHAR"/>
+        <result property="city" column="CITY" jdbcType="VARCHAR"/>
+        <result property="subBranch" column="SUB_BRANCH" jdbcType="VARCHAR"/>
+        <result property="cardOwnerName" column="CARD_OWNER_NAME" jdbcType="VARCHAR"/>
+        <result property="cardNo" column="CARD_NO" jdbcType="VARCHAR"/>
+        <result property="cardOwnerNo" column="CARD_OWNER_NO" jdbcType="VARCHAR"/>
+        <result property="cardPhone" column="CARD_PHONE" jdbcType="VARCHAR"/>
+        <result property="cardStatus" column="CARD_STATUS" jdbcType="OTHER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="OTHER"/>
+    </resultMap>
+</mapper>
