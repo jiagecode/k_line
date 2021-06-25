@@ -33,8 +33,15 @@
 		    
 		}
     ],
+	// 全局配置
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "币安秒合约",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+	},
 	
-	// 导航页
+	// 底部导航
 	"tabBar": {
 		"backgroundColor":"#FFFFFF",
 		"color": "#2c2c2c",
@@ -65,11 +72,5 @@
 				"text": "我的"
 			}
 		]
-	},
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
 	}
 }
