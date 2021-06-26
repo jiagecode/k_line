@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: Learn
+  profiles:
+    include: dev
+  freemarker:
+    cache: false #页面不加载缓存，修改即时生效
+
+swagger:
+  enable: true #生产环境设置为false
+
+logging:
+  level:
+    com.earn.money.dao.mapper: debug
+
+#mybist对象配置
+mybatis:
+  #文件位置配置
+  mapper-locations: classpath:mapping/*.xml #多模块常规方法只能读取一个mapping文件夹，此方法能解决但效率低
+  #数据设置
+  configuration:
+    #开启驼峰功能
+    map-underscore-to-camel-case: true
+    #开启二级缓存
+    cache-enabled: true
+    #查询语句中某些字段值是null,字段就无法返回设置
+    call-setters-on-nulls: true
+
+#分页工具
+pagehelper:
+  #指定数据库分页类型
+  helperDialect: mysql
+  #启用合理化时，页码<=0 查询第一页，页码>=总页数查询最后一页
+  reasonable: true
+  #自动拦截请求参数中的 pageNum, pageSize 参数
+  #supportMethodsArguments: true
+  params: count=countSql
+
+#debug: true

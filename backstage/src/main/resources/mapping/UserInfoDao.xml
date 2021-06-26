@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.UserInfoMapper">
+ 
+    <resultMap type="com.line.backstage.entity.UserInfo" id="UserInfoMap">
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+        <result property="userNickName" column="USER_NICK_NAME" jdbcType="VARCHAR"/>
+        <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
+        <result property="userGender" column="USER_GENDER" jdbcType="OTHER"/>
+        <result property="userPassword" column="USER_PASSWORD" jdbcType="VARCHAR"/>
+        <result property="userHeadImg" column="USER_HEAD_IMG" jdbcType="VARCHAR"/>
+        <result property="userPhone" column="USER_PHONE" jdbcType="VARCHAR"/>
+        <result property="userRefereeId" column="USER_REFEREE_ID" jdbcType="INTEGER"/>
+        <result property="userType" column="USER_TYPE" jdbcType="OTHER"/>
+        <result property="userLevel" column="USER_LEVEL" jdbcType="OTHER"/>
+        <result property="userCardNo" column="USER_CARD_NO" jdbcType="VARCHAR"/>
+        <result property="userRegisterDate" column="USER_REGISTER_DATE" jdbcType="TIMESTAMP"/>
+        <result property="userForbidFlag" column="USER_FORBID_FLAG" jdbcType="OTHER"/>
+        <result property="userRefereeCode" column="USER_REFEREE_CODE" jdbcType="VARCHAR"/>
+        <result property="userRefereeAble" column="USER_REFEREE_ABLE" jdbcType="OTHER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="lastLoginDate" column="LAST_LOGIN_DATE" jdbcType="TIMESTAMP"/>
+        <result property="delStatus" column="DEL_STATUS" jdbcType="OTHER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+    </resultMap>
+</mapper>
