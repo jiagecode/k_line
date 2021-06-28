@@ -32,13 +32,13 @@ body{
 
 /* 阴影 */
 .shadow-sm{
-	box-shadow: 0 2upx 4upx rgba(114, 130, 138, 0.2)!important;
+	box-shadow: 0 2rpx 4rpx rgba(114, 130, 138, 0.2)!important;
 }
 .shadow{
-	box-shadow: 0 8upx 16upx rgba( 114, 130, 138, 0.2)!important;
+	box-shadow: 0 8rpx 16rpx rgba( 114, 130, 138, 0.2)!important;
 }
 .shadow-lg{
-	box-shadow: 0 16upx 48upx rgba( 114, 130, 138, 0.2)!important;
+	box-shadow: 0 16rpx 48rpx rgba( 114, 130, 138, 0.2)!important;
 }
 /* 定位 */
 .position-absolute{ position: absolute;} 
@@ -51,14 +51,14 @@ body{
 /* 宽高 */
 .w-100{ width : 100%; }
 .w-50 { width : 50% ;}
-.h-100{ height : 1250upx ;}
-.h-50 { height : 625upx ;}
+.h-100{ height : 1250rpx ;}
+.h-50 { height : 625rpx ;}
 /* 字体 */
-.font    { font-size : 25upx;}
-.font-sm { font-size : 22upx;}
-.font-md { font-size : 30upx;}
-.font-lg { font-size : 40upx;}
-.font-big{ font-size : 60upx;}
+.font    { font-size : 25rpx;}
+.font-sm { font-size : 22rpx;}
+.font-md { font-size : 30rpx;}
+.font-lg { font-size : 40rpx;}
+.font-big{ font-size : 60rpx;}
 /* 行高 */
 .line-h0{ line-height  : 0!important;}
 .line-h  { line-height  : 1!important;}
@@ -76,18 +76,18 @@ body{
 .row{box-sizing : border-box!important; display : flex!important; flex-direction : row; flex-wrap : wrap;}
 [class*= 'col-'],[class*='span-'], [class*='span24-'] {min-height : 1px; box-sizing : border-box!important;}
 /* 栅栏一 */
-.col-1{ width : 62.5upx; }
-.col-2{ width : 125upx; }
-.col-3{ width : 187.5upx; }
-.col-4{ width : 250upx; }
-.col-5{ width : 312.5upx; }
-.col-6{ width : 375upx; }
-.col-7{ width : 437.5upx; }
-.col-8{ width : 500upx; }
-.col-9{ width : 562.5upx; }
-.col-10{ width : 625upx; }
-.col-11{ width : 687.5upx; }
-.col-12{ width : 750upx; }
+.col-1{ width : 62.5rpx; }
+.col-2{ width : 125rpx; }
+.col-3{ width : 187.5rpx; }
+.col-4{ width : 250rpx; }
+.col-5{ width : 312.5rpx; }
+.col-6{ width : 375rpx; }
+.col-7{ width : 437.5rpx; }
+.col-8{ width : 500rpx; }
+.col-9{ width : 562.5rpx; }
+.col-10{ width : 625rpx; }
+.col-11{ width : 687.5rpx; }
+.col-12{ width : 750rpx; }
 /* 栅栏二 */
 .span-1{ width : 5%; }
 .span-2{ width : 10%; }
@@ -141,7 +141,7 @@ body{
 
 .flex-1{ flex : 1; }
 .flex-column{ flex-direction : column; }
-.lex-row{ flex-direction : row; }
+.flex-row{ flex-direction : row; }
 .flex-wrap{ flex-wrap : wrap; }
 .flex-nowrap{ flex-wrap : nowrap; }
 .flex-shrink{ flex-shrink : 0; }
