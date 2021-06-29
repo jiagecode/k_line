@@ -1,6 +1,15 @@
 {
 	// 页面
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+            "path" : "pages/login/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        },
         {
             "path" : "pages/home/home",
             "style" :                                                                                    
@@ -11,14 +20,6 @@
             
         },
 		{
-            "path" : "pages/login/login",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        },{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "uni-app"
@@ -31,14 +32,31 @@
 		        "enablePullDownRefresh": false
 		    }
 		    
+		},{
+		    "path" : "pages/address/address",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
 		}
+        ,{
+            "path" : "pages/optional/optional",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	// 全局配置
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "币安秒合约",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#FFFFFF"
+		"backgroundColor": "#5586d3"
 	},
 	
 	// 底部导航
@@ -60,7 +78,7 @@
 				"text": "交易"
 			},
 			{
-				"pagePath": "pages/login/login",
+				"pagePath": "pages/optional/optional",
 				"iconPath": "/static/tabbar/cart.png",
 				"selectedIconPath": "/static/tabbar/cart-selected.png",
 				"text": "自选"
