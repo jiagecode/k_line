@@ -43,13 +43,13 @@
 
 
 // #ifdef H5	
-import HQChart from '@/uni_modules/jones-hqchart2/js_sdk/umychart.uniapp.h5.js'
+import HQChart from '@/uni_modules/hqchart2/umychart.uniapp.h5.js'
 // #endif
 
 // #ifndef H5
-import {JSCommon} from '@/uni_modules/jones-hqchart2/js_sdk/umychart.wechat.3.0.js'
-import {JSCommonHQStyle} from '@/uni_modules/jones-hqchart2/js_sdk/umychart.style.wechat.js'
-import {JSConsole} from '@/uni_modules/jones-hqchart2/js_sdk/umychart.console.wechat.js'
+import {JSCommon} from '@/uni_modules/hqchart2/umychart.wechat.3.0.js'
+import {JSCommonHQStyle} from '@/uni_modules/hqchart2/umychart.style.wechat.js'
+import {JSConsole} from '@/uni_modules/hqchart2/umychart.console.wechat.js'
 
 //禁用日志
 //JSConsole.Complier.Log=()=>{ };
