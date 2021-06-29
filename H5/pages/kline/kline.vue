@@ -1,6 +1,6 @@
 <template>
 	<div class='divchart' style='background-color:#101010;' >
-		<!--  #ifdef  H5 -->
+		<!--  #ifdef  H5  -->
 		<div>
 		<div class='kline' id="kline" ref='kline'></div>
 		</div>
