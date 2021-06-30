@@ -5,8 +5,10 @@
             "path" : "pages/register/register",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
             }
             
         },
@@ -14,30 +16,39 @@
             "path" : "pages/home/home",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
             }
             
         },
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
 			}
 		},{
 		    "path" : "pages/kline/kline",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
 		    }
 		    
 		},{
 		    "path" : "pages/address/address",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
 		    }
 		    
 		}
@@ -45,8 +56,10 @@
             "path" : "pages/optional/optional",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
             }
             
         }
@@ -54,8 +67,10 @@
             "path" : "pages/login/login",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
             }
             
         }
@@ -72,7 +87,7 @@
 	"tabBar": {
 		"backgroundColor":"#FFFFFF",
 		"color": "#2c2c2c",
-		"selectedColor": "#d81e06",
+		"selectedColor": "#5586d3",
 		"list": [
 			{
 				"pagePath": "pages/home/home",
@@ -82,14 +97,14 @@
 			},
 			{
 				"pagePath": "pages/kline/kline",
-				"iconPath": "/static/tabbar/index.png",
-				"selectedIconPath": "/static/tabbar/index-selected.png",
+				"iconPath": "/static/tabbar/kline.png",
+				"selectedIconPath": "/static/tabbar/kline-selected.png",
 				"text": "交易"
 			},
 			{
 				"pagePath": "pages/optional/optional",
-				"iconPath": "/static/tabbar/cart.png",
-				"selectedIconPath": "/static/tabbar/cart-selected.png",
+				"iconPath": "/static/tabbar/optional.png",
+				"selectedIconPath": "/static/tabbar/optional-selected.png",
 				"text": "自选"
 			},
 			{
