@@ -236,8 +236,10 @@ export default
 		
 	},
 	
-	onShow()
-	{
+	onShow(){
+		
+		document.title = '币安秒合约';
+		
 		uni.getSystemInfo({
 		    success:  (res) =>
 			{

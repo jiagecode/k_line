@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.SysUserInfoMapper">
+ 
+    <resultMap type="com.line.backstage.entity.SysUserInfo" id="SysUserInfoMap">
+        <result property="sysUserId" column="SYS_USER_ID" jdbcType="INTEGER"/>
+        <result property="sysUserCode" column="SYS_USER_CODE" jdbcType="VARCHAR"/>
+        <result property="sysUserPassword" column="SYS_USER_PASSWORD" jdbcType="VARCHAR"/>
+        <result property="sysUserName" column="SYS_USER_NAME" jdbcType="VARCHAR"/>
+        <result property="sysUserPhone" column="SYS_USER_PHONE" jdbcType="VARCHAR"/>
+        <result property="sysRoleId" column="SYS_ROLE_ID" jdbcType="INTEGER"/>
+        <result property="sysUserImg" column="SYS_USER_IMG" jdbcType="VARCHAR"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="OTHER"/>
+    </resultMap>
+</mapper>

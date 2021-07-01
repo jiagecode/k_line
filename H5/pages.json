@@ -16,8 +16,9 @@
             "path" : "pages/home/home",
             "style" :                                                                                    
             {
-				// 取消导航栏
-				"navigationStyle": "custom",
+				"navigationBarTitleText": "市值",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
 				"enablePullDownRefresh":false
             }
@@ -26,8 +27,9 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				// 取消导航栏
-				"navigationStyle": "custom",
+				"navigationBarTitleText": "我的",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
 				"enablePullDownRefresh":false
 			}
@@ -35,8 +37,9 @@
 		    "path" : "pages/kline/kline",
 		    "style" :                                                                                    
 		    {
-				// 取消导航栏
-				"navigationStyle": "custom",
+				"navigationBarTitleText": "交易",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
 				"enablePullDownRefresh":false
 		    }
@@ -56,8 +59,9 @@
             "path" : "pages/optional/optional",
             "style" :                                                                                    
             {
-				// 取消导航栏
-				"navigationStyle": "custom",
+				"navigationBarTitleText": "自选",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
 				"enablePullDownRefresh":false
             }
@@ -71,6 +75,72 @@
 				"navigationStyle": "custom",
 				// 开启下拉刷新
 				"enablePullDownRefresh":false
+            }
+            
+        }
+        ,{
+            "path" : "pages/transaction-records/transaction-records",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "交易记录",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/recharge/recharge",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "充值通道",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/withdrawal/withdrawal",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "提现",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/flowing-water/flowing-water",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "资金流水",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/customer-service/customer-service",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的客服",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/bank-info/bank-info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "银行卡信息",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
             }
             
         }
@@ -112,6 +182,16 @@
 				"iconPath": "/static/tabbar/user.png",
 				"selectedIconPath": "/static/tabbar/user-selected.png",
 				"text": "我的"
+			}
+		]
+	},
+	// 模式配置，仅开发期间生效
+	"condition": {
+    "current": 0, //当前激活的模式（list 的索引项）
+    "list": [{
+				"name": "test", //模式名称
+				"path": "pages/recharge/recharge", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到。
 			}
 		]
 	}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.CashOutInMapper">
+ 
+    <resultMap type="com.line.backstage.entity.CashOutIn" id="CashOutInMap">
+        <result property="cashId" column="CASH_ID" jdbcType="INTEGER"/>
+        <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
+        <result property="cashType" column="CASH_TYPE" jdbcType="OTHER"/>
+        <result property="cashMoney" column="CASH_MONEY" jdbcType="NUMERIC"/>
+        <result property="checkStatus" column="CHECK_STATUS" jdbcType="OTHER"/>
+        <result property="checkDate" column="CHECK_DATE" jdbcType="TIMESTAMP"/>
+        <result property="checkManUserId" column="CHECK_MAN_USER_ID" jdbcType="INTEGER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="bankCardId" column="BANK_CARD_ID" jdbcType="INTEGER"/>
+        <result property="exchangeRate" column="EXCHANGE_RATE" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="OTHER"/>
+    </resultMap>
+</mapper>
