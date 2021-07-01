@@ -2,22 +2,29 @@ package com.line.backstage.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.utils.PageWrapper;
+import com.line.backstage.utils.PasswordHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
- 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * 用户信息(UserInfo)表服务实现类
  *
  * @author Zy
  * @since 2021-06-24 10:48:03
  */
+@Slf4j
 @Service("userInfoService")
 public class UserInfoServiceImpl implements UserInfoService {
  
@@ -110,5 +117,44 @@ public class UserInfoServiceImpl implements UserInfoService {
         PageInfo<UserInfo> page = new PageInfo<>(userInfoMapper.select(userInfo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
+    }
+
+    @Override
+    public UserInfo login(UserInfo userInfo) {
+
+        // XXX 加密密码
+        String encryptPwd = PasswordHelper.encryptPassword(userInfo.getUserPhone(), userInfo.getUserPassword());
+        userInfo.setUserPassword(encryptPwd);
+        log.info("用户登录密码【{}】", encryptPwd);
+
+        // 查找用户是否存在
+        return userInfoMapper.selectOne(userInfo);
+    }
+
+    @Override
+    public Map getUserInfo(String userId) {
+
+        //FIXME 待优化，用户信息加入redis缓存
+        UserInfo user = queryById(Integer.valueOf(userId));
+
+        //获取用户的角色、权限字符串及菜单路由
+        Set<String> roles = Sets.newHashSet();
+        roles.add(user.getRole().getRoleName());
+//        List<SysMenu> menus = menuMapper.findByRoleId(user.getRoleId());
+        Set<String> permissions = Sets.newHashSet();
+//        for (SysMenu menu : menus) {
+//            if (StringUtils.isNotBlank(menu.getPermission())) {
+//                permissions.add(menu.getPermission());
+//            }
+//        }
+//        //菜单转换为vue router路由对象
+//        List<MenuRouteVo> routes = queryMenuTree(menus);
+        Map<String, Object> resMap = Maps.newHashMap();
+        resMap.put("roles", roles);
+        resMap.put("perms", permissions);
+//        resMap.put("menus", routes);
+//        resMap.put("name", user.getNickname());
+//        resMap.put("avatar", user.getPhoto());
+        return resMap;
     }
 }

@@ -13,28 +13,35 @@ const doRequest = (method, url, data) => {
     return new Promise((resolve, reject) => {
 		
 		// 验证token
-        console.log(uni.getStorageSync('token'));
+        // console.log("验证token:" + uni.getStorageSync('token'));
 		
         uni.request({
             url: baseUrl + url,
             method: method || 'get',
             data: data || '',
             header: {
-				'content-type': 'application/x-www-form-urlencoded',
+				'content-type': 'application/json',
                 Authorization: uni.getStorageSync('token')
             },
             success:(res)=> {
-                if (res.data.code === 10000) {
-                    resolve(res.data.data)
-               // resolve调用后，即可传递到调用方使用then或者async+await同步方式进行处理逻辑
-               resolve(result)
-                }
+				uni.hideLoading();
+                if (res.data.code === 1000) {
+					// resolve调用即可传递到调用方使用 then
+					// 或者 async+await 同步方式进行处理逻辑
+                    resolve(res.data.data);
+                } else {
+					uni.showToast({
+						icon: 'none',   
+						duration: 1000,
+						title: res.data.message
+					});
+				}
             },
             fail:(err)=> {
-               // reject调用后，即可传递到调用方使用catch或者async+await同步方式进行处理逻辑
-                reject(err)
-				console.log('请求失败')
-                uni.hideLoading({})
+                uni.hideLoading();
+               // reject调用即可传递到调用方使用 catch
+			   // 或者async+await同步方式进行处理逻辑
+				reject(res);
             }
         })
     })

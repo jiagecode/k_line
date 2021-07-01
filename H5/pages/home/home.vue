@@ -39,37 +39,11 @@
 						<p>{{60+30+200+290+170}}</p>
 			</view>
 		</view>
-<!-- 		<view class="hqList" style="overflow: hidden;">
-			<block v-for="(item, index) of marketsList" :key="index">
-				<view class="hqInfo">
-					<view class="hqNum" style="float: left; background-color: #d386ff;">{{index + 1}}</view>
-					<view class="hqIcon" style="float: left; margin-left: 20px; background-color: #007AFF;">
-						<image style="width: 36rpx; height: 35rpx;" :src="item.image" >{{item.symbol}}</image>
-						<view class="num">￥{{item.market_cap}}美元</view>
-					</view>
-					<view class="hqAcunt" style="float: left; background-color: #eeeeee;">≈￥{{item.current_price}}</view>
-					<view class="hqPrice" style="float: left; background-color: #eeeeee;">{{item.current_price / 32688}}%</view>
-				</view>
-			</block>
-		</view> -->
-		<!-- marketsList 
-		<view v-if="marketsList.length > 0" class="bg-color-white info-list">
-			<view class="info-item" v-for="(item, index) of marketsList" :key="index">
-                <view class="image-content">
-					<view class="number">{{index + 1}}</view>
-					<view class="number">{{item.symbol}}</view>
-					<view class="number">￥{{item.market_cap}}美元</view>
-					<view class="number">≈￥{{item.current_price}}</view>
-					<view class="number">{{item.current_price / 32688}}%</view>
-					涨跌幅 = 涨跌值 / 昨收盘 * 100%
-                    <image style="width: 36rpx; height: 35rpx; background-color: #eeeeee;" :src="item.image" >{{item.name}}</image>
-                </view>
-			</view>
-		</view>-->
 	</view>
 </template>
 
 <script>
+	import https from '../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -85,7 +59,14 @@
 			}
 		},
 		onLoad() {
-			console.log('页面加载完成');
+			// 非法访问，请重新登录
+			if(uni.getStorageSync('token') === null || uni.getStorageSync('token') === undefined || uni.getStorageSync('token') === ''){
+				// 跳转页面
+				uni.reLaunch({
+				    url: '../login/login'
+				});
+			}
+			
 			uni.request({
 			    url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false',
 				method: 'get',

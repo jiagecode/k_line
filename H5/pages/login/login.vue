@@ -43,8 +43,8 @@
 	export default {
 		data() {
 			return {
-				phone: '18066668888',
-				password: '123456',
+				phone: '18866668888',
+				password: '123123',
 				value: 1,
 				countryAndCode: '',
 				isXy: true
@@ -52,8 +52,6 @@
 		},
 		// option为object类型，会序列化上个页面传递的参数
 		onLoad(options) {
-			console.log(options);
-			console.log(options.country);
 			
 			// 根据定位对象取出对应的城市			
 			const country = (options.country && JSON.parse(decodeURIComponent(options.country))) || {"area": "中国","area_code": "+86", pinyin: 'Z'};
@@ -65,21 +63,35 @@
 			// 登录
 			toLogin(){
 				
-				uni.switchTab({
-					url:'../home/home'
+				// 封装请求数据
+				var data = {
+					"userPhone": this.phone,
+					"userPassword": this.password
+				};
+				
+				// 发起登录请求
+				https.userLogin(data).then((res)=> {
+					if(res != null){
+						// 缓存token
+						uni.setStorageSync('token', res)
+						// 请求用户信息
+						https.getUserInfo().then((res)=> {
+							// 缓存用户信息
+							uni.setStorageSync('userInfo', res);
+						});
+						// 提示用户
+						uni.showToast({
+						    title: '登陆成功！',
+						    duration: 1000,
+						})
+						setTimeout(() => {
+							// 跳转页面
+							uni.switchTab({
+								url:'../home/home'
+							})}, 
+						900)
+					}
 				})
-				
-				// 发送 res.code 到后台换取 openId, sessionKey, unionId
-				// var data = {
-				// 	"userName": 'zjs',
-				// 	"password": '123456'
-				// };
-				
-				// 登录
-				// https.userLogin(data).then(res=> {
-				// 	console.log(res)
-				//    uni.setStorageSync('token', res.token)
-				// })
 			},
 				
 			// 同意协议

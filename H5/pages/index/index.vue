@@ -101,6 +101,13 @@
 		},
 		onLoad() {
 
+			// 非法访问，请重新登录
+			if(uni.getStorageSync('token') === null || uni.getStorageSync('token') === undefined || uni.getStorageSync('token') === ''){
+				// 跳转页面
+				uni.reLaunch({
+				    url: '../login/login'
+				});
+			}
 		},
 		methods: {
 			cz(){
@@ -134,8 +141,9 @@
 				});
 			},
 			out(){
-				console.log("跳转退出页面");
+				
 				// 销毁token
+				uni.setStorageSync('token', null)
 				uni.navigateTo({
 				    url: '../login/login'
 				});

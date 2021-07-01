@@ -11,7 +11,7 @@ swagger:
 
 logging:
   level:
-    com.earn.money.dao.mapper: debug
+    com.line.backstage.dao.mapper: debug
 
 #mybist对象配置
 mybatis:

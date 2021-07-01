@@ -1,28 +1,27 @@
 package com.line.backstage.entity;
 
 import com.line.backstage.bases.QueryRequest;
-
-import java.util.Date;
-import java.io.Serializable;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Date;
  
 /**
  * 用户信息(UserInfo)实体类
  *
  * @author Zy
- * @since 2021-06-24 10:48:02
+ * @since 2021-07-01 18:51:52
  */
 @Data
 @Table(name = "t_user_info")
-@ApiModel("用户信息")
 public class UserInfo extends QueryRequest implements Serializable {
  
-    private static final long serialVersionUID = -18164823991500549L;
+    private static final long serialVersionUID = -53341652575253406L;
     
     /**
     * 用户ID
@@ -33,8 +32,14 @@ public class UserInfo extends QueryRequest implements Serializable {
     private Integer userId;
     
     /**
-    * 用户昵称
+    * 用户角色
     */            
+    @ApiModelProperty("用户角色")
+    private SysRoleInfo Role;
+
+    /**
+     * 用户昵称
+     */
     @ApiModelProperty("用户昵称")
     private String userNickName;
     
@@ -48,7 +53,7 @@ public class UserInfo extends QueryRequest implements Serializable {
     * 性别 1-男 0-女 -1未知
     */            
     @ApiModelProperty("性别 1-男 0-女 -1未知")
-    private Object userGender;
+    private Boolean userGender;
     
     /**
     * 登录密码
@@ -78,13 +83,13 @@ public class UserInfo extends QueryRequest implements Serializable {
     * 用户类别 1-普通用户 2-代理用户
     */            
     @ApiModelProperty("用户类别 1-普通用户 2-代理用户")
-    private Object userType;
+    private Boolean userType;
     
     /**
     * 用户等级 1-普通级
     */            
     @ApiModelProperty("用户等级 1-普通级")
-    private Object userLevel;
+    private Boolean userLevel;
     
     /**
     * 用户身份证号
@@ -102,7 +107,7 @@ public class UserInfo extends QueryRequest implements Serializable {
     * 是否禁用 0-未禁用 1-已禁用
     */            
     @ApiModelProperty("是否禁用 0-未禁用 1-已禁用")
-    private Object userForbidFlag;
+    private Boolean userForbidFlag;
     
     /**
     * 推荐码
@@ -114,7 +119,7 @@ public class UserInfo extends QueryRequest implements Serializable {
     * 是否有推荐资格 1-有 0-无
     */            
     @ApiModelProperty("是否有推荐资格 1-有 0-无")
-    private Object userRefereeAble;
+    private Boolean userRefereeAble;
     
     /**
     * 创建时间
@@ -150,12 +155,12 @@ public class UserInfo extends QueryRequest implements Serializable {
     * 注销状态 0-未注销 1-主动注销 2-强制注销
     */            
     @ApiModelProperty("注销状态 0-未注销 1-主动注销 2-强制注销")
-    private Object delStatus;
+    private Integer delStatus;
     
     /**
     * 数据状态
     */            
     @ApiModelProperty("数据状态")
-    private Object del;
+    private Integer del;
     
 }
