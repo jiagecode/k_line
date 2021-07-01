@@ -13,6 +13,9 @@
 		},
 		methods: {
 			
+		},
+		onShow() {
+			document.title = '币安秒合约';
 		}
 	}
 </script>

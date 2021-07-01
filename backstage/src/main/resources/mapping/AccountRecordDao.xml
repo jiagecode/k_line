@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.AccountRecordMapper">
+ 
+    <resultMap type="com.line.backstage.entity.AccountRecord" id="AccountRecordMap">
+        <result property="recordId" column="RECORD_ID" jdbcType="INTEGER"/>
+        <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
+        <result property="recordType" column="RECORD_TYPE" jdbcType="OTHER"/>
+        <result property="changeMoney" column="CHANGE_MONEY" jdbcType="NUMERIC"/>
+        <result property="beforeMoney" column="BEFORE_MONEY" jdbcType="NUMERIC"/>
+        <result property="afterMoney" column="AFTER_MONEY" jdbcType="NUMERIC"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
+        <result property="serviceCharge" column="SERVICE_CHARGE" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="OTHER"/>
+    </resultMap>
+</mapper>
