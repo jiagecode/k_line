@@ -25,7 +25,7 @@ const doRequest = (method, url, data) => {
             },
             success:(res)=> {
 				uni.hideLoading();
-                if (res.data.code === 1000) {
+                if (res.data.code === 10000) {
 					// resolve调用即可传递到调用方使用 then
 					// 或者 async+await 同步方式进行处理逻辑
                     resolve(res.data.data);

@@ -27,8 +27,8 @@ public class ShiroConfig {
         // 拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 配置不会被拦截的链接 顺序判断
-        filterChainDefinitionMap.put("/pc/login", "anon");
-        filterChainDefinitionMap.put("/pc/logout", "anon");
+        filterChainDefinitionMap.put("/sysUserInfo/login", "anon");
+        filterChainDefinitionMap.put("/sysUserInfo/getUserInfo", "anon");
         filterChainDefinitionMap.put("/userInfo/login/**", "anon");
         filterChainDefinitionMap.put("/userInfo/logout/**", "anon");
         //swagger2

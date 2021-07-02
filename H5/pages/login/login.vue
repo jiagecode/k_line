@@ -43,8 +43,8 @@
 	export default {
 		data() {
 			return {
-				phone: '18866668888',
-				password: '123123',
+				phone: '123456',
+				password: '123456',
 				value: 1,
 				countryAndCode: '',
 				isXy: true
