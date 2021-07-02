@@ -7,15 +7,33 @@
         <result property="menuName" column="MENU_NAME" jdbcType="VARCHAR"/>
         <result property="menuDesc" column="MENU_DESC" jdbcType="VARCHAR"/>
         <result property="menuUrl" column="MENU_URL" jdbcType="VARCHAR"/>
-        <result property="menuType" column="MENU_TYPE" jdbcType="OTHER"/>
-        <result property="menuStatus" column="MENU_STATUS" jdbcType="OTHER"/>
+        <result property="menuType" column="MENU_TYPE" jdbcType="INTEGER"/>
+        <result property="menuStatus" column="MENU_STATUS" jdbcType="INTEGER"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="superId" column="SUPER_ID" jdbcType="INTEGER"/>
         <result property="menuIndex" column="MENU_INDEX" jdbcType="VARCHAR"/>
-        <result property="menuLevel" column="MENU_LEVEL" jdbcType="OTHER"/>
-        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="menuLevel" column="MENU_LEVEL" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
+
+    <select id="findByRoleId" parameterType="java.lang.Integer" resultMap="SysMenuInfoMap">
+        select
+            *
+        from
+            t_sys_menu_info
+        where
+                id in (
+                select
+                    menu_id
+                from
+                    t_sys_role_menu
+                where
+                    role_id = #{roleid})
+
+        order by tree_sort
+
+    </select>
 </mapper>

@@ -1,7 +1,5 @@
 package com.line.backstage.config;
 
-import com.line.backstage.entity.UserInfo;
-import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
 import org.apache.shiro.authc.AuthenticationException;
@@ -57,18 +55,18 @@ public class SystemRealm extends AuthorizingRealm {
             throw new AuthenticationException("token失效");
         }
         //FIXME 通过用户ID查询用户信息，可加入缓存
-        UserInfo user = userInfoService.queryById(Integer.valueOf(userId));
-        if (user == null) {
-            throw new AuthenticationException("账号不存在");
-        }
-
-        if (user.getUserForbidFlag().equals((DataEnum.USER_FORBID_FLAG.getCode()))){
-            throw new AuthenticationException("账号已被禁用");
-        }
-
-        if (!JwtUtil.verifyToKen(token, userId, user.getUserPassword())){
-            throw new AuthenticationException("用户名或密码错误");
-        }
+//        UserInfo user = userInfoService.queryById(Integer.valueOf(userId));
+//        if (user == null) {
+//            throw new AuthenticationException("账号不存在");
+//        }
+//
+//        if (user.getUserForbidFlag().equals((DataEnum.USER_FORBID_FLAG.getCode()))){
+//            throw new AuthenticationException("账号已被禁用");
+//        }
+//
+//        if (!JwtUtil.verifyToKen(token, userId, user.getUserPassword())){
+//            throw new AuthenticationException("用户名或密码错误");
+//        }
         return new SimpleAuthenticationInfo(token, token, getName());
     }
 }

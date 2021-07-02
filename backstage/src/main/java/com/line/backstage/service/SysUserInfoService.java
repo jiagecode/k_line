@@ -2,7 +2,9 @@ package com.line.backstage.service;
  
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.Map;
+
 /**
  * 后台管理系统用户表(SysUserInfo)表服务实现类
  *
@@ -63,4 +65,18 @@ public interface SysUserInfoService {
      * @return 对象列表
      */
     PageWrapper<SysUserInfo> list(Integer loginUserId, SysUserInfo sysUserInfo);
+
+    /**
+     * 系统管理员登录
+     * @param sysUserInfo
+     * @return
+     */
+    SysUserInfo login(SysUserInfo sysUserInfo);
+
+    /**
+     * 菜单权限
+     * @param userId
+     * @return
+     */
+    Map getUserInfo(Integer userId);
 }
