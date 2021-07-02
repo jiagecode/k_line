@@ -8,6 +8,7 @@ const urls = {
   myCard: "/bankCardInfo/queryMyBankCard" ,//查询我的银行卡
   cashOutIn: "/cashOutIn/myCashOutList" ,//查询我的提现、充值记录
   myPosition: "/positionInfo/mySkuForList" ,//查询我的持仓
+  myCusSku: "/skuCusInfo/queryMySku" ,//查询我的自选SKUCODE
 }
 
 module.exports = {
@@ -31,5 +32,8 @@ module.exports = {
   },
   myPosition(data){
     return doRequest('POST', urls.myPosition, data)
+  },
+  myCusSkuCode(data){
+    return doRequest('POST', urls.myCusSku, data)
   }
 }

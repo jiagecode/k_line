@@ -14,4 +14,8 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="BOOLEAN"/>
     </resultMap>
+
+    <select id="queryMyCusCode" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select SKU_CODE from t_sku_cus_info where USER_ID = #{userId} and DEL = 1
+    </select>
 </mapper>

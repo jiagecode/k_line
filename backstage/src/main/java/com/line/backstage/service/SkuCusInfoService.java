@@ -2,7 +2,9 @@ package com.line.backstage.service;
  
 import com.line.backstage.entity.SkuCusInfo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.List;
+
 /**
  * 自选商品信息表(SkuCusInfo)表服务实现类
  *
@@ -63,4 +65,11 @@ public interface SkuCusInfoService {
      * @return 对象列表
      */
     PageWrapper<SkuCusInfo> list(Integer loginUserId, SkuCusInfo skuCusInfo);
+
+    /**
+     * 查询自选商品的code
+     * @param loginUserId
+     * @return
+     */
+    List<String> queryMyCusCode(Integer loginUserId);
 }

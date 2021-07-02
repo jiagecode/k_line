@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
- 
+import java.util.List;
+
 /**
  * 自选商品信息表(SkuCusInfo)表服务实现类
  *
@@ -106,9 +107,15 @@ public class SkuCusInfoServiceImpl implements SkuCusInfoService {
     @Override
     public PageWrapper<SkuCusInfo> list(Integer loginUserId, SkuCusInfo skuCusInfo) {
         PageHelper.startPage(skuCusInfo.getPageNum(), skuCusInfo.getPageSize());
-        skuCusInfo.setDel(DataEnum.FLAG_STATUS_VALID.getCode());
+        skuCusInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        skuCusInfo.setUserId(loginUserId);
         PageInfo<SkuCusInfo> page = new PageInfo<>(skuCusInfoMapper.select(skuCusInfo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
+    }
+
+    @Override
+    public List<String> queryMyCusCode(Integer loginUserId) {
+        return skuCusInfoMapper.queryMyCusCode(loginUserId);
     }
 }

@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.annotation.Resource;
+import io.swagger.annotations.ApiParam;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
- 
+import com.line.backstage.annotation.LoginUserId;
+import org.springframework.validation.annotation.Validated;
 /**
  * 自选商品信息表(SkuCusInfo)表控制层
  *
@@ -71,10 +73,11 @@ public class SkuCusInfoController {
      * @param skuCusInfo 查询条数
      * @return 对象列表
      */
-    @PostMapping("list")
+    @PostMapping("queryMySku")
     @ApiOperation(value = "列表", notes = "查询自选商品信息表的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "自选商品信息表对象", required = true) @RequestBody SkuCusInfo skuCusInfo) {
-        return ResponseHelper.success(skuCusInfoService.list(Integer.valueOf(loginUserId), skuCusInfo));
+//        return ResponseHelper.success(skuCusInfoService.list(Integer.valueOf(loginUserId), skuCusInfo));
+        return ResponseHelper.success(skuCusInfoService.queryMyCusCode(Integer.valueOf(loginUserId)));
     }
  
 }
