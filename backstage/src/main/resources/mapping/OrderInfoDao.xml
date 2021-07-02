@@ -22,6 +22,25 @@
         <result property="guaranteedAmount" column="GUARANTEED_AMOUNT" jdbcType="NUMERIC"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
-        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+<!--        <result property="skuName" column="SKU_NAME" jdbcType="VARCHAR"/>-->
+<!--        <result property="openPrice" column="OPEN_PRICE" jdbcType="NUMERIC"/>-->
+<!--        <result property="nowPrice" column="NOW_PRICE" jdbcType="NUMERIC"/>-->
     </resultMap>
+
+<!--    <select id="queryMyOrder" parameterType="com.line.backstage.entity.OrderInfo" resultMap="OrderInfoMap">-->
+<!--       select o.ORDER_ID,o.ORDER_TYPE,o.USER_ID,o.ORDER_STATUS,o.SKU_ID,o.SKU_CODE,o.SKU_QTY,o.SKU_PRICE,o.ORDER_AMOUNT,-->
+<!--            o.ORDER_CHARGE,o.ADD_DATE,o.EDIT_DATE,o.ORDER_CYCLE,o.INVEST_AMOUNT,o.INVEST_TYPE,o.EXPECTED_RETURN,o.GUARANTEED_AMOUNT,-->
+<!--            o.ADD_USER_ID,o.EDIT_USER_ID,o.DEL,s.SKU_NAME,s.OPEN_PRICE,s.NOW_PRICE-->
+<!--        from t_order_info o-->
+<!--        left join t_sku_info s-->
+<!--        on o.SKU_ID = S.SKU_ID-->
+<!--        where o.DEL = #{del}-->
+<!--        <if test="userId != null and userId !=''">-->
+<!--            AND o.USER_ID =#{userId}-->
+<!--        </if>-->
+<!--        <if test="investType != null and investType !=''">-->
+<!--            AND o.INVEST_TYPE =#{userId}-->
+<!--        </if>-->
+<!--    </select>-->
 </mapper>

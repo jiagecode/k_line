@@ -1,5 +1,5 @@
 <template>
-  <!-- 交易记录 -->
+  <!-- 持仓明细 -->
   <view style="margin-left: 20rpx;">
     <block v-for="(item, index) in positionList" :key="item.positionId">
       <view class="d-flex a-center" style="height: 150rpx; border-bottom: solid #ececec 2rpx;">
@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       positionList: [],
-      positionStatus: 2 //持有状态为已卖出
+      positionStatus: 1 //持有状态为 持有中
     }
   },
   onLoad() {

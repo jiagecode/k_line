@@ -13,4 +13,11 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="OTHER"/>
     </resultMap>
+
+    <select id="queryMyAccountIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select ACCOUNT_ID from  t_account_info where  DEL = 1 and USER_ID = #{userId}
+    </select>
+    <select id="queryMyMoneyByUserId" parameterType="java.lang.Integer" resultType="java.lang.Double">
+        select ACCOUNT_MONEY from  t_account_info where  DEL = 1 and USER_ID = #{userId}
+    </select>
 </mapper>

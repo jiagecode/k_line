@@ -18,4 +18,11 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="OTHER"/>
     </resultMap>
+
+    <select id="queryMyCashOutInList" parameterType="java.lang.Integer" resultMap="CashOutInMap">
+        select CASH_ID,ACCOUNT_ID,CASH_TYPE,CASH_MONEY,CHECK_STATUS,CHECK_DATE,CHECK_MAN_USER_ID,
+               ADD_DATE,EDIT_DATE,BANK_CARD_ID,EXCHANGE_RATE,ADD_USER_ID,EDIT_USER_ID,DEL
+        from t_cash_out_in
+        where DEL = 1 and ACCOUNT_ID = #{accountId} and CASH_TYPE =#{cashType}
+    </select>
 </mapper>

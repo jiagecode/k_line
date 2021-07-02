@@ -75,7 +75,7 @@ public class CashOutInController {
      * @param cashOutIn 查询条数
      * @return 对象列表
      */
-    @PostMapping("list")
+    @PostMapping("myCashOutList")
     @ApiOperation(value = "列表", notes = "查询用户资金充值或提现记录的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户资金充值或提现记录对象", required = true) @RequestBody CashOutIn cashOutIn) {
         return ResponseHelper.success(cashOutInService.list(Integer.valueOf(loginUserId), cashOutIn));

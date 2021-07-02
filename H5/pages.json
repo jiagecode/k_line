@@ -88,6 +88,17 @@
                 "enablePullDownRefresh": false
             }
             
+        },
+		{
+            "path" : "pages/transaction-records/transaction-now",
+            "style" :
+            {
+				"navigationBarTitleText": "持仓明细",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+
         }
         ,{
             "path" : "pages/recharge/recharge",
@@ -110,6 +121,16 @@
                 "enablePullDownRefresh": false
             }
             
+        },{
+            "path" : "pages/cashoutin/cashOutIn",
+            "style" :
+            {
+                "navigationBarTitleText": "提现列表",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+
         }
         ,{
             "path" : "pages/flowing-water/flowing-water",
