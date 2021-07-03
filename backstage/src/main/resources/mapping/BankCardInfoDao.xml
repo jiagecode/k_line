@@ -13,11 +13,11 @@
         <result property="cardNo" column="CARD_NO" jdbcType="VARCHAR"/>
         <result property="cardOwnerNo" column="CARD_OWNER_NO" jdbcType="VARCHAR"/>
         <result property="cardPhone" column="CARD_PHONE" jdbcType="VARCHAR"/>
-        <result property="cardStatus" column="CARD_STATUS" jdbcType="OTHER"/>
+        <result property="cardStatus" column="CARD_STATUS" jdbcType="INTEGER"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
-        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>

@@ -50,7 +50,7 @@ public class UserInfo extends QueryRequest implements Serializable {
      * 性别 1-男 0-女 -1未知
      */
     @ApiModelProperty("性别 1-男 0-女 -1未知")
-    private Boolean userGender;
+    private Integer userGender;
 
     /**
      * 登录密码
@@ -80,13 +80,13 @@ public class UserInfo extends QueryRequest implements Serializable {
      * 用户类别 1-普通用户 2-代理用户
      */
     @ApiModelProperty("用户类别 1-普通用户 2-代理用户")
-    private Boolean userType;
+    private Integer userType;
 
     /**
      * 用户等级 1-普通级
      */
     @ApiModelProperty("用户等级 1-普通级")
-    private Boolean userLevel;
+    private Integer userLevel;
 
     /**
      * 用户身份证号
@@ -104,7 +104,7 @@ public class UserInfo extends QueryRequest implements Serializable {
      * 是否禁用 0-未禁用 1-已禁用
      */
     @ApiModelProperty("是否禁用 0-未禁用 1-已禁用")
-    private Boolean userForbidFlag;
+    private Integer userForbidFlag;
 
     /**
      * 推荐码
@@ -116,7 +116,7 @@ public class UserInfo extends QueryRequest implements Serializable {
      * 是否有推荐资格 1-有 0-无
      */
     @ApiModelProperty("是否有推荐资格 1-有 0-无")
-    private Boolean userRefereeAble;
+    private Integer userRefereeAble;
 
     /**
      * 创建时间

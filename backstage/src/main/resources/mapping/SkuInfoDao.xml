@@ -6,7 +6,7 @@
         <result property="skuId" column="SKU_ID" jdbcType="INTEGER"/>
         <result property="skuCode" column="SKU_CODE" jdbcType="VARCHAR"/>
         <result property="skuName" column="SKU_NAME" jdbcType="VARCHAR"/>
-        <result property="skuStatus" column="SKU_STATUS" jdbcType="OTHER"/>
+        <result property="skuStatus" column="SKU_STATUS" jdbcType="INTEGER"/>
         <result property="nowPrice" column="NOW_PRICE" jdbcType="NUMERIC"/>
         <result property="minPrice" column="MIN_PRICE" jdbcType="NUMERIC"/>
         <result property="maxPrice" column="MAX_PRICE" jdbcType="NUMERIC"/>
@@ -18,6 +18,6 @@
         <result property="skuIncomeRate" column="SKU_INCOME_RATE" jdbcType="NUMERIC"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
-        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>

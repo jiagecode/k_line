@@ -48,7 +48,7 @@ public class SkuInfo extends QueryRequest implements Serializable {
     * 商品状态 1-在售 0-停售
     */            
     @ApiModelProperty("商品状态 1-在售 0-停售")
-    private Object skuStatus;
+    private Integer skuStatus;
     
     /**
     * 现价
@@ -120,6 +120,6 @@ public class SkuInfo extends QueryRequest implements Serializable {
     * 数据状态
     */            
     @ApiModelProperty("数据状态")
-    private Object del;
+    private Integer del;
     
 }

@@ -55,7 +55,7 @@ public class SkuCusInfo extends QueryRequest implements Serializable {
     * 商品状态 1-在售 0-停售
     */            
     @ApiModelProperty("商品状态 1-在售 0-停售")
-    private Boolean skuStatus;
+    private Integer skuStatus;
     
     /**
     * 创建时间

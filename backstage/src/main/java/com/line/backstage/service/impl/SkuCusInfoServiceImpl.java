@@ -7,6 +7,7 @@ import com.line.backstage.entity.SkuCusInfo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SkuCusInfoService;
 import com.line.backstage.utils.PageWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -115,7 +116,9 @@ public class SkuCusInfoServiceImpl implements SkuCusInfoService {
     }
 
     @Override
-    public List<String> queryMyCusCode(Integer loginUserId) {
-        return skuCusInfoMapper.queryMyCusCode(loginUserId);
+    public String queryMyCusCode(Integer loginUserId) {
+        List<String> list =  skuCusInfoMapper.queryMyCusCode(loginUserId);
+        String result = StringUtils.join(list,"%2C");
+        return result;
     }
 }
