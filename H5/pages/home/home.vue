@@ -53,9 +53,6 @@
 		methods: {
 			toKline(item){
 				console.clear("toKline");
-				// uni.navigateTo({
-				// 	url: '../kline/kline'
-				// });
 				uni.$emit("ChangeSymbol",item);
 				uni.switchTab({
 				    url: '../kline/kline'

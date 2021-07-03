@@ -1,8 +1,41 @@
 <template>
 	<div class='divchart' style='background-color:#ffffff;'>
+		<uni-row class="uni-row-top">
+			<uni-col :span="9">
+				<view class="uni-col-top dark topText">123456</view>
+			</uni-col>
+			<uni-col :span="5">
+				<view class="uni-col-top light-top-t">开盘</view>
+				<view class="uni-col-top light-top-d">2</view>
+			</uni-col>
+			<uni-col :span="5">
+				<view class="uni-col-top light-top-t">最低</view>
+				<view class="uni-col-top light-top-d">2</view>
+			</uni-col>
+			<uni-col :span="5">
+				<view class="uni-col-top light-top-t">最高</view>
+				<view class="uni-col-top light-top-d">2</view>
+			</uni-col>
+		</uni-row>
+
+		<div class="button-sp-area">
+			<!-- <button class="mini-btn" type="default" size="mini"
+				@click="ChangeMinutePeriod(MINUTE_PERIOD_ID.MINUTE_ID)">分时</button>
+			<button class="mini-btn" type="default" size="mini"
+				@click="ChangeMinutePeriod(MINUTE_PERIOD_ID.MINUTE_5DAY_ID)">5日</button> -->
+			<button class="mini-btn" type="default" size="mini"
+				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_DAY_ID)">日线</button>
+			<button class="mini-btn" type="default" size="mini"
+				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_WEEK_ID)">周线</button>
+			<button class="mini-btn" type="default" size="mini"
+				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_MINUTE_ID)">1分钟</button>
+			<button class="mini-btn" type="default" size="mini"
+				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_15MINUTE_ID)">15分钟</button>
+		</div>
 		<!--  #ifdef  H5  -->
 		<div>
-			<div class='kline' id="kline" ref='kline' DefaultPairName="ETH/BTC" DefaultName="以太币" DefaultfloatPrecision=8 DefaultPeriod=0></div>
+			<div class='kline' id="kline" ref='kline' DefaultPairName="BTC" DefaultName="比特币" DefaultfloatPrecision=2
+				DefaultPeriod=0></div>
 		</div>
 		<!--  #endif -->
 
@@ -15,33 +48,135 @@
 		<!--  #endif -->
 
 		<div class="button-sp-area">
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeMinutePeriod(MINUTE_PERIOD_ID.MINUTE_ID)">分时</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeMinutePeriod(MINUTE_PERIOD_ID.MINUTE_5DAY_ID)">5日</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_DAY_ID)">日线</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_WEEK_ID)">周线</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_MINUTE_ID)">1分钟</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_15MINUTE_ID)">15分钟</button>
-		</div>
-		<div class="button-sp-area">
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(0,'EMPTY')">主图空指标</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(0,'BOLL')">BOLL</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(1,'MACD')">MACD</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(1,'VOL')">VOL</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(1,'KDJ')">KDJ</button>
 		</div>
-		<div style='color: #007AFF;'>{{TestData}}</div>
-		
+		<!-- <div style='color: #007AFF;'>{{TestData}}</div> -->
+		<uni-row class="uni-row-bot">
+			<uni-col :span="8">
+				<view class="uni-col-bot bot-cc light-bot-t">xx</view>
+				<view class="uni-col-bot bot-cc light-bot-d">持仓</view>
+			</uni-col>
+			<uni-col :span="8">
+				<view class="uni-col-bot bot-mz light-bot-t">xx</view>
+				<view class="uni-col-bot bot-mz light-bot-d">买涨</view>
+			</uni-col>
+			<uni-col :span="8">
+				<view class="uni-col-bot bot-md light-bot-t">xx</view>
+				<view class="uni-col-bot bot-md light-bot-d">买跌</view>
+			</uni-col>
+		</uni-row>
 	</div>
 </template>
 
+<style>
+	.uni-row-top {
+		margin-bottom: 10px;
+		/* #ifdef MP-TOUTIAO || MP-QQ || MP-BAIDU */
+		display: block;
+		/* #endif */
+	}
+
+	.uni-row-top {
+		margin-bottom: 10px;
+	}
+
+	.uni-col-top {
+		height: 60px;
+	}
+
+	.light-top-t {
+		height: 30px;
+		line-height: 30px;
+		font-size: 17px;
+		text-align: center;
+		color: #555555;
+		background-color: #e5e9f2;
+	}
+
+	.light-top-d {
+		height: 30px;
+		line-height: 30px;
+		font-size: 15px;
+		text-align: center;
+		color: rgb(255, 121, 117);
+		background-color: #e5e9f2;
+	}
+
+	.topText {
+		height: 60px;
+		line-height: 60px;
+		font-size: 20px;
+		text-align: center;
+		color: rgb(255, 121, 117);
+	}
+
+	.uni-row-bot {
+		margin-bottom: 10px;
+		/* #ifdef MP-TOUTIAO || MP-QQ || MP-BAIDU */
+		display: block;
+		/* #endif */
+	}
+
+	.uni-row-bot {
+		margin-bottom: 10px;
+	}
+
+	.uni-col-bot {
+		height: 50px;
+	}
+
+	.light-bot-t {
+		height: 20px;
+		line-height: 20px;
+		font-size: 17px;
+		text-align: center;
+		color: #555555;
+		background-color: #e5e9f2;
+	}
+
+	.light-bot-d {
+		height: 30px;
+		line-height: 30px;
+		font-size: 15px;
+		font-weight: bold;
+		text-align: center;
+		color: #4e4d52;
+		background-color: #e5e9f2;
+	}
+
+	.bot-cc {
+		color: #e5e9f2;
+		background-color: #4e4d52;
+	}
+
+	.bot-mz {
+		background-color: #ff7975;
+	}
+
+	.bot-md {
+		position: relative;
+		background-color: #36d47e;
+	}
+
+	.dark_deep {
+		background-color: #99a9bf;
+	}
+
+	.dark {
+		background-color: #d3dce6;
+	}
+
+	.light {
+		background-color: #e5e9f2;
+	}
+</style>
+
 <script>
-	import moment from 'moment' 
+	import moment from 'moment'
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//	HQChart单画布模式,K线/分时共享使用一个画布
 	//
@@ -74,8 +209,11 @@
 	//JSConsole.Chart.Log=()=>{ };
 
 	// #endif
-	
+
 	var API_KEY = "2f5295de0ff822eb314074bbbed58c54154a0cf14a1cc9623b5b577046197d9f";
+
+	// 系统信息
+	var sysInfo = null;
 
 	function DefaultData() {}
 
@@ -240,9 +378,9 @@
 		data() {
 			let data = {
 				Symbol: 'btc.bit',
-				Name:'',
-				PairName:'ETH/BTC', //货币代码
-				FloatPrecision:2,   //品种的小数位数
+				Name: '',
+				PairName: 'ETH/BTC', //货币代码
+				FloatPrecision: 2, //品种的小数位数
 				ChartWidth: 350,
 				ChartHeight: 500,
 				KLine: {
@@ -261,30 +399,37 @@
 			return data;
 		},
 
-		onLoad() {
+		onLoad(obj) {
 			// 订阅币种切换事件
-			uni.$on("ChangeSymbol",(rel)=>{
-					this.ChangeSymbol(rel);
+			uni.$on("ChangeSymbol", (rel) => {
+				this.ChangeSymbol(rel);
 			})
 		},
 
-		onReady() {
-
-		},
+		onReady() {},
 
 		onShow() {
 			uni.getSystemInfo({
 				success: (res) => {
-					var width = res.windowWidth;
-					var height = res.windowHeight;
-					this.ChartWidth = width;
-					this.ChartHeight = height - 130;
-					this.$nextTick(() => {
-						this.ChangeSize();
-						this.CreateKLineChart();
-					})
+					// 保存系统信息到页面全局
+					this.sysInfo = res;
 				}
 			});
+
+			// 重新计算页面元素高度
+			var width = this.sysInfo.windowWidth;
+			var height = this.sysInfo.windowHeight;
+			this.ChartWidth = width;
+			this.ChartHeight = height - 200;
+			this.$nextTick(() => {
+				this.ChangeSize();
+				this.CreateKLineChart();
+			})
+
+			// top
+			var top = document.getElementById('top');
+
+
 		},
 
 		onHide() {
@@ -500,24 +645,26 @@
 			//切换股票
 			ChangeSymbol: function(item) {
 				console.log(item);
-				var symbol =item.symbol;
-				var name =item.name;
-				if (this.PairName==symbol) return;
-				this.PairName=name;
-				this.Symbol=symbol+'.BIT';
-				this.Name=symbol;
-				this.FloatPrecision=2;
+				var symbol = item.symbol;
+				var name = item.name;
+				if (this.PairName == symbol) return;
+				this.PairName = name;
+				this.Symbol = symbol + '.BIT';
+				this.Name = symbol;
+				this.FloatPrecision = 2;
 				if (g_JSChart) g_JSChart.ChangeSymbol(symbol);
 			},
-			
+
 			MinuteNetworkFilter: function(data, callback) {
-				data.PreventDefault=true; //禁止hqchart调用内置api数据
+				data.PreventDefault = true; //禁止hqchart调用内置api数据
 				console.log('[BitKLine::NetworkFilter] data', data);
 				switch (data.Name) {
-					case 'KLineChartContainer::ReqeustHistoryMinuteData':   //分钟全量数据下载
-						this.ReqeustHistoryMinuteData(data, callback, {PageSize: 100});
+					case 'KLineChartContainer::ReqeustHistoryMinuteData': //分钟全量数据下载
+						this.ReqeustHistoryMinuteData(data, callback, {
+							PageSize: 100
+						});
 						break;
-					case 'KLineChartContainer::RequestMinuteRealtimeData':  //分钟实时数据更新
+					case 'KLineChartContainer::RequestMinuteRealtimeData': //分钟实时数据更新
 						this.RequestMinuteRealtimeData(data, callback);
 						break;
 				}
@@ -526,37 +673,39 @@
 			NetworkFilter: function(data, callback) {
 				// if (data.Name=='APIScriptIndex::ExecuteScript') this.CustomIndex(data, callback);
 				console.log(`[HQChart:NetworkFilter] Name=${data.Name} Explain=${data.Explain}`);
-				switch(data.Name) 
-				{
-					case 'KLineChartContainer::ReqeustHistoryMinuteData':   //分钟全量数据下载
-						this.ReqeustHistoryMinuteData(data,callback,{ PageSize:50 });
+				switch (data.Name) {
+					case 'KLineChartContainer::ReqeustHistoryMinuteData': //分钟全量数据下载
+						this.ReqeustHistoryMinuteData(data, callback, {
+							PageSize: 50
+						});
 						break;
-					case 'KLineChartContainer::RequestHistoryData':         //日线全量数据下载
-						this.RequestHistoryData(data,callback);
+					case 'KLineChartContainer::RequestHistoryData': //日线全量数据下载
+						this.RequestHistoryData(data, callback);
 						break;
-					case 'KLineChartContainer::RequestMinuteRealtimeData':  //分钟实时数据更新
-						this.RequestMinuteRealtimeData(data,callback);
+					case 'KLineChartContainer::RequestMinuteRealtimeData': //分钟实时数据更新
+						this.RequestMinuteRealtimeData(data, callback);
 						break;
-					case 'KLineChartContainer::RequestRealtimeData':        //日线实时数据更新
-						this.RequestRealtimeData(data,callback);
+					case 'KLineChartContainer::RequestRealtimeData': //日线实时数据更新
+						this.RequestRealtimeData(data, callback);
 						break;
 				}
 			},
 
 			ReqeustHistoryMinuteData(data, callback, option) //第3方分钟线历史数据请求
 			{
-				data.PreventDefault=true; //禁止hqchart调用内置api数据
+				data.PreventDefault = true; //禁止hqchart调用内置api数据
 				console.log("查询1分钟全量");
 				uni.request({
 					// url: 'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=1',
-					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym='+this.Name+'&tsym=USD&limit=1440&api_key='+API_KEY,
+					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
+						'&tsym=USD&limit=1440&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						console.log(res);
 						var resultData = {};
 						var dataArr = res.data.Data.Data;
 						console.log(dataArr);
-						
+
 						var yClose = null;
 						var klineData = [];
 						for (var i in dataArr) {
@@ -569,12 +718,17 @@
 							var low = parseFloat(item.low);
 							var close = parseFloat(item.close);
 							var vol = parseFloat(item.volumefrom);
-							klineData.push([date, yClose, open, high, low, close, vol, null,time]);
+							klineData.push([date, yClose, open, high, low, close, vol, null, time]);
 							yClose = close;
 						}
 						console.log("klineData");
 						console.log(klineData);
-						var hqChartData={code:0, data:klineData,symbol:this.Symbol, name:this.PairName};
+						var hqChartData = {
+							code: 0,
+							data: klineData,
+							symbol: this.Symbol,
+							name: this.PairName
+						};
 						callback(hqChartData);
 					}
 				});
@@ -584,10 +738,11 @@
 
 			RequestHistoryData(data, callback, option) //日线全量数据下载
 			{
-				data.PreventDefault=true; //禁止hqchart调用内置api数据
+				data.PreventDefault = true; //禁止hqchart调用内置api数据
 				console.log("查询日线全量");
 				uni.request({
-					url: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym='+this.Name+'&tsym=USD&limit=100&api_key='+API_KEY,
+					url: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + this.Name +
+						'&tsym=USD&limit=100&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};
@@ -607,8 +762,13 @@
 							klineData.push([date, yClose, open, high, low, close, vol, null]);
 							yClose = close;
 						}
-						
-						var hqChartData={code:0, data:klineData, symbol:this.Symbol, name:this.PairName};
+
+						var hqChartData = {
+							code: 0,
+							data: klineData,
+							symbol: this.Symbol,
+							name: this.PairName
+						};
 						callback(hqChartData);
 					}
 				});
@@ -730,5 +890,5 @@
 </script>
 
 <style>
-	
+
 </style>
