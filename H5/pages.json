@@ -2,6 +2,17 @@
 	// 页面
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+		    "path" : "pages/login/login",
+		    "style" :                                                                                    
+		    {
+				// 取消导航栏
+				"navigationStyle": "custom",
+				// 开启下拉刷新
+				"enablePullDownRefresh":false
+		    }
+		    
+		},
+		{
             "path" : "pages/register/register",
             "style" :                                                                                    
             {
@@ -68,17 +79,6 @@
             
         }
         ,{
-            "path" : "pages/login/login",
-            "style" :                                                                                    
-            {
-				// 取消导航栏
-				"navigationStyle": "custom",
-				// 开启下拉刷新
-				"enablePullDownRefresh":false
-            }
-            
-        }
-        ,{
             "path" : "pages/transaction-records/transaction-records",
             "style" :                                                                                    
             {
@@ -93,7 +93,7 @@
             "path" : "pages/transaction-records/transaction-now",
             "style" :
             {
-				"navigationBarTitleText": "持仓明细",
+				"navigationBarTitleText": "持仓记录",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
                 "enablePullDownRefresh": false
@@ -115,7 +115,7 @@
             "path" : "pages/withdrawal/withdrawal",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "提现",
+                "navigationBarTitleText": "账户提现",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
                 "enablePullDownRefresh": false
@@ -125,7 +125,7 @@
             "path" : "pages/cashoutin/cashOutIn",
             "style" :
             {
-                "navigationBarTitleText": "提现列表",
+                "navigationBarTitleText": "提现记录",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
                 "enablePullDownRefresh": false
@@ -165,13 +165,25 @@
             }
             
         }
+        ,{
+            "path" : "pages/cooperation/cooperation",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商务合作",
+				"navigationBarTextStyle":"white",
+				"navigationBarBackgroundColor": "#5586d3",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	// 全局配置
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "币安秒合约",
 		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#5586d3"
+		"backgroundColor": "#5586d3",
+		"background-color": "#fafafa"
 	},
 	
 	// 底部导航

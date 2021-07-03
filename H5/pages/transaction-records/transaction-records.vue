@@ -1,22 +1,20 @@
 <template>
   <!-- 交易记录 -->
-  <view style="margin-left: 20rpx;">
+  <view style="padding: 0 4% 0 4%;">		
     <block v-for="(item, index) in positionList" :key="item.positionId">
-      <view class="d-flex a-center" style="height: 150rpx; border-bottom: solid #ececec 2rpx;">
+      <view class="d-flex a-center" style="height: 200rpx; border-bottom: solid #ececec 2rpx;">
         <view style="width: 300rpx;">
-          <view>{{ item.skuName }}</view>
-          <view>{{ item.beaginPrice }}-{{ item.endPrice }}</view>
-          <view style="font-size: 25rpx; color: #999999;">{{ item.addDate }}</view>
+          <view class="font-mdd">{{ item.skuName }}</view>
+          <view class="font-md">{{ item.beaginPrice }}-{{ item.endPrice }}</view>
+          <view class="font-sm" style="color: #999999;">{{ item.addDate }}</view>
         </view>
-        <view style="width: 285rpx;">
+        <view class="font-md" style="width: 285rpx;">
           {{ showUpOrDown(item.investType, item.investAmount) }}
-          <view></view>
-          <view></view>
         </view>
         <view style="width: 300rpx;">
-          <view v-show="item.investType == '1'" style="color: red;">+ {{ item.incomeAmount }}</view>
-          <view v-show="item.investType == '2'" style="color: #09BB07;">- {{ item.incomeAmount }}</view>
-          <view style="font-size: 25rpx; color: #999999;">{{ item.addDate }}</view>
+          <view class="font-md" v-show="item.investType == '1'" style="color: red;">+ {{ item.incomeAmount }}</view>
+          <view class="font-md" v-show="item.investType == '2'" style="color: #09BB07;">- {{ item.incomeAmount }}</view>
+          <view class="font-sm" style="color: #999999;">{{ item.addDate }}</view>
         </view>
       </view>
     </block>

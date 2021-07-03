@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<!-- 行情列表 -->
-		<view>
+		<scroll-view class="sv">
 			<view class="d-flex" style="margin-top: 30rpx; height: 30rpx;">
-				<view style="font-size: 23rpx; margin-left: 30rpx; width: 60rpx;"><image style="width: 30rpx; height: 30rpx;" src="/static/px.png"></image></view>
+				<view style="font-size: 23rpx; margin-left: 30rpx; width: 60rpx;"><image style="width: 40rpx; height: 40rpx;" src="/static/px.png"></image></view>
 				<view style="font-size: 23rpx; width: 200rpx;">币种/市值</view>
 				<view style="font-size: 23rpx; width: 290rpx;">价格</view>
 				<view style="font-size: 23rpx; width: 170rpx;">24h涨幅榜</view>
@@ -36,9 +36,8 @@
 						</view>
 					</view>
 				</block>
-						<p>{{60+30+200+290+170}}</p>
 			</view>
-		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -84,5 +83,4 @@
 </script>
 
 <style>
-
 </style>

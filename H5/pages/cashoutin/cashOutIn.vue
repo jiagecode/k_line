@@ -1,6 +1,6 @@
 <template>
   <!-- 交易记录 -->
-  <view style="margin-left: 20rpx;">
+  <view class="bc" style="margin-left: 20rpx;">
     <block v-for="(item, index) in cashDetailList" :key="item.cashId">
       <view class="d-flex a-center" style="height: 200rpx; border-bottom: solid #ececec 2rpx;">
         <view style="width: 285rpx;">

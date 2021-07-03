@@ -1,25 +1,25 @@
 <template>
-  <view>
+  <view class="sv bc">
     <!-- 行情列表 -->
-    <view>
-      <view class="d-flex" style="margin-top: 30rpx; height: 30rpx;">
-        <view style="font-size: 23rpx; margin-left: 30rpx; width: 60rpx;"><image style="width: 30rpx; height: 30rpx;" src="/static/px.png"></image></view>
-        <view style="font-size: 23rpx; width: 200rpx;">币种/市值</view>
-        <view style="font-size: 23rpx; width: 290rpx;">价格</view>
-        <view style="font-size: 23rpx; width: 170rpx;">24h涨幅榜</view>
-      </view>
-      <view style="margin-top: 45rpx;">
-        <block v-for="(item, index) of marketsList" :key="index">
-          <view class="d-flex" style="height: 115rpx;" @tap="toKline">
-            <view style="margin-top: -4rpx; margin-left: 30rpx; width: 60rpx;">{{index + 1}}</view>
-            <!-- 市值 -->
-            <view style="width: 200rpx; ">
-              <view class="d-flex" style="height: 40rpx;">
-                <image style="width: 40rpx; height: 40rpx;" :src="item.image" ></image>
-                <view style="margin: -12rpx 0 0 10rpx; font-size: 35rpx;  font-weight: bold;">{{item.symbol}}</view>
-              </view>
-              <view class="num" style="margin-top: 5rpx; height: 27rpx; font-size: 25rpx; color: #999999;">￥{{item.market_cap}}</view>
-            </view>
+		<scroll-view>
+			<view class="d-flex" style="margin-top: 30rpx; height: 30rpx;">
+				<view style="font-size: 23rpx; margin-left: 30rpx; width: 60rpx;"><image style="width: 40rpx; height: 40rpx;" src="/static/px.png"></image></view>
+				<view style="font-size: 23rpx; width: 200rpx;">币种/市值</view>
+				<view style="font-size: 23rpx; width: 290rpx;">价格</view>
+				<view style="font-size: 23rpx; width: 170rpx;">24h涨幅榜</view>
+			</view>
+			<view style="margin-top: 45rpx;">
+			<block v-for="(item, index) of marketsList" :key="index">
+			<view class="d-flex" style="height: 115rpx;" @tap="toKline">
+				<view style="margin-top: -4rpx; margin-left: 30rpx; width: 60rpx;">{{index + 1}}</view>
+				<!-- 市值 -->
+				<view style="width: 200rpx; ">
+					<view class="d-flex" style="height: 40rpx;">
+						<image style="width: 40rpx; height: 40rpx;" :src="item.image" ></image>
+						<view style="margin: -12rpx 0 0 10rpx; font-size: 35rpx;  font-weight: bold;">{{item.symbol}}</view>
+					</view>
+					<view class="num" style="margin-top: 5rpx; height: 27rpx; font-size: 25rpx; color: #999999;">￥{{item.market_cap}}</view>
+				</view>
             <!-- 实时价格 -->
             <view style="width: 290rpx;">
               <view class="d-flex" style="height: 40rpx; font-size: 33rpx; font-weight: bold;">
@@ -36,9 +36,8 @@
             </view>
           </view>
         </block>
-        <p>{{60+30+200+290+170}}</p>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 

@@ -1,33 +1,31 @@
 <template>
   <!-- 提现 -->
-  <view style="margin: 25rpx 15rpx 0 15rpx;">
-    <view class="d-flex a-center j-center" style="border: dashed #ececec 5rpx; border-radius: 25rpx; height: 200rpx;">
-      <block v-for="(item, index) in cardList" :key="item.bankCardId">
-        <view class="d-flex flex-column j-center" style="width: 400rpx; margin-left: 5%;">
-          <text>开户行：{{ item.bankName }}</text>
-          <text>持卡人：{{ item.cardOwnerName }}</text>
-          <text>卡号：{{ item.cardOwnerNo }}</text>
-          <text>时间：{{ item.addDate }}</text>
-        </view>
-      </block>
-    </view>
-
-    <view class="d-flex a-center j-center" style="border: dashed #ececec 5rpx; border-radius: 25rpx; height: 200rpx;">
+  <view class="bc" style="padding: 25rpx 4.6% 0 4.6%;">
+		  
+	<!-- 优先展示绑定的银行卡 -->
+	<div>
+		<block v-for="(item, index) in cardList" :key="item.bankCardId">
+			<view class="d-flex a-center j-center" style="background-color: #159682; height: 240rpx; border-radius: 15rpx;">
+				<view style="height: 80%; width: 90.6%;">
+				  <view class="d-flex">
+						<image style="background-color: #FFFFFF; width: 70rpx; height: 70rpx; border-radius: 50rpx;" src="/static/yh.png" @click="xy" />
+						<view class="d-flex flex-column j-center a-cent" style="margin-left: 20rpx;">
+							<view class="font-md" style="color: #FFFFFF;">{{ item.bankName }}</view>
+							<view class="font-sm" style="color: #eddcd6;">储蓄卡</view>
+					  </view>
+				  </view>
+				  <view class="font-big" style="margin: 0 0 0 14%; color: #FFFFFF;">{{ item.cardNo }}</view>
+				</view>
+			</view>
+			<!-- 银行卡间隙 -->
+			<view style="margin-top: 10rpx;"></view>
+		</block>
+	</div>
+	<!-- 添加银行卡 -->
+    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
       <navigator url="../bank-info/bank-info" hover-class="none">
         <image style="margin-left: 40rpx; width: 50rpx; height: 50rpx;" src="/static/tj.png"></image>
         <view style="color: #888888;">添加银行卡</view>
-      </navigator>
-    </view>
-    <view class="d-flex a-center j-center" style="border: dashed #ececec 5rpx; border-radius: 25rpx; height: 200rpx;">
-      <navigator url="../cashoutin/cashOutIn" hover-class="none">
-        <image style="margin-left: 40rpx; width: 50rpx; height: 50rpx;" src="/static/tj.png"></image>
-        <view style="color: #888888;">我的提现记录</view>
-      </navigator>
-    </view>
-    <view class="d-flex a-center j-center" style="border: dashed #ececec 5rpx; border-radius: 25rpx; height: 200rpx;">
-      <navigator url="../transaction-records/transaction-now" hover-class="none">
-        <image style="margin-left: 40rpx; width: 50rpx; height: 50rpx;" src="/static/tj.png"></image>
-        <view style="color: #888888;">持仓明细</view>
       </navigator>
     </view>
   </view>

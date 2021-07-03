@@ -1,91 +1,103 @@
 <template>
-  <view>
+  <view class="sv">
     <view style="height: 290rpx;">
       <view class="d-flex a-center j-center" style="height: 205rpx;">
-        <image style="width: 125rpx; height: 125rpx;" :src=showUserHeadImg(userData.userHeadImg)></image>
+        <image style="width: 125rpx; height: 125rpx; border-radius: 62.5rpx;" :src=showUserHeadImg(userData.userHeadImg)></image>
       </view>
       <view class="d-flex j-center" style="margin-top: -10rpx;">{{ userData.userNickName }}</view>
       <view class="d-flex j-center" style="color: #5586d3;">￥ 账户金额：{{ userData.userMoney }}</view>
     </view>
     <view class="d-flex"
-          style="margin-top: 45rpx; height: 160rpx; border-bottom: solid #ececec 1rpx; border-top: solid #ececec 1rpx;">
+          style="margin-top: 45rpx; height: 160rpx; border-bottom: solid #d8d8d8 15rpx; border-top: solid #d8d8d8 15rpx;">
       <!-- 充值 -->
-      <view class="d-flex a-center j-center" style="width: 25%; border-right: solid #ececec 1rpx;" @click="cz()">
+      <view class="d-flex a-center j-center" style="width: 25%;" @click="cz()">
         <view>
           <image class="d-flex a-center j-center" style="width: 50rpx; height: 50rpx;" src="/static/cz.png">充值</image>
         </view>
       </view>
       <!-- 提现 -->
-      <view class="d-flex a-center j-center" style="width: 25%; border-right: solid #ececec 1rpx;" @click="tx()">
+      <view class="d-flex a-center j-center" style="width: 25%;" @click="tx()">
         <view>
           <image class="d-flex a-center j-center" style="width: 50rpx; height: 50rpx;" src="/static/tx.png">提现</image>
         </view>
       </view>
       <!-- 资金流水 -->
-      <view class="d-flex a-center j-center" style="width: 25%; border-right: solid #ececec 1rpx;" @click="ls()">
+      <view class="d-flex a-center j-center" style="width: 25%;" @click="ls()">
         <view>
           <image class="d-flex a-center j-center" style="width: 50rpx; height: 50rpx;" src="/static/ls.png">流水</image>
         </view>
       </view>
-      <!-- 交易记录 -->
-      <view class="d-flex a-center j-center" style="width: 25%;" @click="jy()">
+      <!-- 持仓记录 -->
+      <view class="d-flex a-center j-center" style="width: 25%;" @click="cc()">
         <view>
-          <image class="d-flex a-center j-center" style="width: 50rpx; height: 50rpx;" src="/static/jy.png">交易</image>
+          <image class="d-flex a-center j-center" style="width: 50rpx; height: 50rpx;" src="/static/cc.png">持仓</image>
         </view>
       </view>
     </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
-        <image style="width: 50rpx; height: 50rpx;" src="/static/kf.png"/>
-        <text style="margin-left: 20rpx;">客服</text>
-      </view>
-    </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
-        <image style="width: 50rpx; height: 50rpx;" src="/static/hz.png"/>
-        <text style="margin-left: 20rpx;">商务合作</text>
-      </view>
-    </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
+	
+	<!-- 交易记录 -->
+	<navigator url="../transaction-records/transaction-records" hover-class="none" style="border-bottom: solid #d8d8d8 1rpx;">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
+			<image style="width: 50rpx; height: 50rpx;" src="/static/jy.png"/>
+			<text style="margin-left: 20rpx;">交易记录</text>
+		</view>
+	</navigator>
+	
+	<!-- 提现记录 -->
+	<navigator url="../cashoutin/cashOutIn" hover-class="none" style="border-bottom: solid #d8d8d8 1rpx;">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
+			<image style="width: 50rpx; height: 50rpx;" src="/static/tx.png"/>
+			<text style="margin-left: 20rpx;">提现记录</text>
+		</view>
+	</navigator>
+	
+	<!-- 客服 -->
+	<navigator url="../customer-service/customer-service" hover-class="none" style="border-bottom: solid #d8d8d8 1rpx;">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
+			<image style="width: 50rpx; height: 50rpx;" src="/static/kf.png"/>
+			<text style="margin-left: 20rpx;">客服</text>
+		</view>
+	</navigator>
+	
+	<!-- 商务合作 -->
+	<navigator url="../cooperation/cooperation" hover-class="none" style="border-bottom: solid #d8d8d8 1rpx;">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
+			<image style="width: 50rpx; height: 50rpx;" src="/static/hz.png"/>
+			<text style="margin-left: 20rpx;">商务合作</text>
+		</view>
+	</navigator>
+      <!-- 下载App 
+    <view style="border-bottom: solid #d8d8d8 1rpx;" @click="kf()">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
         <image style="width: 50rpx; height: 50rpx;" src="/static/down.png"/>
         <text style="margin-left: 20rpx;">下载App</text>
       </view>
-    </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
-        <image style="width: 50rpx; height: 50rpx;" src="/static/yq.png"/>
-        <text style="margin-left: 20rpx;">邀请好友</text>
-      </view>
-    </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
+    </view>-->
+	<!-- 关于币安秒合约 
+    <view style="border-bottom: solid #d8d8d8 1rpx;" @click="kf()">
+      
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
         <image style="width: 50rpx; height: 50rpx;" src="/static/gy.png"/>
         <text style="margin-left: 20rpx;">关于币安秒合约</text>
       </view>
-    </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
+    </view>-->
+      <!-- 客服
+    <view style="border-bottom: solid #d8d8d8 1rpx;" @click="kf()">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
         <image style="width: 50rpx; height: 50rpx;" src="/static/yj.png"/>
         <text style="margin-left: 20rpx;">意见反馈</text>
       </view>
-    </view>
-    <view style="border-bottom: solid #ececec 1rpx;" @click="kf()">
-      <!-- 客服 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
+    </view> -->
+      <!-- 联系我们
+    <view style="border-bottom: solid #d8d8d8 1rpx;" @click="kf()">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
         <image style="width: 50rpx; height: 50rpx;" src="/static/wm.png"/>
         <text style="margin-left: 20rpx;">联系我们</text>
       </view>
-    </view>
-    <view style="border-bottom: solid #ececec 2rpx;" @click="out()">
+    </view> -->
+    <view style="border-bottom: solid #d8d8d8 2rpx;" @click="out()">
       <!-- 退出 -->
-      <view class="d-flex a-center" style="margin-left: 40rpx; height: 140rpx;">
+      <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
         <image style="width: 50rpx; height: 50rpx;" src="/static/tc.png"/>
         <text style="margin-left: 20rpx;">退出</text>
       </view>
@@ -142,16 +154,10 @@ export default {
         url: '../flowing-water/flowing-water'
       });
     },
-    jy() {
-      console.log("跳转交易页面");
+    cc() {
+      console.log("跳转持仓记录页面");
       uni.navigateTo({
-        url: '../transaction-records/transaction-records'
-      });
-    },
-    kf() {
-      console.log("跳转客服页面");
-      uni.navigateTo({
-        url: '../customer-service/customer-service'
+        url: '../transaction-records/transaction-now'
       });
     },
     out() {

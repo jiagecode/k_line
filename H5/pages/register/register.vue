@@ -1,8 +1,8 @@
 <template>
 	<view class="body">
 		<!-- 密码登录提示 -->
-		<H1 style="margin-top: 75rpx;">注册账号</H1>
-		<view style="margin-top: 75rpx;">
+		<H1 style="padding-top: 75rpx;">注册账号</H1>
+		<view style="padding-top: 75rpx;">
 			<uni-forms>
 				<!-- 姓名 -->
 				<view class="d-flex a-center" style="height: 80rpx; border-bottom: solid #ececec 2rpx;">

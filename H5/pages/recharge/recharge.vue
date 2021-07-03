@@ -1,6 +1,6 @@
 <template>
 	<!-- 充值 -->
-	<view>
+	<view class="bc">
 		<!-- 通道一 -->
 		<view style="border-bottom: solid #ececec 1rpx;">
 			<!-- 客服 -->

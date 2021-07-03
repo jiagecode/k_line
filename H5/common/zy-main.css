@@ -30,6 +30,12 @@ body{
 	--lightmuted: #B2B2B2;
 }
 
+.sv{
+	/* margin-bottom: calc(var(--window-bottom)); */
+	padding-bottom: calc(var(--window-bottom));
+	background-image: url('~@/static/bk.png');
+}
+
 /* 阴影 */
 .shadow-sm{
 	box-shadow: 0 2rpx 4rpx rgba(114, 130, 138, 0.2)!important;
@@ -57,7 +63,9 @@ body{
 .font    { font-size : 25rpx;}
 .font-sm { font-size : 22rpx;}
 .font-md { font-size : 30rpx;}
+.font-mdd { font-size : 35rpx;}
 .font-lg { font-size : 40rpx;}
+.font-lgg { font-size : 50rpx;}
 .font-big{ font-size : 60rpx;}
 /* 行高 */
 .line-h0{ line-height  : 0!important;}
@@ -149,6 +157,7 @@ body{
 .j-center{ justify-content : center; }
 .j-end   { justify-content : flex-end; }
 .j-sb    { justify-content : space-between; }
+.j-sa    { justify-content : space-around; }
 .a-center{ align-items : center; }
 .a-start { align-items : flex-start; }
 .a-end   { align-items : flex-end;  }

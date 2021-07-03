@@ -1,11 +1,11 @@
 <template>
 	<view class="body">
 		<!-- 密码登录提示 -->
-		<H1 style="margin-top: 80rpx;">密码登录</H1>
-		<view style="margin-top: 75rpx;">
+		<H1 style="padding-top: 80rpx;">密码登录</H1>
+		<view style="padding-top: 75rpx;">
 			<uni-forms>
 				<!-- 手机号 -->
-				<view class="d-flex a-center" style="height: 80rpx; border-bottom: solid #ececec 2rpx;">
+				<view class="d-flex a-center" style=" border-bottom: solid #ececec 2rpx;">
 					<navigator hover-class="none" open-type="navigate" url="../address/address">
 						<text>{{countryAndCode}}</text>
 						<uni-icons type="arrowdown" color="#b1b1b1" style="margin-left: 10rpx;"/>
@@ -15,7 +15,7 @@
 					</uni-forms-item>
 				</view>
 				<!-- 密码 -->
-				<view class="d-flex a-center" style="margin-top: 55rpx; height: 80rpx; border-bottom: solid #ececec 2rpx;">
+				<view class="d-flex a-center" style="margin-top: 55rpx; border-bottom: solid #ececec 2rpx;">
 					<uni-icons type="locked" color="#b1b1b1" size="20"/>
 					<uni-forms-item label="" name="name" style="margin-top: 50rpx;">
 						<uni-easyinput type="password" :inputBorder="false" placeholder="输入密码" v-model="password" />

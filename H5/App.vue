@@ -24,4 +24,9 @@
 	@import './common/zy-main.css';
     /* 公共样式 */
     @import './common/common.css';
+	
+	/* 全局背景色 */
+	page{
+		background-color: #fafafa;
+	}
 </style>
