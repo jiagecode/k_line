@@ -160,11 +160,12 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         // 菜单转换为vue router路由对象
         List<MenuRouteVo> routes = queryMenuTree(menus);
         Map<String, Object> resMap = Maps.newHashMap();
+        resMap.put("account", user.getSysUserId());
+        resMap.put("avatar", user.getSysUserImg());
         resMap.put("roles", roles);
         resMap.put("perms", permissions);
         resMap.put("menus", routes);
         resMap.put("name", user.getSysUserName());
-        resMap.put("avatar", user.getSysUserPhone());
         return resMap;
     }
 
@@ -194,7 +195,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             meta.setIcon(one.getMenuIcon());
             menuRouteVo.setMeta(meta);
 
-            List<MenuRouteVo> treeData = getMapTree(one.getId(), menus);
+            List<MenuRouteVo> treeData = getMapTree(one.getMenuId(), menus);
             if (!treeData.isEmpty()) {
                 menuRouteVo.setChildren(treeData);
             }
@@ -222,7 +223,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             meta.setTitle(sysMenu.getMenuName());
             meta.setIcon(sysMenu.getMenuIcon());
             menuRouteVo.setMeta(meta);
-            List<MenuRouteVo> treeData = getMapTree(sysMenu.getId(), list);
+            List<MenuRouteVo> treeData = getMapTree(sysMenu.getMenuId(), list);
             if (!treeData.isEmpty()) {
                 menuRouteVo.setChildren(treeData);
             }

@@ -5,75 +5,71 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
  
 /**
- * 系统菜单(SysMenuInfo)实体类
+ * 菜单表(SysMenuInfo)实体类
  *
  * @author Zy
- * @since 2021-07-02 19:24:07
+ * @since 2021-07-03 10:18:13
  */
 @Data
 @Table(name = "t_sys_menu_info")
-@ApiModel("系统菜单")
+@ApiModel("菜单表")
 public class SysMenuInfo extends QueryRequest implements Serializable {
  
-    private static final long serialVersionUID = 785518365554004063L;
+    private static final long serialVersionUID = 224485757094210450L;
 
-    public static final Long ROOT = 0L;
-             
+    @Transient
+    public static final Integer ROOT = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
     @ApiModelProperty("$column.comment")
-    private Integer id;
+    private Integer menuId;
     
     /**
-    * 菜单编号
+    * 节点上级ID
     */            
-    @ApiModelProperty("菜单编号")
-    private String menuId;
-    
-    /**
-    * 父级编号
-    */            
-    @ApiModelProperty("父级编号")
+    @ApiModelProperty("节点上级ID")
     private Integer parentId;
     
-                
-    @ApiModelProperty("$column.comment")
+    /**
+    * 节点所有上级ID
+    */            
+    @ApiModelProperty("节点所有上级ID")
     private String parentIds;
     
     /**
-    * 排序号
+    * 当前层级排序号
     */            
-    @ApiModelProperty("排序号")
+    @ApiModelProperty("当前层级排序号")
     private Integer treeSort;
     
     /**
-    * 参考文献
+    * 节点所有上级编码
     */            
-    @ApiModelProperty("参考文献")
+    @ApiModelProperty("节点所有上级编码")
     private String treeSorts;
     
     /**
-    * 是否是叶子节点
+    * 是否是叶子节点（0否/1是
     */            
-    @ApiModelProperty("是否是叶子节点")
+    @ApiModelProperty("是否是叶子节点（0否/1是")
     private String treeLeaf;
     
     /**
-    * （从1开始，快速分级查询，根据层级缩进）
+    * 节点层级
     */            
-    @ApiModelProperty("（从1开始，快速分级查询，根据层级缩进）")
+    @ApiModelProperty("节点层级")
     private Integer treeLevel;
     
-                
-    @ApiModelProperty("$column.comment")
+    /**
+    * 全节点全名称
+    */            
+    @ApiModelProperty("全节点全名称")
     private String treeNames;
     
     /**
@@ -83,77 +79,67 @@ public class SysMenuInfo extends QueryRequest implements Serializable {
     private String menuName;
     
     /**
-    * 菜单类型
+    * 菜单类型:1目录2菜单3按钮
     */            
-    @ApiModelProperty("菜单类型")
-    private String menuType;
+    @ApiModelProperty("菜单类型:1目录2菜单3按钮")
+    private Integer menuType;
     
     /**
-    * 路径
+    * vue菜单访问路径
     */            
-    @ApiModelProperty("路径")
+    @ApiModelProperty("vue菜单访问路径")
     private String menuHref;
     
     /**
-    * 对应前端Vue组件名称
+    * vue组件名称
     */            
-    @ApiModelProperty("对应前端Vue组件名称")
+    @ApiModelProperty("vue组件名称")
     private String menuComponent;
     
-                
-    @ApiModelProperty("$column.comment")
-    private String menuTarget;
-    
     /**
-    * 图标
+    * vue组件图标
     */            
-    @ApiModelProperty("图标")
+    @ApiModelProperty("vue组件图标")
     private String menuIcon;
     
     /**
-    * 1-显示，2-隐藏
+    * 1-显示菜单，2-隐藏菜单
     */            
-    @ApiModelProperty("1-显示，2-隐藏")
-    private String showType;
+    @ApiModelProperty("1-显示菜单，2-隐藏菜单")
+    private Integer showType;
     
     /**
-    * 权限字符串
+    * vue组件权限
     */            
-    @ApiModelProperty("权限字符串")
+    @ApiModelProperty("vue组件权限")
     private String permission;
+    
+    /**
+    * 备注
+    */            
+    @ApiModelProperty("备注")
+    private String remarks;
     
                 
     @ApiModelProperty("$column.comment")
-    private String remark;
-    
-    /**
-    * 数据状态
-    */            
-    @ApiModelProperty("数据状态")
-    private int del;
-    
-    /**
-    * 创建人
-    */            
-    @ApiModelProperty("创建人")
     private Integer addUserId;
     
-    /**
-    * 修改人
-    */            
-    @ApiModelProperty("修改人")
+                
+    @ApiModelProperty("$column.comment")
+    private Date addTime;
+    
+                
+    @ApiModelProperty("$column.comment")
     private Integer editUserId;
     
-    /**
-    * 新增日期
-    */            
-    @ApiModelProperty("新增日期")
-    private Date addDate;
+                
+    @ApiModelProperty("$column.comment")
+    private Date editTime;
     
     /**
-    * 修改日期
+    * 数据状态1 有效 0无效
     */            
-    @ApiModelProperty("修改日期")
-    private Date editDate;
+    @ApiModelProperty("数据状态1 有效 0无效")
+    private Integer del;
     
 }

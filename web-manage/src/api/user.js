@@ -8,6 +8,13 @@ export function login(data) {
   })
 }
 
+export function logout() {
+  return request({
+    url: '/sysUserInfo/logout',
+    method: 'get'
+  })
+}
+
 export function getInfo() {
   return request({
     url: '/sysUserInfo/getUserInfo',
@@ -50,13 +57,6 @@ export function removemenu(data) {
 }
 
 
-
-export function logout() {
-  return request({
-    url: '/login/logout',
-    method: 'post'
-  })
-}
 
 //首页
 export function getHome(params) {

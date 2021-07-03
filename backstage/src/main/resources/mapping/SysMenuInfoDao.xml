@@ -4,18 +4,25 @@
  
     <resultMap type="com.line.backstage.entity.SysMenuInfo" id="SysMenuInfoMap">
         <result property="menuId" column="MENU_ID" jdbcType="INTEGER"/>
+        <result property="parentId" column="PARENT_ID" jdbcType="INTEGER"/>
+        <result property="parentIds" column="PARENT_IDS" jdbcType="VARCHAR"/>
+        <result property="treeSort" column="TREE_SORT" jdbcType="INTEGER"/>
+        <result property="treeSorts" column="TREE_SORTS" jdbcType="VARCHAR"/>
+        <result property="treeLeaf" column="TREE_LEAF" jdbcType="VARCHAR"/>
+        <result property="treeLevel" column="TREE_LEVEL" jdbcType="INTEGER"/>
+        <result property="treeNames" column="TREE_NAMES" jdbcType="VARCHAR"/>
         <result property="menuName" column="MENU_NAME" jdbcType="VARCHAR"/>
-        <result property="menuDesc" column="MENU_DESC" jdbcType="VARCHAR"/>
-        <result property="menuUrl" column="MENU_URL" jdbcType="VARCHAR"/>
         <result property="menuType" column="MENU_TYPE" jdbcType="INTEGER"/>
-        <result property="menuStatus" column="MENU_STATUS" jdbcType="INTEGER"/>
-        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="menuHref" column="MENU_HREF" jdbcType="VARCHAR"/>
+        <result property="menuComponent" column="MENU_COMPONENT" jdbcType="VARCHAR"/>
+        <result property="menuIcon" column="MENU_ICON" jdbcType="VARCHAR"/>
+        <result property="showType" column="SHOW_TYPE" jdbcType="INTEGER"/>
+        <result property="permission" column="PERMISSION" jdbcType="VARCHAR"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
-        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="addTime" column="ADD_TIME" jdbcType="TIMESTAMP"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
-        <result property="superId" column="SUPER_ID" jdbcType="INTEGER"/>
-        <result property="menuIndex" column="MENU_INDEX" jdbcType="VARCHAR"/>
-        <result property="menuLevel" column="MENU_LEVEL" jdbcType="INTEGER"/>
+        <result property="editTime" column="EDIT_TIME" jdbcType="TIMESTAMP"/>
         <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -25,15 +32,13 @@
         from
             t_sys_menu_info
         where
-                id in (
+                menu_id in (
                 select
                     menu_id
                 from
-                    t_sys_role_menu
+                    t_sys_power
                 where
                     role_id = #{roleid})
-
         order by tree_sort
-
     </select>
 </mapper>

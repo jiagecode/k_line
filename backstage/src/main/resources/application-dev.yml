@@ -1,6 +1,6 @@
 #项目参数配置
 server:
-  port: 1688
+  port: 1686
   tomcat:
     max-http-form-post-size: 8192
     uri-encoding: utf-8 #编码格式

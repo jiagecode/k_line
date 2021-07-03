@@ -118,5 +118,16 @@ public class SysUserInfoController {
     public ResponseModel getUserInfo(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
         return ResponseHelper.success(sysUserInfoService.getUserInfo(Integer.valueOf(loginUserId)));
     }
+
+    /**
+     * logout
+     *
+     * @return 实例对象
+     */
+    @GetMapping("logout")
+    @ApiOperation(value = "查询单条数据", notes = "根据token的用户id}")
+    public ResponseModel logout(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
+        return ResponseHelper.success("success");
+    }
  
 }

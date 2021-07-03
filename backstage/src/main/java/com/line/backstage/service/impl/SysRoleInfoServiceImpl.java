@@ -1,16 +1,16 @@
 package com.line.backstage.service.impl;
  
-import com.line.backstage.entity.SysRoleInfo;
-import com.line.backstage.enums.DataEnum;
-import com.line.backstage.utils.PageWrapper;
-import com.line.backstage.dao.mapper.SysRoleInfoMapper;
-import com.line.backstage.service.SysRoleInfoService;
-import org.springframework.stereotype.Service;
-import java.util.Date;
- 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.line.backstage.dao.mapper.SysRoleInfoMapper;
+import com.line.backstage.entity.SysRoleInfo;
+import com.line.backstage.enums.DataEnum;
+import com.line.backstage.service.SysRoleInfoService;
+import com.line.backstage.utils.PageWrapper;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.util.Date;
  
 /**
  * 后台管理系统角色表(SysRoleInfo)表服务实现类
@@ -67,7 +67,7 @@ public class SysRoleInfoServiceImpl implements SysRoleInfoService {
     public int delete(Integer loginUserId, Integer roleId) {
 		SysRoleInfo sysRoleInfo = sysRoleInfoMapper.selectByPrimaryKey(roleId);
         sysRoleInfo.setEditUserId(loginUserId);
-        sysRoleInfo.setEditDate(new Date());
+        sysRoleInfo.setEditTime(new Date());
         sysRoleInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         return sysRoleInfoMapper.updateByPrimaryKeySelective(sysRoleInfo);
     }

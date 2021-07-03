@@ -13,24 +13,22 @@ import java.io.Serializable;
 import java.util.Date;
  
 /**
- * 后台管理系统角色表(SysRoleInfo)实体类
+ * 角色表 ;(SysRoleInfo)实体类
  *
  * @author Zy
- * @since 2021-07-01 11:36:06
+ * @since 2021-07-03 10:18:23
  */
 @Data
 @Table(name = "t_sys_role_info")
-@ApiModel("后台管理系统角色表")
+@ApiModel("角色表 ;")
 public class SysRoleInfo extends QueryRequest implements Serializable {
  
-    private static final long serialVersionUID = 299405415291588540L;
+    private static final long serialVersionUID = -27122625382717408L;
     
-    /**
-    * 角色id
-    */         
+             
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
-    @ApiModelProperty("角色id")
+    @ApiModelProperty("$column.comment")
     private Integer roleId;
     
     /**
@@ -40,39 +38,49 @@ public class SysRoleInfo extends QueryRequest implements Serializable {
     private String roleName;
     
     /**
-    * 角色等级
+    * 英文标识
     */            
-    @ApiModelProperty("角色等级")
-    private Object roleLevel;
+    @ApiModelProperty("英文标识")
+    private String roleEnglishName;
     
     /**
-    * 创建时间
+    * 对应用户的子账户组
     */            
-    @ApiModelProperty("创建时间")
-    private Date addDate;
+    @ApiModelProperty("对应用户的子账户组")
+    private Integer roleType;
     
     /**
-    * 创建人
+    * 1-启用，2-禁用
     */            
-    @ApiModelProperty("创建人")
+    @ApiModelProperty("1-启用，2-禁用")
+    private Integer locked;
+    
+    /**
+    * 备注
+    */            
+    @ApiModelProperty("备注")
+    private String universal;
+    
+                
+    @ApiModelProperty("$column.comment")
     private Integer addUserId;
     
-    /**
-    * 修改时间
-    */            
-    @ApiModelProperty("修改时间")
-    private Date editDate;
+                
+    @ApiModelProperty("$column.comment")
+    private Date addTime;
     
-    /**
-    * 修改人
-    */            
-    @ApiModelProperty("修改人")
+                
+    @ApiModelProperty("$column.comment")
     private Integer editUserId;
     
+                
+    @ApiModelProperty("$column.comment")
+    private Date editTime;
+    
     /**
-    * 数据状态
+    * 数据状态1 有效 0无效
     */            
-    @ApiModelProperty("数据状态")
-    private Object del;
+    @ApiModelProperty("数据状态1 有效 0无效")
+    private Integer del;
     
 }
