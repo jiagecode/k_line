@@ -8465,7 +8465,7 @@ function JSChartContainer(uielement, OffscreenElement)
             success: function (data) 
             {
                 JSConsole.Chart.Log('[JSChartContainer::SaveToImageUrl] recv data', data);
-                var result={Path:data.relativeurl, Domain:'https://opensourcedownload.zealink.com'};
+                var result={Path:data.relativeurl, Domain:'https://www.xxx.com'};
                 result.Url=`${result.Domain}/${result.Path}`;
                 if (callback) callback(true,result,'');
             },
@@ -40180,45 +40180,45 @@ function JSChartResource()
     this.LockBGColor = "rgb(220, 220, 220)";        //指标锁区域颜色
     this.LockTextColor = "rgb(210, 34, 34)";        //指标锁提示信息文字颜色
 
-    this.Domain="https://opensource.zealink.com";               //API域名
-    this.CacheDomain="https://opensourcecache.zealink.com";     //缓存域名
-    this.PyIndexDomain='https://py.zealink.com';                //py指标计算域名
+    this.Domain="https://www.xxx.com";               //API域名
+    this.CacheDomain="https://www.xxx.com";     //缓存域名
+    this.PyIndexDomain='https://www.xxx.com';                //py指标计算域名
 
     this.KLine={
             MaxMin: {Font:12*GetDevicePixelRatio() +'px 微软雅黑',Color:'rgb(43,54,69)'},   //K线最大最小值显示
             Info:  //信息地雷
             {
-                Investor:
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/NewsInteract', //互动易
-                    IconFont: { Family:'iconfont', Text:'\ue631' , HScreenText:'\ue684', Color:'#1c65db'} //SVG 文本
-                },
-                Announcement:                                           //公告
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/ReportList',
-                    IconFont: { Family:'iconfont', Text:'\ue633', HScreenText:'\ue685', Color:'#f5a521' },  //SVG 文本
-                    IconFont2: { Family:'iconfont', Text:'\ue634', HScreenText:'\ue686', Color:'#ed7520' }, //SVG 文本 //季报
-                },
-                Pforecast:  //业绩预告
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
-                    IconFont: { Family:'iconfont', Text:'\ue62e', HScreenText:'\ue687', Color:'#986cad' } //SVG 文本
-                },
-                Research:   //调研
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/InvestorRelationsList',
-                    IconFont: { Family:'iconfont', Text:'\ue632', HScreenText:'\ue688', Color:'#19b1b7' } //SVG 文本
-                },
-                BlockTrading:   //大宗交易
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
-                    IconFont: { Family:'iconfont', Text:'\ue630', HScreenText:'\ue689', Color:'#f39f7c' } //SVG 文本
-                },
-                TradeDetail:    //龙虎榜
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
-                    IconFont: { Family:'iconfont', Text:'\ue62f', HScreenText:'\ue68a' ,Color:'#b22626' } //SVG 文本
-                },
+                // Investor:
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/NewsInteract', //互动易
+                //     IconFont: { Family:'iconfont', Text:'\ue631' , HScreenText:'\ue684', Color:'#1c65db'} //SVG 文本
+                // },
+                // Announcement:                                           //公告
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/ReportList',
+                //     IconFont: { Family:'iconfont', Text:'\ue633', HScreenText:'\ue685', Color:'#f5a521' },  //SVG 文本
+                //     IconFont2: { Family:'iconfont', Text:'\ue634', HScreenText:'\ue686', Color:'#ed7520' }, //SVG 文本 //季报
+                // },
+                // Pforecast:  //业绩预告
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
+                //     IconFont: { Family:'iconfont', Text:'\ue62e', HScreenText:'\ue687', Color:'#986cad' } //SVG 文本
+                // },
+                // Research:   //调研
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/InvestorRelationsList',
+                //     IconFont: { Family:'iconfont', Text:'\ue632', HScreenText:'\ue688', Color:'#19b1b7' } //SVG 文本
+                // },
+                // BlockTrading:   //大宗交易
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
+                //     IconFont: { Family:'iconfont', Text:'\ue630', HScreenText:'\ue689', Color:'#f39f7c' } //SVG 文本
+                // },
+                // TradeDetail:    //龙虎榜
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
+                //     IconFont: { Family:'iconfont', Text:'\ue62f', HScreenText:'\ue68a' ,Color:'#b22626' } //SVG 文本
+                // },
 
                 //扩展图标库
                 IconLibrary:
@@ -40276,16 +40276,16 @@ function JSChartResource()
         "rgb(130,177,255)",
     ];
 
-    //历史数据api
-    this.Index.StockHistoryDayApiUrl="https://opensource.zealink.com/API/StockHistoryDay";
-    //市场多空
-    this.Index.MarketLongShortApiUrl="https://opensource.zealink.com/API/FactorTiming";
-    //市场关注度
-    this.Index.MarketAttentionApiUrl="https://opensource.zealink.com/API/MarketAttention";
-    //行业,指数热度
-    this.Index.MarketHeatApiUrl="https://opensource.zealink.com/API/MarketHeat";
-    //自定义指数热度
-    this.Index.CustomIndexHeatApiUrl="https://opensource.zealink.com/API/QuadrantCalculate";
+    // //历史数据api
+    // this.Index.StockHistoryDayApiUrl="https://opensource.zealink.com/API/StockHistoryDay";
+    // //市场多空
+    // this.Index.MarketLongShortApiUrl="https://opensource.zealink.com/API/FactorTiming";
+    // //市场关注度
+    // this.Index.MarketAttentionApiUrl="https://opensource.zealink.com/API/MarketAttention";
+    // //行业,指数热度
+    // this.Index.MarketHeatApiUrl="https://opensource.zealink.com/API/MarketHeat";
+    // //自定义指数热度
+    // this.Index.CustomIndexHeatApiUrl="https://opensource.zealink.com/API/QuadrantCalculate";
 
     //指标不支持信息
     this.Index.NotSupport={Font:"14px 微软雅黑", TextColor:"rgb(52,52,52)"};
@@ -41932,14 +41932,14 @@ function KLineChartContainer(uielement,OffscreenElement)
     this.AutoUpdateTimer;                       //自动更新定时器
 
     //this.KLineApiUrl="http://opensource.zealink.com/API/KLine2";                  //历史K线api地址
-    this.KLineApiUrl=g_JSChartResource.Domain+"/API/KLine2";                        //历史K线api地址
-    this.MinuteKLineApiUrl=g_JSChartResource.Domain+'/API/KLine3';                  //历史分钟数据
-    this.DragMinuteKLineApiUrl=g_JSChartResource.Domain+'/API/KLine4';              //拖动1分钟K数据下载
-    this.DragKLineApiUrl=g_JSChartResource.Domain+'/API/KLine5';                    //拖动日K数据下载
-    this.RealtimeApiUrl=g_JSChartResource.Domain+"/API/Stock";                      //实时行情api地址
-    this.KLineMatchUrl=g_JSChartResource.Domain+"/API/KLineMatch";                  //形态匹配
-    this.StockHistoryDayApiUrl= g_JSChartResource.Domain+'/API/StockHistoryDay';    //股票历史数据
-    this.TickApiUrl=g_JSChartResource.Domain+'/API/StockDetail';                    //当天分笔数据
+    // this.KLineApiUrl=g_JSChartResource.Domain+"/API/KLine2";                        //历史K线api地址
+    // this.MinuteKLineApiUrl=g_JSChartResource.Domain+'/API/KLine3';                  //历史分钟数据
+    // this.DragMinuteKLineApiUrl=g_JSChartResource.Domain+'/API/KLine4';              //拖动1分钟K数据下载
+    // this.DragKLineApiUrl=g_JSChartResource.Domain+'/API/KLine5';                    //拖动日K数据下载
+    // this.RealtimeApiUrl=g_JSChartResource.Domain+"/API/Stock";                      //实时行情api地址
+    // this.KLineMatchUrl=g_JSChartResource.Domain+"/API/KLineMatch";                  //形态匹配
+    // this.StockHistoryDayApiUrl= g_JSChartResource.Domain+'/API/StockHistoryDay';    //股票历史数据
+    // this.TickApiUrl=g_JSChartResource.Domain+'/API/StockDetail';                    //当天分笔数据
 
     this.MinuteDialog;      //双击历史K线 弹出分钟走势图
     this.RightMenu;         //右键菜单
@@ -55245,8 +55245,8 @@ function ChangeIndexDialog(divElement)
     delete this.newMethod;
 
     this.DivElement=divElement;   //父节点
-    this.IndexTreeApiUrl="https://opensourcecache.zealink.com/cache/hqh5/index/commonindextree.json";               //数据下载地址
-    this.OverlayIndexTreeApiUrl="https://opensourcecache.zealink.com/cache/hqh5/index/commonindextree.json";        //叠加指标列表数据下载地址
+    // this.IndexTreeApiUrl="https://opensourcecache.zealink.com/cache/hqh5/index/commonindextree.json";               //数据下载地址
+    // this.OverlayIndexTreeApiUrl="https://opensourcecache.zealink.com/cache/hqh5/index/commonindextree.json";        //叠加指标列表数据下载地址
     this.IsOverlayIndex=false;
 
     this.Create=function()
@@ -60665,8 +60665,8 @@ if (!JSConsole)
 //API默认地址
 var g_JSComplierResource=
 {
-    Domain : "https://opensource.zealink.com",               //API域名
-    CacheDomain : "https://opensourcecache.zealink.com",      //缓存域名
+    Domain : "https://www.xxx.com",               //API域名
+    CacheDomain : "https://www.xxx.com",      //缓存域名
 
     DrawIcon:
     {  
@@ -81813,37 +81813,37 @@ var BLACK_STYLE=
         MaxMin: { Font: 12*GetDevicePixelRatio() +'px 微软雅黑', Color: 'rgb(255,250,240)' },   //K线最大最小值显示
         Info:  //信息地雷
         {
-            Investor:
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/NewsInteract', //互动易
-                    IconFont: { Family:'iconfont', Text:'\ue631' , HScreenText:'\ue684', Color:'#1c65db'} //SVG 文本
-                },
-                Announcement:                                           //公告
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/ReportList',
-                    IconFont: { Family:'iconfont', Text:'\ue633', HScreenText:'\ue685', Color:'#f5a521' }, //SVG 文本
-                    IconFont2: { Family:'iconfont', Text:'\ue634', HScreenText:'\ue686', Color:'#ed7520' } //SVG 文本 //季报
-                },
-                Pforecast:  //业绩预告
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
-                    IconFont: { Family:'iconfont', Text:'\ue62e', HScreenText:'\ue687', Color:'#986cad' } //SVG 文本
-                },
-                Research:   //调研
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/InvestorRelationsList',
-                    IconFont: { Family:'iconfont', Text:'\ue632', HScreenText:'\ue688', Color:'#19b1b7' } //SVG 文本
-                },
-                BlockTrading:   //大宗交易
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
-                    IconFont: { Family:'iconfont', Text:'\ue630', HScreenText:'\ue689', Color:'#f39f7c' } //SVG 文本
-                },
-                TradeDetail:    //龙虎榜
-                {
-                    ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
-                    IconFont: { Family:'iconfont', Text:'\ue62f', HScreenText:'\ue68a' ,Color:'#b22626' } //SVG 文本
-                }
+            // Investor:
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/NewsInteract', //互动易
+                //     IconFont: { Family:'iconfont', Text:'\ue631' , HScreenText:'\ue684', Color:'#1c65db'} //SVG 文本
+                // },
+                // Announcement:                                           //公告
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/ReportList',
+                //     IconFont: { Family:'iconfont', Text:'\ue633', HScreenText:'\ue685', Color:'#f5a521' }, //SVG 文本
+                //     IconFont2: { Family:'iconfont', Text:'\ue634', HScreenText:'\ue686', Color:'#ed7520' } //SVG 文本 //季报
+                // },
+                // Pforecast:  //业绩预告
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
+                //     IconFont: { Family:'iconfont', Text:'\ue62e', HScreenText:'\ue687', Color:'#986cad' } //SVG 文本
+                // },
+                // Research:   //调研
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/InvestorRelationsList',
+                //     IconFont: { Family:'iconfont', Text:'\ue632', HScreenText:'\ue688', Color:'#19b1b7' } //SVG 文本
+                // },
+                // BlockTrading:   //大宗交易
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
+                //     IconFont: { Family:'iconfont', Text:'\ue630', HScreenText:'\ue689', Color:'#f39f7c' } //SVG 文本
+                // },
+                // TradeDetail:    //龙虎榜
+                // {
+                //     ApiUrl:'https://opensource.zealink.com/API/StockHistoryDay',
+                //     IconFont: { Family:'iconfont', Text:'\ue62f', HScreenText:'\ue68a' ,Color:'#b22626' } //SVG 文本
+                // }
 
         },
         NumIcon:
@@ -81877,7 +81877,7 @@ var BLACK_STYLE=
             "rgb(42,230,215)",
             "rgb(24,71,178)",
         ],
-        NotSupport: { Font: "14px 微软雅黑", TextColor: "rgb(52,52,52)" }
+        NotSupport: { Font: 14*GetDevicePixelRatio() +"px 微软雅黑", TextColor: "rgb(52,52,52)" }
     },
       
     ColorArray:       //自定义指标默认颜色
@@ -81962,9 +81962,251 @@ var BLACK_STYLE=
     
 };
 
+var WHITE_STYLE=    //白色风格
+{
+    BGColor:'rgb(255,255,255)',
+    TooltipBGColor: "rgb(255, 255, 255)", //背景色
+    TooltipAlpha: 0.92,                  //透明度
+
+    SelectRectBGColor:"rgba(1,130,212,0.06)", //背景色
+    //   this.SelectRectAlpha=0.06;                  //透明度
+
+    UpBarColor: "rgb(238,21,21)",
+    DownBarColor: "rgb(25,158,0)",
+    UnchagneBarColor: "rgb(0,0,0)",
+	EmptyBarBGColor:'rgb(0,0,0)',   //空心柱子背景色
+
+    Minute:
+    {
+        VolBarColor : "rgb(238,127,9)",
+        PriceColor : "rgb(50,171,205)",
+		AreaPriceColor:"rgba(63,158,255,.3)",
+        AvPriceColor : "rgb(238,127,9)",
+		PositionColor:'rgb(218,165,32)', 
+        VolTitleColor:"rgb(190,190,190)",
+        Before:
+        {
+            BGColor:"rgba(105,105,105,0.5)",
+            AvPriceColor:'rgb(248,248,255)'     //均线
+        }
+    },
+
+    DefaultTextColor: "rgb(43,54,69)",
+	DefaultTextFont: 14*GetDevicePixelRatio() +'px 微软雅黑',
+	TitleFont: 13*GetDevicePixelRatio() +'px 微软雅黑',    //标题字体(动态标题 K线及指标的动态信息字体)
+
+    DynamicTitleFont: 12*GetDevicePixelRatio() +'px 微软雅黑', //指标动态标题字体
+
+
+    UpTextColor: "rgb(238,21,21)",
+    DownTextColor: "rgb(25,158,0)",
+    UnchagneTextColor: "rgb(0,0,0)",
+    CloseLineColor: 'rgb(178,34,34)',
+
+	Title:
+		{
+			TradeIndexColor:'rgb(105,105,105)', //交易指标颜色
+			ColorIndexColor:'rgb(112,128,144)',  //五彩K线颜色
+
+			VolColor:"rgb(101,104,112)",       //标题成交量
+			AmountColor:"rgb(101,104,112)",    //成交金额 
+			DateTimeColor:"rgb(101,104,112)",  //时间,日期  
+			SettingColor:"rgb(101,104,112)",   //周期,复权
+			NameColor:"rgb(101,104,112)" ,     //股票名称
+			TurnoverRateColor:'rgb(101,104,112)',       //换手率
+			PositionColor:"rgb(101,104,112)"       //持仓
+		},
+
+    FrameBorderPen: "rgb(225,236,242)",     //边框
+    FrameSplitPen: "rgb(225,236,242)",          //分割线
+    FrameSplitTextColor: "rgb(51,51,51)",     //刻度文字颜色
+    FrameSplitTextFont: 12*GetDevicePixelRatio() +"px 微软雅黑",        //坐标刻度文字字体
+    FrameTitleBGColor: "rgb(246,251,253)",      //标题栏背景色
+
+	Frame:
+		{ 
+			XBottomOffset:1*GetDevicePixelRatio(), //X轴文字向下偏移
+		   
+			PercentageText:      //百分比坐标文字颜色
+			{ 
+				PriceColor:'rgb(101,104,112)', 
+				PercentageColor:"rgb(101,104,112)", 
+				SplitColor:"rgb(101,104,112)",
+				Font:14*GetDevicePixelRatio() +"px 微软雅黑"
+			}
+		},   
+		
+    FrameLatestPrice : {
+        TextColor:'rgb(255,255,255)',   //最新价格文字颜色
+        UpBarColor:"rgb(238,21,21)",    //上涨
+        DownBarColor:"rgb(25,158,0)",   //下跌
+        UnchagneBarColor:"rgb(190,190,190)",   //平盘
+        BGAlpha:0.6
+    },
+
+    CorssCursorBGColor: "rgb(130,130,130)",            //十字光标背景
+    CorssCursorTextColor: "rgb(255,255,255)",
+    CorssCursorTextFont: 12*GetDevicePixelRatio() +"px 微软雅黑",
+    CorssCursorPenColor: "rgb(130,130,130)",           //十字光标线段颜色
+	CorssCursorHPenColor: "rgb(130,130,130)",           //十字光标线段颜色
+    CorssCursorVPenColor: "rgb(130,130,130)",           //十字光标线段颜色
+
+    KLine:
+    {
+        MaxMin: { Font: 12*GetDevicePixelRatio() +'px 微软雅黑', Color: 'rgb(111,111,111)' },   //K线最大最小值显示
+        Info:  //信息地雷
+        {
+            Color: 'rgb(205,149,12)',
+            TextColor: '#197de9',
+            TextBGColor: '#e1e4ef',
+            // Investor:
+            // {
+            //     ApiUrl: '/API/NewsInteract', //互动易
+            // },
+            // Announcement:                                           //公告
+            // {
+            //     ApiUrl: '/API/ReportList',
+            // },
+            // Pforecast:  //业绩预告
+            // {
+            //     ApiUrl: '/API/StockHistoryDay',
+            // },
+            // Research:   //调研
+            // {
+            //     ApiUrl: '/API/InvestorRelationsList',
+            // },
+            // BlockTrading:   //大宗交易
+            // {
+            //     ApiUrl: '/API/StockHistoryDay',
+            // },
+            // TradeDetail:    //龙虎榜
+            // {
+            //     ApiUrl: '/API/StockHistoryDay',
+            // },
+            // Policy: //策略
+            // {
+            //     ApiUrl: '/API/StockHistoryDay',
+            // }
+        },
+		NumIcon:
+        {
+            Color:'rgb(251,80,80)',Family:'iconfont',
+            Text:[  '\ue649',
+                    '\ue63b','\ue640','\ue63d','\ue63f','\ue645','\ue641','\ue647','\ue648','\ue646','\ue636',
+                    '\ue635','\ue637','\ue638','\ue639','\ue63a','\ue63c','\ue63e','\ue642','\ue644','\ue643'
+                ]
+        },
+        TradeIcon:  //交易指标 图标
+        {
+            Family:'iconfont', 
+            Buy: { Color:'rgb(255,15,4)', Text:'\ue683', HScreenText:'\ue682'}, 
+            Sell: { Color:'rgb(64,122,22)', Text:'\ue681',HScreenText:'\ue680'},
+        }
+    },
+
+    Index: 
+    {      //指标线段颜色
+        LineColor: 
+        [
+            "rgb(255,189,09)",
+            "rgb(22,198,255)",
+            "rgb(174,35,161)",
+            "rgb(236,105,65)",
+            "rgb(68,114,196)",
+            "rgb(229,0,79)",
+            "rgb(0,128,255)",
+            "rgb(252,96,154)",
+            "rgb(42,230,215)",
+            "rgb(24,71,178)",
+        ],
+        NotSupport: { Font: 14*GetDevicePixelRatio() +"px 微软雅黑", TextColor: "rgb(52,52,52)" }
+    },
+
+    ColorArray:       //自定义指标默认颜色
+    [
+        "rgb(255,174,0)",
+        "rgb(25,199,255)",
+        "rgb(175,95,162)",
+        "rgb(236,105,65)",
+        "rgb(68,114,196)",
+        "rgb(229,0,79)",
+        "rgb(0,128,255)",
+        "rgb(252,96,154)",
+        "rgb(42,230,215)",
+        "rgb(24,71,178)",
+    ],
+
+    //画图工具
+    DrawPicture:
+    {
+        LineColor: "rgb(30,144,255)",
+        PointColor: "rgb(105,105,105)",
+    },
+	TooltipPaint : 
+    {
+        BGColor:'rgba(80, 80, 80, 0.9)',    //背景色
+        BorderColor:'rgb(210,210,210)',     //边框颜色
+        TitleColor:'rgb(210,210,210)',       //标题颜色
+        TitleFont:13*GetDevicePixelRatio() +'px 微软雅黑',   //字体
+        DateTimeColor:'rgb(210,210,210)',
+        VolColor:"rgb(210,210,210)",       //标题成交量
+        AmountColor:"rgb(210,210,210)",    //成交金额
+    },
+
+    //走势图 信息地雷
+    MinuteInfo:
+    {
+        TextColor: 'rgb(84,143,255)',
+        Font: 14*GetDevicePixelRatio() +'px 微软雅黑',
+        PointColor:'rgb(38,113,254)',
+        LineColor:'rgb(120,167,255)',
+        TextBGColor:'rgba(255,255,255,1)'
+    },
+
+    //筹码分布图
+    StockChip:
+    {
+        InfoColor:'rgb(255,255,255)', //文字颜色
+        DayInfoColor:'rgb(0,0,0)' //周期颜色内文字颜色
+    },
+
+    //深度图
+    DepthChart:
+    {
+        BidColor: { Line:"rgb(82,176,123)", Area:"rgba(82,176,123,0.5)"},  //卖
+        AskColor: { Line:"rgb(207,76,89)", Area:"rgba(207,76,89, 0.5)"},   //买
+        LineWidth:4
+    },
+
+    DepthCorss:
+    {
+        BidColor: { Line:"rgb(82,176,123)" },  //卖
+        AskColor: { Line:"rgb(207,76,89)" },   //买
+        LineWidth:2,    //线段宽度
+        LineDash:[3,3],
+        Tooltip:
+        { 
+            BGColor:'rgba(54,54,54, 0.8)', TextColor:"rgb(203,215,224)",
+            Border:{ Top:5, Left:20, Bottom:5, Center: 5},
+            Font:14*GetDevicePixelRatio() +"px 微软雅黑",
+            LineHeight:16   //单行高度
+        }
+    },
+
+    //区间选择
+    RectSelect:
+    {
+        LineColor:"rgb(115,83,64)",          //竖线  
+        LineWidth:1*GetDevicePixelRatio(),
+        LineDotted:[3,3], 
+        AreaColor:"rgba(26,13,7,0.5)",     //面积
+    }
+}
+
 var STYLE_TYPE_ID=
 {
     BLACK_ID:1, //黑色风格
+	WHITE_ID:2  //白色风格
 }
 
 function HQChartStyle()
@@ -81975,16 +82217,17 @@ function HQChartStyle()
 HQChartStyle.GetStyleConfig=function(styleid)    //获取一个风格的配置变量
 {
   switch (styleid)
-  {
-      case STYLE_TYPE_ID.BLACK_ID:
-          return BLACK_STYLE;
-      default:
-          return null;
-  }
+    {
+        case STYLE_TYPE_ID.BLACK_ID:
+            return BLACK_STYLE;
+            break;
+        case STYLE_TYPE_ID.WHITE_ID:
+            return WHITE_STYLE;
+            break;  
+        default:
+            return null;
+    }
 }
-
-
-
 
 
 /*

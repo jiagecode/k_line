@@ -10,7 +10,7 @@
 			</view>
 			<view style="margin-top: 45rpx;">
 				<block v-for="(item, index) of marketsList" :key="index">
-					<view class="d-flex" style="height: 115rpx;" @tap="toKline">
+					<view class="d-flex" style="height: 115rpx;" @tap="toKline(item)">
 						<view style="margin-top: -4rpx; margin-left: 30rpx; width: 60rpx;">{{index + 1}}</view>
 						<!-- 市值 -->
 						<view style="width: 200rpx; ">
@@ -77,10 +77,14 @@
 			}
 		},
 		methods: {
-			toKline(){
+			toKline(item){
 				console.clear("toKline");
-				uni.navigateTo({
-					url: '../kline/kline'
+				// uni.navigateTo({
+				// 	url: '../kline/kline'
+				// });
+				uni.$emit("ChangeSymbol",item);
+				uni.switchTab({
+				    url: '../kline/kline'
 				});
 			}
 		},
