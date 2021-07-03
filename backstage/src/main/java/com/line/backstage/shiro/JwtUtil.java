@@ -35,7 +35,7 @@ public class JwtUtil {
     public static String sign(String userId, String secret) {
         Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         Algorithm algorithm = Algorithm.HMAC256(secret);
-        // 附带username信息
+        // 设置token和过期时间
         return JWT.create()
                 .withClaim(USER_ID, userId)
                 .withExpiresAt(date)

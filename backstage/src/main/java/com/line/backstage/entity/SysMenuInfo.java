@@ -1,113 +1,145 @@
 package com.line.backstage.entity;
 
 import com.line.backstage.bases.QueryRequest;
-
-import java.util.Date;
-import java.io.Serializable;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
  
 /**
- * 后台管理系统菜单表(SysMenuInfo)实体类
+ * 菜单表(SysMenuInfo)实体类
  *
  * @author Zy
- * @since 2021-07-01 11:35:35
+ * @since 2021-07-03 10:18:13
  */
 @Data
 @Table(name = "t_sys_menu_info")
-@ApiModel("后台管理系统菜单表")
+@ApiModel("菜单表")
 public class SysMenuInfo extends QueryRequest implements Serializable {
  
-    private static final long serialVersionUID = -95619408042321594L;
-    
-    /**
-    * 菜单id
-    */         
+    private static final long serialVersionUID = 224485757094210450L;
+
+    @Transient
+    public static final Integer ROOT = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
-    @ApiModelProperty("菜单id")
+    @ApiModelProperty("$column.comment")
     private Integer menuId;
     
     /**
-    * 菜单名
+    * 节点上级ID
     */            
-    @ApiModelProperty("菜单名")
+    @ApiModelProperty("节点上级ID")
+    private Integer parentId;
+    
+    /**
+    * 节点所有上级ID
+    */            
+    @ApiModelProperty("节点所有上级ID")
+    private String parentIds;
+    
+    /**
+    * 当前层级排序号
+    */            
+    @ApiModelProperty("当前层级排序号")
+    private Integer treeSort;
+    
+    /**
+    * 节点所有上级编码
+    */            
+    @ApiModelProperty("节点所有上级编码")
+    private String treeSorts;
+    
+    /**
+    * 是否是叶子节点（0否/1是
+    */            
+    @ApiModelProperty("是否是叶子节点（0否/1是")
+    private String treeLeaf;
+    
+    /**
+    * 节点层级
+    */            
+    @ApiModelProperty("节点层级")
+    private Integer treeLevel;
+    
+    /**
+    * 全节点全名称
+    */            
+    @ApiModelProperty("全节点全名称")
+    private String treeNames;
+    
+    /**
+    * 菜单名称
+    */            
+    @ApiModelProperty("菜单名称")
     private String menuName;
     
     /**
-    * 描述
+    * 菜单类型:1目录2菜单3按钮
     */            
-    @ApiModelProperty("描述")
-    private String menuDesc;
+    @ApiModelProperty("菜单类型:1目录2菜单3按钮")
+    private Integer menuType;
     
     /**
-    * 路径
+    * vue菜单访问路径
     */            
-    @ApiModelProperty("路径")
-    private String menuUrl;
+    @ApiModelProperty("vue菜单访问路径")
+    private String menuHref;
     
     /**
-    * 菜单类型
+    * vue组件名称
     */            
-    @ApiModelProperty("菜单类型")
-    private Object menuType;
+    @ApiModelProperty("vue组件名称")
+    private String menuComponent;
     
     /**
-    * 菜单状态
+    * vue组件图标
     */            
-    @ApiModelProperty("菜单状态")
-    private Object menuStatus;
+    @ApiModelProperty("vue组件图标")
+    private String menuIcon;
     
     /**
-    * 创建时间
+    * 1-显示菜单，2-隐藏菜单
     */            
-    @ApiModelProperty("创建时间")
-    private Date addDate;
+    @ApiModelProperty("1-显示菜单，2-隐藏菜单")
+    private Integer showType;
     
     /**
-    * 创建人
+    * vue组件权限
     */            
-    @ApiModelProperty("创建人")
+    @ApiModelProperty("vue组件权限")
+    private String permission;
+    
+    /**
+    * 备注
+    */            
+    @ApiModelProperty("备注")
+    private String remarks;
+    
+                
+    @ApiModelProperty("$column.comment")
     private Integer addUserId;
     
-    /**
-    * 修改时间
-    */            
-    @ApiModelProperty("修改时间")
-    private Date editDate;
+                
+    @ApiModelProperty("$column.comment")
+    private Date addTime;
     
-    /**
-    * 修改人
-    */            
-    @ApiModelProperty("修改人")
+                
+    @ApiModelProperty("$column.comment")
     private Integer editUserId;
     
-    /**
-    * 上级id
-    */            
-    @ApiModelProperty("上级id")
-    private Integer superId;
+                
+    @ApiModelProperty("$column.comment")
+    private Date editTime;
     
     /**
-    * 菜单结构 ‘-’分割
+    * 数据状态1 有效 0无效
     */            
-    @ApiModelProperty("菜单结构 ‘-’分割")
-    private String menuIndex;
-    
-    /**
-    * 菜单等级
-    */            
-    @ApiModelProperty("菜单等级")
-    private Object menuLevel;
-    
-    /**
-    * 数据状态
-    */            
-    @ApiModelProperty("数据状态")
-    private Object del;
+    @ApiModelProperty("数据状态1 有效 0无效")
+    private Integer del;
     
 }

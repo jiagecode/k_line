@@ -3,6 +3,8 @@ package com.line.backstage.service;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.utils.PageWrapper;
 
+import java.util.Map;
+
 /**
  * 用户信息(UserInfo)表服务实现类
  *
@@ -63,4 +65,18 @@ public interface UserInfoService {
      * @return 对象列表
      */
     PageWrapper<UserInfo> list(Integer loginUserId, UserInfo userInfo);
+
+    /**
+     * 用户登录
+     * @param userInfo
+     * @return
+     */
+    UserInfo login(UserInfo userInfo);
+
+    /**
+     * 查询当前用户的权限菜单信息
+     * @param userId
+     * @return
+     */
+    Map getUserInfo(String userId);
 }

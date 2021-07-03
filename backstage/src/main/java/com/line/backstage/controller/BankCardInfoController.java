@@ -75,7 +75,7 @@ public class BankCardInfoController {
      * @param bankCardInfo 查询条数
      * @return 对象列表
      */
-    @PostMapping("list")
+    @PostMapping("queryMyBankCard")
     @ApiOperation(value = "列表", notes = "查询银行卡信息的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "银行卡信息对象", required = true) @RequestBody BankCardInfo bankCardInfo) {
         return ResponseHelper.success(bankCardInfoService.list(Integer.valueOf(loginUserId), bankCardInfo));

@@ -75,7 +75,7 @@ public class OrderInfoController {
      * @param orderInfo 查询条数
      * @return 对象列表
      */
-    @PostMapping("list")
+    @PostMapping("queryMyOrder")
     @ApiOperation(value = "列表", notes = "查询订单信息的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单信息对象", required = true) @RequestBody OrderInfo orderInfo) {
         return ResponseHelper.success(orderInfoService.list(Integer.valueOf(loginUserId), orderInfo));

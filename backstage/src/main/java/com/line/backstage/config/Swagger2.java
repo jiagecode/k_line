@@ -34,7 +34,7 @@ public class Swagger2 {
         return new ApiInfoBuilder()
                 .title("woSen猎头")
                 .description("寻找发光的你")
-                .termsOfServiceUrl("http://192.168.110.76/")
+                .termsOfServiceUrl("http://192.168.1.9/")
                 .version("1.0")
                 .contact("我是你嘉哥哦~")
                 .build();
@@ -55,7 +55,7 @@ public class Swagger2 {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("controllerApi")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.wosen.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.line.backstage.controller"))
                 .build()
                 .apiInfo(apiInfo())
                 .enable(enable);

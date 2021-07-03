@@ -88,7 +88,7 @@ public class BankCardInfo extends QueryRequest implements Serializable {
     * 卡状态 0-可用 1-禁用
     */            
     @ApiModelProperty("卡状态 0-可用 1-禁用")
-    private Object cardStatus;
+    private Integer cardStatus;
     
     /**
     * 创建时间
@@ -118,6 +118,6 @@ public class BankCardInfo extends QueryRequest implements Serializable {
     * 数据状态
     */            
     @ApiModelProperty("数据状态")
-    private Object del;
+    private Integer del;
     
 }

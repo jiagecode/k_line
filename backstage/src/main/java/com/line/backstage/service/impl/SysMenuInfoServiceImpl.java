@@ -1,22 +1,22 @@
 package com.line.backstage.service.impl;
  
-import com.line.backstage.entity.SysMenuInfo;
-import com.line.backstage.enums.DataEnum;
-import com.line.backstage.utils.PageWrapper;
-import com.line.backstage.dao.mapper.SysMenuInfoMapper;
-import com.line.backstage.service.SysMenuInfoService;
-import org.springframework.stereotype.Service;
-import java.util.Date;
- 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.line.backstage.dao.mapper.SysMenuInfoMapper;
+import com.line.backstage.entity.SysMenuInfo;
+import com.line.backstage.enums.DataEnum;
+import com.line.backstage.service.SysMenuInfoService;
+import com.line.backstage.utils.PageWrapper;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.util.Date;
  
 /**
- * 后台管理系统菜单表(SysMenuInfo)表服务实现类
+ * 菜单表(SysMenuInfo)表服务实现类
  *
  * @author Zy
- * @since 2021-07-01 11:35:35
+ * @since 2021-07-03 10:27:30
  */
 @Service("sysMenuInfoService")
 public class SysMenuInfoServiceImpl implements SysMenuInfoService {
@@ -67,7 +67,7 @@ public class SysMenuInfoServiceImpl implements SysMenuInfoService {
     public int delete(Integer loginUserId, Integer menuId) {
 		SysMenuInfo sysMenuInfo = sysMenuInfoMapper.selectByPrimaryKey(menuId);
         sysMenuInfo.setEditUserId(loginUserId);
-        sysMenuInfo.setEditDate(new Date());
+        sysMenuInfo.setEditTime(new Date());
         sysMenuInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         return sysMenuInfoMapper.updateByPrimaryKeySelective(sysMenuInfo);
     }

@@ -1,6 +1,6 @@
 #项目参数配置
 server:
-  port: 1668
+  port: 1686
   tomcat:
     max-http-form-post-size: 8192
     uri-encoding: utf-8 #编码格式
@@ -14,6 +14,7 @@ spring:
   #mysql数据库相关配置      时区问题，serverTimezone=UTC，将这个UTC改成serverTimezone=CTT即可，CTT（Asia&Shanghai）北京时间。UTC：世界统一时间，世界标准时间，国际协调时间
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true?tinyInt1isBit=false
     url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
     password: 123456

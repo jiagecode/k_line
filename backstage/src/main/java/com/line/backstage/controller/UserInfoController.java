@@ -2,17 +2,21 @@ package com.line.backstage.controller;
 
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.UserInfo;
+import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.UserInfoService;
+import com.line.backstage.shiro.JwtUtil;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.shiro.authc.LockedAccountException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
- 
+import java.util.Objects;
+
 /**
  * 用户信息(UserInfo)表控制层
  *
@@ -67,6 +71,17 @@ public class UserInfoController {
     public ResponseModel queryById(@ApiParam(value = "用户信息主键userId", required = true) @PathVariable("userId") Integer userId){
         return ResponseHelper.success(userInfoService.queryById(userId));
     }
+
+    /**
+     * 根据token的用户id
+     *
+     * @return 实例对象
+     */
+    @GetMapping("getUserInfo")
+    @ApiOperation(value = "查询单条数据", notes = "根据token的用户id}")
+    public ResponseModel getUserInfo(@ApiParam(value = "用户信息主键userId", required = true) @LoginUserId String loginUserId){
+        return ResponseHelper.success(userInfoService.queryById(Integer.valueOf(loginUserId)));
+    }
  
     /**
      * 查询多条数据
@@ -80,5 +95,28 @@ public class UserInfoController {
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户信息对象", required = true) @RequestBody UserInfo userInfo) {
         return ResponseHelper.success(userInfoService.list(Integer.valueOf(loginUserId), userInfo));
     }
- 
+
+    /**
+     * 登陆
+     * @param userInfo
+     * @return
+     */
+    @PostMapping("login")
+    public ResponseModel login(@ApiParam(value = "用户信息对象", required = true) @RequestBody UserInfo userInfo) {
+
+        UserInfo user = userInfoService.login(userInfo);
+        if (user != null) {
+
+            if (Objects.equals(DataEnum.USER_DEL_STATUS.getCode(), user.getDelStatus())) {
+                throw new LockedAccountException(DataEnum.USER_DEL_STATUS.getDesc());
+            } else if (Objects.equals(DataEnum.USER_FORBID_FLAG.getCode(), user.getUserForbidFlag())) {
+                throw new LockedAccountException(DataEnum.USER_FORBID_FLAG.getDesc());
+            } else {
+                String token = JwtUtil.sign(String.valueOf(user.getUserId()), userInfo.getUserPassword());
+                return ResponseHelper.success(token);
+            }
+        } else {
+            return ResponseHelper.failedWith(DataEnum.USER_ERROR.getDesc());
+        }
+    }
 }

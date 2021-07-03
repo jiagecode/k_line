@@ -1,28 +1,29 @@
 package com.line.backstage.entity;
 
 import com.line.backstage.bases.QueryRequest;
-
-import java.util.Date;
-import java.io.Serializable;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Date;
  
 /**
  * 后台管理系统用户表(SysUserInfo)实体类
  *
  * @author Zy
- * @since 2021-07-01 11:36:19
+ * @since 2021-07-02 10:16:06
  */
 @Data
 @Table(name = "t_sys_user_info")
 @ApiModel("后台管理系统用户表")
 public class SysUserInfo extends QueryRequest implements Serializable {
  
-    private static final long serialVersionUID = -34593848385249339L;
+    private static final long serialVersionUID = -44175677178704398L;
     
     /**
     * 后台用户id
@@ -31,10 +32,10 @@ public class SysUserInfo extends QueryRequest implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
     @ApiModelProperty("后台用户id")
     private Integer sysUserId;
-    
+
     /**
-    * 登录账号
-    */            
+     * 登录账号
+     */
     @ApiModelProperty("登录账号")
     private String sysUserCode;
     
@@ -96,6 +97,6 @@ public class SysUserInfo extends QueryRequest implements Serializable {
     * 数据状态
     */            
     @ApiModelProperty("数据状态")
-    private Object del;
+    private Integer del;
     
 }

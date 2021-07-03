@@ -48,7 +48,7 @@ public class AccountInfo extends QueryRequest implements Serializable {
     * 账户状态 0-正常 1-禁止提现 
     */            
     @ApiModelProperty("账户状态 0-正常 1-禁止提现 ")
-    private Object accountStatus;
+    private Integer accountStatus;
     
     /**
     * 创建日期
@@ -78,6 +78,6 @@ public class AccountInfo extends QueryRequest implements Serializable {
     * 数据状态
     */            
     @ApiModelProperty("数据状态")
-    private Object del;
+    private Integer del;
     
 }
