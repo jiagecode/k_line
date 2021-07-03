@@ -71,5 +71,5 @@ public interface SkuCusInfoService {
      * @param loginUserId
      * @return
      */
-    List<String> queryMyCusCode(Integer loginUserId);
+    String queryMyCusCode(Integer loginUserId);
 }

@@ -6,22 +6,22 @@
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="userNickName" column="USER_NICK_NAME" jdbcType="VARCHAR"/>
         <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
-        <result property="userGender" column="USER_GENDER" jdbcType="OTHER"/>
+        <result property="userGender" column="USER_GENDER" jdbcType="INTEGER"/>
         <result property="userPassword" column="USER_PASSWORD" jdbcType="VARCHAR"/>
         <result property="userHeadImg" column="USER_HEAD_IMG" jdbcType="VARCHAR"/>
         <result property="userPhone" column="USER_PHONE" jdbcType="VARCHAR"/>
         <result property="userRefereeId" column="USER_REFEREE_ID" jdbcType="INTEGER"/>
-        <result property="userType" column="USER_TYPE" jdbcType="OTHER"/>
-        <result property="userLevel" column="USER_LEVEL" jdbcType="OTHER"/>
+        <result property="userType" column="USER_TYPE" jdbcType="INTEGER"/>
+        <result property="userLevel" column="USER_LEVEL" jdbcType="INTEGER"/>
         <result property="userCardNo" column="USER_CARD_NO" jdbcType="VARCHAR"/>
         <result property="userRegisterDate" column="USER_REGISTER_DATE" jdbcType="TIMESTAMP"/>
-        <result property="userForbidFlag" column="USER_FORBID_FLAG" jdbcType="OTHER"/>
+        <result property="userForbidFlag" column="USER_FORBID_FLAG" jdbcType="INTEGER"/>
         <result property="userRefereeCode" column="USER_REFEREE_CODE" jdbcType="VARCHAR"/>
-        <result property="userRefereeAble" column="USER_REFEREE_ABLE" jdbcType="OTHER"/>
+        <result property="userRefereeAble" column="USER_REFEREE_ABLE" jdbcType="INTEGER"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="lastLoginDate" column="LAST_LOGIN_DATE" jdbcType="TIMESTAMP"/>
-        <result property="delStatus" column="DEL_STATUS" jdbcType="OTHER"/>
+        <result property="delStatus" column="DEL_STATUS" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>

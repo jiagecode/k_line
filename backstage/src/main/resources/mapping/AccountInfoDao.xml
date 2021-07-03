@@ -6,12 +6,12 @@
         <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="accountMoney" column="ACCOUNT_MONEY" jdbcType="NUMERIC"/>
-        <result property="accountStatus" column="ACCOUNT_STATUS" jdbcType="OTHER"/>
+        <result property="accountStatus" column="ACCOUNT_STATUS" jdbcType="INTEGER"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
-        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryMyAccountIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
