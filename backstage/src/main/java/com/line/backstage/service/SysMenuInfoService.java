@@ -2,7 +2,9 @@ package com.line.backstage.service;
  
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.Map;
+
 /**
  * 后台管理系统菜单表(SysMenuInfo)表服务实现类
  *
@@ -63,4 +65,15 @@ public interface SysMenuInfoService {
      * @return 对象列表
      */
     PageWrapper<SysMenuInfo> list(Integer loginUserId, SysMenuInfo sysMenuInfo);
+
+    /**
+     * 新增
+     * @param userId
+     * @param menu
+     * @return
+     */
+    int insertForOne(Integer userId, SysMenuInfo menu);
+    int updateForOne(Integer userId, SysMenuInfo menu);
+    int deleteForOne(Integer userId, SysMenuInfo menu);
+    Map<String,Object> queryMyMenuList(Integer loginUserId, SysMenuInfo sysMenuInfo);
 }

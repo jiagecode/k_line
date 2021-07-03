@@ -41,4 +41,41 @@
                     role_id = #{roleid})
         order by tree_sort
     </select>
+    <select id="queryRoleIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select SYS_ROLE_ID FROM t_sys_user_info WHERE DEL = 1 AND SYS_USER_ID = #{userId}
+    </select>
+
+    <select id="queryMenuListByRoleId" parameterType="java.lang.Integer" resultMap="SysMenuInfoMap">
+        select
+            MENU_ID,PARENT_ID,PARENT_IDS,TREE_SORT,TREE_SORTS,TREE_LEAF,TREE_LEVEL,
+            TREE_NAMES,MENU_NAME,MENU_TYPE,MENU_HREF,MENU_COMPONENT,MENU_ICON,SHOW_TYPE,
+            PERMISSION,REMARKS,ADD_USER_ID,ADD_TIME,EDIT_USER_ID,EDIT_TIME,DEL
+        from
+            t_sys_menu_info
+        where
+          MENU_ID in ( select menu_id from t_sys_power where role_id = #{roleId}) and DEL = 1
+        order by tree_sort
+    </select>
+    <select id="findByParentIdsLike" parameterType="java.lang.String" resultMap="SysMenuInfoMap">
+        SELECT
+            MENU_ID,PARENT_ID,PARENT_IDS,TREE_SORT,TREE_SORTS,TREE_LEAF,TREE_LEVEL,
+            TREE_NAMES,MENU_NAME,MENU_TYPE,MENU_HREF,MENU_COMPONENT,MENU_ICON,SHOW_TYPE,
+            PERMISSION,REMARKS,ADD_USER_ID,ADD_TIME,EDIT_USER_ID,EDIT_TIME,DEL
+        FROM
+            t_sys_menu_info
+        WHERE
+            DEL = 1 AND PARENT_IDS LIKE CONCAT('%', #{parentIdsLike}, '%')
+        ORDER BY
+        tree_sort
+    </select>
+
+    <!--查询某个菜单是否有子节点-->
+    <select id="getChildCountByMenuId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(menu_id)
+        FROM
+            t_sys_menu_info
+        WHERE
+            DEL = 1 AND   PARENT_IDS LIKE CONCAT('%', #{parentIdsLike}, '%')
+    </select>
 </mapper>

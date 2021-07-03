@@ -7,10 +7,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.line.backstage.dao.mapper.SysMenuInfoMapper;
 import com.line.backstage.dao.mapper.SysUserInfoMapper;
+import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.entity.SysUserInfo;
+import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
+import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.MenuRouteVo;
@@ -42,6 +45,8 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
 
     @Resource
     private SysMenuInfoMapper sysMenuInfoMapper;
+    @Resource
+    private UserInfoMapper userInfoMapper;
     /**
      * 保存数据
      *
@@ -126,6 +131,31 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }
+    /**
+     * 分页查询用户列表
+     * @param loginUserId
+     * @param userVo
+     * @return
+     */
+    @Override
+    public PageWrapper<ManUserVo> queryManUserVoForPage(Integer loginUserId, ManUserVo userVo) {
+        PageHelper.startPage(userVo.getPageNum(), userVo.getPageSize());
+        if(userVo.getDel() == null){
+            //可查无效用户 默认查有效
+            userVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        if(userVo.getQueryDateFlag() != null){
+            if(userVo.getBeginDate() == null){
+                userVo.setBeginDate(DateUtil.getStartTimeOfToday());
+            }
+            if(userVo.getEndDate() == null){
+                userVo.setEndDate(DateUtil.getEndTimeOfDay(new Date()));
+            }
+        }
+        PageInfo<ManUserVo> page = new PageInfo<>(userInfoMapper.queryManUserVoList(userVo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
+    }
 
     @Override
     public SysUserInfo login(SysUserInfo sysUserInfo) {
@@ -142,13 +172,13 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     @Override
     public Map getUserInfo(Integer userId) {
 
-        //FIXME 待优化，用户信息加入redis缓存
+        //FIXME 待优化，用户信息加入redis缓存红利BONUS 佣金
         SysUserInfo user = sysUserInfoMapper.selectByPrimaryKey(userId);
 
         //获取用户的角色、权限字符串及菜单路由
         Set<String> roles = Sets.newHashSet();
         roles.add(user.getSysUserName());
-        List<SysMenuInfo> menus = sysMenuInfoMapper.findByRoleId(user.getSysRoleId());
+        List<SysMenuInfo> menus = sysMenuInfoMapper.queryMenuListByRoleId(user.getSysRoleId());
         Set<String> permissions = Sets.newHashSet();
 
         // 权限暂时不要

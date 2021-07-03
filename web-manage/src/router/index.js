@@ -109,7 +109,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: 'noRedirect',
     meta: {
-      title: '商户管理',
+      title: '用户管理',
       icon: 'excel'
     },
     children: [
@@ -117,7 +117,18 @@ export const constantRoutes = [
         path: 'index',
         name: 'index',
         component: () => import('@/views/form/index'),
-        meta: { title: '商户管理' }
+        meta: { title: '用户列表' }
+      },
+      {
+        path: 'team',
+        name: 'team',
+        component: () => import('@/views/form/team'),
+        meta: { title: '我的团队' }
+      },{
+        path: 'cashout',
+        name: 'cashout',
+        component: () => import('@/views/form/cashout'),
+        meta: { title: '提现列表' }
       },
 
       {
@@ -125,6 +136,40 @@ export const constantRoutes = [
         name: 'admin',
         component: () => import('@/views/form/admin'),
         meta: { title: '充值订单' }
+      },
+    ]
+  },{
+    path: '/table',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: {
+      title: '报表管理',
+      icon: 'excel'
+    },
+    children: [
+      {
+        path: 'bonus',
+        name: 'bonus',
+        component: () => import('@/views/table/bonus'),
+        meta: { title: '红利报表' }
+      },
+      {
+        path: 'people',
+        name: 'people',
+        component: () => import('@/views/table/people'),
+        meta: { title: '个人报表' }
+      },{
+        path: 'money',
+        name: 'money',
+        component: () => import('@/views/table/money'),
+        meta: { title: '资金报表' }
+      },
+
+      {
+        path: 'commission',
+        name: 'commission',
+        component: () => import('@/views/table/commission'),
+        meta: { title: '佣金报表' }
       },
     ]
   },
@@ -142,6 +187,12 @@ export const constantRoutes = [
         name: 'log',
         component: () => import('@/views/sys/log'),
         meta: { title: '代付订单' }
+      },
+      {
+        path: 'pingcang',
+        name: 'pingcang',
+        component: () => import('@/views/sys/pingcang'),
+        meta: { title: '平仓日志' }
       },
     ]
   },

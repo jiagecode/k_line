@@ -15,7 +15,9 @@ public enum ResultCode {
 
     // 系统信息
     ERROR(50000, "未知错误"),
-    INDEX_OUT_OF_BOUNDS(50001, "下标越界");
+    INDEX_OUT_OF_BOUNDS(50001, "下标越界"),
+    TEL_EXIST(40001, "手机号已存在"),
+    TEL_NULL(40002, "手机号为空");
     /**
      * 请求响应码
      */

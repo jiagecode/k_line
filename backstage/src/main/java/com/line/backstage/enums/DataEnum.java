@@ -14,7 +14,10 @@ public enum DataEnum {
     USER_DEL_STATUS(1, "账号已主动注销"),
     USER_ERROR(1, "账号或密码错误"),
     FLAG_STATUS_INVALID(1, "数据有效"),
-    FLAG_STATUS_VALID(0, "数据无效");
+    FLAG_STATUS_VALID(0, "数据无效"),
+    BUTTON(3, "按钮"),
+    MENU(2, "菜单"),
+    CATALOG(1, "目录");
 
     /**
      * 请求响应码

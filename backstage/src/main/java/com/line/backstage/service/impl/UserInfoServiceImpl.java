@@ -6,12 +6,15 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.line.backstage.dao.mapper.AccountInfoMapper;
 import com.line.backstage.dao.mapper.UserInfoMapper;
+import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
+import com.line.backstage.vo.ResultCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -51,6 +54,56 @@ public class UserInfoServiceImpl implements UserInfoService {
         } else {
             return update(loginUserId, userInfo);
         }
+    }
+
+    /**
+     * 创建新用户并创建账户
+     * @param loginUserId
+     * @param userInfo
+     * @return
+     */
+    @Override
+    public int addNewUser(Integer loginUserId, UserInfo userInfo) {
+        String tel = userInfo.getUserPhone();
+        if(StringUtils.isEmpty(tel)){
+            return ResultCode.TEL_NULL.getCode();
+        }
+        if(userInfoMapper.queryUserIdForPhone(tel) != null ){
+            return ResultCode.TEL_EXIST.getCode();
+        }
+        if(userInfo.getUserType() == null){
+            userInfo.setUserType(1);
+        }
+        if(userInfo.getUserType() != 1 && userInfo.getUserType() != 2){
+            userInfo.setUserType(1);
+        }
+        Date date = new Date();
+        userInfo.setAddDate(date);
+        userInfo.setUserRegisterDate(date);
+        userInfo.setEditDate(date);
+        userInfo.setEditUserId(loginUserId);
+        userInfo.setAddUserId(loginUserId);
+        userInfo.setUserGender(1);
+        userInfo.setUserLevel(1);
+        userInfo.setUserForbidFlag(0);
+        userInfo.setUserForbidFlag(0);
+        userInfo.setDelStatus(0);
+        userInfo.setUserRefereeAble(1);
+        int newId  = userInfoMapper.insert(userInfo);
+        if(newId == 1){
+            newId = userInfoMapper.queryUserIdForPhone(tel);
+        }
+        System.out.println("创建用户得新id："+newId);
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setUserId(newId);
+        accountInfo.setAddDate(date);
+        accountInfo.setEditDate(date);
+        accountInfo.setEditUserId(loginUserId);
+        accountInfo.setAddUserId(loginUserId);
+        accountInfo.setOrderNum(0);
+        accountInfo.setAccountMoney(0.0);
+        accountInfo.setAccountStatus(0);
+        return accountInfoMapper.insert(accountInfo);
     }
 
     /**

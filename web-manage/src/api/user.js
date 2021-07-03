@@ -34,7 +34,7 @@ export function getoffice(data) {
 //获取菜单列表list
 export function getmenu(data) {
   return request({
-    url: '/menu/list',
+    url: '/sysMenuInfo/queryList',
     method: 'post',
     data:data
   })
@@ -42,7 +42,7 @@ export function getmenu(data) {
 //菜单新增/修改
 export function addmenu(data) {
   return request({
-    url: '/menu/insert',
+    url: '/sysMenuInfo/addOrUpdateOne',
     method: 'post',
     data:data
   })
@@ -50,7 +50,7 @@ export function addmenu(data) {
 //菜单删除
 export function removemenu(data) {
   return request({
-    url: '/menu/del',
+    url: '/sysMenuInfo/delOne',
     method: 'post',
     data:data
   })

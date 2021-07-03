@@ -3,7 +3,7 @@ import request from '@/utils/request'
 //获取用户信息列表
 export function listUser(data) {
   return request({
-    url: '/adminUser/list',
+    url: 'sysUserInfo/queryInfoList',
     method: 'post',
     data:data
   })
@@ -11,7 +11,7 @@ export function listUser(data) {
 //查询角色列表
 export function listPeople(data) {
   return request({
-    url: '/role/list',
+    url: '/sysUserInfo/queryInfoList',
     method: 'post',
     data:data
   })
@@ -19,7 +19,7 @@ export function listPeople(data) {
 //新增用户
 export function addUser(data) {
   return request({
-    url: '/adminUser/insert',
+    url: '/sysUserInfo/addNewOne',
     method: 'post',
     data:data
   })

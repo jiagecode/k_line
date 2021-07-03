@@ -1,6 +1,7 @@
 package com.line.backstage.service;
  
 import com.line.backstage.entity.SysUserInfo;
+import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.utils.PageWrapper;
 
 import java.util.Map;
@@ -65,6 +66,14 @@ public interface SysUserInfoService {
      * @return 对象列表
      */
     PageWrapper<SysUserInfo> list(Integer loginUserId, SysUserInfo sysUserInfo);
+
+    /**
+     * 分页查询用户列表
+     * @param loginUserId
+     * @param sysUserInfo
+     * @return
+     */
+    PageWrapper<ManUserVo> queryManUserVoForPage(Integer loginUserId, ManUserVo sysUserInfo);
 
     /**
      * 系统管理员登录

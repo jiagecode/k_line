@@ -2,7 +2,7 @@
   <div id="eerchant" class="app-container">
     <div class="app-box">
       <div class="app-box-tab">
-        <div class="app-box-title">客户列表</div>
+        <div class="app-box-title">提现列表</div>
         <div class="app-box-changeBox">
           <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia">新增
           </el-button>

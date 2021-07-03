@@ -2,8 +2,11 @@ package com.line.backstage.controller;
 
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysUserInfo;
+import com.line.backstage.entity.UserInfo;
+import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
+import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
@@ -33,6 +36,8 @@ public class SysUserInfoController {
      */
     @Resource
     private SysUserInfoService sysUserInfoService;
+    @Resource
+    private UserInfoService userInfoService;
  
     /**
      * 新增/修改数据
@@ -83,6 +88,30 @@ public class SysUserInfoController {
     @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "后台管理系统用户表对象", required = true) @RequestBody SysUserInfo sysUserInfo) {
         return ResponseHelper.success(sysUserInfoService.list(Integer.valueOf(ManageUserId), sysUserInfo));
+    }
+
+    /**
+     * 管理端-查询用户列表
+     * @param ManageUserId
+     * @param manUserVo
+     * @return
+     */
+    @PostMapping("queryInfoList")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    public ResponseModel queryInfoList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManUserVo manUserVo) {
+        return ResponseHelper.success(sysUserInfoService.queryManUserVoForPage(Integer.valueOf(ManageUserId), manUserVo));
+    }
+
+    /**
+     * 管理端-创建新用户
+     * @param ManageUserId
+     * @param manUserVo
+     * @return
+     */
+    @PostMapping("addNewOne")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    public ResponseModel addNewUser(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
+        return ResponseHelper.success(userInfoService.addNewUser(Integer.valueOf(ManageUserId), manUserVo));
     }
 
     /**

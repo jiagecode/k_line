@@ -79,5 +79,9 @@ public class AccountInfo extends QueryRequest implements Serializable {
     */            
     @ApiModelProperty("数据状态")
     private Integer del;
-    
+    /**
+     * 用户订单数
+     */
+    private Integer orderNum;
+
 }

@@ -2,6 +2,7 @@ package com.line.backstage.dao.mapper;
  
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.SysMenuInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,16 @@ public interface SysMenuInfoMapper extends TkBaseMapper<SysMenuInfo> {
      * @return
      */
     List<SysMenuInfo> findByRoleId(Integer roleId);
+
+    Integer queryRoleIdByUserId(@Param("userId") Integer roleId);
+
+    List<SysMenuInfo> queryMenuListByRoleId(@Param("roleId") Integer roleId);
+    List<SysMenuInfo> findByParentIdsLike(@Param("parentIdsLike") String parentIdsLike);
+    /**
+     * 根据菜单ID查询它子节点数量
+     *
+     * @param parentIdsLike
+     * @return
+     */
+    int getChildCountByMenuId(@Param("parentIdsLike") String parentIdsLike);
 }

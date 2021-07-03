@@ -37,23 +37,26 @@ public class SysMenuInfoController {
      * @param sysMenuInfo 实例对象
      * @return 是否成功
      */
-    @PostMapping("save")
-    @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统菜单表的一条数据")
+    @PostMapping("addOrUpdateOne")
+    @ApiOperation(value = "新增", notes = "新增/修改后台管理系统菜单表的一条数据")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统菜单表对象", required = true) @RequestBody @Validated SysMenuInfo sysMenuInfo) {
-            return ResponseHelper.success(sysMenuInfoService.save(Integer.valueOf(loginUserId), sysMenuInfo));
+           if(sysMenuInfo != null && sysMenuInfo.getMenuId() != null){
+               return ResponseHelper.success(sysMenuInfoService.updateForOne(Integer.valueOf(loginUserId), sysMenuInfo));
+           }else {
+               return ResponseHelper.success(sysMenuInfoService.insertForOne(Integer.valueOf(loginUserId), sysMenuInfo));
+           }
     }
  
     /**
      * 通过主键删除数据
      *
      * @param loginUserId 用户ID
-     * @param menuId 主键
      * @return 是否成功
      */
-    @DeleteMapping("delete/{menuId}")
+    @PostMapping("delOne")
     @ApiOperation(value = "删除单条数据", notes = "删除主键menuId的单条数据")
-    public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统菜单表主键menuId", required = true) @PathVariable("menuId") Integer menuId) {
-            return ResponseHelper.success(sysMenuInfoService.delete(Integer.valueOf(loginUserId), menuId));
+    public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@ApiParam(value = "后台管理系统菜单表对象", required = true) @RequestBody @Validated SysMenuInfo sysMenuInfo) {
+            return ResponseHelper.success(sysMenuInfoService.deleteForOne(Integer.valueOf(loginUserId),sysMenuInfo));
     }
  
     /**
@@ -75,10 +78,10 @@ public class SysMenuInfoController {
      * @param sysMenuInfo 查询条数
      * @return 对象列表
      */
-    @PostMapping("list")
+    @PostMapping("queryList")
     @ApiOperation(value = "列表", notes = "查询后台管理系统菜单表的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统菜单表对象", required = true) @RequestBody SysMenuInfo sysMenuInfo) {
-        return ResponseHelper.success(sysMenuInfoService.list(Integer.valueOf(loginUserId), sysMenuInfo));
+        return ResponseHelper.success(sysMenuInfoService.queryMyMenuList(Integer.valueOf(loginUserId), sysMenuInfo));
     }
  
 }

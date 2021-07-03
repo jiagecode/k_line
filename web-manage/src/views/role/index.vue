@@ -235,7 +235,7 @@
       removeThis(index,row) {
         console.log(row.menu.menuId)
         var data={
-          id:row.menu.menuId,
+          menuId:row.menu.menuId,
           flag:1
         }
 
@@ -282,7 +282,6 @@
         var data={}
         this.listLoading = true
         getmenu(data).then(res => {
-          // console.log(res.data.menuList)
           if(res.code==10000){
             this.menuList = res.data.menuList
             this.treeList = res.data.treeList

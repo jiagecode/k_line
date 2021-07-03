@@ -21,7 +21,14 @@ public interface UserInfoService {
      * @return 是否成功
      */
     int save(Integer loginUserId, UserInfo userInfo);
- 
+
+    /**
+     * 管理端创建新用户
+     * @param loginUserId
+     * @param userInfo
+     * @return
+     */
+    int addNewUser(Integer loginUserId, UserInfo userInfo);
     /**
      * 新增数据
      *
