@@ -2,40 +2,33 @@
 	<div class='divchart' style='background-color:#ffffff;'>
 		<uni-row class="uni-row-top">
 			<uni-col :span="9">
-				<view class="uni-col-top dark topText">123456</view>
+				<view class="uni-col-top dark topText">
+					<div id="t_price">{{SocketMsg.PRICE}}</div>
+				</view>
 			</uni-col>
 			<uni-col :span="5">
 				<view class="uni-col-top light-top-t">开盘</view>
-				<view class="uni-col-top light-top-d">2</view>
+				<view class="uni-col-top light-top-d">
+					<div id="t_openday">{{SocketMsg.OPENDAY}}</div>
+				</view>
 			</uni-col>
 			<uni-col :span="5">
 				<view class="uni-col-top light-top-t">最低</view>
-				<view class="uni-col-top light-top-d">2</view>
+				<view class="uni-col-top light-top-d">
+					<div id="t_lowday">{{SocketMsg.LOWDAY}}</div>
+				</view>
 			</uni-col>
 			<uni-col :span="5">
 				<view class="uni-col-top light-top-t">最高</view>
-				<view class="uni-col-top light-top-d">2</view>
+				<view class="uni-col-top light-top-d">
+					<div id="t_highday">{{SocketMsg.HIGHDAY}}</div>
+				</view>
 			</uni-col>
 		</uni-row>
 
-		<div class="button-sp-area">
-			<!-- <button class="mini-btn" type="default" size="mini"
-				@click="ChangeMinutePeriod(MINUTE_PERIOD_ID.MINUTE_ID)">分时</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeMinutePeriod(MINUTE_PERIOD_ID.MINUTE_5DAY_ID)">5日</button> -->
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_DAY_ID)">日线</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_WEEK_ID)">周线</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_MINUTE_ID)">1分钟</button>
-			<button class="mini-btn" type="default" size="mini"
-				@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_15MINUTE_ID)">15分钟</button>
-		</div>
 		<!--  #ifdef  H5  -->
 		<div>
-			<div class='kline' id="kline" ref='kline' DefaultPairName="BTC" DefaultName="比特币" DefaultfloatPrecision=2
-				DefaultPeriod=0></div>
+			<div class='kline' id="kline" ref='kline'></div>
 		</div>
 		<!--  #endif -->
 
@@ -46,14 +39,41 @@
 				@touchmove='KLineTouchMove' @touchend='KLineTouchEnd'></canvas>
 		</view>
 		<!--  #endif -->
+		<uni-row>
+			<uni-col :span="4">
+				<button class="mini-btn btn-period btn-1m" type="default" size="mini"
+					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_MINUTE_ID)">1M</button>
+			</uni-col>
+			<uni-col :span="4">
+				<button class="mini-btn btn-period btn-15m" type="default" size="mini"
+					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_15MINUTE_ID)">15M</button>
+			</uni-col>
+			<uni-col :span="4">
+				<button class="mini-btn btn-period btn-30m" type="default" size="mini"
+					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_30MINUTE_ID)">30M</button>
+			</uni-col>
+			<uni-col :span="4">
+				<button class="mini-btn btn-period btn-1h" type="default" size="mini"
+					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_60MINUTE_ID)">1H</button>
+			</uni-col>
+			<uni-col :span="4">
+				<button class="mini-btn btn-period btn-1d" type="default" size="mini" style="background-color: #dedede;"
+					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_DAY_ID)">日线</button>
+			</uni-col>
+			<uni-col :span="4">
+				<button class="mini-btn btn-period btn-1w" type="default" size="mini"
+					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_WEEK_ID)">周线</button>
+			</uni-col>
+		</uni-row>
 
-		<div class="button-sp-area">
+		<!-- 		<div class="button-sp-area">
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(0,'EMPTY')">主图空指标</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(0,'BOLL')">BOLL</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(1,'MACD')">MACD</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(1,'VOL')">VOL</button>
 			<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(1,'KDJ')">KDJ</button>
 		</div>
+ -->
 		<!-- <div style='color: #007AFF;'>{{TestData}}</div> -->
 		<uni-row class="uni-row-bot">
 			<uni-col :span="8">
@@ -61,27 +81,315 @@
 				<view class="uni-col-bot bot-cc light-bot-d">持仓</view>
 			</uni-col>
 			<uni-col :span="8">
-				<view class="uni-col-bot bot-mz light-bot-t">xx</view>
-				<view class="uni-col-bot bot-mz light-bot-d">买涨</view>
+				<div @click="ClickBuy(1)">
+					<view class="uni-col-bot bot-mz light-bot-t">xx</view>
+					<view class="uni-col-bot bot-mz light-bot-d">买涨</view>
+				</div>
 			</uni-col>
 			<uni-col :span="8">
-				<view class="uni-col-bot bot-md light-bot-t">xx</view>
-				<view class="uni-col-bot bot-md light-bot-d">买跌</view>
+				<div @click="ClickBuy(2)">
+					<view class="uni-col-bot bot-md light-bot-t">xx</view>
+					<view class="uni-col-bot bot-md light-bot-d">买跌</view>
+				</div>
 			</uni-col>
 		</uni-row>
+
+		<!-- 弹出层 -->
+		<vus-layer>
+			<!--slot(插槽)-->
+			<view slot="page">
+				<!--在这里写入页面层的html内容-->
+				<view><div class="page-top-line"></div></view>
+				<view><p class="page-top-dqsj">到期时间</p></view>
+				<view>
+					<uni-row class="uni-row-page">
+						<uni-col :span="8" class="row-page-item">
+							<view class="uni-col-page light-page-t">结算时间</view>
+							<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">30</b>秒</view>
+							<view class="uni-col-page light-page-d">收益 88%</view>
+						</uni-col>
+						<uni-col :span="8" class="row-page-item">
+							<div>
+								<view class="uni-col-page light-page-t">结算时间</view>
+								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">60</b>秒</view>
+								<view class="uni-col-page light-page-d">收益 90%</view>
+							</div>
+						</uni-col>
+						<uni-col :span="8" class="row-page-item">
+							<div>
+								<view class="uni-col-page light-page-t">结算时间</view>
+								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">180</b>秒</view>
+								<view class="uni-col-page light-page-d">收益 92%</view>
+							</div>
+						</uni-col>
+					</uni-row>
+				</view>
+				<!-- <view><p class="page-top-dqsj"></p></view> -->
+				<view><p class="page-top-dqsj">投资金额</p></view>
+				<view>
+					<uni-row class="uni-row-page1">
+						<uni-col :span="4" class="row-page1-item">
+							<div>
+							<view class="uni-col-page1 light-page1-t">¥10</view>
+							</div>
+						</uni-col>
+						<uni-col :span="4" class="row-page1-item">
+							<div>
+								<view class="uni-col-page1 light-page1-t">¥50</view>
+							</div>
+						</uni-col>
+						<uni-col :span="4" class="row-page1-item">
+							<div>
+								<view class="uni-col-page1 light-page1-t">¥100</view>
+							</div>
+						</uni-col>
+						<uni-col :span="4" class="row-page1-item">
+							<div>
+								<view class="uni-col-page1 light-page1-t">¥500</view>
+							</div>
+						</uni-col>
+						<uni-col :span="4" class="row-page1-item">
+							<div>
+								<view class="uni-col-page1 light-page1-t">¥1000</view>
+							</div>
+						</uni-col>
+						<uni-col :span="4" class="row-page1-item">
+							<div>
+								<view class="uni-col-page1 page1-md light-page1-t">¥5000</view>
+							</div>
+						</uni-col>
+					</uni-row>
+				</view>
+				<uni-row class="">
+					<uni-col :span="12" class="row-page1-item">
+						<view class="page-left-ye">余额: ¥0 </view>
+					</uni-col>
+					<uni-col :span="12" class="row-page1-item">
+						<view class="page-left-sxf">手续费: 0% </view>
+					</uni-col>
+				</uni-row>
+				<view><div class="page-c-line"></div></view>
+				<view>
+					<uni-row class="uni-row-page2">
+						<uni-col :span="6" class="row-page2-item">
+							<div>
+								<view class="uni-col-page2 light-page2-t">名称</view>
+								<view class="uni-col-page2 light-page2-d page-2-name">比特币</view>
+							</div>
+						</uni-col>
+						<uni-col :span="6" class="row-page2-item">
+							<div>
+								<view class="uni-col-page2 light-page2-t">方向</view>
+								<view class="uni-col-page2 light-page2-d page-2-fx">买涨</view>
+							</div>
+						</uni-col>
+						<uni-col :span="6" class="row-page2-item">
+							<div>
+								<view class="uni-col-page2 light-page2-t">现价</view>
+								<view class="uni-col-page2 light-page2-d page-2-xj">34467.23</view>
+							</div>
+						</uni-col>
+						<uni-col :span="6" class="row-page2-item">
+							<div>
+								<view class="uni-col-page2 light-page2-t">金额</view>
+								<view class="uni-col-page2 light-page2-d page-2-je">¥10</view>
+							</div>
+						</uni-col>
+					</uni-row>
+				</view>
+				<view><p class="page-top-dqsj"></p></view>
+				<view>
+					<button class="page-btn-submit" type="default" size="default" @click="SubmitBuy()">确认下单</button>
+				</view>
+				<uni-row>
+					<uni-col :span="12" >
+						<view class="page-left-yqsy" style="text-align: center;">预期收益:¥0</view>
+					</uni-col>
+					<uni-col :span="12" >
+						<view class="page-left-bdje" style="text-align: center;">保底金额:¥0.00</view>
+					</uni-col>
+				</uni-row>
+				<view><p class="page-top-dqsj"></p></view>
+			</view>
+		</vus-layer>
+		<!-- 弹出层 -->
 	</div>
 </template>
 
 <style>
-	.uni-row-top {
-		margin-bottom: 10px;
-		/* #ifdef MP-TOUTIAO || MP-QQ || MP-BAIDU */
-		display: block;
-		/* #endif */
+	/* // 弹出层引入CSS文件 */
+	@import "../../components/vusui-app-layer/theme/default/vusui-layer.css";  
+	/* 弹出框内容css */
+	.page-top-line{
+		margin: 0 auto;
+		margin-top: 20upx;
+		width: 100%;
+		height: 4upx;
+		background-color: #000000;
 	}
-
+	.page-top-dqsj{
+		height: 60upx;
+		text-align: left;
+		line-height: 60upx;
+		color: #8c8b90;
+	}
+	.uni-row-page {
+		margin-top: 20upx;
+		margin-bottom: 20upx;
+		height: 150upx;
+	}
+	
+	.uni-col-page {
+		height: 150upx;
+	}
+	
+	.light-page-t {
+		height: 40upx;
+		line-height: 40upx;
+		font-size: 30upx;
+		text-align: center;
+		color: #8c8b90;
+		background-color: #424448;
+	}
+	.light-page-c {
+		height: 70upx;
+		line-height: 70upx;
+		font-size: 26upx;
+		text-align: center;
+		color: #ffc71e;
+		background-color: #424448;
+	}
+	.light-page-d {
+		height: 40upx;
+		line-height: 40upx;
+		font-size: 30upx;
+		font-weight: bold;
+		text-align: center;
+		color: #f6676c;
+		background-color: #424448;
+	}
+	.row-page-item{
+		padding-left: 10upx !important;
+		padding-right: 10upx !important;
+	}
+	
+	.uni-row-page1 {
+		height: 80upx;
+	}
+	
+	.uni-col-page1 {
+		height: 80upx;
+	}
+	
+	.light-page1-t {
+		height: 60upx;
+		line-height: 60upx;
+		font-size: 26upx;
+		text-align: center;
+		color: #ffc71e;
+		background-color: #434549;
+	}
+	.row-page1-item{
+		padding-top: 10upx !important;
+		padding-bottom: 10upx !important;
+		padding-left: 10upx !important;
+		padding-right: 10upx !important;
+	}
+	.page-left-ye{
+		float: left;
+		width: 50%;
+		height: 50upx;
+		line-height: 50upx;
+		color: #8c8b90;
+	}
+	.page-left-sxf{
+		float: right;
+		width: 50%;
+		height: 50upx;
+		line-height: 50upx;
+		color: #8c8b90;
+	}
+	.page-c-line{
+		margin: 0 auto;
+		width: 100%;
+		height: 4upx;
+		background-color: #434347;
+	}
+	.uni-row-page2 {
+		height: 120upx;
+	}
+	
+	.uni-col-page2 {
+		height: 60upx;
+	}
+	
+	.light-page2-t {
+		height: 60upx;
+		line-height: 60upx;
+		font-weight: bold;
+		font-size: 26upx;
+		text-align: center;
+		color: #8c8b90;
+	}
+	.light-page2-d {
+		height: 60upx;
+		line-height: 60upx;
+		font-size: 26upx;
+		text-align: center;
+		color: #4e4d52;
+	}
+	.row-page2-item{
+		padding-top: 10upx !important;
+		padding-bottom: 10upx !important;
+		padding-left: 10upx !important;
+		padding-right: 10upx !important;
+	}
+	.page-2-name{
+		font-size: 30upx;
+		color: #FFFFFF;
+	}
+	.page-2-fx{
+		font-size: 30upx;
+		color: #f6676c;
+	}
+	.page-2-xj{
+		font-size: 30upx;
+		color: #f6676c;
+	}
+	.page-2-je{
+		font-size: 30upx;
+		color: #FFB400;
+	}
+	.page-btn-submit{
+		background-color: #ffc71d;
+	}
+	.page-left-yqsy{
+		display: contents;
+		float: left;
+		/* width: 50%; */
+		height: 50upx;
+		line-height: 50upx;
+		font-size: 26upx;
+		text-align: center;
+		color: #ffc71d;
+	}
+	.page-left-bdje{
+		display: contents;
+		float: right;
+		/* width: 50%; */
+		height: 50upx;
+		line-height: 50upx;
+		font-size: 26upx;
+		color: #ffc71d;
+		text-align: center;
+	}
+	/* 弹出框内容css */
+	
+	
+	
+	
 	.uni-row-top {
-		margin-bottom: 10px;
+		height: 60px;
 	}
 
 	.uni-col-top {
@@ -94,7 +402,7 @@
 		font-size: 17px;
 		text-align: center;
 		color: #555555;
-		background-color: #e5e9f2;
+		background-color: #f8f8f8;
 	}
 
 	.light-top-d {
@@ -103,7 +411,7 @@
 		font-size: 15px;
 		text-align: center;
 		color: rgb(255, 121, 117);
-		background-color: #e5e9f2;
+		background-color: #f8f8f8;
 	}
 
 	.topText {
@@ -112,26 +420,20 @@
 		font-size: 20px;
 		text-align: center;
 		color: rgb(255, 121, 117);
+		background-color: #f8f8f8;
 	}
 
 	.uni-row-bot {
-		margin-bottom: 10px;
-		/* #ifdef MP-TOUTIAO || MP-QQ || MP-BAIDU */
-		display: block;
-		/* #endif */
-	}
-
-	.uni-row-bot {
-		margin-bottom: 10px;
+		height: 70px;
 	}
 
 	.uni-col-bot {
-		height: 50px;
+		height: 70px;
 	}
 
 	.light-bot-t {
-		height: 20px;
-		line-height: 20px;
+		height: 30px;
+		line-height: 30px;
 		font-size: 17px;
 		text-align: center;
 		color: #555555;
@@ -139,7 +441,7 @@
 	}
 
 	.light-bot-d {
-		height: 30px;
+		height: 40px;
 		line-height: 30px;
 		font-size: 15px;
 		font-weight: bold;
@@ -162,21 +464,43 @@
 		background-color: #36d47e;
 	}
 
-	.dark_deep {
-		background-color: #99a9bf;
+	.mini-btn {
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		border: 0px;
+		border-right: 1px;
+		border-radius: 0px;
+		overflow: inherit;
 	}
 
-	.dark {
-		background-color: #d3dce6;
+	.mini-btn:after {
+		border-radius: 0px;
+		border-right: 1px;
+		border: 0px;
+		overflow: inherit;
 	}
 
-	.light {
-		background-color: #e5e9f2;
+	/* 弹出层 */
+	.uni-banner {
+		width: 70%;
+		position: fixed;
+		left: 15%;
+		margin-top: -400upx;
+		z-index: 99;
 	}
+
+	.uni-mask {
+		z-index: 1;
+		background: rgba(0, 0, 0, 0.6);
+	}
+	
 </style>
 
 <script>
 	import moment from 'moment'
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//	HQChart单画布模式,K线/分时共享使用一个画布
 	//
@@ -214,17 +538,10 @@
 
 	// 系统信息
 	var sysInfo = null;
+	// socket连接对象
+	var ccStreamer = null;
 
 	function DefaultData() {}
-
-	// uni.request({
-	//     url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false',
-	// 	method: 'get',
-	//     success: (res) => {
-	//         console.log(res.data);
-	//         this.marketsList = res.data;
-	//     }
-	// });
 
 	DefaultData.GetKLineOption = function() {
 		let data = {
@@ -377,9 +694,10 @@
 	export default {
 		data() {
 			let data = {
-				Symbol: 'btc.bit',
-				Name: '',
-				PairName: 'ETH/BTC', //货币代码
+				// PairName:Bitcoin,Symbol:btc.BIT,Name:btc
+				Symbol: 'btc.BIT',
+				Name: 'btc',
+				PairName: 'Bitcoin', //货币代码
 				FloatPrecision: 2, //品种的小数位数
 				ChartWidth: 350,
 				ChartHeight: 500,
@@ -393,22 +711,40 @@
 
 				MINUTE_PERIOD_ID: MINUTE_PERIOD_ID,
 				KLINE_PERIOD_ID: KLINE_PERIOD_ID,
-				TestData: ''
+				TestData: '',
+
+				// socket 对象
+				SocketTask: null,
+				timeOutObject: null,
+				// socket 打开状态
+				is_open_socket: false,
+				// socket 的数据
+				SocketMsg: {
+					PRICE: 0,
+					OPENDAY: 0,
+					LOWDAY: 0,
+					HIGHDAY: 0,
+				},
 			};
 
 			return data;
 		},
 
 		onLoad(obj) {
+			var that = this;
+
 			// 订阅币种切换事件
 			uni.$on("ChangeSymbol", (rel) => {
 				this.ChangeSymbol(rel);
 			})
+
 		},
 
 		onReady() {},
 
 		onShow() {
+			var that = this;
+
 			uni.getSystemInfo({
 				success: (res) => {
 					// 保存系统信息到页面全局
@@ -420,7 +756,7 @@
 			var width = this.sysInfo.windowWidth;
 			var height = this.sysInfo.windowHeight;
 			this.ChartWidth = width;
-			this.ChartHeight = height - 200;
+			this.ChartHeight = height - 156;
 			this.$nextTick(() => {
 				this.ChangeSize();
 				this.CreateKLineChart();
@@ -430,9 +766,78 @@
 			var top = document.getElementById('top');
 
 
+			// this.connectionSocket();
+			ccStreamer = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + API_KEY);
+			ccStreamer.onopen = function onStreamOpen() {
+				console.log("连接打开");
+				var subRequest = {
+					"action": "SubAdd",
+					"subs": ["2~Coinbase~" + that.Name.toUpperCase() + "~USD"]
+				};
+				console.log(subRequest);
+				ccStreamer.send(JSON.stringify(subRequest));
+			}
+
+			ccStreamer.onmessage = function onStreamMessage(message) {
+				var message = event.data;
+				var msgData = JSON.parse(message);
+				var oldPrice = that.SocketMsg.PRICE;
+				if (msgData.TYPE == '2') {
+					if (typeof msgData.PRICE != 'undefined') {
+						that.SocketMsg.PRICE = msgData.PRICE;
+						document.getElementById("t_price").innerText = msgData.PRICE;
+					}
+					if (typeof msgData.OPENHOUR != 'undefined') {
+						that.SocketMsg.OPENHOUR = msgData.OPENHOUR;
+					}
+					if (typeof msgData.OPENDAY != 'undefined') {
+						that.SocketMsg.OPENDAY = msgData.OPENDAY;
+						document.getElementById("t_openday").innerText = msgData.OPENDAY;
+					}
+					if (typeof msgData.OPEN24HOUR != 'undefined') {
+						that.SocketMsg.OPEN24HOUR = msgData.OPEN24HOUR;
+					}
+					if (typeof msgData.LOWHOUR != 'undefined') {
+						that.SocketMsg.LOWHOUR = msgData.LOWHOUR;
+					}
+					if (typeof msgData.LOWDAY != 'undefined') {
+						that.SocketMsg.LOWDAY = msgData.LOWDAY;
+						document.getElementById("t_lowday").innerText = msgData.LOWDAY;
+					}
+					if (typeof msgData.LOW24HOUR != 'undefined') {
+						that.SocketMsg.LOW24HOUR = msgData.LOW24HOUR;
+					}
+					if (typeof msgData.HIGHHOUR != 'undefined') {
+						that.SocketMsg.HIGHHOUR = msgData.HIGHHOUR;
+					}
+					if (typeof msgData.HIGHDAY != 'undefined') {
+						that.SocketMsg.HIGHDAY = msgData.HIGHDAY;
+						document.getElementById("t_highday").innerText = msgData.HIGHDAY;
+					}
+					if (typeof msgData.HIGH24HOUR != 'undefined') {
+						that.SocketMsg.HIGH24HOUR = msgData.HIGH24HOUR;
+					}
+
+					var price = document.getElementById('t_price');
+					// 判断涨跌
+					if (parseFloat(oldPrice) < parseFloat(that.SocketMsg.PRICE)) {
+						// 涨
+						price.style.color = '#ff7975';
+					}
+					if (parseFloat(oldPrice) > parseFloat(that.SocketMsg.PRICE)) {
+						// 跌
+						price.style.color = '#36d47e';
+					}
+					console.log(that.SocketMsg.PRICE);
+				}
+			}
+			ccStreamer.onclose = function onStreamClose() {
+				console.log("连接关闭");
+			}
 		},
 
 		onHide() {
+			ccStreamer.close();
 			this.ClearChart();
 		},
 
@@ -441,6 +846,20 @@
 		},
 
 		methods: {
+			// 下单
+			SubmitBuy(){
+				
+			},
+			// 购买弹窗
+			ClickBuy(type) {
+				console.log(type);
+				// slot(插槽) 模式
+				this.vusui.page({
+					title: '订单确认'
+				})
+				console.log(type);
+			},
+
 			ClearChart() {
 				if (g_JSChart) {
 					g_JSChart.ChartDestory();
@@ -558,6 +977,45 @@
 			//K线周期切换
 			ChangeKLinePeriod: function(period) {
 				this.KLine.Period = period;
+				var periodList = document.getElementsByClassName("btn-period");
+				console.log(periodList);
+				console.log(period);
+				for (var i = 0; i < periodList.length; i++) {
+					periodList[i].style.backgroundColor = "#f8f8f8";
+				}
+				var selectBtn = "";
+				switch (period) {
+					case 0:
+						selectBtn = "btn-1d";
+						break;
+					case 1:
+						selectBtn = "btn-1w";
+						break;
+					case 2:
+						selectBtn = "btn-1m";
+						break;
+					case 3:
+						selectBtn = "btn-1y";
+						break;
+					case 4:
+						selectBtn = "btn-1m";
+						break;
+					case 5:
+						selectBtn = "btn-5m";
+						break;
+					case 6:
+						selectBtn = "btn-15m";
+						break;
+					case 7:
+						selectBtn = "btn-30m";
+						break;
+					case 8:
+						selectBtn = "btn-1h";
+						break;
+					default:
+						break;
+				}
+				document.getElementsByClassName(selectBtn)[0].style.backgroundColor = "#dedede";
 				if (this.IsKLineChart()) {
 					g_JSChart.ChangePeriod(period);
 				} else {
@@ -644,14 +1102,14 @@
 
 			//切换股票
 			ChangeSymbol: function(item) {
-				console.log(item);
 				var symbol = item.symbol;
 				var name = item.name;
-				if (this.PairName == symbol) return;
+				if (this.PairName == name) return;
 				this.PairName = name;
 				this.Symbol = symbol + '.BIT';
 				this.Name = symbol;
 				this.FloatPrecision = 2;
+				console.log("PairName:" + this.PairName + ",Symbol:" + this.Symbol + ",Name:" + this.Name);
 				if (g_JSChart) g_JSChart.ChangeSymbol(symbol);
 			},
 
@@ -822,7 +1280,7 @@
 			{
 				console.log('[OnTitleDraw]', event, data);
 				if (!data.Draw) {
-					this.TestData = "隐藏";
+					this.TestData = "";
 				} else {
 					var item = data.Draw;
 					this.TestData = `日期:${item.Date} 收:${item.Close}`;
@@ -833,7 +1291,7 @@
 			{
 				console.log('[OnMinuteTitleDraw]', event, data);
 				if (!data.Draw) {
-					this.TestData = "隐藏";
+					this.TestData = "";
 				} else {
 					var item = data.Draw;
 					this.TestData = `时间:${item.Time} 价格:${item.Close}`;
