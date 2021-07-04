@@ -89,11 +89,20 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserForbidFlag(0);
         userInfo.setDelStatus(0);
         userInfo.setUserRefereeAble(1);
+        userInfo.setDel(1);
         int newId  = userInfoMapper.insert(userInfo);
         if(newId == 1){
             newId = userInfoMapper.queryUserIdForPhone(tel);
         }
-        System.out.println("创建用户得新id："+newId);
+       // System.out.println("创建用户得新id："+newId);
+        if(2 == userInfo.getUserType()){
+            //用户为代理
+            userInfo.setAgentId(newId);
+            userInfo.setUserId(newId);
+            userInfo.setAgentName(userInfo.getUserNickName());
+            userInfo.setAgentTime(date);
+            userInfoMapper.updateByPrimaryKeySelective(userInfo);
+        }
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setUserId(newId);
         accountInfo.setAddDate(date);

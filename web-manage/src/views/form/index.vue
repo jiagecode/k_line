@@ -323,7 +323,8 @@
           region: '',
           txt: '',
           sysUserId: '',
-          merchantInfoId: ''
+          merchantInfoId: '',
+          userType:1
         },
         text: '',
         dialogFormVisibleTel: false,
@@ -532,6 +533,7 @@
           data ={
             queryDateFlag:2,
             del:1,
+            userType:2,
             pageNum: this.currentPage,
           }
         }else {
@@ -573,7 +575,7 @@
               userNickName: this.form.userNickName,
               userRealName: this.form.userRealName,
               userPhone: this.form.userPhone,
-              userType: 1,
+              userType: this.form.userType,
             }
             addUser(data).then(res => {
               console.log(res)

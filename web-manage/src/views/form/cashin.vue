@@ -13,7 +13,8 @@
             <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
           </div>
           <div class="app-box-select app-marginR" >
-            <el-select v-model="regionCheckStatus" placeholder="审核状态">
+            <div class="app-box-input-txt">审核状态：</div>
+            <el-select v-model="regionCheckStatus" placeholder="请选择审核状态">
               <el-option label="无需审核" value="0"></el-option>
               <el-option label="待审核" value="1"></el-option>
               <el-option label="审核中" value="2"></el-option>
@@ -67,7 +68,7 @@
                              {{scope.row.checkDate}}
                             </span>
                 <span v-else-if="item.prop==='checkStatus'">
-                             {{scope.row.checkStatus}}
+                           {{showCheckStatusDesc(scope.row.checkStatus)}}
                             </span>
                 <!-- 正常的其他列 -->
                 <span v-else>{{scope.row[item.prop]}}</span>
@@ -373,6 +374,10 @@
         this.input2 = ''
         this.currentPage = 1
         this.queryDetailForCash()
+      },
+      showCheckStatusDesc(sta){
+        // 审核状态 0-无需审核 1-待审核 2-审核中 3-审核通过 4-审核拒绝
+        return sta>2?(sta ===3?"审核通过":"审核拒绝"):(sta ===2?"审核中":(sta===1?"待审核":"无需审核"));
       },
       //提现明细列表
       queryDetailForCash() {
