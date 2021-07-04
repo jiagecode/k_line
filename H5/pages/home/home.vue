@@ -25,7 +25,7 @@
 							<view class="d-flex" style="height: 40rpx; font-size: 33rpx; font-weight: bold;">
 								<view style="height: 40rpx; margin-top: -8rpx;">${{item.current_price}}</view>
 							</view>
-							<view class="num" style="font-size: 25rpx; color: #999999; margin-top: 5rpx; height: 27rpx;">≈￥{{item.current_price}}</view>
+							<view class="num" style="font-size: 25rpx; color: #999999; margin-top: 5rpx; height: 27rpx;">≈￥{{item.current_price_cny}}</view>
 							<view style="height: 38rpx;"></view>
 						</view>
 						<!-- 涨幅榜 -->
@@ -56,7 +56,57 @@
 				uni.switchTab({
 				    url: '../kline/kline'
 				});
+			},
+			// 处理数据
+			processingdData(data){
+				for (const d of data) {
+					// 美元转换人名币
+					let market_cap = d.market_cap * 6.47;
+					let current_price = d.current_price * 6.47;
+					
+					// 转换亿元
+					d.market_cap = (this.numFormat(market_cap / 100000000)) + "亿";
+					// 实时人民币价格
+					console.log(current_price)
+					d.current_price_cny = (this.numFormat(current_price));
+					// 历史价格获取计算涨跌榜
+					this.getOldPrice(d.id);
+				}
+				return data;
+			},
+			// js 金额用，隔开
+			numFormat(num) {
+				return (num.toString().indexOf('.') !== -1) ? num.toLocaleString('CNY', {maximumFractionDigits : 2}) : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+			},
+			getOldPrice(id){
+				uni.request({
+				    url: 'https://api.coingecko.com/api/v3/coins/' + id + '/market_chart?vs_currency=usd&days=1&interval=daily',
+					method: 'get',
+				    success: (res) => {
+				        console.log(res.data.prices)
+				    }
+				});
 			}
+			// js将数值转化为万、亿、万亿并保留两位小数
+			// numberFormat(value) {
+			// 	var param = {};
+			// 	var k = 10000,
+			// 		sizes = ['', '万', '亿', '万亿'],
+			// 		i;
+			// 		if(value < k){
+			// 			param.value =value
+			// 			param.unit=''
+			// 		}else{
+			// 			// Math.floor() 返回小于或等于一个给定数字的最大整数
+			// 			// Math.log() 函数返回一个数的自然对数
+			// 			// Math.pow() 函数返回基数（base）的指数（exponent）次幂
+			// 			i = Math.floor(Math.log(value) / Math.log(k)); 
+			// 			console.log((value/ 100000000).toFixed(2))
+			// 			param.value = ((value / Math.pow(k, i))).toFixed(2);
+			// 			param.unit = sizes[i];
+			// 		}
+			// 	return param;
+			// }
 		},
 		onLoad() {
 			// 非法访问，请重新登录
@@ -68,11 +118,10 @@
 			}
 			
 			uni.request({
-			    url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false',
+			    url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=1&page=1&sparkline=false',
 				method: 'get',
 			    success: (res) => {
-			        console.log(res.data);
-			        this.marketsList = res.data;
+			        this.marketsList = this.processingdData(res.data);
 			    }
 			});
 		},
