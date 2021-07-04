@@ -30,6 +30,10 @@ public class ManRecordVo extends AccountRecord {
      */
     private Integer queryDataFlag;
     /**
+     * 查询类型 1-平仓 2-个人报表
+     */
+    private Integer queryType;
+    /**
      * 所属用户
      */
     private Integer userId;

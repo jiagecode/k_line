@@ -77,5 +77,11 @@
         <if test=" endDate != null ">
             and r.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
+        <if test=" queryType == 2 and beginDate != null ">
+            and o.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test="queryType == 2 and endDate != null ">
+            and o.ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
     </select>
 </mapper>
