@@ -1,6 +1,7 @@
 package com.line.backstage.service;
  
 import com.line.backstage.entity.SysUserInfo;
+import com.line.backstage.entity.sysentity.ManCashVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.utils.PageWrapper;
 
@@ -74,6 +75,14 @@ public interface SysUserInfoService {
      * @return
      */
     PageWrapper<ManUserVo> queryManUserVoForPage(Integer loginUserId, ManUserVo sysUserInfo);
+
+    /**
+     * 查询充值列表数据
+     * @param loginUserId
+     * @param manCashVo
+     * @return
+     */
+    PageWrapper<ManCashVo> queryManCashVoForPage(Integer loginUserId, ManCashVo manCashVo);
 
     /**
      * 系统管理员登录

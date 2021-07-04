@@ -2,6 +2,7 @@ package com.line.backstage.dao.mapper;
  
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.CashOutIn;
+import com.line.backstage.entity.sysentity.ManCashVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -14,5 +15,10 @@ import java.util.List;
  */
 public interface CashOutInMapper extends TkBaseMapper<CashOutIn> {
     List<CashOutIn> queryMyCashOutInList(@Param("accountId") Integer accountId, @Param("cashType")Integer cashType);
-
+    /**
+     * 查询充值记录
+     * @param vo
+     * @return
+     */
+    List<ManCashVo> queryManCashVoList(ManCashVo vo);
 }

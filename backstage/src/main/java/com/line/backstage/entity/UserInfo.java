@@ -159,6 +159,11 @@ public class UserInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
+    /**
+     * 备注
+     */
+    @ApiModelProperty("备注")
+    private String remarks;
     @Transient
     private Double userMoney;
 }

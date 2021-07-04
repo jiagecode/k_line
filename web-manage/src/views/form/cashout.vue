@@ -4,8 +4,6 @@
       <div class="app-box-tab">
         <div class="app-box-title">提现列表</div>
         <div class="app-box-changeBox">
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia">新增
-          </el-button>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt">用户ID：</div>
             <el-input placeholder="请输入商户ID" v-model="input1"></el-input>
@@ -14,6 +12,15 @@
             <div class="app-box-input-txt">用户：</div>
             <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
           </div>
+          <div class="app-box-select app-marginR" >
+            <el-select v-model="regionCheckStatus" placeholder="审核状态">
+              <el-option label="无需审核" value="0"></el-option>
+              <el-option label="待审核" value="1"></el-option>
+              <el-option label="审核中" value="2"></el-option>
+              <el-option label="审核通过" value="3"></el-option>
+              <el-option label="审核拒绝" value="4"></el-option>
+            </el-select>
+          </div>
           <div class="app-btn-box">
             <el-button type="primary" icon="el-icon-search" @click="seeOther">查找</el-button>
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
@@ -21,7 +28,7 @@
         </div>
         <div class="app-tab-box">
           <el-table
-            :data="shoppingList.list"
+            :data="cashVoDataList.list"
             border
             :max-height="600+'px'"
             :header-cell-style="tabheaderFn"
@@ -32,43 +39,36 @@
               :label="item.label">
               <template slot-scope="scope">
                 <!--复制-->
-                <span v-if="item.prop==='userId'" @click="handleCopy(scope.row.userId)">
-                             {{scope.row.userId}}
+                <span v-if="item.prop==='cashId'" @click="handleCopy(scope.row.cashId)">
+                             {{scope.row.cashId}}
                 </span>
-                <span v-else-if="item.prop==='userNickName'" @click="handleCopy(scope.row.userNickName)">
-                             {{scope.row.userNickName}}[{{scope.row.userPhone}}]
+                <span v-else-if="item.prop==='accountId'" @click="handleCopy(scope.row.accountId)">
+                             {{scope.row.accountId}}
                             </span>
                 <span v-else-if="item.prop==='userRealName'">
                              {{scope.row.userRealName}}
                             </span>
-                <span v-else-if="item.prop==='userRegisterDate'">
-                             {{scope.row.userRegisterDate}}
+                <span v-else-if="item.prop==='addDate'">
+                             {{scope.row.addDate}}
                             </span>
-                <span v-else-if="item.prop==='lastLoginDate'">
-                             {{scope.row.lastLoginDate}}
-                            </span>
-                <span v-else-if="item.prop==='orderNum'">
-                             {{scope.row.orderNum}}
+                <span v-else-if="item.prop==='cashMoney'">
+                             {{scope.row.cashMoney}}
                             </span>
                 <span v-else-if="item.prop==='userMoney'">
                              {{scope.row.userMoney}}
                             </span>
-                <span v-else-if="item.prop==='userType'">
-                             {{scope.row.userType}}
+                <span v-else-if="item.prop==='userMoney'">
+                             {{scope.row.userMoney}}
                             </span>
-                <span v-else-if="item.prop==='bonusRate'">
-                             {{scope.row.bonusRate}}
+                <span v-else-if="item.prop==='remarks'">
+                             {{scope.row.remarks}}
                             </span>
-                <span v-else-if="item.prop==='commissionRate'">
-                             {{scope.row.commissionRate}}
+                <span v-else-if="item.prop==='checkDate'">
+                             {{scope.row.checkDate}}
                             </span>
-                <span v-else-if="item.prop==='agentName'">
-                             {{scope.row.agentName}}
+                <span v-else-if="item.prop==='checkStatus'">
+                             {{scope.row.checkStatus}}
                             </span>
-
-<!--                <span v-else-if="item.prop==='merchantInfo.platformName'">-->
-<!--                             {{scope.row.merchantInfo['platformName']}}-->
-<!--                            </span>-->
                 <!-- 正常的其他列 -->
                 <span v-else>{{scope.row[item.prop]}}</span>
               </template>
@@ -80,22 +80,9 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">修改余额
+                           @click="changeMoney(scope.$index, scope.row)">审核
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.locked==1"
-                           @click="changeUser(scope.$index, scope.row)">禁用
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">启用
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">下级客户
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">下级代理
-                </el-button><el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">签约
-                </el-button>
+
 
               </template>
             </el-table-column>
@@ -109,7 +96,7 @@
                 :page-size=10
                 background
                 layout="prev, pager, next, jumper"
-                :total=shoppingList.total>
+                :total=cashVoDataList.total>
               </el-pagination>
             </div>
             <div class="refresh">
@@ -121,68 +108,11 @@
         </div>
       </div>
     </div>
-    <!--新增-->
-    <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false"
-               :before-close="ai_dialog_close">
-            <span slot="title" class="dialog-footer">
-                <span>{{text}}</span>
-            </span>
-      <div class="payNameDiaBox">
-        <el-form ref="form" :model="form" label-width="130px" :rules="rules">
-          <el-form-item label="用户姓名：" prop="username" v-if="!bjShow">
-            <el-input v-model="form.userRealName"></el-input>
-          </el-form-item>
-          <el-form-item label="用户昵称：" prop="ptname">
-            <el-input v-model="form.userNickName"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号码：" prop="tel">
-            <el-input v-model.number="form.userPhone" type="number"></el-input>
-          </el-form-item>
-          <el-form-item label="备注：">
-            <el-input v-model="form.txt"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button class="payNameBnt1" @click="resetForm('form')">取消</el-button>
-            <el-button class="payNameBnt2" @click="submitForm('form')">确定</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-dialog>
-
-    <!--修改金额-->
-
-    <el-dialog :visible.sync="dialogFormVisibleChange" :close-on-click-modal="false"
-               :before-close="ai_dialog_closeChange">
-            <span slot="title" class="dialog-footer">
-                <span>修改金额</span>
-            </span>
-      <div class="payNameDiaBox">
-        <el-form ref="changeForm" :model="changeForm" label-width="130px" :rules="rules">
-          <el-form-item label="金额：" prop="moeny" >
-            <el-input v-model="changeForm.moeny" type="number"></el-input>
-          </el-form-item>
-          <el-form-item label="类型：" prop="leixing">
-            <el-select v-model="changeForm.leixing" placeholder="请选择类型">
-              <el-option label="系统加款" value="1"></el-option>
-              <el-option label="系统扣款" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="备注：" prop="beizhu">
-            <el-input v-model="changeForm.beizhu"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button class="payNameBnt1" @click="resetFormChange('changeForm')">取消</el-button>
-            <el-button class="payNameBnt2" @click="submitFormChange('changeForm')">确定</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-  import { listUser, listPeople, addUser, removeUser, changeUser, guanliUser,changeUserMoney } from '@/api/adminUser'
+  import { listCashVo,  addUser,changeUserMoney } from '@/api/adminUser'
 
   export default {
     name: 'index',
@@ -257,51 +187,45 @@
         input1: '',
         input2: '',
         region: '',
+        regionCheckStatus: undefined,
+        cashType:1,
         tabHead: [
           {
-            label: '用户ID',
-            prop: 'userId'
+            label: '提现编号',
+            prop: 'cashId'
           },
           {
-            label: '用户信息',
-            prop: 'userNickName'
+            label: '交易账号',
+            prop: 'accountId'
           },
           {
-            label: '客户姓名',
+            label: '交易姓名',
             prop: 'userRealName'
           },
           {
-            label: '创建日期',
-            prop: 'userRegisterDate'
+            label: '操作时间',
+            prop: 'addDate'
           },
           {
-            label: '最后登录',
-            prop: 'lastLoginDate'
+            label: '交易金额',
+            prop: 'cashMoney'
           },
           {
-            label: '订单数',
-            prop: 'orderNum'
-          },
-          {
-            label: '账户余额',
+            label: '会员账户余额',
             prop: 'userMoney'
           },
           {
-            label: '身份',
-            prop: 'userType'
+            label: '备注',
+            prop: 'remarks'
           },
           {
-            label: '红利',
-            prop: 'bonusRate'
+            label: '审核时间',
+            prop: 'checkDate'
           },
           {
-            label: '佣金',
-            prop: 'commissionRate'
+            label: '审核状态',
+            prop: 'checkStatus'
           },
-          {
-            label: '归属代理商',
-            prop: 'agentName'
-          }
         ],
         form: {
           username: '',
@@ -347,7 +271,7 @@
           // ],
         },
         peopleList: [],
-        shoppingList: '',
+        cashVoDataList: '',
         //  修改金额
         dialogFormVisibleChange: false,
         changeForm: {
@@ -359,16 +283,11 @@
       }
     },
     created() {
-      this.getshlist()
-      this.getpeopleList()
+      this.queryDetailForCash()
+    //  this.getpeopleList()
     },
     methods: {
-      //修改余额
-      changeMoney(index, row) {
-        this.dialogFormVisibleChange = true;
-        console.log(row)
-        this.changeId = row.merchantInfo.merchantInfoId
-      },
+
       submitFormChange(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -384,7 +303,7 @@
                 this.$message.success(res.message);
                 this.dialogFormVisibleChange = false
                 this.$refs[`changeForm`].resetFields();
-                this.getshlist();
+                this.queryDetailForCash();
               }else {
                 this.$message.error(res.message);
               }
@@ -434,14 +353,16 @@
       seeOther() {
         this.currentPage = 1
         var data = {
-          userNickName: this.input2,
+          userRealName: this.input2,
           userId: this.input1,
           pageNum: this.currentPage,
+          checkStatus:this.regionCheckStatus,
+          cashType:this.cashType
         }
-        listUser(data).then(res => {
+        listCashVo(data).then(res => {
           console.log(res)
           if (res.code == 10000) {
-            this.shoppingList = res.data
+            this.cashVoDataList = res.data
           } else {
             this.$message.error(res.message)
           }
@@ -451,17 +372,18 @@
         this.input1 = ''
         this.input2 = ''
         this.currentPage = 1
-        this.getshlist()
+        this.queryDetailForCash()
       },
-      //获取商户列表
-      getshlist() {
+      //提现明细列表
+      queryDetailForCash() {
         var data = {
           pageNum: this.currentPage,
+          cashType:this.cashType
         }
-        listUser(data).then(res => {
+        listCashVo(data).then(res => {
           console.log(res)
           if (res.code == 10000) {
-            this.shoppingList = res.data
+            this.cashVoDataList = res.data
           } else {
             this.$message.error(res.message)
           }
@@ -480,75 +402,15 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`)
-        this.getshlist()
+        this.queryDetailForCash()
       },
       refresh() {
         this.currentPage = 1
-        this.getshlist()
+        this.queryDetailForCash()
       },
       ai_dialog_close() {
         this.dialogFormVisible = false
         this.$refs[`form`].resetFields()
-      },
-      //获取角色组
-      // getpeopleList() {
-      //   var data = {
-      //     pageNum: this.currentPage
-      //   }
-      //   listPeople(data).then(res => {
-      //     console.log(res)
-      //     if (res.code == 10000) {
-      //       let list = res.data.list
-      //       var arr = []
-      //       for (var i = 0; i < list.length; i++) {
-      //         var obj = {}
-      //         obj.userId = list[i].userId
-      //         // obj.roleName = list[i].roleName
-      //         arr.push(obj)
-      //       }
-      //       this.peopleList = arr
-      //     } else {
-      //       this.$message.error(res.message)
-      //     }
-      //   })
-      // },
-      //禁用启用
-      // changeUser(index, row) {
-      //   console.log(row)
-      //   let locked = row.locked
-      //   var userlocked = ''
-      //   if (locked == 1) {
-      //     userlocked = 2
-      //   } else {
-      //     userlocked = 1
-      //   }
-      //   var data = {
-      //     locked: userlocked,
-      //     sysUserId: row.sysUserId
-      //   }
-      //   guanliUser(data).then(res => {
-      //     console.log(res)
-      //     if (res.code == 10000) {
-      //       this.getshlist()
-      //     } else {
-      //       this.$message.error(res.message)
-      //     }
-      //   })
-      // },
-
-      //新增
-      openDia() {
-        // this.openDia = false;
-        this.bjShow = false
-        this.text = '新增客户'
-        this.dialogFormVisible = true
-        this.form = {
-          userNickName: '',
-          userRealName: '',
-          userPhone: '',
-          userType: '',
-          txt: ''
-        }
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -563,7 +425,7 @@
             addUser(data).then(res => {
               console.log(res)
               if (res.code == 10000) {
-                this.getshlist()
+                this.queryDetailForCash()
                 this.$message.success(res.message)
                 this.$refs[formName].resetFields()
                 this.dialogFormVisible = false

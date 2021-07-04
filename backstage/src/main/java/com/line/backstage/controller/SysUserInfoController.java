@@ -3,6 +3,7 @@ package com.line.backstage.controller;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.UserInfo;
+import com.line.backstage.entity.sysentity.ManCashVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
@@ -100,6 +101,17 @@ public class SysUserInfoController {
     @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
     public ResponseModel queryInfoList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManUserVo manUserVo) {
         return ResponseHelper.success(sysUserInfoService.queryManUserVoForPage(Integer.valueOf(ManageUserId), manUserVo));
+    }
+    /**
+     * 管理端-查询提现记录
+     * @param ManageUserId
+     * @param manCashVo
+     * @return
+     */
+    @PostMapping("queryCashDetail")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    public ResponseModel queryCashDetail(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManCashVo manCashVo) {
+        return ResponseHelper.success(sysUserInfoService.queryManCashVoForPage(Integer.valueOf(ManageUserId), manCashVo));
     }
 
     /**

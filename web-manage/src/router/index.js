@@ -132,10 +132,10 @@ export const constantRoutes = [
       },
 
       {
-        path: 'admin',
-        name: 'admin',
-        component: () => import('@/views/form/admin'),
-        meta: { title: '充值订单' }
+        path: 'cashin',
+        name: 'cashin',
+        component: () => import('@/views/form/cashin'),
+        meta: { title: '充值列表' }
       },
     ]
   },{
