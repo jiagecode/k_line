@@ -31,6 +31,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/sysUserInfo/getUserInfo", "anon");
         filterChainDefinitionMap.put("/userInfo/login/**", "anon");
         filterChainDefinitionMap.put("/userInfo/logout/**", "anon");
+        filterChainDefinitionMap.put("/websocket/**", "anon");
         //swagger2
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/swagger-resources", "anon");
