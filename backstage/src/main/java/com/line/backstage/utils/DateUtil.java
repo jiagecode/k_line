@@ -135,6 +135,9 @@ public class DateUtil {
         return sdf.format(date);
     }
 
+    public static int getTodayIntNum(){
+        return Integer.parseInt(formatShortDate(new Date()));
+    }
     /**
      * 格式日期字符串（短格式：yyyyMMdd）
      *

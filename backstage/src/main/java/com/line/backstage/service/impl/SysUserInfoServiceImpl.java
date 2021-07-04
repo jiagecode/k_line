@@ -5,17 +5,16 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.line.backstage.dao.mapper.CashOutInMapper;
-import com.line.backstage.dao.mapper.SysMenuInfoMapper;
-import com.line.backstage.dao.mapper.SysUserInfoMapper;
-import com.line.backstage.dao.mapper.UserInfoMapper;
+import com.line.backstage.dao.mapper.*;
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.sysentity.ManCashVo;
+import com.line.backstage.entity.sysentity.ManOrderVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
 import com.line.backstage.utils.DateUtil;
+import com.line.backstage.utils.DateUtils;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.MenuRouteVo;
@@ -51,6 +50,8 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private CashOutInMapper cashOutInMapper;
+    @Resource
+    private OrderInfoMapper orderInfoMapper;
     /**
      * 保存数据
      *
@@ -168,6 +169,34 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             manCashVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         }
         PageInfo<ManCashVo> page = new PageInfo<>(cashOutInMapper.queryManCashVoList(manCashVo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
+    }
+
+    @Override
+    public PageWrapper<ManOrderVo> queryManOrderVoForPage(Integer loginUserId, ManOrderVo manOrderVo) {
+        PageHelper.startPage(manOrderVo.getPageNum(), manOrderVo.getPageSize());
+        if(manOrderVo.getDel() == null){
+            manOrderVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        Integer userType = manOrderVo.getUserType();
+        Integer investType = manOrderVo.getInvestType();
+        Integer orderStatus = manOrderVo.getOrderStatus();
+        Integer queryDataFlag = manOrderVo.getQueryDataFlag();
+        if(userType!= null && userType!= 1 && userType!=2){
+            manOrderVo.setUserType(null);
+        }
+        if(investType!= null && investType!= 1 && investType!=2){
+            manOrderVo.setInvestType(null);
+        }
+        if(orderStatus!= null && orderStatus!= 1 && orderStatus!=2){
+            manOrderVo.setOrderStatus(null);
+        }
+        if(queryDataFlag!= null && queryDataFlag!= 1 && queryDataFlag!=2){
+            manOrderVo.setQueryDataFlag(null);
+        }
+        manOrderVo.setTodayNum(DateUtil.getTodayIntNum());
+        PageInfo<ManOrderVo> page = new PageInfo<>(orderInfoMapper.queryManOrderVoForPage(manOrderVo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

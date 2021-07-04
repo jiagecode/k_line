@@ -174,7 +174,7 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/sys',
+    path: '/orderMan',
     component: Layout,
     redirect: 'noRedirect',
     meta: {
@@ -183,15 +183,15 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'log',
-        name: 'log',
-        component: () => import('@/views/sys/log'),
-        meta: { title: '代付订单' }
+        path: 'orderWater',
+        name: 'orderWater',
+        component: () => import('@/views/orderMan/orderWater'),
+        meta: { title: '订单流水' }
       },
       {
-        path: 'pingcang',
-        name: 'pingcang',
-        component: () => import('@/views/sys/pingcang'),
+        path: 'pingCang',
+        name: 'pingCang',
+        component: () => import('@/views/orderMan/pingCang'),
         meta: { title: '平仓日志' }
       },
     ]
@@ -348,11 +348,11 @@ function generateRouter(item, isParent) {
 export const componentsMap = {
 
   roleIndex: () => import('@/views/role/index'),
-  OfficeIndex: () => import('@/views/sys/office'),
+  OfficeIndex: () => import('@/views/orderMan/office'),
   AdminIndex: () => import('@/views/form/admin'),
   MenuIndex: () => import('@/views/role/menu'),
-  RoleIndex: () => import('@/views/sys/role'),
-  LogIndex: () => import('@/views/sys/log')
+  RoleIndex: () => import('@/views/orderMan/role'),
+  LogIndex: () => import('@/views/orderMan/orderWater')
 }
 
 const createRouter = () => new Router({

@@ -2,6 +2,7 @@ package com.line.backstage.dao.mapper;
  
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.OrderInfo;
+import com.line.backstage.entity.sysentity.ManOrderVo;
 
 import java.util.List;
 
@@ -13,5 +14,5 @@ import java.util.List;
  */
 public interface OrderInfoMapper extends TkBaseMapper<OrderInfo> {
 
-//    List<OrderInfo> queryMyOrder(OrderInfo orderInfo);
+    List<ManOrderVo> queryManOrderVoForPage(ManOrderVo manOrderVo);
 }
