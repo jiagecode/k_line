@@ -93,7 +93,6 @@
         </if>
         order by u.USER_ID DESC
     </select>
-
     <select id="queryUserIdForPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
         select USER_ID from t_user_info where USER_PHONE = #{tel}
     </select>

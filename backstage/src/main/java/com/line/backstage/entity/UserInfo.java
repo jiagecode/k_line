@@ -159,6 +159,36 @@ public class UserInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
+    /**
+     * 备注
+     */
+    @ApiModelProperty("备注")
+    private String remarks;
+    /**
+     * 所属代理id
+     */
+    @ApiModelProperty("所属代理id")
+    private Integer agentId;
+    /**
+     *所属代理名称
+     */
+    @ApiModelProperty("所属代理名称")
+    private String agentName;
+    /**
+     * 所属代理名称
+     */
+    @ApiModelProperty("所属代理名称")
+    private Date agentTime;
+    /**
+     *所属代理名称
+     */
+    @ApiModelProperty("所属代理名称")
+    private Double bonusRate;
+    /**
+     * 所属代理名称
+     */
+    @ApiModelProperty("所属代理名称")
+    private Double commissionRate;
     @Transient
     private Double userMoney;
 }

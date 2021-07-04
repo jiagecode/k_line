@@ -5,11 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.line.backstage.dao.mapper.CashOutInMapper;
 import com.line.backstage.dao.mapper.SysMenuInfoMapper;
 import com.line.backstage.dao.mapper.SysUserInfoMapper;
 import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.entity.SysUserInfo;
+import com.line.backstage.entity.sysentity.ManCashVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
@@ -47,6 +49,8 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     private SysMenuInfoMapper sysMenuInfoMapper;
     @Resource
     private UserInfoMapper userInfoMapper;
+    @Resource
+    private CashOutInMapper cashOutInMapper;
     /**
      * 保存数据
      *
@@ -153,6 +157,17 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             }
         }
         PageInfo<ManUserVo> page = new PageInfo<>(userInfoMapper.queryManUserVoList(userVo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
+    }
+
+    @Override
+    public PageWrapper<ManCashVo> queryManCashVoForPage(Integer loginUserId, ManCashVo manCashVo) {
+        PageHelper.startPage(manCashVo.getPageNum(), manCashVo.getPageSize());
+        if(manCashVo.getDel() == null){
+            manCashVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        PageInfo<ManCashVo> page = new PageInfo<>(cashOutInMapper.queryManCashVoList(manCashVo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

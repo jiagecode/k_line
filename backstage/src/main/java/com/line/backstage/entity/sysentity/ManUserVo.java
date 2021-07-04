@@ -14,26 +14,6 @@ import java.util.Date;
 @Data
 public class ManUserVo extends UserInfo {
     /**
-     * 所属代理id
-     */
-    private Integer agentId;
-    /**
-     *所属代理名称
-     */
-    private String agentName;
-    /**
-     * 成为代理时间
-     */
-    private Date agentTime;
-    /**
-     *红利
-     */
-    private Double bonusRate;
-    /**
-     * 佣金
-     */
-    private Double commissionRate;
-    /**
      * 订单数
      */
     private Integer orderNum;

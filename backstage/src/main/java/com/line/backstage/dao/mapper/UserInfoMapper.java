@@ -21,5 +21,6 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
      */
     List<ManUserVo> queryManUserVoList(ManUserVo vo);
 
+
     Integer queryUserIdForPhone(@Param("tel") String phone);
 }
