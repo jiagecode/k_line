@@ -5,6 +5,7 @@ import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.entity.sysentity.ManCashVo;
 import com.line.backstage.entity.sysentity.ManOrderVo;
+import com.line.backstage.entity.sysentity.ManRecordVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
@@ -124,6 +125,17 @@ public class SysUserInfoController {
     @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
     public ResponseModel queryOrderDataList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManOrderVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManOrderVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
+    }
+    /**
+     * 管理端-查询平仓记录
+     * @param ManageUserId
+     * @param manOrderVo
+     * @return
+     */
+    @PostMapping("queryManRecordVoForPage")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    public ResponseModel queryManRecordVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManRecordVo manOrderVo) {
+        return ResponseHelper.success(sysUserInfoService.queryManRecordVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
 
     /**

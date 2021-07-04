@@ -10,6 +10,7 @@ import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.sysentity.ManCashVo;
 import com.line.backstage.entity.sysentity.ManOrderVo;
+import com.line.backstage.entity.sysentity.ManRecordVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
@@ -52,6 +53,8 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     private CashOutInMapper cashOutInMapper;
     @Resource
     private OrderInfoMapper orderInfoMapper;
+    @Resource
+    private AccountRecordMapper accountRecordMapper;
     /**
      * 保存数据
      *
@@ -195,8 +198,27 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         if(queryDataFlag!= null && queryDataFlag!= 1 && queryDataFlag!=2){
             manOrderVo.setQueryDataFlag(null);
         }
+        if(manOrderVo.getBeginDate() == null && manOrderVo.getEndDate() == null){
+            manOrderVo.setBeginDate(DateUtil.getStartTimeOfToday());
+            manOrderVo.setEndDate(DateUtil.getEndTimeOfDay(new Date()));
+        }
         manOrderVo.setTodayNum(DateUtil.getTodayIntNum());
         PageInfo<ManOrderVo> page = new PageInfo<>(orderInfoMapper.queryManOrderVoForPage(manOrderVo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
+    }
+
+    @Override
+    public PageWrapper<ManRecordVo> queryManRecordVoForPage(Integer loginUserId, ManRecordVo recordVo) {
+        PageHelper.startPage(recordVo.getPageNum(), recordVo.getPageSize());
+        if(recordVo.getDel() == null){
+            recordVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        if(recordVo.getBeginDate() == null && recordVo.getEndDate() == null){
+            recordVo.setBeginDate(DateUtil.getStartTimeOfToday());
+            recordVo.setEndDate(DateUtil.getEndTimeOfDay(new Date()));
+        }
+        PageInfo<ManRecordVo> page = new PageInfo<>(accountRecordMapper.queryManRecordVoForPage(recordVo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

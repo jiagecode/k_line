@@ -4,9 +4,9 @@
 
     <resultMap type="com.line.backstage.entity.OrderInfo" id="OrderInfoMap">
         <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
-        <result property="orderType" column="ORDER_TYPE" jdbcType="OTHER"/>
+        <result property="orderType" column="ORDER_TYPE" jdbcType="INTEGER"/>
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
-        <result property="orderStatus" column="ORDER_STATUS" jdbcType="OTHER"/>
+        <result property="orderStatus" column="ORDER_STATUS" jdbcType="INTEGER"/>
         <result property="skuId" column="SKU_ID" jdbcType="INTEGER"/>
         <result property="skuCode" column="SKU_CODE" jdbcType="VARCHAR"/>
         <result property="skuQty" column="SKU_QTY" jdbcType="NUMERIC"/>
@@ -17,7 +17,7 @@
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="orderCycle" column="ORDER_CYCLE" jdbcType="INTEGER"/>
         <result property="investAmount" column="INVEST_AMOUNT" jdbcType="NUMERIC"/>
-        <result property="investType" column="INVEST_TYPE" jdbcType="OTHER"/>
+        <result property="investType" column="INVEST_TYPE" jdbcType="INTEGER"/>
         <result property="expectedReturn" column="EXPECTED_RETURN" jdbcType="NUMERIC"/>
         <result property="guaranteedAmount" column="GUARANTEED_AMOUNT" jdbcType="NUMERIC"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
@@ -32,9 +32,9 @@
     </resultMap>
     <resultMap type="com.line.backstage.entity.sysentity.ManOrderVo" id="ManOrderVoInfoMap">
         <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
-        <result property="orderType" column="ORDER_TYPE" jdbcType="OTHER"/>
+        <result property="orderType" column="ORDER_TYPE" jdbcType="INTEGER"/>
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
-        <result property="orderStatus" column="ORDER_STATUS" jdbcType="OTHER"/>
+        <result property="orderStatus" column="ORDER_STATUS" jdbcType="INTEGER"/>
         <result property="skuId" column="SKU_ID" jdbcType="INTEGER"/>
         <result property="skuCode" column="SKU_CODE" jdbcType="VARCHAR"/>
         <result property="skuQty" column="SKU_QTY" jdbcType="NUMERIC"/>
@@ -45,7 +45,7 @@
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="orderCycle" column="ORDER_CYCLE" jdbcType="INTEGER"/>
         <result property="investAmount" column="INVEST_AMOUNT" jdbcType="NUMERIC"/>
-        <result property="investType" column="INVEST_TYPE" jdbcType="OTHER"/>
+        <result property="investType" column="INVEST_TYPE" jdbcType="INTEGER"/>
         <result property="expectedReturn" column="EXPECTED_RETURN" jdbcType="NUMERIC"/>
         <result property="guaranteedAmount" column="GUARANTEED_AMOUNT" jdbcType="NUMERIC"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>

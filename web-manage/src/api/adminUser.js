@@ -32,6 +32,14 @@ export function orderVoList(data) {
     data:data
   })
 }
+//查询平仓日志
+export function pingCangDataVo(data) {
+  return request({
+    url: '/sysUserInfo/queryManRecordVoForPage',
+    method: 'post',
+    data:data
+  })
+}
 //新增用户
 export function addUser(data) {
   return request({

@@ -17,4 +17,54 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="OTHER"/>
     </resultMap>
+
+    <resultMap type="com.line.backstage.entity.sysentity.ManRecordVo" id="AccountRecordMapVo">
+        <result property="recordId" column="RECORD_ID" jdbcType="INTEGER"/>
+        <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
+        <result property="recordType" column="RECORD_TYPE" jdbcType="INTEGER"/>
+        <result property="changeMoney" column="CHANGE_MONEY" jdbcType="NUMERIC"/>
+        <result property="beforeMoney" column="BEFORE_MONEY" jdbcType="NUMERIC"/>
+        <result property="afterMoney" column="AFTER_MONEY" jdbcType="NUMERIC"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
+        <result property="serviceCharge" column="SERVICE_CHARGE" jdbcType="NUMERIC"/>
+        <result property="integral" column="INTEGRAL" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+        <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="record_vo_Column_List">
+        r.RECORD_ID,r.ACCOUNT_ID,r.RECORD_TYPE,r.CHANGE_MONEY,r.BEFORE_MONEY,r.AFTER_MONEY,
+        r.ADD_DATE,r.EDIT_DATE,r.ORDER_ID,r.SERVICE_CHARGE,r.ADD_USER_ID,r.EDIT_USER_ID,r.DEL,
+        u.USER_REAL_NAME,u.USER_ID,o.INTEGRAL
+    </sql>
+    <select id="queryManRecordVoForPage" parameterType="com.line.backstage.entity.sysentity.ManRecordVo" resultMap="AccountRecordMapVo">
+        select <include refid="record_vo_Column_List"/>
+        from t_account_record r
+        left join  t_account_info a on r.ACCOUNT_ID = a.ACCOUNT_ID
+        left join t_user_info u on u.USER_ID = a.USER_ID
+        left join t_order_info o on o.ORDER_ID = r.ORDER_ID
+        where r.DEL = #{del} and r.RECORD_TYPE = 4
+        <if test="queryDataFlag == 2 ">
+            and r.CHANGE_MONEY <![CDATA[ < ]]> 0
+        </if>
+        <if test="queryDataFlag == 1 ">
+            and r.CHANGE_MONEY <![CDATA[ > ]]> 0
+        </if>
+        <if test="userRealName != null and userRealName != ''">
+            and (u.USER_PHONE like concat('%', #{userRealName}, '%')
+            or u.USER_NICK_NAME like concat('%', #{userRealName}, '%')
+            or u.USER_REAL_NAME like concat('%', #{userRealName}, '%')
+            )
+        </if>
+        <if test=" beginDate != null ">
+            and r.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and r.ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
 </mapper>

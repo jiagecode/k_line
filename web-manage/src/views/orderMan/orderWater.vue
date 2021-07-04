@@ -250,7 +250,8 @@ export default {
         userRealName: this.input2,
         orderId: this.input3,
         userType: this.region1,
-        investType: this.region2,
+        queryDataFlag: this.region2,
+        investType: this.region3,
         orderStatus: this.region3,
         pageNum: this.currentPage
       }
