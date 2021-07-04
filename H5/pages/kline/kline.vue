@@ -99,24 +99,30 @@
 			<!--slot(插槽)-->
 			<view slot="page">
 				<!--在这里写入页面层的html内容-->
-				<view><div class="page-top-line"></div></view>
-				<view><p class="page-top-dqsj">到期时间</p></view>
+				<view>
+					<div class="page-top-line"></div>
+				</view>
+				<view>
+					<p class="page-top-dqsj">到期时间</p>
+				</view>
 				<view>
 					<uni-row class="uni-row-page">
 						<uni-col :span="8" class="row-page-item">
-							<view class="uni-col-page light-page-t">结算时间</view>
-							<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">30</b>秒</view>
-							<view class="uni-col-page light-page-d">收益 88%</view>
+							<div @click="SelectBuyItem(1)" class="page-item page-item-1 page-item-select">
+								<view class="uni-col-page light-page-t">结算时间</view>
+								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">30</b>秒</view>
+								<view class="uni-col-page light-page-d">收益 88%</view>
+							</div>
 						</uni-col>
 						<uni-col :span="8" class="row-page-item">
-							<div>
+							<div @click="SelectBuyItem(2)" class="page-item page-item-2">
 								<view class="uni-col-page light-page-t">结算时间</view>
 								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">60</b>秒</view>
 								<view class="uni-col-page light-page-d">收益 90%</view>
 							</div>
 						</uni-col>
 						<uni-col :span="8" class="row-page-item">
-							<div>
+							<div @click="SelectBuyItem(3)" class="page-item page-item-3">
 								<view class="uni-col-page light-page-t">结算时间</view>
 								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">180</b>秒</view>
 								<view class="uni-col-page light-page-d">收益 92%</view>
@@ -124,41 +130,45 @@
 						</uni-col>
 					</uni-row>
 				</view>
-				<!-- <view><p class="page-top-dqsj"></p></view> -->
-				<view><p class="page-top-dqsj">投资金额</p></view>
+				<view>
+					<p class="page-top-dqsj">投资金额</p>
+				</view>
 				<view>
 					<uni-row class="uni-row-page1">
 						<uni-col :span="4" class="row-page1-item">
-							<div>
-							<view class="uni-col-page1 light-page1-t">¥10</view>
+							<div @click="SelectBuyAccount(10)" class="page-amount page-amount-1 page-amount-select">
+								<view class="uni-col-page1 light-page1-t">¥10</view>
 							</div>
 						</uni-col>
 						<uni-col :span="4" class="row-page1-item">
-							<div>
+							<div @click="SelectBuyAccount(50)" class="page-amount page-amount-2">
 								<view class="uni-col-page1 light-page1-t">¥50</view>
 							</div>
 						</uni-col>
 						<uni-col :span="4" class="row-page1-item">
-							<div>
+							<div @click="SelectBuyAccount(100)" class="page-amount page-amount-3">
 								<view class="uni-col-page1 light-page1-t">¥100</view>
 							</div>
 						</uni-col>
 						<uni-col :span="4" class="row-page1-item">
-							<div>
+							<div @click="SelectBuyAccount(500)" class="page-amount page-amount-4">
 								<view class="uni-col-page1 light-page1-t">¥500</view>
 							</div>
 						</uni-col>
 						<uni-col :span="4" class="row-page1-item">
-							<div>
+							<div @click="SelectBuyAccount(1000)" class="page-amount page-amount-5">
 								<view class="uni-col-page1 light-page1-t">¥1000</view>
 							</div>
 						</uni-col>
 						<uni-col :span="4" class="row-page1-item">
-							<div>
+							<div @click="SelectBuyAccount(5000)" class="page-amount page-amount-6">
 								<view class="uni-col-page1 page1-md light-page1-t">¥5000</view>
 							</div>
 						</uni-col>
 					</uni-row>
+				</view>
+				<view>
+					<p class="page-top-dqsj"></p>
 				</view>
 				<uni-row class="">
 					<uni-col :span="12" class="row-page1-item">
@@ -168,7 +178,9 @@
 						<view class="page-left-sxf">手续费: 0% </view>
 					</uni-col>
 				</uni-row>
-				<view><div class="page-c-line"></div></view>
+				<view>
+					<div class="page-c-line"></div>
+				</view>
 				<view>
 					<uni-row class="uni-row-page2">
 						<uni-col :span="6" class="row-page2-item">
@@ -186,7 +198,7 @@
 						<uni-col :span="6" class="row-page2-item">
 							<div>
 								<view class="uni-col-page2 light-page2-t">现价</view>
-								<view class="uni-col-page2 light-page2-d page-2-xj">34467.23</view>
+								<view class="uni-col-page2 light-page2-d page-2-xj">{{SocketMsg.PRICE}}</view>
 							</div>
 						</uni-col>
 						<uni-col :span="6" class="row-page2-item">
@@ -197,19 +209,23 @@
 						</uni-col>
 					</uni-row>
 				</view>
-				<view><p class="page-top-dqsj"></p></view>
+				<view>
+					<p class="page-top-dqsj"></p>
+				</view>
 				<view>
 					<button class="page-btn-submit" type="default" size="default" @click="SubmitBuy()">确认下单</button>
 				</view>
 				<uni-row>
-					<uni-col :span="12" >
+					<uni-col :span="12">
 						<view class="page-left-yqsy" style="text-align: center;">预期收益:¥0</view>
 					</uni-col>
-					<uni-col :span="12" >
+					<uni-col :span="12">
 						<view class="page-left-bdje" style="text-align: center;">保底金额:¥0.00</view>
 					</uni-col>
 				</uni-row>
-				<view><p class="page-top-dqsj"></p></view>
+				<view>
+					<p class="page-top-dqsj"></p>
+				</view>
 			</view>
 		</vus-layer>
 		<!-- 弹出层 -->
@@ -218,31 +234,34 @@
 
 <style>
 	/* // 弹出层引入CSS文件 */
-	@import "../../components/vusui-app-layer/theme/default/vusui-layer.css";  
+	@import "../../components/vusui-app-layer/theme/default/vusui-layer.css";
+
 	/* 弹出框内容css */
-	.page-top-line{
+	.page-top-line {
 		margin: 0 auto;
 		margin-top: 20upx;
 		width: 100%;
 		height: 4upx;
 		background-color: #000000;
 	}
-	.page-top-dqsj{
+
+	.page-top-dqsj {
 		height: 60upx;
 		text-align: left;
 		line-height: 60upx;
 		color: #8c8b90;
 	}
+
 	.uni-row-page {
 		margin-top: 20upx;
 		margin-bottom: 20upx;
 		height: 150upx;
 	}
-	
+
 	.uni-col-page {
 		height: 150upx;
 	}
-	
+
 	.light-page-t {
 		height: 40upx;
 		line-height: 40upx;
@@ -251,6 +270,7 @@
 		color: #8c8b90;
 		background-color: #424448;
 	}
+
 	.light-page-c {
 		height: 70upx;
 		line-height: 70upx;
@@ -259,6 +279,7 @@
 		color: #ffc71e;
 		background-color: #424448;
 	}
+
 	.light-page-d {
 		height: 40upx;
 		line-height: 40upx;
@@ -268,19 +289,25 @@
 		color: #f6676c;
 		background-color: #424448;
 	}
-	.row-page-item{
+
+	.row-page-item {
 		padding-left: 10upx !important;
 		padding-right: 10upx !important;
 	}
-	
+
+	.page-item-select {
+		border-radius: 6upx;
+		border: 6upx solid #ffc71e;
+	}
+
 	.uni-row-page1 {
 		height: 80upx;
 	}
-	
+
 	.uni-col-page1 {
 		height: 80upx;
 	}
-	
+
 	.light-page1-t {
 		height: 60upx;
 		line-height: 60upx;
@@ -289,40 +316,50 @@
 		color: #ffc71e;
 		background-color: #434549;
 	}
-	.row-page1-item{
+
+	.row-page1-item {
 		padding-top: 10upx !important;
 		padding-bottom: 10upx !important;
 		padding-left: 10upx !important;
 		padding-right: 10upx !important;
 	}
-	.page-left-ye{
+
+	.page-amount-select {
+		border-radius: 4upx;
+		border: 4upx solid #ffc71e;
+	}
+
+	.page-left-ye {
 		float: left;
 		width: 50%;
 		height: 50upx;
 		line-height: 50upx;
 		color: #8c8b90;
 	}
-	.page-left-sxf{
+
+	.page-left-sxf {
 		float: right;
 		width: 50%;
 		height: 50upx;
 		line-height: 50upx;
 		color: #8c8b90;
 	}
-	.page-c-line{
+
+	.page-c-line {
 		margin: 0 auto;
 		width: 100%;
 		height: 4upx;
 		background-color: #434347;
 	}
+
 	.uni-row-page2 {
 		height: 120upx;
 	}
-	
+
 	.uni-col-page2 {
 		height: 60upx;
 	}
-	
+
 	.light-page2-t {
 		height: 60upx;
 		line-height: 60upx;
@@ -331,6 +368,7 @@
 		text-align: center;
 		color: #8c8b90;
 	}
+
 	.light-page2-d {
 		height: 60upx;
 		line-height: 60upx;
@@ -338,32 +376,39 @@
 		text-align: center;
 		color: #4e4d52;
 	}
-	.row-page2-item{
+
+	.row-page2-item {
 		padding-top: 10upx !important;
 		padding-bottom: 10upx !important;
 		padding-left: 10upx !important;
 		padding-right: 10upx !important;
 	}
-	.page-2-name{
+
+	.page-2-name {
 		font-size: 30upx;
 		color: #FFFFFF;
 	}
-	.page-2-fx{
+
+	.page-2-fx {
 		font-size: 30upx;
 		color: #f6676c;
 	}
-	.page-2-xj{
+
+	.page-2-xj {
 		font-size: 30upx;
 		color: #f6676c;
 	}
-	.page-2-je{
+
+	.page-2-je {
 		font-size: 30upx;
 		color: #FFB400;
 	}
-	.page-btn-submit{
+
+	.page-btn-submit {
 		background-color: #ffc71d;
 	}
-	.page-left-yqsy{
+
+	.page-left-yqsy {
 		display: contents;
 		float: left;
 		/* width: 50%; */
@@ -373,7 +418,8 @@
 		text-align: center;
 		color: #ffc71d;
 	}
-	.page-left-bdje{
+
+	.page-left-bdje {
 		display: contents;
 		float: right;
 		/* width: 50%; */
@@ -383,11 +429,12 @@
 		color: #ffc71d;
 		text-align: center;
 	}
+
 	/* 弹出框内容css */
-	
-	
-	
-	
+
+
+
+
 	.uni-row-top {
 		height: 60px;
 	}
@@ -398,7 +445,7 @@
 
 	.light-top-t {
 		height: 30px;
-		line-height: 30px;
+		line-height: 36px;
 		font-size: 17px;
 		text-align: center;
 		color: #555555;
@@ -407,7 +454,7 @@
 
 	.light-top-d {
 		height: 30px;
-		line-height: 30px;
+		line-height: 24px;
 		font-size: 15px;
 		text-align: center;
 		color: rgb(255, 121, 117);
@@ -495,12 +542,11 @@
 		z-index: 1;
 		background: rgba(0, 0, 0, 0.6);
 	}
-	
 </style>
 
 <script>
 	import moment from 'moment'
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//	HQChart单画布模式,K线/分时共享使用一个画布
 	//
@@ -725,6 +771,13 @@
 					LOWDAY: 0,
 					HIGHDAY: 0,
 				},
+				// 订单数据
+				OrderDirection: 0,
+				OrderItem: 0,
+				OrderAmount: 0,
+				OrderCoin: "",
+				OrderCoinPrice: 0,
+
 			};
 
 			return data;
@@ -846,9 +899,70 @@
 		},
 
 		methods: {
+			// 选择项目
+			SelectBuyItem(item) {
+				// 移除样式
+				var itemList = document.getElementsByClassName("page-item");
+				for (var i = 0; i < itemList.length; i++) {
+					itemList[i].classList.remove("page-item-select");
+				}
+				// 修改样式
+				switch (item) {
+					case 1:
+						document.getElementsByClassName("page-item-1")[0].classList.add("page-item-select");
+						break;
+					case 2:
+						document.getElementsByClassName("page-item-2")[0].classList.add("page-item-select");
+						break;
+					case 3:
+						document.getElementsByClassName("page-item-3")[0].classList.add("page-item-select");
+						break;
+					default:
+						//没有选中
+						break;
+				}
+
+
+				console.log(item);
+			},
+			// 选择金额
+			SelectBuyAccount(account) {
+				// 移除样式
+				var itemList = document.getElementsByClassName("page-amount");
+				for (var i = 0; i < itemList.length; i++) {
+					itemList[i].classList.remove("page-amount-select");
+				}
+				// 修改样式
+				switch (account) {
+					case 10:
+						document.getElementsByClassName("page-amount-1")[0].classList.add("page-amount-select");
+						break;
+					case 50:
+						document.getElementsByClassName("page-amount-2")[0].classList.add("page-amount-select");
+						break;
+					case 100:
+						document.getElementsByClassName("page-amount-3")[0].classList.add("page-amount-select");
+						break;
+					case 500:
+						document.getElementsByClassName("page-amount-4")[0].classList.add("page-amount-select");
+						break;
+					case 1000:
+						document.getElementsByClassName("page-amount-5")[0].classList.add("page-amount-select");
+						break;
+					case 5000:
+						document.getElementsByClassName("page-amount-6")[0].classList.add("page-amount-select");
+						break;
+					default:
+						//没有选中
+						break;
+				}
+
+
+				console.log(account);
+			},
 			// 下单
-			SubmitBuy(){
-				
+			SubmitBuy() {
+				console.log("下单");
 			},
 			// 购买弹窗
 			ClickBuy(type) {
@@ -978,8 +1092,6 @@
 			ChangeKLinePeriod: function(period) {
 				this.KLine.Period = period;
 				var periodList = document.getElementsByClassName("btn-period");
-				console.log(periodList);
-				console.log(period);
 				for (var i = 0; i < periodList.length; i++) {
 					periodList[i].style.backgroundColor = "#f8f8f8";
 				}
