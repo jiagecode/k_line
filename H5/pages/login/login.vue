@@ -1,5 +1,5 @@
 <template>
-	<view class="body">
+	<view class="body sv">
 		<!-- 密码登录提示 -->
 		<H1 style="padding-top: 80rpx;">密码登录</H1>
 		<view style="padding-top: 75rpx;">

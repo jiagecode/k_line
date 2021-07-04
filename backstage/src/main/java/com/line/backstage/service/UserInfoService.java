@@ -29,6 +29,13 @@ public interface UserInfoService {
      * @return
      */
     int addNewUser(Integer loginUserId, UserInfo userInfo);
+
+    /**
+     * H5新增用户
+     * @param userInfo
+     * @return
+     */
+    String createUserInfo(UserInfo userInfo);
     /**
      * 新增数据
      *

@@ -1,5 +1,5 @@
 <template>
-	<view class="body">
+	<view class="body sv">
 		<!-- 密码登录提示 -->
 		<H1 style="padding-top: 75rpx;">注册账号</H1>
 		<view style="padding-top: 75rpx;">
@@ -61,18 +61,16 @@
 	export default {
 		data() {
 			return {
-				phone: '18866668888',
-				passwordOne: '123456',
-				passwordTwo: '123456',
-				userName: 'admin',
+				phone: '',
+				passwordOne: '',
+				passwordTwo: '',
+				userName: '',
 				countryAndCode: '',
 				isXy: true
 			}
 		},
 		// option为object类型，会序列化上个页面传递的参数
 		onLoad(options) {
-			console.log(options);
-			console.log(options.country);
 			
 			// 根据定位对象取出对应的城市			
 			const country = (options.country && JSON.parse(decodeURIComponent(options.country))) || {"area": "中国","area_code": "+86", pinyin: 'Z'};
@@ -83,35 +81,66 @@
 		methods: {
 			// 注册
 			toRegister(){
-				console.log("toLogin");
-				uni.switchTab({
-					url:'../home/home'
+				
+				if(this.phone.length !== 11){
+					uni.showToast({
+						icon: 'none',   
+						duration: 1000,
+						title: '手机号不正确'
+					});
+					return;
+				}
+				
+				if(this.passwordOne !== this.passwordTwo){
+					uni.showToast({
+						icon: 'none',   
+						duration: 1000,
+						title: '密码不一致'
+					});
+					return;
+				}
+				
+				var data = {
+					'userPhone': this.phone,
+					'userRealName': this.userName,
+					'userPassword': this.passwordOne
+				};
+				
+				https.userRegister(data).then((res)=> {
+					if(res != null){
+						// 缓存token
+						uni.setStorageSync('token', res)
+						// 请求用户信息
+						https.getUserInfo().then((res)=> {
+							// 缓存用户信息
+							uni.setStorageSync('userInfo', res);
+						});
+						// 提示用户
+						uni.showToast({
+						    title: '注册成功！',
+						    duration: 1000,
+						})
+						setTimeout(() => {
+							// 跳转页面
+							uni.switchTab({
+								url:'../home/home'
+							})}, 
+						900)
+					}
 				})
 			},
 			// 到登录页
 			toLoginPage(){
+				
 				console.log("toLogin");
 				uni.redirectTo({
 					url:'../login/login'
 				})
-				
-				// 发送 res.code 到后台换取 openId, sessionKey, unionId
-				// var data = {
-				// 	"userName": 'zjs',
-				// 	"password": '123456'
-				// };
-				
-				// 登录
-				// https.userLogin(data).then(res=> {
-				// 	console.log(res)
-				//    uni.setStorageSync('token', res.token)
-				// })
 			},
 				
 			// 同意协议
 			xy() {
 				this.isXy = !this.isXy;
-				console.log("按钮被点击了，且传入的参数是：" + this.isXy)
 			}
 		}
 	}

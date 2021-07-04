@@ -4,7 +4,7 @@
       <view class="d-flex a-center j-center" style="height: 205rpx;">
         <image style="width: 125rpx; height: 125rpx; border-radius: 62.5rpx;" :src=showUserHeadImg(userData.userHeadImg)></image>
       </view>
-      <view class="d-flex j-center" style="margin-top: -10rpx;">{{ userData.userNickName }}</view>
+      <view class="d-flex j-center" style="margin-top: -10rpx;">{{ userData.userRealName }}</view>
       <view class="d-flex j-center" style="color: #5586d3;">￥ 账户金额：{{ userData.userMoney }}</view>
     </view>
     <view class="d-flex"

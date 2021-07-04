@@ -7,6 +7,7 @@ import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
+import com.line.backstage.vo.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,6 +34,25 @@ public class UserInfoController {
      */
     @Resource
     private UserInfoService userInfoService;
+
+    /**
+     * H5新增用户
+     * @param manUserVo
+     * @return
+     */
+    @PostMapping("createUserInfo")
+    @ApiOperation(value = "列表", notes = "H5新增用户")
+    public ResponseModel createUserInfo(@ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
+
+        String s = userInfoService.createUserInfo(manUserVo);
+        if (Objects.equals(s, "40002")) {
+            return ResponseHelper.failedWith(ResultCode.TEL_NULL.getMessage());
+        } else if (Objects.equals(s, "40001")) {
+            return ResponseHelper.failedWith(ResultCode.TEL_EXIST.getMessage());
+        } else {
+            return ResponseHelper.success(s);
+        }
+    }
  
     /**
      * 新增/修改数据

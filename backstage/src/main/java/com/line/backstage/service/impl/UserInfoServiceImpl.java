@@ -10,6 +10,7 @@ import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.UserInfoService;
+import com.line.backstage.shiro.JwtUtil;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.ResultCode;
@@ -64,6 +65,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public int addNewUser(Integer loginUserId, UserInfo userInfo) {
+
         String tel = userInfo.getUserPhone();
         if(StringUtils.isEmpty(tel)){
             return ResultCode.TEL_NULL.getCode();
@@ -81,8 +83,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setAddDate(date);
         userInfo.setUserRegisterDate(date);
         userInfo.setEditDate(date);
-        userInfo.setEditUserId(loginUserId);
-        userInfo.setAddUserId(loginUserId);
+        // XXX 设置加密密码
+        String encryptPwd = PasswordHelper.encryptPassword(userInfo.getUserPhone(), userInfo.getUserPassword());
+        userInfo.setUserPassword(encryptPwd);
+        if (loginUserId != -1) {
+
+            userInfo.setEditUserId(loginUserId);
+            userInfo.setAddUserId(loginUserId);
+        }
         userInfo.setUserGender(1);
         userInfo.setUserLevel(1);
         userInfo.setUserForbidFlag(0);
@@ -93,8 +101,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         int newId  = userInfoMapper.insert(userInfo);
         if(newId == 1){
             newId = userInfoMapper.queryUserIdForPhone(tel);
+            userInfo.setUserId(newId);
         }
-       // System.out.println("创建用户得新id："+newId);
+       // System.out.println("创建用户得新id：" + newId);
         if(2 == userInfo.getUserType()){
             //用户为代理
             userInfo.setAgentId(newId);
@@ -107,12 +116,27 @@ public class UserInfoServiceImpl implements UserInfoService {
         accountInfo.setUserId(newId);
         accountInfo.setAddDate(date);
         accountInfo.setEditDate(date);
-        accountInfo.setEditUserId(loginUserId);
-        accountInfo.setAddUserId(loginUserId);
+        if (loginUserId != -1) {
+            accountInfo.setEditUserId(loginUserId);
+            accountInfo.setAddUserId(loginUserId);
+        }
         accountInfo.setOrderNum(0);
         accountInfo.setAccountMoney(0.0);
         accountInfo.setAccountStatus(0);
-        return accountInfoMapper.insert(accountInfo);
+        int r = accountInfoMapper.insert(accountInfo);
+        return loginUserId == -1 ? -1 : r;
+    }
+
+    /**
+     * H5新增用户
+     * 注册没有 userLoginId -1来区分
+     * @param userInfo
+     * @return
+     */
+    @Override
+    public String createUserInfo(UserInfo userInfo) {
+        int result = addNewUser(-1, userInfo);
+        return result == -1 ? JwtUtil.sign(String.valueOf(userInfo.getUserId()), userInfo.getUserPassword()) : result + "";
     }
 
     /**

@@ -40,7 +40,7 @@
 			<text>支行：</text>
 			<uni-easyinput type="text" :inputBorder="false" placeholder="支行址" :v-model="bankInfo.subBranch"/>
 		</view>
-		<button style="margin-top: 80rpx; width: 45%; background-color: #5586d3; color: #FFFFFF;" @click="createBankInfo()">添加</button>
+		<button style="margin-top: 50rpx; width: 45%; background-color: #5586d3; color: #FFFFFF;" @click="createBankInfo()">添加</button>
 	</view>
   </view>
 </template>
