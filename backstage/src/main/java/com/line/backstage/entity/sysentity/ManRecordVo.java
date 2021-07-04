@@ -34,4 +34,5 @@ public class ManRecordVo extends AccountRecord {
      */
     private Integer userId;
     private Integer integral;
+    private String agentName;
 }

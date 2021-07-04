@@ -218,6 +218,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             recordVo.setBeginDate(DateUtil.getStartTimeOfToday());
             recordVo.setEndDate(DateUtil.getEndTimeOfDay(new Date()));
         }
+        recordVo.setRecordType(DataEnum.RECORD_TYPE4.getCode());
         PageInfo<ManRecordVo> page = new PageInfo<>(accountRecordMapper.queryManRecordVoForPage(recordVo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
