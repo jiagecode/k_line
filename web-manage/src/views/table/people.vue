@@ -98,7 +98,7 @@ export default {
         }, {
           label: '代理名称',
           prop: 'agentName'
-        },, {
+        }, {
           label: '订单ID',
           prop: 'orderId'
         }, {
