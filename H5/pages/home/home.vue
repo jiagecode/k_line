@@ -31,8 +31,10 @@
 						<!-- 涨幅榜 -->
 						<view style="width: 170rpx;">
 							<!-- align-items: center; 垂直居中  justify-content: center; 水平居中 -->
-							<view class="d-flex a-center j-center" v-if="item.current_price / 32688 > 1" style="width: 143rpx; height: 62rpx; background-color: #00c68d; color: #FFFFFF;">+ 4.20%</view>
-							<view class="d-flex a-center j-center" v-else style="width: 143rpx; height: 62rpx; background-color: #fd6d48; color: #FFFFFF; ">- 0.06%</view>
+							<view class="d-flex a-center j-center" v-if="item.price_change_percentage_24h > 0" 
+							style="width: 143rpx; height: 62rpx; background-color: #00c68d; color: #FFFFFF;">+{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
+							<view class="d-flex a-center j-center" v-else 
+							style="width: 143rpx; height: 62rpx; background-color: #fd6d48; color: #FFFFFF; ">{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
 						</view>
 					</view>
 				</block>
@@ -65,12 +67,9 @@
 					let current_price = d.current_price * 6.47;
 					
 					// 转换亿元
-					d.market_cap = (this.numFormat(market_cap / 100000000)) + "亿";
+					d.market_cap = (this.numFormat(d.market_cap / 100000000)) + "亿";
 					// 实时人民币价格
-					console.log(current_price)
-					d.current_price_cny = (this.numFormat(current_price));
-					// 历史价格获取计算涨跌榜
-					this.getOldPrice(d.id);
+					d.current_price_cny = (this.numFormat(d.current_price));
 				}
 				return data;
 			},
@@ -78,14 +77,19 @@
 			numFormat(num) {
 				return (num.toString().indexOf('.') !== -1) ? num.toLocaleString('CNY', {maximumFractionDigits : 2}) : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
 			},
-			getOldPrice(id){
-				uni.request({
-				    url: 'https://api.coingecko.com/api/v3/coins/' + id + '/market_chart?vs_currency=usd&days=1&interval=daily',
-					method: 'get',
-				    success: (res) => {
-				        console.log(res.data.prices)
-				    }
-				});
+			async getOldPrice(id){
+				return await new Promise((resolve, reject) => {
+					uni.request({
+					    // url: 'https://api.coingecko.com/api/v3/coins/' + id + '/market_chart?vs_currency=usd&days=1&interval=daily',
+					    url: 'https://api.coingecko.com/api/v3/coins/' + id + '/ohlc?vs_currency=usd&days=1',
+						method: 'get',
+					    success: (res) => {
+							console.log(res);
+							let c = res.data[0][3];
+							resolve(c);
+					    }
+					});
+				})
 			}
 			// js将数值转化为万、亿、万亿并保留两位小数
 			// numberFormat(value) {
@@ -118,10 +122,10 @@
 			}
 			
 			uni.request({
-			    url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false',
+			    url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false',
 				method: 'get',
 			    success: (res) => {
-			        this.marketsList = this.processingdData(res.data);
+					this.marketsList = this.processingdData(res.data);
 			    }
 			});
 		},

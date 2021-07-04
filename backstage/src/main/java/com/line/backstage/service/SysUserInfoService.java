@@ -2,9 +2,12 @@ package com.line.backstage.service;
  
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.sysentity.ManCashVo;
+import com.line.backstage.entity.sysentity.ManOrderVo;
+import com.line.backstage.entity.sysentity.ManRecordVo;
 import com.line.backstage.entity.sysentity.ManUserVo;
 import com.line.backstage.utils.PageWrapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,7 +86,8 @@ public interface SysUserInfoService {
      * @return
      */
     PageWrapper<ManCashVo> queryManCashVoForPage(Integer loginUserId, ManCashVo manCashVo);
-
+    PageWrapper<ManOrderVo> queryManOrderVoForPage(Integer loginUserId, ManOrderVo manOrderVo);
+    PageWrapper<ManRecordVo> queryManRecordVoForPage(Integer loginUserId,ManRecordVo recordVo);
     /**
      * 系统管理员登录
      * @param sysUserInfo

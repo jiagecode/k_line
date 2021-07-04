@@ -31,8 +31,8 @@
             <!-- 涨幅榜 -->
             <view style="width: 170rpx;">
               <!-- align-items: center; 垂直居中  justify-content: center; 水平居中 -->
-              <view class="d-flex a-center j-center" v-if="item.current_price / 32688 > 1" style="width: 143rpx; height: 62rpx; background-color: #00c68d; color: #FFFFFF;">+ 4.20%</view>
-              <view class="d-flex a-center j-center" v-else style="width: 143rpx; height: 62rpx; background-color: #fd6d48; color: #FFFFFF; ">- 0.06%</view>
+              <view class="d-flex a-center j-center" v-if="item.current_price > 0" style="width: 143rpx; height: 62rpx; background-color: #00c68d; color: #FFFFFF;">+{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
+              <view class="d-flex a-center j-center" v-else style="width: 143rpx; height: 62rpx; background-color: #fd6d48; color: #FFFFFF; ">{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
             </view>
           </view>
         </block>
@@ -57,7 +57,26 @@ export default {
       uni.navigateTo({
         url: '../kline/kline'
       });
-    }
+    },
+	// 处理数据
+	processingdData(data){
+		for (const d of data) {
+			console.log(d)
+			// 美元转换人名币
+			let market_cap = d.market_cap * 6.47;
+			let current_price = d.current_price * 6.47;
+			
+			// 转换亿元
+			d.market_cap = (this.numFormat(d.market_cap / 100000000)) + "亿";
+			// 实时人民币价格
+			d.current_price_cny = (this.numFormat(d.current_price));
+		}
+		return data;
+	},
+	// js 金额用，隔开
+	numFormat(num) {
+		return (num.toString().indexOf('.') !== -1) ? num.toLocaleString('CNY', {maximumFractionDigits : 2}) : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+	}
   },
   onLoad() {
     //非法访问，请重新登录
@@ -80,7 +99,8 @@ export default {
             method: 'get',
             success: (res) => {
               console.log(res.data);
-              this.marketsList = res.data;
+              // this.marketsList = res.data;
+              this.marketsList = this.processingdData(res.data);
             }
           });
         }

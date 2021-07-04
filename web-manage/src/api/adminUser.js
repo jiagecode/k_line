@@ -15,10 +15,27 @@ export function listPeople(data) {
     method: 'post',
     data:data
   })
-}//查询角色列表
+}
+//查询角色列表
 export function listCashVo(data) {
   return request({
     url: '/sysUserInfo/queryCashDetail',
+    method: 'post',
+    data:data
+  })
+}
+//查询订单流水
+export function orderVoList(data) {
+  return request({
+    url: '/sysUserInfo/queryOrderDataList',
+    method: 'post',
+    data:data
+  })
+}
+//查询平仓日志
+export function pingCangDataVo(data) {
+  return request({
+    url: '/sysUserInfo/queryManRecordVoForPage',
     method: 'post',
     data:data
   })

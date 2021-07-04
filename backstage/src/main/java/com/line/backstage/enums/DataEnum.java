@@ -17,6 +17,7 @@ public enum DataEnum {
     FLAG_STATUS_VALID(0, "数据无效"),
     BUTTON(3, "按钮"),
     MENU(2, "菜单"),
+    RECORD_TYPE4(4, "交易记录类型-卖出"),
     CATALOG(1, "目录");
 
     /**
