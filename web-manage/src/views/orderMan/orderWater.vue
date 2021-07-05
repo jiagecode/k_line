@@ -80,7 +80,7 @@
             :header-cell-style="tabheaderFn"
             style="width: 100%"
             lazy
-            row-key="payId"
+            row-key="orderId"
             default-expand-all
             :tree-props="{children: 'children'}">
             <el-table-column
@@ -91,13 +91,56 @@
                 <span v-if="item.prop==='orderId'">
                              {{ scope.row.orderId }}
                 </span>
-
-                <!--                <span v-else-if="item.prop==='updateBy'" @click="handleCopy(scope.row.updateBy)">-->
-                <!--                             {{scope.row.updateBy}}-->
-                <!--                </span>-->
-
+                <span v-if="item.prop==='accountId'">
+                             {{ scope.row.accountId }}
+                </span>
+                <span v-if="item.prop==='userRealName'">
+                             {{ scope.row.userRealName }}
+                </span>
+                <span v-if="item.prop==='addDate'">
+                             {{ scope.row.addDate }}
+                </span>
+                <span v-if="item.prop==='skuName'">
+                             {{ scope.row.skuName }}
+                </span>
+                <span v-if="item.prop ==='orderStatus'" style="color: red">
+                 {{ showOrderStatus(scope.row.orderStatus)}}
+                </span>
+                <span v-if="item.prop==='investType'">
+                             {{ showInvestTypeDesc(scope.row.investType)}}
+                </span>
+                <span v-if="item.prop==='orderCycle'">
+                             {{ scope.row.orderCycle }}
+                </span>
+                <span v-if="item.prop==='inPoint'">
+                             {{ scope.row.inPoint }}
+                </span>
+                <span v-if="item.prop==='outPoint'">
+                             {{ scope.row.outPoint }}
+                </span>
+                <span v-if="item.prop==='investAmount'">
+                             {{ scope.row.investAmount }}
+                </span>
+                <span v-if="item.prop==='resultMoney'">
+                             {{ scope.row.resultMoney }}
+                </span>
+                <span v-if="item.prop==='userMoney'">
+                             {{ scope.row.userMoney }}
+                </span>
+                <span v-if="item.prop==='todayMoney'">
+                             {{ scope.row.todayMoney }}
+                </span>
+                <span v-if="item.prop==='allMoney'">
+                             {{ scope.row.allMoney }}
+                </span>
+                <span v-if="item.prop==='afterMoney'">
+                             {{ scope.row.afterMoney }}
+                </span>
+                <span v-if="item.prop==='agentName'">
+                             {{ scope.row.agentName }}
+                </span>
                 <!-- 正常的其他列 -->
-                <span v-else>{{ scope.row[item.prop] }}</span>
+<!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
               </template>
             </el-table-column>
             <el-table-column
@@ -209,14 +252,11 @@ export default {
           prop: 'todayMoney'
         }, {
           label: '总盈亏',
-          prop: 'afterMoney'
+          prop: 'allMoney'
         }, {
           label: '所属代理商',
           prop: 'agentName'
-        }, {
-          label: '单空操作',
-          prop: 'orderStatus'
-        },
+        }
       ],
       orderDataList: ''
     }
@@ -228,6 +268,15 @@ export default {
     //复制
     handleCopy(e) {
       this.copy(e)
+    },
+    showIvestType(investType){
+      return investType === 1;
+    },
+    showInvestTypeDesc(investType){
+      return this.showIvestType(investType)? "买涨":"买跌";
+    },
+    showOrderStatus(orderStatus){
+      return orderStatus === 1 ? "持仓":"平仓";
     },
     //查询
     seeOther() {

@@ -193,7 +193,7 @@ import {queryHomeData,orderVoList} from '@/api/adminUser'
             prop: 'todayMoney'
           }, {
             label: '总盈亏',
-            prop: 'afterMoney'
+            prop: 'allMoney'
           }, {
             label: '所属代理商',
             prop: 'agentName'

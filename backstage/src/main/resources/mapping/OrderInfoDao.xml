@@ -71,7 +71,7 @@
         o.ORDER_ID,o.POSITION_ID,o.ORDER_TYPE,o.USER_ID,o.ORDER_STATUS,o.SKU_ID,o.SKU_CODE,o.SKU_QTY,o.SKU_PRICE,o.ORDER_AMOUNT,
         o.ORDER_CHARGE,o.ADD_DATE,o.EDIT_DATE,o.ORDER_CYCLE,o.INVEST_AMOUNT,o.INVEST_TYPE,o.EXPECTED_RETURN,o.GUARANTEED_AMOUNT,
         o.ADD_USER_ID,o.EDIT_USER_ID,o.DEL,o.INTEGRAL,o.SKU_NAME,o.IN_POINT,o.OUT_POINT,o.RESULT_MONEY,o.SUB_MONEY,re.AFTER_MONEY,
-        a.ALL_MONEY,a.ACCOUNT_ID,u.USER_REAL_NAME,u.AGENT_NAME,ext.TODAY_MONEY
+        a.ALL_MONEY,a.ACCOUNT_ID,a.ACCOUNT_MONEY userMoney, u.USER_REAL_NAME,u.AGENT_NAME,ext.TODAY_MONEY
     </sql>
     <select id="queryManOrderVoForPage" parameterType="com.line.backstage.entity.sysentity.ManOrderVo" resultMap="ManOrderVoInfoMap">
         select <include refid="orderInfo_Column_List"/>

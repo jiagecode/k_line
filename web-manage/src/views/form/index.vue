@@ -54,10 +54,10 @@
                 <span v-else-if="item.prop==='userRealName'">
                              {{scope.row.userRealName}}
                             </span>
-                <span v-else-if="item.prop==='userRegisterDate'">
+                <span v-else-if="item.prop==='userRegisterDate'" style="width:'150' ">
                              {{scope.row.userRegisterDate}}
                             </span>
-                <span v-else-if="item.prop==='lastLoginDate'">
+                <span v-else-if="item.prop==='lastLoginDate'"  style="width: '150'">
                              {{scope.row.lastLoginDate}}
                             </span>
                 <span v-else-if="item.prop==='orderNum'">
@@ -88,28 +88,16 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="250">
+              width="300">
               <template slot-scope="scope">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">修改余额
+                           @click="changeMoney(scope.$index, scope.row)">查询资金
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.locked==1"
-                           @click="changeUser(scope.$index, scope.row)">禁用
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">启用
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">下级客户
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
+                <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="changeUser(scope.$index, scope.row)">下级代理
-                </el-button><el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">签约
                 </el-button>
-
               </template>
             </el-table-column>
           </el-table>
