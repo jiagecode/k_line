@@ -23,6 +23,7 @@
         <result property="lastLoginDate" column="LAST_LOGIN_DATE" jdbcType="TIMESTAMP"/>
         <result property="delStatus" column="DEL_STATUS" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap type="com.line.backstage.entity.sysentity.ManUserVo" id="ManUserVoInfoMap">
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
@@ -48,6 +49,7 @@
 
         <result property="agentId" column="AGENT_ID" jdbcType="INTEGER"/>
         <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
         <result property="agentTime" column="AGENT_TIME" jdbcType="TIMESTAMP"/>
         <result property="bonusRate" column="BONUS_RATE" jdbcType="NUMERIC"/>
         <result property="commissionRate" column="COMMISSION_RATE" jdbcType="NUMERIC"/>

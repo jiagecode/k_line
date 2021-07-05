@@ -3,10 +3,7 @@ package com.line.backstage.controller;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.UserInfo;
-import com.line.backstage.entity.sysentity.ManCashVo;
-import com.line.backstage.entity.sysentity.ManOrderVo;
-import com.line.backstage.entity.sysentity.ManRecordVo;
-import com.line.backstage.entity.sysentity.ManUserVo;
+import com.line.backstage.entity.sysentity.*;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
 import com.line.backstage.service.UserInfoService;
@@ -100,7 +97,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("queryInfoList")
-    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-用户表-的多条数据")
     public ResponseModel queryInfoList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManUserVo manUserVo) {
         return ResponseHelper.success(sysUserInfoService.queryManUserVoForPage(Integer.valueOf(ManageUserId), manUserVo));
     }
@@ -111,7 +108,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("queryCashDetail")
-    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-提现记录-的多条数据")
     public ResponseModel queryCashDetail(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManCashVo manCashVo) {
         return ResponseHelper.success(sysUserInfoService.queryManCashVoForPage(Integer.valueOf(ManageUserId), manCashVo));
     }
@@ -122,7 +119,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("queryOrderDataList")
-    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-订单表-多条数据")
     public ResponseModel queryOrderDataList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManOrderVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManOrderVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
@@ -133,9 +130,20 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("queryManRecordVoForPage")
-    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
     public ResponseModel queryManRecordVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManRecordVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManRecordVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
+    }
+    /**
+     * 管理端-查询银行卡
+     * @param ManageUserId
+     * @param manOrderVo
+     * @return
+     */
+    @PostMapping("queryBankVoForPage")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
+    public ResponseModel queryBankVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManBankVo manOrderVo) {
+        return ResponseHelper.success(sysUserInfoService.queryManBankVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
 
     /**
@@ -145,7 +153,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("addNewOne")
-    @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    @ApiOperation(value = "列表", notes = "后台系统添加用户")
     public ResponseModel addNewUser(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
         return ResponseHelper.success(userInfoService.addNewUser(Integer.valueOf(ManageUserId), manUserVo));
     }

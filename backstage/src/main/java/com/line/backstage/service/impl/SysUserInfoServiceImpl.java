@@ -8,10 +8,7 @@ import com.google.common.collect.Sets;
 import com.line.backstage.dao.mapper.*;
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.entity.SysUserInfo;
-import com.line.backstage.entity.sysentity.ManCashVo;
-import com.line.backstage.entity.sysentity.ManOrderVo;
-import com.line.backstage.entity.sysentity.ManRecordVo;
-import com.line.backstage.entity.sysentity.ManUserVo;
+import com.line.backstage.entity.sysentity.*;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
 import com.line.backstage.utils.DateUtil;
@@ -55,6 +52,9 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     private OrderInfoMapper orderInfoMapper;
     @Resource
     private AccountRecordMapper accountRecordMapper;
+    @Resource
+    private BankCardInfoMapper bankCardInfoMapper;
+
     /**
      * 保存数据
      *
@@ -222,6 +222,17 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         }
         recordVo.setRecordType(DataEnum.RECORD_TYPE4.getCode());
         PageInfo<ManRecordVo> page = new PageInfo<>(accountRecordMapper.queryManRecordVoForPage(recordVo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
+    }
+
+    @Override
+    public PageWrapper<ManBankVo> queryManBankVoForPage(Integer loginUserId, ManBankVo recordVo) {
+        PageHelper.startPage(recordVo.getPageNum(), recordVo.getPageSize());
+        if(recordVo.getDel() == null){
+            recordVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        PageInfo<ManBankVo> page = new PageInfo<>(bankCardInfoMapper.queryManBankVoForPage(recordVo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

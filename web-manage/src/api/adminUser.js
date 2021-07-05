@@ -40,6 +40,14 @@ export function pingCangDataVo(data) {
     data:data
   })
 }
+//查询银行卡
+export function queryBankVoData(data) {
+  return request({
+    url: '/sysUserInfo/queryBankVoForPage',
+    method: 'post',
+    data:data
+  })
+}
 //新增用户
 export function addUser(data) {
   return request({
