@@ -29,11 +29,13 @@
         <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
         <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
         <result property="todayMoney" column="TODAY_MONEY" jdbcType="NUMERIC"/>
+        <result property="allCheckMoney" column="ALL_CHECK_MONEY" jdbcType="NUMERIC"/>
     </resultMap>
     <sql id="account_info_sql">
         a.ACCOUNT_ID,a.USER_ID,a.ACCOUNT_MONEY,a.ACCOUNT_STATUS,a.ADD_DATE,a.EDIT_DATE,a.ADD_USER_ID,a.EDIT_USER_ID,
         a.DEL,a.ORDER_NUM,a.ALL_MONEY,a.ALL_IN_MONEY,a.ALL_IN_NUM,a.HAND_IN_MONEY,a.ALL_OUT_MONEY,a.ALL_OUT_NUM,
-        a.ALL_COMMISSION,a.ALL_BONUS,a.REALLY_MONEY,a.REALLY_IN_MONEY,a.ALL_FEE,a.REMARKS,u.AGENT_NAME,u.USER_REAL_NAME
+        a.ALL_COMMISSION,a.ALL_BONUS,a.REALLY_MONEY,a.REALLY_IN_MONEY,a.ALL_FEE,a.REMARKS,u.AGENT_NAME,u.USER_REAL_NAME,
+        co.ALL_CHECK_MONEY
     </sql>
     <select id="queryMyAccountIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select ACCOUNT_ID from  t_account_info where  DEL = 1 and USER_ID = #{userId}
@@ -47,7 +49,34 @@
         left join t_user_info u on a.USER_ID = u.USER_ID
         left join (SELECT sum(EXP_MONEY) TODAY_MONEY,USER_ID FROM t_order_expand WHERE TODAY_NUM = #{todayNum} and DEL = 1 GROUP BY USER_ID ) as ext
         on ext.USER_ID = a.USER_ID
+        left join (SELECT sum(CASH_MONEY) ALL_CHECK_MONEY,ACCOUNT_ID FROM t_cash_out_in WHERE CHECK_STATUS = 2 and DEL = 1 GROUP BY ACCOUNT_ID ) as co
+        on co.ACCOUNT_ID = a.ACCOUNT_ID
         where a.DEL = #{del}
+        <if test="userRealName != null and userRealName != ''">
+            and (u.USER_PHONE like concat('%', #{userRealName}, '%')
+            or u.USER_NICK_NAME like concat('%', #{userRealName}, '%')
+            or u.USER_REAL_NAME like concat('%', #{userRealName}, '%')
+            )
+        </if>
+        <if test=" beginDate != null ">
+            and a.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and a.ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
+    <select id="queryManMoneyVo" parameterType="com.line.backstage.entity.sysentity.ManMoneyVo" resultType="com.line.backstage.entity.sysentity.ManMoneyVo">
+        SELECT  SUM(a.ALL_IN_MONEY) allInMoney,
+                SUM(a.ALL_OUT_MONEY) allOutMoney,
+                SUM(a.ALL_COMMISSION) allCommission,
+                SUM(a.ALL_BONUS) allBonus ,
+                SUM(a.ALL_MONEY) allMoney,
+                SUM(ext.TODAY_MONEY) todayMoney
+        FROM t_account_info a
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        left join (SELECT sum(EXP_MONEY) TODAY_MONEY,USER_ID FROM t_order_expand WHERE TODAY_NUM = #{todayNum} and DEL = 1 GROUP BY USER_ID ) as ext
+        on ext.USER_ID = a.USER_ID
+        WHERE a.DEL = #{del}
         <if test="userRealName != null and userRealName != ''">
             and (u.USER_PHONE like concat('%', #{userRealName}, '%')
             or u.USER_NICK_NAME like concat('%', #{userRealName}, '%')

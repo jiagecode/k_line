@@ -157,6 +157,17 @@ public class SysUserInfoController {
     public ResponseModel queryMoneyTableData(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody AccountInfo accountInfo) {
         return ResponseHelper.success(sysUserInfoService.queryAccountInfoForPage(Integer.valueOf(ManageUserId),accountInfo));
     }
+    /**
+     * 管理端-资金汇总
+     * @param ManageUserId
+     * @param manMoneyVo
+     * @return
+     */
+    @PostMapping("moneyTableTotal")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-汇总数据")
+    public ResponseModel moneyTableTotal(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManMoneyVo manMoneyVo) {
+        return ResponseHelper.success(sysUserInfoService.queryManMoneyVo(Integer.valueOf(ManageUserId),manMoneyVo));
+    }
 
     /**
      * 管理端-创建新用户

@@ -48,6 +48,22 @@ export function queryBankVoData(data) {
     data:data
   })
 }
+//资金报表查询
+export function moneyTableData(data) {
+  return request({
+    url: '/sysUserInfo/moneyTableData',
+    method: 'post',
+    data:data
+  })
+}
+//资金报表汇总
+export function moneyTableAll(data) {
+  return request({
+    url: '/sysUserInfo/moneyTableTotal',
+    method: 'post',
+    data:data
+  })
+}
 //新增用户
 export function addUser(data) {
   return request({

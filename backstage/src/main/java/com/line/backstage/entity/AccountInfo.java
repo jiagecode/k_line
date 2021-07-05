@@ -153,8 +153,19 @@ public class AccountInfo extends QueryRequest implements Serializable {
      */
     @Transient
     private Date endDate;
+    /**
+     * 当日盈亏金额
+     */
     @Transient
     private Double todayMoney;
+    /**
+     * 出金审核中
+     */
+    @Transient
+    private Double allCheckMoney;
+    /**
+     * 今日日期int值
+     */
     @Transient
     private Integer todayNum;
 }

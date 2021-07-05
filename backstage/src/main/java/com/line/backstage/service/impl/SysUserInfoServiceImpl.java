@@ -253,6 +253,37 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     }
 
     @Override
+    public ManMoneyVo queryManMoneyVo(Integer loginUserId, ManMoneyVo manMoneyVo) {
+       if(manMoneyVo.getDel() == null){
+           manMoneyVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+       }
+        manMoneyVo.setTodayNum(DateUtil.getTodayIntNum());
+        ManMoneyVo  vo =  accountInfoMapper.queryManMoneyVo(manMoneyVo);
+        if(vo == null){
+            vo = new ManMoneyVo();
+        }
+        if(vo.getAllInMoney() == null){
+            vo.setAllInMoney(0.0);
+        }
+        if(vo.getAllMoney() == null){
+            vo.setAllMoney(0.0);
+        }
+        if(vo.getAllOutMoney() == null){
+            vo.setAllOutMoney(0.0);
+        }
+        if(vo.getTodayMoney() == null){
+            vo.setTodayMoney(0.0);
+        }
+        if(vo.getAllCommission() == null){
+            vo.setAllCommission(0.0);
+        }
+        if(vo.getAllBonus() == null){
+            vo.setAllBonus(0.0);
+        }
+        return vo;
+    }
+
+    @Override
     public SysUserInfo login(SysUserInfo sysUserInfo) {
 
         // XXX 加密密码

@@ -2,6 +2,7 @@ package com.line.backstage.dao.mapper;
  
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.AccountInfo;
+import com.line.backstage.entity.sysentity.ManMoneyVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
     Integer queryMyAccountIdByUserId(@Param("userId")Integer userId);
     Double queryMyMoneyByUserId(@Param("userId")Integer userId);
     List<AccountInfo> queryForPage(AccountInfo accountInfo);
+    ManMoneyVo queryManMoneyVo(ManMoneyVo manMoneyVo);
 }
