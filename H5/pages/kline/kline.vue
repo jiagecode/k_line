@@ -41,7 +41,7 @@
 		<!--  #endif -->
 		<uni-row>
 			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-1m" type="default" size="mini"
+				<button class="mini-btn btn-period btn-1m" type="default" size="mini" style="background-color: #dedede;"
 					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_MINUTE_ID)">1M</button>
 			</uni-col>
 			<uni-col :span="4">
@@ -57,7 +57,7 @@
 					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_60MINUTE_ID)">1H</button>
 			</uni-col>
 			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-1d" type="default" size="mini" style="background-color: #dedede;"
+				<button class="mini-btn btn-period btn-1d" type="default" size="mini"
 					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_DAY_ID)">日线</button>
 			</uni-col>
 			<uni-col :span="4">
@@ -77,18 +77,23 @@
 		<!-- <div style='color: #007AFF;'>{{TestData}}</div> -->
 		<uni-row class="uni-row-bot">
 			<uni-col :span="8">
-				<view class="uni-col-bot bot-cc light-bot-t">xx</view>
-				<view class="uni-col-bot bot-cc light-bot-d">持仓</view>
+				<div @click="ClickCc()">
+					<!-- <view class="uni-col-bot bot-cc light-bot-t"></view> -->
+					<view class="uni-col-bot bot-cc light-bot-d">
+						<!-- <image style="width: 40rpx; height: 40rpx;" src="/static/checkbox.png" /> -->
+						持仓
+						</view>
+				</div>
 			</uni-col>
 			<uni-col :span="8">
 				<div @click="ClickBuy(1)">
-					<view class="uni-col-bot bot-mz light-bot-t">xx</view>
+					<!-- <view class="uni-col-bot bot-mz light-bot-t">xx</view> -->
 					<view class="uni-col-bot bot-mz light-bot-d">买涨</view>
 				</div>
 			</uni-col>
 			<uni-col :span="8">
 				<div @click="ClickBuy(2)">
-					<view class="uni-col-bot bot-md light-bot-t">xx</view>
+					<!-- <view class="uni-col-bot bot-md light-bot-t">xx</view> -->
 					<view class="uni-col-bot bot-md light-bot-d">买跌</view>
 				</div>
 			</uni-col>
@@ -172,7 +177,7 @@
 				</view>
 				<uni-row class="">
 					<uni-col :span="12" class="row-page1-item">
-						<view class="page-left-ye">余额: ¥0 </view>
+						<view class="page-left-ye">余额: ¥{{UserData.userMoney}} </view>
 					</uni-col>
 					<uni-col :span="12" class="row-page1-item">
 						<view class="page-left-sxf">手续费: 0% </view>
@@ -186,25 +191,30 @@
 						<uni-col :span="6" class="row-page2-item">
 							<div>
 								<view class="uni-col-page2 light-page2-t">名称</view>
-								<view class="uni-col-page2 light-page2-d page-2-name">比特币</view>
+								<view class="uni-col-page2 light-page2-d page-2-name">{{OrderCoin}}</view>
 							</div>
 						</uni-col>
 						<uni-col :span="6" class="row-page2-item">
 							<div>
 								<view class="uni-col-page2 light-page2-t">方向</view>
-								<view class="uni-col-page2 light-page2-d page-2-fx">买涨</view>
+								<view class="uni-col-page2 light-page2-d page-2-fx"
+									:class="(OrderDirection == 1)?'page-2-fx-red':'page-2-fx-green'">
+									{{OrderDirectionName}}
+								</view>
 							</div>
 						</uni-col>
 						<uni-col :span="6" class="row-page2-item">
 							<div>
 								<view class="uni-col-page2 light-page2-t">现价</view>
-								<view class="uni-col-page2 light-page2-d page-2-xj">{{SocketMsg.PRICE}}</view>
+								<view class="uni-col-page2 light-page2-d page-2-xj"
+									:class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'">{{OrderCoinPrice}}
+								</view>
 							</div>
 						</uni-col>
 						<uni-col :span="6" class="row-page2-item">
 							<div>
 								<view class="uni-col-page2 light-page2-t">金额</view>
-								<view class="uni-col-page2 light-page2-d page-2-je">¥10</view>
+								<view class="uni-col-page2 light-page2-d page-2-je">¥{{OrderAmount}}</view>
 							</div>
 						</uni-col>
 					</uni-row>
@@ -216,11 +226,11 @@
 					<button class="page-btn-submit" type="default" size="default" @click="SubmitBuy()">确认下单</button>
 				</view>
 				<uni-row>
-					<uni-col :span="12">
-						<view class="page-left-yqsy" style="text-align: center;">预期收益:¥0</view>
-					</uni-col>
-					<uni-col :span="12">
-						<view class="page-left-bdje" style="text-align: center;">保底金额:¥0.00</view>
+					<uni-col :span="24">
+						<view class="page-bottom-text">
+							<div class="page-left-yqsy">预期收益:¥{{OrderExpectEarnings}}</div>
+							<div class="page-left-bdje">保底金额:¥{{OrderGuarantee}}</div>
+						</view>
 					</uni-col>
 				</uni-row>
 				<view>
@@ -296,8 +306,8 @@
 	}
 
 	.page-item-select {
-		border-radius: 6upx;
-		border: 6upx solid #ffc71e;
+		border-radius: 4upx;
+		border: 4upx solid #ffc71e;
 	}
 
 	.uni-row-page1 {
@@ -330,6 +340,7 @@
 	}
 
 	.page-left-ye {
+		display: contents;
 		float: left;
 		width: 50%;
 		height: 50upx;
@@ -391,43 +402,64 @@
 
 	.page-2-fx {
 		font-size: 30upx;
+		color: #8c8b90;
+	}
+
+	.page-2-fx-red {
 		color: #f6676c;
+	}
+
+	.page-2-fx-green {
+		color: #36d47e;
 	}
 
 	.page-2-xj {
 		font-size: 30upx;
+		color: #8c8b90;
+	}
+
+	.page-2-xj-red {
 		color: #f6676c;
 	}
 
+	.page-2-xj-green {
+		color: #36d47e;
+	}
+
+
 	.page-2-je {
 		font-size: 30upx;
-		color: #FFB400;
+		color: #ffc71d;
 	}
 
 	.page-btn-submit {
 		background-color: #ffc71d;
 	}
 
-	.page-left-yqsy {
-		display: contents;
-		float: left;
-		/* width: 50%; */
+	.page-bottom-text {
+		display: block;
+		text-align: center;
 		height: 50upx;
 		line-height: 50upx;
 		font-size: 26upx;
-		text-align: center;
 		color: #ffc71d;
 	}
 
+	.page-left-yqsy {
+		width: 50%;
+		display: block;
+		float: left;
+		text-align: right;
+		padding-right: 10upx;
+	}
+
 	.page-left-bdje {
-		display: contents;
+		width: 50%;
+		display: block;
 		float: right;
-		/* width: 50%; */
-		height: 50upx;
-		line-height: 50upx;
-		font-size: 26upx;
-		color: #ffc71d;
-		text-align: center;
+		text-align: left;
+		padding-left: 10upx;
+
 	}
 
 	/* 弹出框内容css */
@@ -480,17 +512,18 @@
 
 	.light-bot-t {
 		height: 30px;
-		line-height: 30px;
-		font-size: 17px;
+		line-height: 40px;
+		font-size: 30upx;
+		font-weight: bold;
 		text-align: center;
-		color: #555555;
+		color: #4e4d52;
 		background-color: #e5e9f2;
 	}
 
 	.light-bot-d {
-		height: 40px;
-		line-height: 30px;
-		font-size: 15px;
+		height: 70px;
+		line-height: 70px;
+		font-size: 35upx;
 		font-weight: bold;
 		text-align: center;
 		color: #4e4d52;
@@ -546,6 +579,8 @@
 
 <script>
 	import moment from 'moment'
+	import MathUtil from '@/utils/MathUtil.js'
+	import https from '../../api/api.js'
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//	HQChart单画布模式,K线/分时共享使用一个画布
@@ -559,7 +594,11 @@
 	import HQChart from '@/uni_modules/hqchart2/umychart.uniapp.h5.js'
 	// HQChart.JSChart.SetDomain("https://api.coingecko.com/api/v3/coins/bitcoin");
 	// HQChart.JSComplier.SetDomain("https://api.coingecko.com/api/v3/coins/bitcoin");
+	//禁用日志
+	// HQChart.Chart.JSConsole.Chart.Log=()=>{ }
+	// HQChart.Chart.JSConsole.Complier.Log=()=>{ }
 	// #endif
+
 
 	// #ifndef H5
 	import {
@@ -571,12 +610,16 @@
 	import {
 		JSConsole
 	} from '@/uni_modules/hqchart2/umychart.console.wechat.js'
+	// 交易时间 0=闭市 1=盘前 2=盘中 3=盘后
+	// 设置当前已开市
+	// JSCommon.MARKET_SUFFIX_NAME.GetMarketStatus = function (symbol) { return 2; }
+
 	// JSCommon.JSChart.SetDomain("https://api.coingecko.com/api/v3/coins/bitcoin");
 	// JSCommonComplier.JSComplier.SetDomain("https://api.coingecko.com/api/v3/coins/bitcoin")
 
 	//禁用日志
-	//JSConsole.Complier.Log=()=>{ };
-	//JSConsole.Chart.Log=()=>{ };
+	// JSConsole.Complier.Log=()=>{ };
+	// JSConsole.Chart.Log=()=>{ };
 
 	// #endif
 
@@ -617,6 +660,9 @@
 			}, //十字光标刻度设置
 			//IsFullDraw:true,
 
+			IsAutoUpdate: true, //是自动更新数据
+			AutoUpdateFrequency: 20000, //数据更新频率
+
 			Border: //边框
 			{
 				Left: 1,
@@ -628,7 +674,7 @@
 			KLine: {
 				DragMode: 1,
 				Right: 0, //复权 0 不复权 1 前复权 2 后复权 不是股票的品种设置0
-				Period: 0, //周期: 0 日线 1 周线 2 月线 3 年线 
+				Period: 4, //周期: 0 日线 1 周线 2 月线 3 年线 
 				PageSize: 30,
 				IsShowTooltip: false,
 				DrawType: 0,
@@ -748,7 +794,12 @@
 				ChartWidth: 350,
 				ChartHeight: 500,
 				KLine: {
-					Period: 0,
+					// 周期
+					// 0=日线 1=周线 2=月线 3=年线 9=季线 21=双周 [40001-50000) 自定义日线
+					// 4=1分钟 5=5分钟 6=15分钟 7=30分钟 8=60分钟 11=120分钟 12=240分钟 [20001-30000) 自定义分钟
+					// 10=分笔线 （小程序不支持)
+					// 30001-32000 自定义秒
+					Period: 4,
 					Right: 0
 				},
 				Minute: {
@@ -766,17 +817,23 @@
 				is_open_socket: false,
 				// socket 的数据
 				SocketMsg: {
-					PRICE: 0,
-					OPENDAY: 0,
-					LOWDAY: 0,
-					HIGHDAY: 0,
+					PRICE: null,
+					OPENDAY: null,
+					LOWDAY: null,
+					HIGHDAY: null,
 				},
+				// 用户数据
+				UserData: null,
 				// 订单数据
-				OrderDirection: 0,
-				OrderItem: 0,
-				OrderAmount: 0,
-				OrderCoin: "",
-				OrderCoinPrice: 0,
+				OrderDirection: 1,
+				OrderDirectionName: "买涨",
+				OrderItem: 1,
+				OrderCycle: 30,
+				OrderAmount: 10,
+				OrderCoin: "Bitcoin",
+				OrderCoinPrice: null,
+				OrderExpectEarnings: 18.8,
+				OrderGuarantee: 0.00,
 
 			};
 
@@ -797,7 +854,17 @@
 
 		onShow() {
 			var that = this;
-
+			// 用户信息
+			this.UserData = uni.getStorageSync('userInfo');
+			var token = uni.getStorageSync('token');
+			// 非法访问，请重新登录
+			if (token === null || token === undefined || token === '' || this.UserData === null) {
+				// 跳转页面
+				uni.reLaunch({
+					url: '../login/login'
+				});
+			}
+			// 系统信息
 			uni.getSystemInfo({
 				success: (res) => {
 					// 保存系统信息到页面全局
@@ -822,12 +889,10 @@
 			// this.connectionSocket();
 			ccStreamer = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + API_KEY);
 			ccStreamer.onopen = function onStreamOpen() {
-				console.log("连接打开");
 				var subRequest = {
 					"action": "SubAdd",
 					"subs": ["2~Coinbase~" + that.Name.toUpperCase() + "~USD"]
 				};
-				console.log(subRequest);
 				ccStreamer.send(JSON.stringify(subRequest));
 			}
 
@@ -838,12 +903,17 @@
 				if (msgData.TYPE == '2') {
 					if (typeof msgData.PRICE != 'undefined') {
 						that.SocketMsg.PRICE = msgData.PRICE;
+						that.OrderCoinPrice = msgData.PRICE;
 						document.getElementById("t_price").innerText = msgData.PRICE;
+						var xjItems = document.getElementsByClassName("page-2-xj");
+						if (xjItems.length > 0) {
+							xjItems[0].innerText = msgData.PRICE;
+						}
 					}
 					if (typeof msgData.OPENHOUR != 'undefined') {
 						that.SocketMsg.OPENHOUR = msgData.OPENHOUR;
 					}
-					if (typeof msgData.OPENDAY != 'undefined') {
+					if (typeof msgData.OPENDAY != 'undefined' && msgData.OPENDAY > 0) {
 						that.SocketMsg.OPENDAY = msgData.OPENDAY;
 						document.getElementById("t_openday").innerText = msgData.OPENDAY;
 					}
@@ -853,7 +923,7 @@
 					if (typeof msgData.LOWHOUR != 'undefined') {
 						that.SocketMsg.LOWHOUR = msgData.LOWHOUR;
 					}
-					if (typeof msgData.LOWDAY != 'undefined') {
+					if (typeof msgData.LOWDAY != 'undefined' && msgData.LOWDAY > 0) {
 						that.SocketMsg.LOWDAY = msgData.LOWDAY;
 						document.getElementById("t_lowday").innerText = msgData.LOWDAY;
 					}
@@ -863,7 +933,7 @@
 					if (typeof msgData.HIGHHOUR != 'undefined') {
 						that.SocketMsg.HIGHHOUR = msgData.HIGHHOUR;
 					}
-					if (typeof msgData.HIGHDAY != 'undefined') {
+					if (typeof msgData.HIGHDAY != 'undefined' && msgData.HIGHDAY > 0) {
 						that.SocketMsg.HIGHDAY = msgData.HIGHDAY;
 						document.getElementById("t_highday").innerText = msgData.HIGHDAY;
 					}
@@ -881,7 +951,6 @@
 						// 跌
 						price.style.color = '#36d47e';
 					}
-					console.log(that.SocketMsg.PRICE);
 				}
 			}
 			ccStreamer.onclose = function onStreamClose() {
@@ -895,38 +964,49 @@
 		},
 
 		onUnload() {
+			ccStreamer.close();
 			this.ClearChart();
 		},
 
 		methods: {
+			// 跳转持仓
+			ClickCc(){
+				uni.navigateTo({
+						url: '../transaction-records/transaction-now'
+					})
+			},
 			// 选择项目
 			SelectBuyItem(item) {
+				this.OrderItem = item;
 				// 移除样式
 				var itemList = document.getElementsByClassName("page-item");
 				for (var i = 0; i < itemList.length; i++) {
 					itemList[i].classList.remove("page-item-select");
 				}
-				// 修改样式
+				// 修改样式 选中值
 				switch (item) {
 					case 1:
+						this.OrderCycle = 30;
 						document.getElementsByClassName("page-item-1")[0].classList.add("page-item-select");
 						break;
 					case 2:
+						this.OrderCycle = 60;
 						document.getElementsByClassName("page-item-2")[0].classList.add("page-item-select");
 						break;
 					case 3:
+						this.OrderCycle = 180;
 						document.getElementsByClassName("page-item-3")[0].classList.add("page-item-select");
 						break;
 					default:
 						//没有选中
 						break;
 				}
-
-
-				console.log(item);
+				// 触发预期收益计算
+				this.countYqsy();
 			},
 			// 选择金额
 			SelectBuyAccount(account) {
+				this.OrderAmount = account;
 				// 移除样式
 				var itemList = document.getElementsByClassName("page-amount");
 				for (var i = 0; i < itemList.length; i++) {
@@ -957,21 +1037,99 @@
 						break;
 				}
 
-
-				console.log(account);
+				// 触发预期收益计算
+				this.countYqsy();
+			},
+			countYqsy() {
+				// 收益率
+				var rat = 0.88;
+				if (this.OrderItem == 1) {
+					rat = 0.88;
+				}
+				if (this.OrderItem == 2) {
+					rat = 0.9;
+				}
+				if (this.OrderItem == 3) {
+					rat = 0.92;
+				}
+				// 收益金额 = 投资额 + (投资额 * 收益率);
+				this.OrderExpectEarnings = MathUtil.add(this.OrderAmount, MathUtil.mul(this.OrderAmount, rat));
 			},
 			// 下单
 			SubmitBuy() {
-				console.log("下单");
+				// 校验
+				if (this.UserData.userMoney < this.OrderAmount) {
+					// 图标 0 成功, 1 警告, 2 错误, 3 信息, 4 疑问, 5 斜杠
+					this.vusui.msg(
+						'账户余额不足,请充值!', {
+							icon: 2,
+							shade: 0.6,
+						}, () => {
+							// console.log("回调");
+						});
+					return;
+				};
+				// 校验当前价
+				console.log(this.OrderCoinPrice)
+				if(typeof this.OrderCoinPrice == "undefined" || this.OrderCoinPrice == null || this.OrderCoinPrice == 0 || this.OrderCoinPrice =="" ){
+					return;
+				}
+				// 提交
+				var data = {
+					"orderType": 1,
+					"orderStatus": 0,
+					"skuId": this.OrderItem,
+					"skuCode": this.Name,
+					"skuQty": 1,
+					"skuPrice": this.OrderAmount,
+					"orderAmount": this.OrderAmount,
+					"orderCharge": 0,
+					"orderCycle": this.OrderCycle,
+					"investAmount": this.OrderAmount,
+					"investType": this.OrderDirection,
+					"expectedReturn": this.OrderExpectEarnings,
+					"guaranteedAmount": this.OrderGuarantee,
+					"inPoint": this.OrderCoinPrice,
+				};
+
+				https.submitOrder(data).then((res) => {
+					// orderloading.close();
+					console.clear();
+					console.log(res);
+					if (res != null) {
+						// 提示用户
+						this.vusui.msg(
+							'下单成功!', {
+								icon: 0,
+								shade: 0.6,
+							}, () => {
+								// 关闭当前弹窗
+								this.vusui.close('page');
+								// 重新获取用户信息 余额
+								// todo
+								// 跳转页面
+								uni.navigateTo({
+									url: '../transaction-records/transaction-now'
+								})
+							});
+					}
+				});
 			},
 			// 购买弹窗
 			ClickBuy(type) {
-				console.log(type);
+				//根据type确定方向
+				if (type == 1) {
+					this.OrderDirection = 1;
+					this.OrderDirectionName = "买涨";
+				}
+				if (type == 2) {
+					this.OrderDirection = 2;
+					this.OrderDirectionName = "买跌";
+				}
 				// slot(插槽) 模式
 				this.vusui.page({
 					title: '订单确认'
-				})
-				console.log(type);
+				});
 			},
 
 			ClearChart() {
@@ -1221,13 +1379,14 @@
 				this.Symbol = symbol + '.BIT';
 				this.Name = symbol;
 				this.FloatPrecision = 2;
+				this.OrderCoin = name;
 				console.log("PairName:" + this.PairName + ",Symbol:" + this.Symbol + ",Name:" + this.Name);
 				if (g_JSChart) g_JSChart.ChangeSymbol(symbol);
 			},
 
 			MinuteNetworkFilter: function(data, callback) {
 				data.PreventDefault = true; //禁止hqchart调用内置api数据
-				console.log('[BitKLine::NetworkFilter] data', data);
+				// console.log('[BitKLine::NetworkFilter] data', data);
 				switch (data.Name) {
 					case 'KLineChartContainer::ReqeustHistoryMinuteData': //分钟全量数据下载
 						this.ReqeustHistoryMinuteData(data, callback, {
@@ -1242,7 +1401,7 @@
 
 			NetworkFilter: function(data, callback) {
 				// if (data.Name=='APIScriptIndex::ExecuteScript') this.CustomIndex(data, callback);
-				console.log(`[HQChart:NetworkFilter] Name=${data.Name} Explain=${data.Explain}`);
+				// console.log(`[HQChart:NetworkFilter] Name=${data.Name} Explain=${data.Explain}`);
 				switch (data.Name) {
 					case 'KLineChartContainer::ReqeustHistoryMinuteData': //分钟全量数据下载
 						this.ReqeustHistoryMinuteData(data, callback, {
@@ -1260,21 +1419,20 @@
 						break;
 				}
 			},
-
-			ReqeustHistoryMinuteData(data, callback, option) //第3方分钟线历史数据请求
-			{
+			//第3方分钟线历史数据请求
+			ReqeustHistoryMinuteData(data, callback, option) {
 				data.PreventDefault = true; //禁止hqchart调用内置api数据
 				console.log("查询1分钟全量");
 				uni.request({
 					// url: 'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=1',
+					// url: 'https://min-api.cryptocompare.com/data/v2/histominute?tryConversion=false&fsym=' + this.Name +
+					// 	'&tsym=USD&limit=1440&api_key=' + API_KEY,
 					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
 						'&tsym=USD&limit=1440&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
-						console.log(res);
 						var resultData = {};
 						var dataArr = res.data.Data.Data;
-						console.log(dataArr);
 
 						var yClose = null;
 						var klineData = [];
@@ -1291,8 +1449,6 @@
 							klineData.push([date, yClose, open, high, low, close, vol, null, time]);
 							yClose = close;
 						}
-						console.log("klineData");
-						console.log(klineData);
 						var hqChartData = {
 							code: 0,
 							data: klineData,
@@ -1305,19 +1461,17 @@
 
 			},
 
-
+			//第3方日线历史数据请求
 			RequestHistoryData(data, callback, option) //日线全量数据下载
 			{
 				data.PreventDefault = true; //禁止hqchart调用内置api数据
 				console.log("查询日线全量");
 				uni.request({
 					url: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + this.Name +
-						'&tsym=USD&limit=100&api_key=' + API_KEY,
+						'&tsym=USD&limit=30&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};
-						console.log('OHLC数据');
-						console.log(res.data);
 						var dataArr = res.data.Data.Data;
 						var yClose = null;
 						var klineData = [];
@@ -1344,6 +1498,83 @@
 				});
 
 			},
+
+			//第3方分钟线实时数据请求
+			RequestMinuteRealtimeData(data, callback) {
+				data.PreventDefault = true; //禁止hqchart调用内置api数据
+				console.log("查询分钟实时数据");
+				uni.request({
+					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
+						'&tsym=USD&limit=5&api_key=' + API_KEY,
+					method: 'get',
+					success: (res) => {
+						var resultData = {};
+						var dataArr = res.data.Data.Data;
+
+						var yClose = null;
+						var klineData = [];
+						for (var i in dataArr) {
+							var item = dataArr[i];
+							// var date = moment(parseInt(item.time)).format('YYYYMMDD');
+							var date = parseInt(moment.unix(parseInt(item.time)).format('YYYYMMDD'));
+							var time = parseInt(moment.unix(parseInt(item.time)).format('hhmm'));
+							var open = parseFloat(item.open);
+							var high = parseFloat(item.high);
+							var low = parseFloat(item.low);
+							var close = parseFloat(item.close);
+							var vol = parseFloat(item.volumefrom);
+							klineData.push([date, yClose, open, high, low, close, vol, null, time]);
+							yClose = close;
+						}
+						var hqChartData = {
+							code: 0,
+							data: klineData,
+							symbol: this.Symbol,
+							name: this.PairName,
+							ver: 2.0
+						};
+						callback(hqChartData);
+					}
+				});
+
+			},
+			//第3方日线实时数据请求
+			RequestRealtimeData(data, callback) {
+				data.PreventDefault = true; //禁止hqchart调用内置api数据
+				console.log("查询当天最新实时数据");
+				uni.request({
+					url: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + this.Name +
+						'&tsym=USD&limit=2&api_key=' + API_KEY,
+					method: 'get',
+					success: (res) => {
+						var resultData = {};
+						var dataArr = res.data.Data.Data;
+						var yClose = null;
+						var klineData = [];
+						for (var i in dataArr) {
+							var item = dataArr[i];
+							var date = moment.unix(parseInt(item.time)).format('YYYYMMDD');
+							var open = parseFloat(item.open);
+							var high = parseFloat(item.high);
+							var low = parseFloat(item.low);
+							var close = parseFloat(item.close);
+							var vol = parseFloat(item.volumefrom);
+							klineData.push([date, yClose, open, high, low, close, vol, null]);
+							yClose = close;
+						}
+
+						var hqChartData = {
+							code: 0,
+							data: klineData,
+							symbol: this.Symbol,
+							name: this.PairName
+						};
+						callback(hqChartData);
+					}
+				});
+
+			},
+
 
 
 			CustomIndex(data, callback) //自定义指标
