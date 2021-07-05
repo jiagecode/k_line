@@ -181,6 +181,7 @@ export default {
       var data = {
         beginDate: time1,
         endDate: time2,
+        queryType: 1,
         userRealName: this.input2,
         queryDataFlag: this.region2,
         pageNum: this.currentPage
@@ -203,6 +204,7 @@ export default {
       this.region = ''
       this.currentPage = 1
       var data = {
+        queryType: 1,
         pageNum: this.currentPage
       }
       pingCangDataVo(data).then(res => {
@@ -222,6 +224,7 @@ export default {
     //获取交易订单list
     queryRecordDataList() {
       var data = {
+        queryType: 1,
         pageNum: this.currentPage
       }
       pingCangDataVo(data).then(res => {
@@ -239,7 +242,7 @@ export default {
       console.log(row.payId)
       var data = {
         payId: row.payId,
-        resultStatus: 1,
+        resultStatus: 1
       }
       caozuo(data).then(res => {
         if (res.code == 10000) {

@@ -214,10 +214,13 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         if(recordVo.getDel() == null){
             recordVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         }
-        if(recordVo.getBeginDate() == null && recordVo.getEndDate() == null){
+        Integer queryType = recordVo.getQueryType();
+        if(queryType!=null && queryType ==1 &&recordVo.getBeginDate() == null && recordVo.getEndDate() == null){
+            //查询平仓记录
             recordVo.setBeginDate(DateUtil.getStartTimeOfToday());
             recordVo.setEndDate(DateUtil.getEndTimeOfDay(new Date()));
         }
+        recordVo.setRecordType(DataEnum.RECORD_TYPE4.getCode());
         PageInfo<ManRecordVo> page = new PageInfo<>(accountRecordMapper.queryManRecordVoForPage(recordVo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);

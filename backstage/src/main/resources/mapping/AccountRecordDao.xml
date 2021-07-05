@@ -13,9 +13,11 @@
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
         <result property="serviceCharge" column="SERVICE_CHARGE" jdbcType="NUMERIC"/>
+        <result property="commissionMoney" column="COMMISSION_MONEY" jdbcType="NUMERIC"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
-        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap type="com.line.backstage.entity.sysentity.ManRecordVo" id="AccountRecordMapVo">
@@ -29,17 +31,20 @@
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
         <result property="serviceCharge" column="SERVICE_CHARGE" jdbcType="NUMERIC"/>
+        <result property="commissionMoney" column="COMMISSION_MONEY" jdbcType="NUMERIC"/>
         <result property="integral" column="INTEGRAL" jdbcType="NUMERIC"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="INTEGER"/>
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="record_vo_Column_List">
         r.RECORD_ID,r.ACCOUNT_ID,r.RECORD_TYPE,r.CHANGE_MONEY,r.BEFORE_MONEY,r.AFTER_MONEY,
-        r.ADD_DATE,r.EDIT_DATE,r.ORDER_ID,r.SERVICE_CHARGE,r.ADD_USER_ID,r.EDIT_USER_ID,r.DEL,
-        u.USER_REAL_NAME,u.USER_ID,o.INTEGRAL
+        r.COMMISSION_MONEY,r.REMARKS,r.ADD_DATE,r.EDIT_DATE,r.ORDER_ID,r.SERVICE_CHARGE,r.ADD_USER_ID,
+        r.EDIT_USER_ID,r.DEL,u.USER_REAL_NAME,u.USER_ID,u.AGENT_NAME,o.INTEGRAL
     </sql>
     <select id="queryManRecordVoForPage" parameterType="com.line.backstage.entity.sysentity.ManRecordVo" resultMap="AccountRecordMapVo">
         select <include refid="record_vo_Column_List"/>
@@ -51,8 +56,14 @@
         <if test="queryDataFlag == 2 ">
             and r.CHANGE_MONEY <![CDATA[ < ]]> 0
         </if>
+        <if test="recordType !=null ">
+            and r.RECORD_TYPE = #{recordType}
+        </if>
         <if test="queryDataFlag == 1 ">
             and r.CHANGE_MONEY <![CDATA[ > ]]> 0
+        </if>
+        <if test="agentName !=null and agentName !='' ">
+            and u.AGENT_NAME like concat('%', #{agentName}, '%')
         </if>
         <if test="userRealName != null and userRealName != ''">
             and (u.USER_PHONE like concat('%', #{userRealName}, '%')
@@ -65,6 +76,12 @@
         </if>
         <if test=" endDate != null ">
             and r.ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+        <if test=" queryType == 2 and beginDate != null ">
+            and o.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test="queryType == 2 and endDate != null ">
+            and o.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
 </mapper>
