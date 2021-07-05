@@ -1,6 +1,7 @@
 package com.line.backstage.controller;
 
 import com.line.backstage.annotation.LoginUserId;
+import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.entity.sysentity.*;
@@ -144,6 +145,17 @@ public class SysUserInfoController {
     @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
     public ResponseModel queryBankVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManBankVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManBankVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
+    }
+    /**
+     * 管理端-资金报表
+     * @param ManageUserId
+     * @param accountInfo
+     * @return
+     */
+    @PostMapping("moneyTableData")
+    @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
+    public ResponseModel queryMoneyTableData(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody AccountInfo accountInfo) {
+        return ResponseHelper.success(sysUserInfoService.queryAccountInfoForPage(Integer.valueOf(ManageUserId),accountInfo));
     }
 
     /**

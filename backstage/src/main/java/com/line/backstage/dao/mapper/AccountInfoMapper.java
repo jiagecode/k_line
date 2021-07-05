@@ -4,6 +4,8 @@ import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.AccountInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 用户账户(AccountInfo)表数据库访问层
  *
@@ -18,4 +20,5 @@ public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
      */
     Integer queryMyAccountIdByUserId(@Param("userId")Integer userId);
     Double queryMyMoneyByUserId(@Param("userId")Integer userId);
+    List<AccountInfo> queryForPage(AccountInfo accountInfo);
 }

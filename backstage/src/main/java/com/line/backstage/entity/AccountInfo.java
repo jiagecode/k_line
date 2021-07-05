@@ -6,11 +6,9 @@ import java.util.Date;
 import java.io.Serializable;
 import io.swagger.annotations.*;
 import lombok.Data;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
- 
+
+import javax.persistence.*;
+
 /**
  * 用户账户(AccountInfo)实体类
  *
@@ -73,15 +71,90 @@ public class AccountInfo extends QueryRequest implements Serializable {
     */            
     @ApiModelProperty("修改人")
     private Integer editUserId;
-    
+
     /**
-    * 数据状态
-    */            
+     * 数据状态
+     */
     @ApiModelProperty("数据状态")
     private Integer del;
     /**
      * 用户订单数
      */
+    @ApiModelProperty("用户订单数")
     private Integer orderNum;
-
+    /**
+     *总盈亏金额
+     */
+    @ApiModelProperty("总盈亏金额")
+    private Double allMoney;
+    /**
+     *入金总额
+     */
+    @ApiModelProperty("入金总额")
+    private Double allInMoney;
+    /**
+     *入金次数
+     */
+    @ApiModelProperty("入金次数")
+    private Integer allInNum;
+    /**
+     *手动入金
+     */
+    @ApiModelProperty("手动入金")
+    private Double handInMoney;
+    /**
+     *出金总额
+     */
+    @ApiModelProperty("出金总额")
+    private Double allOutMoney;
+    /**
+     *出金次数
+     */
+    @ApiModelProperty("出金次数")
+    private Integer allOutNum;
+    /**
+     *佣金
+     */
+    @ApiModelProperty("佣金")
+    private Double allCommission;
+    /**
+     *红利
+     */
+    @ApiModelProperty("红利")
+    private Double allBonus;
+    /**
+     *实际余额
+     */
+    @ApiModelProperty("实际余额")
+    private Double reallyMoney;
+    /**
+     *净入金
+     */
+    @ApiModelProperty("净入金")
+    private Double reallyInMoney;
+    /**
+     *手续费
+     */
+    @ApiModelProperty("手续费")
+    private Double allFee;
+    @ApiModelProperty("备注")
+    private String remarks;
+    @Transient
+    private String agentName;
+    @Transient
+    private String userRealName;
+    /**
+     * 查询开始时间
+     */
+    @Transient
+    private Date beginDate;
+    /**
+     * 查询结束时间
+     */
+    @Transient
+    private Date endDate;
+    @Transient
+    private Double todayMoney;
+    @Transient
+    private Integer todayNum;
 }

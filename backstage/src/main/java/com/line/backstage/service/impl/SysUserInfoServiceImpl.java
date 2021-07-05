@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.line.backstage.dao.mapper.*;
+import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.sysentity.*;
@@ -54,6 +55,8 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     private AccountRecordMapper accountRecordMapper;
     @Resource
     private BankCardInfoMapper bankCardInfoMapper;
+    @Resource
+    private AccountInfoMapper accountInfoMapper;
 
     /**
      * 保存数据
@@ -233,6 +236,18 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             recordVo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         }
         PageInfo<ManBankVo> page = new PageInfo<>(bankCardInfoMapper.queryManBankVoForPage(recordVo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
+    }
+
+    @Override
+    public PageWrapper<AccountInfo> queryAccountInfoForPage(Integer loginUserId, AccountInfo accountInfo) {
+        PageHelper.startPage(accountInfo.getPageNum(), accountInfo.getPageSize());
+        if(accountInfo.getDel() == null){
+            accountInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        accountInfo.setTodayNum(DateUtil.getTodayIntNum());
+        PageInfo<AccountInfo> page = new PageInfo<>(accountInfoMapper.queryForPage(accountInfo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

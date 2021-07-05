@@ -1,5 +1,6 @@
 package com.line.backstage.service;
  
+import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.sysentity.*;
 import com.line.backstage.utils.PageWrapper;
@@ -86,6 +87,7 @@ public interface SysUserInfoService {
     PageWrapper<ManOrderVo> queryManOrderVoForPage(Integer loginUserId, ManOrderVo manOrderVo);
     PageWrapper<ManRecordVo> queryManRecordVoForPage(Integer loginUserId,ManRecordVo recordVo);
     PageWrapper<ManBankVo> queryManBankVoForPage(Integer loginUserId, ManBankVo recordVo);
+    PageWrapper<AccountInfo> queryAccountInfoForPage(Integer loginUserId, AccountInfo recordVo);
     /**
      * 系统管理员登录
      * @param sysUserInfo
