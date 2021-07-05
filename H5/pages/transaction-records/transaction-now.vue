@@ -2,7 +2,7 @@
   <!-- 持仓明细 -->
   <view style="margin-left: 20rpx;">
     <block v-for="(item, index) in positionList" :key="item.positionId">
-      <view class="d-flex a-center" style="height: 150rpx; border-bottom: solid #ececec 2rpx;">
+      <view class="d-flex a-center" style="height: 180rpx; border-bottom: solid #ececec 2rpx;">
         <view style="width: 300rpx;">
           <view>{{ item.skuName }}</view>
           <view>{{ item.beaginPrice }}-{{ item.endPrice }}</view>

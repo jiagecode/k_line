@@ -6,7 +6,7 @@
 			<uni-forms>
 				<!-- 姓名 -->
 				<view class="d-flex a-center" style="height: 80rpx; border-bottom: solid #ececec 2rpx;">
-					<uni-icons type="personadd" color="#b1b1b1" size="20"/>
+					<uni-icons type="personadd" color="#5586d3" size="20"/>
 					<uni-forms-item label="" name="" style="margin-top: 50rpx;">
 						<uni-easyinput type="text" :inputBorder="false" placeholder="输入姓名" v-model="userName" />
 					</uni-forms-item>
@@ -14,8 +14,8 @@
 				<!-- 手机号 -->
 				<view class="d-flex a-center" style="margin-top: 55rpx; height: 80rpx; border-bottom: solid #ececec 2rpx;">
 					<navigator hover-class="none" open-type="navigate" url="../address/address">
-						<text>{{countryAndCode}}</text>
-						<uni-icons type="arrowdown" color="#b1b1b1" style="margin-left: 10rpx;"/>
+						<text style="color: #5586d3;">{{countryAndCode}}</text>
+						<uni-icons type="arrowdown" color="#5586d3" style="margin-left: 10rpx;"/>
 					</navigator>
 					<uni-forms-item label="" name="" style="margin-top: 50rpx;">
 						<uni-easyinput style="margin-left: 15rpx;" type="number" :inputBorder="false" placeholder="请输入手机号" v-model="phone" />
@@ -23,14 +23,14 @@
 				</view>
 				<!-- 密码 -->
 				<view class="d-flex a-center" style="margin-top: 55rpx; height: 80rpx; border-bottom: solid #ececec 2rpx;">
-					<uni-icons type="locked" color="#b1b1b1" size="20"/>
+					<uni-icons type="locked" color="#5586d3" size="20"/>
 					<uni-forms-item label="" name="" style="margin-top: 50rpx;">
 						<uni-easyinput type="password" :inputBorder="false" placeholder="设置登录密码" v-model="passwordOne" />
 					</uni-forms-item>
 				</view>
 				<!-- 确认密码 -->
 				<view class="d-flex a-center" style="margin-top: 55rpx; height: 80rpx; border-bottom: solid #ececec 2rpx;">
-					<uni-icons type="checkbox-filled" color="#b1b1b1" size="20"/>
+					<uni-icons type="checkbox-filled" color="#5586d3" size="20"/>
 					<uni-forms-item label="" name="" style="margin-top: 50rpx;">
 						<uni-easyinput type="password" :inputBorder="false" placeholder="确认登录密码" v-model="passwordTwo" />
 					</uni-forms-item>

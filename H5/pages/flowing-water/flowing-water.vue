@@ -4,7 +4,7 @@
 			<!-- 根据月份拆分 
 			<view style="height: 95rpx; background-color: red;"></view>-->
 			<!-- 明细 -->
-			<view class="d-flex a-center" style="height: 200rpx; border-top: #eeeeee solid 1rpx;">
+			<view class="d-flex a-center" style="height: 160rpx; border-top: #eeeeee solid 1rpx;">
 				<!-- 消费图片 根据4种类型渲染不同的图片 -->
 				<view>
 				  <image style="background-color: #FFFFFF; width: 70rpx; height: 70rpx; border-radius: 50rpx;" src="/static/yh.png" />

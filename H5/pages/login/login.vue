@@ -7,8 +7,8 @@
 				<!-- 手机号 -->
 				<view class="d-flex a-center" style=" border-bottom: solid #ececec 2rpx;">
 					<navigator hover-class="none" open-type="navigate" url="../address/address">
-						<text>{{countryAndCode}}</text>
-						<uni-icons type="arrowdown" color="#b1b1b1" style="margin-left: 10rpx;"/>
+						<text style="color: #5586d3;">{{countryAndCode}}</text>
+						<uni-icons type="arrowdown" color="#5586d3" style="margin-left: 10rpx;"/>
 					</navigator>
 					<uni-forms-item label="" name="name" style="margin-top: 50rpx;">
 						<uni-easyinput style="margin-left: 15rpx;" type="number" :inputBorder="false" placeholder="请输入手机号" v-model="phone" />
@@ -16,7 +16,7 @@
 				</view>
 				<!-- 密码 -->
 				<view class="d-flex a-center" style="margin-top: 55rpx; border-bottom: solid #ececec 2rpx;">
-					<uni-icons type="locked" color="#b1b1b1" size="20"/>
+					<uni-icons type="locked" color="#5586d3" size="20"/>
 					<uni-forms-item label="" name="name" style="margin-top: 50rpx;">
 						<uni-easyinput type="password" :inputBorder="false" placeholder="输入密码" v-model="password" />
 					</uni-forms-item>

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 银行卡信息(BankCardInfo)表服务实现类
@@ -53,6 +54,7 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
     @Override
     public int insert(Integer loginUserId, BankCardInfo bankCardInfo) {
         bankCardInfo.setAddUserId(loginUserId);
+        bankCardInfo.setUserId(loginUserId);
         return bankCardInfoMapper.insertSelective(bankCardInfo);
     }
 
@@ -108,7 +110,13 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
         PageHelper.startPage(bankCardInfo.getPageNum(), bankCardInfo.getPageSize());
         bankCardInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         bankCardInfo.setUserId(loginUserId);
-        PageInfo<BankCardInfo> page = new PageInfo<>(bankCardInfoMapper.select(bankCardInfo));
+        List<BankCardInfo> bankCardInfoLists = bankCardInfoMapper.select(bankCardInfo);
+        for (BankCardInfo b : bankCardInfoLists) {
+            // 隐藏卡号
+            b.setCardNo(".... .... .... " + b.getCardNo().substring(13));
+
+        }
+        PageInfo<BankCardInfo> page = new PageInfo<>(bankCardInfoLists);
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

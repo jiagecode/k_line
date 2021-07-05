@@ -8,8 +8,9 @@ const urls = {
   myCard: "/bankCardInfo/queryMyBankCard" ,//查询我的银行卡
   cashOutIn: "/cashOutIn/myCashOutList" ,//查询我的提现、充值记录
   myPosition: "/positionInfo/mySkuForList" ,//查询我的持仓
-  myCusSku: "/skuCusInfo/queryMySku" ,//查询我的自选SKUCODE
-  userRegister: "/userInfo/createUserInfo" ,// H5用户注册
+  myCusSku: "/skuCusInfo/queryMySku", //查询我的自选SKUCODE
+  userRegister: "/userInfo/createUserInfo", // H5用户注册
+  bankCardInfoSave: "/bankCardInfo/save", // 新增银行卡
 }
 
 module.exports = {
@@ -39,5 +40,8 @@ module.exports = {
   },
   userRegister(data){
     return doRequest('POST', urls.userRegister, data)
+  },
+  bankCardInfoSave(data){
+    return doRequest('POST', urls.bankCardInfoSave, data)
   }
 }

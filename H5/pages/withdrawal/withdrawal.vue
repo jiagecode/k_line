@@ -5,7 +5,7 @@
 	<!-- 优先展示绑定的银行卡 -->
 	<div>
 		<block v-for="(item, index) in cardList" :key="item.bankCardId">
-			<view class="d-flex a-center j-center" style="background-color: #159682; height: 240rpx; border-radius: 15rpx;">
+			<view class="d-flex a-center j-center" style="background-color: #159682; height: 220rpx; border-radius: 15rpx;">
 				<view style="height: 80%; width: 90.6%;">
 				  <view class="d-flex">
 						<image style="background-color: #FFFFFF; width: 70rpx; height: 70rpx; border-radius: 50rpx;" src="/static/yh.png" @click="xy" />
@@ -61,6 +61,13 @@ export default {
   },
   onShow() {
     document.title = '币安秒合约';
+    //发起查询数据
+    https.myCardList(data).then((res) => {
+      if (res != null) {
+        this.cardList = res.list;
+        console.log("银行卡数据:" + res.list);
+      }
+    })
   }
 }
 </script>

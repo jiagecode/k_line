@@ -69,7 +69,8 @@ public class BankCardInfoController {
     }
  
     /**
-     * 查询多条数据
+     * 消费者用户查询多条数据
+     * 截取卡号
      *
      * @param loginUserId 用户ID
      * @param bankCardInfo 查询条数

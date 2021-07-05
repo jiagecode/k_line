@@ -8,90 +8,96 @@
 	<view style="width: 84%;">
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 			<text>卡号：</text>
-			<uni-easyinput type="number" :inputBorder="false" placeholder="卡号" :v-model="bankInfo.cardNo"/>
+			<uni-easyinput type="number" :inputBorder="false" placeholder="卡号" v-model="bankInfo.cardNo" @input="bindPickerChange"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 			<text>持卡人：</text>
-			<uni-easyinput type="number" :inputBorder="false" placeholder="持卡人" :v-model="bankInfo.cardOwnerName"/>
+			<uni-easyinput type="number" :inputBorder="false" placeholder="持卡人" v-model="bankInfo.cardOwnerName"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
-			<text @tap="nextStep">卡类型：</text>
-			<picker @change="bindPickerChange" :value="index" :range="array">
-				<view class="uni-input">{{array[index]}}</view>
-			</picker>
+			<text>卡类型：</text>
+			<uni-easyinput type="text" :inputBorder="false" placeholder="持卡人" v-model="bankInfo.bankName"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 			<text>手机号：</text>
-			<uni-easyinput type="number" :inputBorder="false" placeholder="手机号" :v-model="bankInfo.cardPhone"/>
+			<uni-easyinput type="number" :inputBorder="false" placeholder="手机号" v-model="bankInfo.cardPhone"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 			<text>身份证：</text>
-			<uni-easyinput type="idcard" :inputBorder="false" placeholder="身份证号" :v-model="bankInfo.cardOwnerNo"/>
+			<uni-easyinput type="idcard" :inputBorder="false" placeholder="身份证号" v-model="bankInfo.cardOwnerNo"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 			<text>省份：</text>
-			<uni-easyinput type="text" :inputBorder="false" placeholder="省份" :v-model="bankInfo.province"/>
+			<uni-easyinput type="text" :inputBorder="false" placeholder="省份" v-model="bankInfo.province"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 			<text>市名：</text>
-			<uni-easyinput type="text" :inputBorder="false" placeholder="市名" :v-model="bankInfo.city"/>
+			<uni-easyinput type="text" :inputBorder="false" placeholder="市名" v-model="bankInfo.city"/>
 		</view>
 		<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
 			<text>支行：</text>
-			<uni-easyinput type="text" :inputBorder="false" placeholder="支行址" :v-model="bankInfo.subBranch"/>
+			<uni-easyinput type="text" :inputBorder="false" placeholder="支行址" v-model="bankInfo.subBranch"/>
 		</view>
 		<button style="margin-top: 50rpx; width: 45%; background-color: #5586d3; color: #FFFFFF;" @click="createBankInfo()">添加</button>
 	</view>
   </view>
 </template>
-
 <script>
-//import BIN from 'bankcardinfo'
-export default {
-  data() {
-    return {
-      index: 0,
-      array: ['中国工商银行', '美国', '巴西', '日本'],
-      cardNo: '',
-      bankInfo: {
-        bankName: "",
-        province: "",
-        city: "",
-        subBranch: "",
-        cardOwnerName: "",
-        cardNo: "",
-        cardOwnerNo: "",
-        cardPhone: ""
-      }
-    }
-  },
-  methods: {
-    bindPickerChange: function (e) {
-      console.log('picker发送选择改变，携带值为', e.target.value)
-    },
-    nextStep() {
-      // promise 方式调用, 2.0.0 及以上版本支持 6212812318000075076
-      console.log(this.cardNo);
-      // console.log(this.bankInfo);
-      // console.log(this.bankInfo.cardNo);
-      // BIN.getBankBin(this.bankInfo.cardNo).then(function(data) {
-      // 	console.log(data)
-      // 	this.bankInfo.bankName = data.bankName;
-      // }).catch(function(err) {
-      // 	console.log(err)
-      // })
-    }
-  },
-  onShow() {
-    document.title = '币安秒合约';
-  },
-  methods: {
-	  createBankInfo(){
-		  console.log("添加银行卡")
-	  }
-  }
-}
+	import BIN from 'bankcardinfo'
+	import https from '../../api/api.js'
+	export default{
+		data(){
+			return{
+				bankName:'',
+				bankInfo: {
+					bankName: "",
+					province: "",
+					city: "",
+					subBranch: "",
+					cardOwnerName: "",
+					cardNo: "",
+					cardOwnerNo: "",
+					cardPhone: ""
+				}
+			}
+		},
+		methods:{
+			// 6212812318000075076 
+			bindPickerChange: function (e) {
+				if(e.length > 14){
+					var _this = this;
+					BIN.getBankBin(e).then(function(data) {
+						_this.bankInfo.bankName = data.bankName;
+					}).catch(function(err) {
+						console.log(err)
+					})
+				}
+			},
+			createBankInfo(){
+				console.log("添加银行卡")
+				console.log(this.bankInfo)
+				
+				// 发起登录请求
+				https.bankCardInfoSave(this.bankInfo).then((res)=> {
+					if(res != null){
+						// 提示用户
+						uni.showToast({
+						    title: '添加成功！',
+						    duration: 1000,
+						})
+						setTimeout(() => {
+							// 跳转页面
+							uni.redirectTo({
+								url:'../withdrawal/withdrawal'
+							})}, 
+						900)
+					}
+				})
+			}
+		}
+	}
 </script>
+
 <style>
 text {
   margin-left: 25 rpx;
