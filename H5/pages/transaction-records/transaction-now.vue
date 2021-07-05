@@ -10,13 +10,12 @@
         </view>
         <view style="width: 285rpx;">
           {{ showUpOrDown(item.investType, item.investAmount) }}
-          <view></view>
-          <view></view>
         </view>
         <view style="width: 300rpx;">
           <view v-show="item.investType == '1'" style="color: red;">+ {{ item.incomeAmount }}</view>
           <view v-show="item.investType == '2'" style="color: #09BB07;">- {{ item.incomeAmount }}</view>
-          <view style="font-size: 25rpx; color: #999999;">{{ item.addDate }}</view>
+          <view> 1</view>
+		  <view style="font-size: 25rpx; color: #999999;">{{ item.addDate }}</view>
         </view>
       </view>
     </block>

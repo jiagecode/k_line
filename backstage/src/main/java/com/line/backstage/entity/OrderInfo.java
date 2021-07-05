@@ -30,6 +30,9 @@ public class OrderInfo extends QueryRequest implements Serializable {
     @ApiModelProperty("订单ID")
     private Integer orderId;
 
+    @ApiModelProperty("持仓Id")
+    private Integer positionId;
+
     /**
      * 订单类型 1-买入 2-卖出
      */

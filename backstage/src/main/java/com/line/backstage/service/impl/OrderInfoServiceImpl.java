@@ -1,18 +1,25 @@
 package com.line.backstage.service.impl;
 
-import com.line.backstage.entity.OrderInfo;
-import com.line.backstage.enums.DataEnum;
-import com.line.backstage.utils.PageWrapper;
-import com.line.backstage.dao.mapper.OrderInfoMapper;
-import com.line.backstage.service.OrderInfoService;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.line.backstage.dao.mapper.OrderInfoMapper;
+import com.line.backstage.entity.AccountInfo;
+import com.line.backstage.entity.AccountRecord;
+import com.line.backstage.entity.OrderInfo;
+import com.line.backstage.entity.PositionInfo;
+import com.line.backstage.enums.DataEnum;
+import com.line.backstage.service.AccountInfoService;
+import com.line.backstage.service.AccountRecordService;
+import com.line.backstage.service.OrderInfoService;
+import com.line.backstage.service.PositionInfoService;
+import com.line.backstage.utils.PageWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 订单信息(OrderInfo)表服务实现类
@@ -28,6 +35,12 @@ public class OrderInfoServiceImpl implements OrderInfoService {
      */
     @Resource
     private OrderInfoMapper orderInfoMapper;
+    @Autowired
+    private PositionInfoService positionInfoService;
+    @Autowired
+    private AccountInfoService accountInfoService;
+    @Autowired
+    private AccountRecordService accountRecordService;
 
     /**
      * 保存数据
@@ -53,9 +66,56 @@ public class OrderInfoServiceImpl implements OrderInfoService {
      * @return 是否成功
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insert(Integer loginUserId, OrderInfo orderInfo) {
+        // 查询用户信息
+        AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
+
+        // 新增资金变动记录
+        AccountRecord accountRecord = new AccountRecord();
+        accountRecord.setAccountId(accountInfo.getAccountId());
+        accountRecord.setRecordType(3);
+        accountRecord.setChangeMoney(orderInfo.getInvestAmount());
+        accountRecord.setBeforeMoney(accountInfo.getAccountMoney());
+        accountRecord.setAddDate(new Date());
+        accountRecord.setEditDate(new Date());
+        accountRecord.setServiceCharge(orderInfo.getOrderCharge());
+
+        // 修改账户余额
+        accountInfo.setAccountMoney(BigDecimal.valueOf(accountInfo.getAccountMoney()).subtract(BigDecimal.valueOf(orderInfo.getInvestAmount())).doubleValue());
+        accountInfo.setOrderNum(accountInfo.getOrderNum() + 1);
+
+        // 记录变动后的金额
+        accountRecord.setAfterMoney(accountInfo.getAccountMoney());
+
+        accountInfoService.update(loginUserId, accountInfo);
+
+        // 生成持仓数据
+        PositionInfo positionInfo = new PositionInfo();
+        positionInfo.setUserId(loginUserId);
+        positionInfo.setPositionStatus(1);
+        positionInfo.setSkuName(orderInfo.getSkuName());
+        positionInfo.setInvestType(orderInfo.getInvestType());
+        positionInfo.setBeaginPrice(orderInfo.getSkuPrice());
+        positionInfo.setNowPrice(orderInfo.getSkuPrice());
+        positionInfo.setInvestAmount(orderInfo.getInvestAmount());
+        positionInfo.setBeginDate(new Date());
+        positionInfo.setAddDate(new Date());
+        positionInfo.setEditDate(new Date());
+        positionInfo.setAddUserId(loginUserId);
+        positionInfo.setEditUserId(loginUserId);
+
+        // 新增持仓数据
+        positionInfoService.insert(loginUserId, positionInfo);
+
+        // 新增订单信息
         orderInfo.setAddUserId(loginUserId);
-        return orderInfoMapper.insertSelective(orderInfo);
+        orderInfo.setPositionId(positionInfo.getPositionId());
+        int result = orderInfoMapper.insertSelective(orderInfo);
+
+        accountRecord.setOrderId(orderInfo.getOrderId());
+        accountRecordService.insert(loginUserId, accountRecord);
+        return result;
     }
 
     /**

@@ -111,4 +111,16 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }
+
+    /**
+     * 通过loginUserId查询单条数据
+     *
+     * @param loginUserId
+     * @return 实例对象
+     */
+    @Override
+    public AccountInfo queryByLoginUserId(Integer loginUserId){
+        return accountInfoMapper.queryByUserId(loginUserId);
+    }
+
 }

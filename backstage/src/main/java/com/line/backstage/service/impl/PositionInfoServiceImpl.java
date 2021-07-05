@@ -55,7 +55,12 @@ public class PositionInfoServiceImpl implements PositionInfoService {
     @Override
     public int insert(Integer loginUserId, PositionInfo positionInfo) {
         positionInfo.setAddUserId(loginUserId);
-        return positionInfoMapper.insertSelective(positionInfo);
+        int result = positionInfoMapper.insertSelective(positionInfo);
+        if(result > 0){
+            // 增加持仓数据同时开启定时结算任务
+            // todo
+        }
+        return result;
     }
 
     /**

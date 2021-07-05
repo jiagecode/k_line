@@ -63,4 +63,11 @@ public interface AccountInfoService {
      * @return 对象列表
      */
     PageWrapper<AccountInfo> list(Integer loginUserId, AccountInfo accountInfo);
+
+    /**
+     * 根据userId查询AccountInfo
+     * @param loginUserId
+     * @return
+     */
+    AccountInfo queryByLoginUserId(Integer loginUserId);
 }

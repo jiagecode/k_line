@@ -96,4 +96,9 @@
             and a.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
+
+    <select id="queryByUserId" parameterType="java.lang.Integer" resultType="com.line.backstage.entity.AccountInfo">
+        SELECT * FROM t_account_info WHERE USER_ID = #{userId}
+    </select>
+
 </mapper>
