@@ -46,6 +46,16 @@
         r.COMMISSION_MONEY,r.REMARKS,r.ADD_DATE,r.EDIT_DATE,r.ORDER_ID,r.SERVICE_CHARGE,r.ADD_USER_ID,
         r.EDIT_USER_ID,r.DEL,u.USER_REAL_NAME,u.USER_ID,u.AGENT_NAME,o.INTEGRAL
     </sql>
+    <select id="sumAllMoneyRecord" parameterType="java.util.Map" resultType="java.util.Map">
+        select sum(CHANGE_MONEY) todayWater,sum(SERVICE_CHARGE) todayFee from t_account_record where DEL = 1
+        <if test=" beginDate != null ">
+            and ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
+
     <select id="queryManRecordVoForPage" parameterType="com.line.backstage.entity.sysentity.ManRecordVo" resultMap="AccountRecordMapVo">
         select <include refid="record_vo_Column_List"/>
         from t_account_record r

@@ -4,8 +4,8 @@
       <div class="app-box-tab">
         <div class="app-box-title">我的团队</div>
         <div class="app-box-changeBox">
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia">新增
-          </el-button>
+<!--          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia">新增-->
+<!--          </el-button>-->
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt">用户ID：</div>
             <el-input placeholder="请输入商户ID" v-model="input1"></el-input>

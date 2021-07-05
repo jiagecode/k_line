@@ -43,6 +43,12 @@
     <select id="queryMyMoneyByUserId" parameterType="java.lang.Integer" resultType="java.lang.Double">
         select ACCOUNT_MONEY from  t_account_info where  DEL = 1 and USER_ID = #{userId}
     </select>
+    <select id="sumAllUserMoney" resultType="java.lang.Double">
+        select sum(ACCOUNT_MONEY) from  t_account_info where  DEL = 1
+    </select>
+    <select id="sumAllUserProfitAndLoss" resultType="java.lang.Double">
+        select sum(ALL_MONEY) from  t_account_info where  DEL = 1
+    </select>
     <select id="queryForPage" parameterType="com.line.backstage.entity.AccountInfo" resultMap="AccountInfoMap">
         select <include refid="account_info_sql"/>
         from t_account_info a

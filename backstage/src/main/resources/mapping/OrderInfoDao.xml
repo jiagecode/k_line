@@ -114,4 +114,16 @@
             and o.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
+
+    <select id="countTodayOrderNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from t_order_info where DEL = 1
+        <if test=" beginDate != null ">
+            and ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
+
+
 </mapper>

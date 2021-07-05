@@ -17,15 +17,13 @@ import com.line.backstage.utils.DateUtils;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.MenuRouteVo;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 后台管理系统用户表(SysUserInfo)表服务实现类
@@ -281,6 +279,60 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
             vo.setAllBonus(0.0);
         }
         return vo;
+    }
+
+    @Override
+    public Map<String, Object> queryHomePageData() {
+        Map<String, Object> map = new HashMap<>();
+        //用户总数
+        Integer allUserNum = userInfoMapper.countUserNum(map);
+        //用户总余额
+        Double userAllMoney = accountInfoMapper.sumAllUserMoney();
+        if(userAllMoney == null){
+            userAllMoney = 0.0;
+        }
+        //用户总盈亏
+        Double profitAndLoss = accountInfoMapper.sumAllUserProfitAndLoss();
+        if(profitAndLoss == null){
+            profitAndLoss = 0.0;
+        }
+        Date todayBegin = DateUtil.getStartTimeOfToday();
+        Date todayEnd = DateUtil.getEndTimeOfDay(new Date());
+        map.put("beginDate",todayBegin);
+        map.put("endDate",todayEnd);
+        //今日新增用户
+        Integer todayUserNum = userInfoMapper.countUserNum(map);
+        map.put("userType",2);
+        Integer todayAgentNum = userInfoMapper.countUserNum(map);
+        //今日订单数
+        Integer todayOrderNum = orderInfoMapper.countTodayOrderNum(map);
+        Map<String ,Object> result = accountRecordMapper.sumAllMoneyRecord(map);
+        map.put("cashType",1);
+        //今日充值
+        Double cashIn = cashOutInMapper.sumAllCash(map);
+        if(cashIn ==null){
+            cashIn = 0.0;
+        }
+        map.put("cashType",2);
+        //今日提现
+        Double cashOut = cashOutInMapper.sumAllCash(map);
+        if(cashOut ==null){
+            cashOut = 0.0;
+        }
+        if(result == null){
+            result = new HashMap<>();
+            result.put("todayWater",0.0);
+            result.put("todayFee",0.0);
+        }
+        result.put("allUserNum",allUserNum);
+        result.put("userAllMoney",userAllMoney);
+        result.put("profitAndLoss",profitAndLoss);
+        result.put("todayUserNum",todayUserNum);
+        result.put("todayOrderNum",todayOrderNum);
+        result.put("cashIn",cashIn);
+        result.put("cashOut",cashOut);
+        result.put("todayAgentNum",todayAgentNum);
+        return result;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.line.backstage.entity.OrderInfo;
 import com.line.backstage.entity.sysentity.ManOrderVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单信息(OrderInfo)表数据库访问层
@@ -15,4 +16,6 @@ import java.util.List;
 public interface OrderInfoMapper extends TkBaseMapper<OrderInfo> {
 
     List<ManOrderVo> queryManOrderVoForPage(ManOrderVo manOrderVo);
+
+    Integer countTodayOrderNum(Map map);
 }

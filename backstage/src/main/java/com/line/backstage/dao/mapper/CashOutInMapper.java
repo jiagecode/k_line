@@ -6,6 +6,7 @@ import com.line.backstage.entity.sysentity.ManCashVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户资金充值或提现记录(CashOutIn)表数据库访问层
@@ -21,4 +22,6 @@ public interface CashOutInMapper extends TkBaseMapper<CashOutIn> {
      * @return
      */
     List<ManCashVo> queryManCashVoList(ManCashVo vo);
+    Double sumAllCash(Map map);
+
 }

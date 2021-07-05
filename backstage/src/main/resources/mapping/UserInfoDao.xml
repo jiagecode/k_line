@@ -98,6 +98,17 @@
     <select id="queryUserIdForPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
         select USER_ID from t_user_info where USER_PHONE = #{tel}
     </select>
-
+    <select id="countUserNum" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from t_user_info where DEL = 1
+        <if test=" userType != null ">
+            and USER_TYPE = #{userType}
+        </if>
+        <if test=" beginDate != null ">
+            and USER_REGISTER_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and USER_REGISTER_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
 
 </mapper>

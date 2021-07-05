@@ -214,6 +214,16 @@ public class SysUserInfoController {
     public ResponseModel getUserInfo(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
         return ResponseHelper.success(sysUserInfoService.getUserInfo(Integer.valueOf(loginUserId)));
     }
+    /**
+     * 查询首页统计数据
+     *
+     * @return 实例对象
+     */
+    @GetMapping("queryHomeData")
+    @ApiOperation(value = "查询首页统计数据", notes = "根据token的用户id}")
+    public ResponseModel queryHomeData(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
+        return ResponseHelper.success(sysUserInfoService.queryHomePageData());
+    }
 
     /**
      * logout

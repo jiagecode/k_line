@@ -5,6 +5,7 @@ import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.entity.sysentity.ManRecordVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户资金账户变动记录(AccountRecord)表数据库访问层
@@ -15,4 +16,5 @@ import java.util.List;
 public interface AccountRecordMapper extends TkBaseMapper<AccountRecord> {
 
     List<ManRecordVo> queryManRecordVoForPage(ManRecordVo recordVo);
+    Map<String,Object> sumAllMoneyRecord(Map map);
 }

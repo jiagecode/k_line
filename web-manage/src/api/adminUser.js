@@ -56,6 +56,13 @@ export function moneyTableData(data) {
     data:data
   })
 }
+//更新用户状态
+export function queryHomeData() {
+  return request({
+    url: '/sysUserInfo/queryHomeData',
+    method: 'get'
+  })
+}
 //资金报表汇总
 export function moneyTableAll(data) {
   return request({
@@ -90,6 +97,7 @@ export function changeUser(data) {
     data:data
   })
 }
+
 
 //账户管理
 export function guanliUser(data) {

@@ -6,6 +6,7 @@ import com.line.backstage.entity.sysentity.ManUserVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户信息(UserInfo)表数据库访问层
@@ -21,6 +22,12 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
      */
     List<ManUserVo> queryManUserVoList(ManUserVo vo);
 
+    /**
+     * 统计用户数
+     * @param map
+     * @return
+     */
+    Integer countUserNum(Map map);
 
     Integer queryUserIdForPhone(@Param("tel") String phone);
 }

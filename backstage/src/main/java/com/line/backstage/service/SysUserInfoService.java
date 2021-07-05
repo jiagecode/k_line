@@ -89,6 +89,7 @@ public interface SysUserInfoService {
     PageWrapper<ManBankVo> queryManBankVoForPage(Integer loginUserId, ManBankVo recordVo);
     PageWrapper<AccountInfo> queryAccountInfoForPage(Integer loginUserId, AccountInfo recordVo);
     ManMoneyVo queryManMoneyVo(Integer loginUserId, ManMoneyVo manMoneyVo);
+    Map<String,Object> queryHomePageData();
     /**
      * 系统管理员登录
      * @param sysUserInfo
