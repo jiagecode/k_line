@@ -110,6 +110,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
         // 新增订单信息
         orderInfo.setAddUserId(loginUserId);
+        orderInfo.setUserId(loginUserId);
         orderInfo.setPositionId(positionInfo.getPositionId());
         int result = orderInfoMapper.insertSelective(orderInfo);
 

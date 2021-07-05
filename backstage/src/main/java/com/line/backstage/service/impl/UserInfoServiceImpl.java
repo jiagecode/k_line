@@ -17,8 +17,10 @@ import com.line.backstage.vo.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -64,6 +66,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int addNewUser(Integer loginUserId, UserInfo userInfo) {
 
         String tel = userInfo.getUserPhone();
@@ -113,6 +116,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             userInfoMapper.updateByPrimaryKeySelective(userInfo);
         }
         AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setDel(1);
         accountInfo.setUserId(newId);
         accountInfo.setAddDate(date);
         accountInfo.setEditDate(date);
