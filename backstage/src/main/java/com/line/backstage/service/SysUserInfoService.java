@@ -90,6 +90,7 @@ public interface SysUserInfoService {
     PageWrapper<AccountInfo> queryAccountInfoForPage(Integer loginUserId, AccountInfo recordVo);
     ManMoneyVo queryManMoneyVo(Integer loginUserId, ManMoneyVo manMoneyVo);
     Map<String,Object> queryHomePageData();
+    List<Map<String, Object>>queryHomePageDataForDate(String dateStr);
     /**
      * 系统管理员登录
      * @param sysUserInfo

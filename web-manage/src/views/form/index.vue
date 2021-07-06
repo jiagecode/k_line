@@ -139,6 +139,12 @@
           <el-form-item label="手机号码：" prop="tel">
             <el-input v-model.number="form.userPhone" type="number"></el-input>
           </el-form-item>
+          <el-form-item label="用户密码：" prop="userPassword" v-if="!bjShow">
+            <el-input type="password" v-model="form.userPassword1"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码：" prop="userPassword" v-if="!bjShow">
+            <el-input type="password" v-model="form.userPassword2"></el-input>
+          </el-form-item>
           <el-form-item label="备注：">
             <el-input v-model="form.txt"></el-input>
           </el-form-item>
@@ -308,6 +314,8 @@
           username: '',
           ptname: '',
           tel: '',
+          userPassword1: '',
+          userPassword2: '',
           region: '',
           txt: '',
           sysUserId: '',
@@ -551,6 +559,8 @@
           userNickName: '',
           userRealName: '',
           userPhone: '',
+          userPassword1: '',
+          userPassword2: '',
           userType: userType,
           txt: ''
         }
@@ -558,11 +568,16 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            if(this.form.userPassword1 != this.form.userPassword2){
+              this.$message.error("两次密码不一致")
+              return false;
+            }
             console.log(this.form)
             var data = {
               userNickName: this.form.userNickName,
               userRealName: this.form.userRealName,
               userPhone: this.form.userPhone,
+              userPassword: this.form.userPassword1,
               userType: this.form.userType,
             }
             addUser(data).then(res => {

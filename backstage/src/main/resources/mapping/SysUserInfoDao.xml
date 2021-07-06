@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.line.backstage.dao.mapper.SysUserInfoMapper">
- 
+
     <resultMap type="com.line.backstage.entity.SysUserInfo" id="SysUserInfoMap">
         <result property="sysUserId" column="SYS_USER_ID" jdbcType="INTEGER"/>
         <result property="sysUserCode" column="SYS_USER_CODE" jdbcType="VARCHAR"/>
@@ -16,4 +16,58 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="OTHER"/>
     </resultMap>
+
+    <select id="queryHomeDate" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT t1.date_str,-- 日期
+               IFNULL(t2.merchantNumber, 0) AS merchantNumber,-- 用户户数量
+               IFNULL(t3.topUpAmount, 0)    AS topUpAmount,-- 充值金额
+               IFNULL(t4.countNumber, 0)    AS countNumber,-- 订单数量
+               IFNULL(t4.successNumber, 0)  AS successNumber,-- 订单成功数量
+               IFNULL(t4.orderAmount, 0)    AS orderAmount,-- 订单金额
+               IFNULL(t4.successAmount, 0)  AS successAmount,-- 成功订单金额
+               IFNULL(t4.payAmount, 0)      AS payAmount -- 手续费
+        FROM (
+                 SELECT #{endTime, jdbcType=VARCHAR} AS date_str
+                 UNION ALL
+                 SELECT DATE_SUB(#{endTime, jdbcType=VARCHAR}, INTERVAL 1 DAY ) AS date_str
+                 UNION ALL
+                 SELECT DATE_SUB(#{endTime, jdbcType=VARCHAR}, INTERVAL 2 DAY ) AS date_str
+                 UNION ALL
+                 SELECT DATE_SUB(#{endTime, jdbcType=VARCHAR}, INTERVAL 3 DAY ) AS date_str
+                 UNION ALL
+                 SELECT DATE_SUB(#{endTime, jdbcType=VARCHAR}, INTERVAL 4 DAY ) AS date_str
+                 UNION ALL
+                 SELECT DATE_SUB(#{endTime, jdbcType=VARCHAR}, INTERVAL 5 DAY ) AS date_str
+                 UNION ALL
+                 SELECT DATE_SUB(#{endTime, jdbcType=VARCHAR}, INTERVAL 6 DAY ) AS date_str
+             ) t1
+                 LEFT JOIN (
+            SELECT CONVERT
+                       (a.ADD_DATE, DATE) AS date_str,
+                   COUNT(*)                  AS merchantNumber -- 用户数量
+            FROM t_user_info a
+            WHERE a.USER_TYPE = 1
+              AND a.DEL = 1
+            GROUP BY CONVERT(a.ADD_DATE, DATE)
+        ) t2 ON t1.date_str = t2.date_str
+                 LEFT JOIN (
+            SELECT SUM(CASE WHEN u.CASH_TYPE = (1) THEN u.CASH_MONEY ELSE 0 END) AS topUpAmount,-- 充值金额
+                   CONVERT(u.ADD_DATE, DATE)                                  AS date_str
+            FROM t_cash_out_in u
+            WHERE u.DEL = 1
+            GROUP BY CONVERT(u.ADD_DATE, DATE)
+        ) t3 ON t1.date_str = t3.date_str
+                 LEFT JOIN (
+            SELECT COUNT(t.ORDER_ID)                                                   AS countNumber,-- 订单数量
+                   SUM(CASE WHEN t.ORDER_STATUS = (2) THEN 1 ELSE 0 END)            AS successNumber,-- 订单成功数量
+                   SUM(t.ORDER_AMOUNT)                                                 AS orderAmount,-- 订单金额
+                   SUM(SUB_MONEY) AS successAmount,-- 盈亏金额
+                   SUM(ORDER_CHARGE) AS payAmount,-- 手续费
+                   CONVERT(t.ADD_DATE, DATE)                                      AS date_str
+            FROM t_order_info t
+            WHERE t.DEL = 1
+            GROUP BY (CONVERT(t.ADD_DATE, DATE))
+        ) t4 ON t1.date_str = t4.date_str
+        ORDER BY t1.date_str ASC;
+    </select>
 </mapper>

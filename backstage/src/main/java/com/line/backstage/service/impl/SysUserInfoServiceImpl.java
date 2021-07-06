@@ -336,6 +336,11 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     }
 
     @Override
+    public List<Map<String, Object>> queryHomePageDataForDate(String dateStr) {
+        return sysUserInfoMapper.queryHomeDate(dateStr);
+    }
+
+    @Override
     public SysUserInfo login(SysUserInfo sysUserInfo) {
 
         // XXX 加密密码

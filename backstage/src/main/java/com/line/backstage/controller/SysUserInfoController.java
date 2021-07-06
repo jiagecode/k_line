@@ -221,8 +221,9 @@ public class SysUserInfoController {
      */
     @GetMapping("queryHomeData")
     @ApiOperation(value = "查询首页统计数据", notes = "根据token的用户id}")
-    public ResponseModel queryHomeData(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
-        return ResponseHelper.success(sysUserInfoService.queryHomePageData());
+    public ResponseModel queryHomeData(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId,@RequestParam String endTime){
+//        return ResponseHelper.success(sysUserInfoService.queryHomePageData());
+        return ResponseHelper.success(sysUserInfoService.queryHomePageDataForDate(endTime));
     }
 
     /**

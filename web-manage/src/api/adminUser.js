@@ -57,10 +57,11 @@ export function moneyTableData(data) {
   })
 }
 //更新用户状态
-export function queryHomeData() {
+export function queryHomeData(params) {
   return request({
     url: '/sysUserInfo/queryHomeData',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 //资金报表汇总
