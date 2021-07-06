@@ -259,56 +259,67 @@
 		height: 60upx;
 		text-align: left;
 		line-height: 60upx;
-		color: #8c8b90;
+		color: #9aa2b5;
 	}
 
 	.uni-row-page {
 		margin-top: 20upx;
 		margin-bottom: 20upx;
-		height: 150upx;
+		height: 180upx;
 	}
 
 	.uni-col-page {
-		height: 150upx;
+		height: 180upx;
 	}
 
 	.light-page-t {
-		height: 40upx;
-		line-height: 40upx;
+		height: 50upx;
+		line-height: 50upx;
 		font-size: 30upx;
 		text-align: center;
-		color: #8c8b90;
+		color: #9aa2b5;
 		background-color: #424448;
 	}
 
 	.light-page-c {
-		height: 70upx;
-		line-height: 70upx;
+		height: 80upx;
+		line-height: 80upx;
 		font-size: 26upx;
 		text-align: center;
-		color: #ffc71e;
+		color: #5586d3;
 		background-color: #424448;
 	}
 
 	.light-page-d {
-		height: 40upx;
-		line-height: 40upx;
+		height: 50upx;
+		line-height: 50upx;
 		font-size: 30upx;
 		font-weight: bold;
 		text-align: center;
-		color: #f6676c;
+		color: #f96f47;
 		background-color: #424448;
 	}
 
 	.row-page-item {
-		padding-left: 10upx !important;
-		padding-right: 10upx !important;
+		padding-left: 8upx !important;
+		padding-right: 8upx !important;
 	}
 
 	.page-item-select {
+		height:180upx;
 		border-radius: 4upx;
-		border: 4upx solid #ffc71e;
+		border: 4upx solid #5586d3;
 	}
+	
+	.page-item-select .light-page-t {
+		height:46upx;
+		line-height: 50upx;
+	}
+	.page-item-select .light-page-d {
+		height:46upx;
+		line-height: 50upx;
+	}
+	
 
 	.uni-row-page1 {
 		height: 80upx;
@@ -323,20 +334,26 @@
 		line-height: 60upx;
 		font-size: 26upx;
 		text-align: center;
-		color: #ffc71e;
+		color: #5586d3;
 		background-color: #434549;
 	}
 
 	.row-page1-item {
 		padding-top: 10upx !important;
 		padding-bottom: 10upx !important;
-		padding-left: 10upx !important;
-		padding-right: 10upx !important;
+		padding-left: 4upx !important;
+		padding-right: 4upx !important;
 	}
 
 	.page-amount-select {
-		border-radius: 4upx;
-		border: 4upx solid #ffc71e;
+		height: 60upx;
+		border-radius:6upx;
+		border: 4upx solid #5586d3;
+	}
+
+	.page-amount-select .light-page1-t {
+		height: 52upx;
+		line-height: 52upx;
 	}
 
 	.page-left-ye {
@@ -345,7 +362,7 @@
 		width: 50%;
 		height: 50upx;
 		line-height: 50upx;
-		color: #8c8b90;
+		color: #9aa2b5;
 	}
 
 	.page-left-sxf {
@@ -353,7 +370,7 @@
 		width: 50%;
 		height: 50upx;
 		line-height: 50upx;
-		color: #8c8b90;
+		color: #9aa2b5;
 	}
 
 	.page-c-line {
@@ -377,7 +394,7 @@
 		font-weight: bold;
 		font-size: 26upx;
 		text-align: center;
-		color: #8c8b90;
+		color: #9aa2b5;
 	}
 
 	.light-page2-d {
@@ -406,11 +423,11 @@
 	}
 
 	.page-2-fx-red {
-		color: #f6676c;
+		color: #f96f47;
 	}
 
 	.page-2-fx-green {
-		color: #36d47e;
+		color: #00bf89;
 	}
 
 	.page-2-xj {
@@ -419,21 +436,22 @@
 	}
 
 	.page-2-xj-red {
-		color: #f6676c;
+		color: #f96f47;
 	}
 
 	.page-2-xj-green {
-		color: #36d47e;
+		color: #00bf89;
 	}
 
 
 	.page-2-je {
 		font-size: 30upx;
-		color: #ffc71d;
+		color: #5586d3;
 	}
 
 	.page-btn-submit {
-		background-color: #ffc71d;
+		background-color: #5586d3;
+		color: #FFFFFF;
 	}
 
 	.page-bottom-text {
@@ -442,7 +460,7 @@
 		height: 50upx;
 		line-height: 50upx;
 		font-size: 26upx;
-		color: #ffc71d;
+		color: #5586d3;
 	}
 
 	.page-left-yqsy {
@@ -489,7 +507,7 @@
 		line-height: 24px;
 		font-size: 15px;
 		text-align: center;
-		color: rgb(255, 121, 117);
+		color: #f96f47;
 		background-color: #f8f8f8;
 	}
 
@@ -498,7 +516,7 @@
 		line-height: 60px;
 		font-size: 20px;
 		text-align: center;
-		color: rgb(255, 121, 117);
+		color: #f96f47;
 		background-color: #f8f8f8;
 	}
 
@@ -536,12 +554,12 @@
 	}
 
 	.bot-mz {
-		background-color: #ff7975;
+		background-color: #f96f47;
 	}
 
 	.bot-md {
 		position: relative;
-		background-color: #36d47e;
+		background-color: #00bf89;
 	}
 
 	.mini-btn {
@@ -945,11 +963,11 @@
 					// 判断涨跌
 					if (parseFloat(oldPrice) < parseFloat(that.SocketMsg.PRICE)) {
 						// 涨
-						price.style.color = '#ff7975';
+						price.style.color = '#f96f47';
 					}
 					if (parseFloat(oldPrice) > parseFloat(that.SocketMsg.PRICE)) {
 						// 跌
-						price.style.color = '#36d47e';
+						price.style.color = '#00bf89';
 					}
 				}
 			}
@@ -1080,6 +1098,7 @@
 					"orderStatus": 0,
 					"skuId": this.OrderItem,
 					"skuCode": this.Name,
+					"skuName": this.PairName,
 					"skuQty": 1,
 					"skuPrice": this.OrderAmount,
 					"orderAmount": this.OrderAmount,
@@ -1428,7 +1447,7 @@
 					// url: 'https://min-api.cryptocompare.com/data/v2/histominute?tryConversion=false&fsym=' + this.Name +
 					// 	'&tsym=USD&limit=1440&api_key=' + API_KEY,
 					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
-						'&tsym=USD&limit=1440&api_key=' + API_KEY,
+						'&tsym=USD&limit=180&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};
@@ -1505,7 +1524,7 @@
 				console.log("查询分钟实时数据");
 				uni.request({
 					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
-						'&tsym=USD&limit=5&api_key=' + API_KEY,
+						'&tsym=USD&limit=4&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};

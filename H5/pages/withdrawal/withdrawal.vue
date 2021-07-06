@@ -62,6 +62,7 @@ export default {
   onShow() {
     document.title = '币安秒合约';
     //发起查询数据
+	var data = {};
     https.myCardList(data).then((res) => {
       if (res != null) {
         this.cardList = res.list;

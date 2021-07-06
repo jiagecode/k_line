@@ -14,7 +14,7 @@
         <view style="width: 300rpx;">
           <view v-show="item.investType == '1'" style="color: red;">+ {{ item.incomeAmount }}</view>
           <view v-show="item.investType == '2'" style="color: #09BB07;">- {{ item.incomeAmount }}</view>
-          <view> 1</view>
+          <view></view>
 		  <view style="font-size: 25rpx; color: #999999;">{{ item.addDate }}</view>
         </view>
       </view>
