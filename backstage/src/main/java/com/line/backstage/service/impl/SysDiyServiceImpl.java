@@ -35,6 +35,8 @@ public class SysDiyServiceImpl implements SysDiyService {
     private OrderInfoMapper orderInfoMapper;
     @Resource
     private AccountRecordMapper accountRecordMapper;
+    @Resource
+    private PositionInfoMapper positionInfoMapper;
 
     @Override
     public Map<String, Object> querySpecialUserInfo(Integer loginUserId,String diyUserId) {
@@ -133,8 +135,12 @@ public class SysDiyServiceImpl implements SysDiyService {
         Integer diyUserId = (Integer) map.get("diyUserId");
         //操作id
         Integer diyId = (Integer) map.get("diyId");
+        SysDiyInfo diyInfo;
         if(diyId == null){
-            diyId = findSysDiyInfo(diyUserId,loginUserId).getDiyId();
+            diyInfo = findSysDiyInfo(diyUserId,loginUserId);
+            diyId = diyInfo.getDiyId();
+        }else {
+            diyInfo = findById(diyId);
         }
         //起始时间或提现时间
         String dateStr = (String)map.get("dateStr");
@@ -151,6 +157,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         if(dealType == 1){
             String skuName = (String)map.get("skuName");
             String skuCode = (String)map.get("skuCode");
+            Integer skuId = (Integer) map.get("skuId");
             //起始金额
             String moneyStr = (String)map.get("moneyStr");
             //价格区间 最高价
@@ -165,6 +172,12 @@ public class SysDiyServiceImpl implements SysDiyService {
             Integer orderCycle = (Integer) map.get("orderCycle");
             //购买局数
             Integer orderNum = (Integer) map.get("orderNum");
+            BigDecimal orderMoney = new BigDecimal(moneyStr);
+            BigDecimal maxMoney = new BigDecimal(maxPriceStr);
+            BigDecimal minMoney = new BigDecimal(minPriceStr);
+            BigDecimal endMoney =  createOrderData(diyUserId,loginUserId,diyId,skuName,skuCode,orderMoney,maxMoney,minMoney,winRate,investType,orderCycle,orderNum,date,skuId);
+            result.put("endMoney",endMoney);
+            result.put("orders",queryOrders(diyUserId,diyId));
         }else {
             /*生成提现记录*/
             //提现金额
@@ -172,8 +185,13 @@ public class SysDiyServiceImpl implements SysDiyService {
             //通过-3或拒绝-4
             Integer checkStatus = (Integer) map.get("checkStatus");
             if(StringUtils.isNotEmpty(cashStr)&& checkStatus!= null){
-                BigDecimal money = new BigDecimal(cashStr);
+              BigDecimal money = new BigDecimal(cashStr);
               money =  createDiyCashData(diyId,diyUserId,loginUserId,money,checkStatus,date);
+              diyInfo.setDiyCashStatus(1);
+              diyInfo.setDiyRecordStatus(1);
+              diyInfo.setEditUserId(loginUserId);
+              diyInfo.setEditDate(new Date());
+              sysDiyInfoMapper.updateByPrimaryKey(diyInfo);
               result.put("endMoney",money);
             }
         }
@@ -186,6 +204,167 @@ public class SysDiyServiceImpl implements SysDiyService {
         return null;
     }
 
+    private List<OrderInfo> queryOrders(Integer userId,Integer diyId){
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setUserId(userId);
+        orderInfo.setDiyId(diyId);
+        orderInfo.setDel(1);
+        return orderInfoMapper.select(orderInfo);
+    }
+    /**
+     * 生成订单数据
+     * @param diyUserId
+     * @param sysUserId
+     * @param diyId
+     * @param skuName
+     * @param skuCode
+     * @param orderMoney
+     * @param maxMoney
+     * @param minMoney
+     * @param winRate
+     * @param investType
+     * @param orderCycle
+     * @param orderNum
+     * @param date
+     */
+    private BigDecimal createOrderData(Integer diyUserId,Integer sysUserId,Integer diyId,String skuName,String skuCode,
+                                 BigDecimal orderMoney,BigDecimal maxMoney, BigDecimal minMoney,Integer winRate,
+                                 Integer investType,Integer orderCycle, Integer orderNum,Date date,Integer skuId){
+        //盈利次数
+        int winNum = (winRate * orderNum * 10)/100;
+        Date beginDete = date ;
+        AccountInfo acc  = accountInfoMapper.queryByUserId(diyUserId);
+        Integer accId = acc.getAccountId();
+        BigDecimal accBefore = acc.getDiyMoney();
+        BigDecimal endMoney = accBefore ;
+        for (int i = 1 ;i<orderNum;i++){
+            Date  endDate = new Date(beginDete.getTime()+orderCycle*1000);
+            double rate = Math.random();
+            //此单是否盈利
+            boolean winFlag = rate > 0.5;
+            //是否买涨
+            boolean inestFlag = investType == 1 ;
+            if(winFlag){
+                if(winNum > 0){
+                    winNum --;
+                }else {
+                    winFlag = !winFlag;
+                }
+            }
+            //金额范围
+            BigDecimal subMoney = maxMoney.subtract(minMoney).setScale(10);
+            //订单结果金额
+            BigDecimal amount = subMoney.multiply( new BigDecimal(rate)).setScale(10);
+            BigDecimal accAfter = winFlag? accBefore.add(amount):accBefore.subtract(amount);
+            if(winFlag){
+                if(inestFlag){
+                    endMoney = minMoney.add(amount).setScale(10);
+                }else {
+                    endMoney = minMoney.subtract(amount).setScale(10);
+                }
+            }else {
+                if(inestFlag){
+                    endMoney = minMoney.subtract(amount).setScale(10);
+                }else {
+                    endMoney = minMoney.add(amount).setScale(10);
+                }
+            }
+            //持仓信息
+            Integer posId = insertPositionInfo(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,winFlag,minMoney,endMoney,orderMoney);
+            //订单信息
+            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId);
+            //资金记录
+            createAccountRecord(accId,amount.doubleValue(),accBefore.doubleValue(),accAfter.doubleValue(),null,diyId,endDate,sysUserId,orderId);
+            beginDete = new Date(endDate.getTime()+6000);
+        }
+        return endMoney;
+    }
+
+    /**
+     * 创建订单
+     * @param beginDete
+     * @param sysUserId
+     * @param endDate
+     * @param diyUserId
+     * @param diyId
+     * @param skuName
+     * @param investType
+     * @param orderCycle
+     * @param amount
+     * @param minMoney
+     * @param endMoney
+     * @param orderMoney
+     * @param posId
+     * @param skuCode
+     * @param skuId
+     * @return
+     */
+    private Integer insertOrder(Date beginDete,Integer sysUserId,Date endDate,Integer diyUserId,
+                                Integer diyId,String skuName,Integer investType,Integer orderCycle,BigDecimal amount,
+                                BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId){
+        OrderInfo info = new OrderInfo();
+        info.setPositionId(posId);
+        info.setOrderType(1);
+        info.setUserId(diyUserId);
+        info.setOrderStatus(2);
+        info.setSkuName(skuName);
+        info.setSkuId(skuId);
+        info.setSkuCode(skuCode);
+        info.setSkuQty(1.0);
+        info.setAddUserId(sysUserId);
+        info.setEditDate(endDate);
+        info.setAddDate(beginDete);
+        info.setEditUserId(sysUserId);
+        info.setOrderCycle(orderCycle);
+        info.setDiyId(diyId);
+        info.setInvestType(investType);
+        info.setIntegral(0.0);
+        info.setSubMoney(amount.doubleValue());
+        info.setInPoint(minMoney.doubleValue());
+        info.setOrderAmount(orderMoney.doubleValue());
+        info.setOutPoint(endMoney.doubleValue());
+        info.setOrderCharge(0.0);
+        return orderInfoMapper.insert(info);
+    }
+
+    /**
+     * 持仓
+     * @param beginDete
+     * @param sysUserId
+     * @param endDate
+     * @param diyUserId
+     * @param diyId
+     * @param skuName
+     * @param investType
+     * @param winFlag
+     * @param minMoney
+     * @param endMoney
+     * @param orderMoney
+     * @return
+     */
+    private Integer insertPositionInfo(Date beginDete,Integer sysUserId,Date endDate,Integer diyUserId,
+                                       Integer diyId,String skuName,Integer investType,boolean winFlag,
+                                       BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney){
+        PositionInfo pos = new PositionInfo();
+        pos.setAddDate(beginDete);
+        pos.setAddUserId(sysUserId);
+        pos.setEditDate(endDate);
+        pos.setEditUserId(sysUserId);
+        pos.setUserId(diyUserId);
+        pos.setPositionStatus(2);
+        pos.setSkuName(skuName);
+        pos.setInvestType(investType);
+        pos.setBeaginPrice(minMoney.doubleValue());
+        pos.setEndPrice(endMoney.doubleValue());
+        pos.setNowPrice(endMoney.doubleValue());
+        pos.setIncomeAmount(orderMoney.doubleValue());
+        pos.setBeginDate(beginDete);
+        pos.setEndDate(endDate);
+        pos.setIncomeFlage(winFlag?1:0);
+        pos.setDel(1);
+        pos.setDiyId(diyId);
+        return  positionInfoMapper.insert(pos);
+    }
     /**
      * 生成提现记录
      * @param diyId
@@ -217,7 +396,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         cash.setDiyId(diyId);
         cash.setDel(1);
         int cashId = cashOutInMapper.insert(cash);
-        createAccountRecord(oldAcc.getAccountId(),cashMoney.doubleValue(),oldMoney.doubleValue(),afterMoney.doubleValue(),cashId,diyId,date,sysUserId);
+        createAccountRecord(oldAcc.getAccountId(),cashMoney.doubleValue(),oldMoney.doubleValue(),afterMoney.doubleValue(),cashId,diyId,date,sysUserId,null);
         return  afterMoney;
     }
 
@@ -229,10 +408,15 @@ public class SysDiyServiceImpl implements SysDiyService {
      * @param afterMoney
      * @param cashId
      */
-    private void createAccountRecord(Integer accId,Double changeMoney,Double beforeMoney,Double afterMoney,Integer cashId,Integer diyId,Date date,Integer sysUserId){
+    private void createAccountRecord(Integer accId,Double changeMoney,Double beforeMoney,Double afterMoney,Integer cashId,Integer diyId,Date date,Integer sysUserId,Integer orderId){
         AccountRecord record = new AccountRecord();
         record.setAccountId(accId);
-        record.setRecordType(2);
+        if(orderId != null){
+            record.setOrderId(orderId);
+            record.setRecordType(3);
+        }else {
+            record.setRecordType(2);
+        }
         record.setChangeMoney(changeMoney);
         record.setBeforeMoney(beforeMoney);
         record.setAfterMoney(afterMoney);
@@ -259,11 +443,23 @@ public class SysDiyServiceImpl implements SysDiyService {
         return userInfoMapper.selectByPrimaryKey(info);
     }
 
+    private SysDiyInfo findById(Integer diyId){
+        SysDiyInfo info = new SysDiyInfo();
+        info.setDiyId(diyId);
+        info.setDel(1);
+        List<SysDiyInfo> list = sysDiyInfoMapper.selectAsList(info);
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
+
     private SysDiyInfo findSysDiyInfo(Integer userId,Integer sysUserId){
         SysDiyInfo info = new SysDiyInfo();
         info.setSysUserId(sysUserId);
         info.setUserId(userId);
         info.setDiyStatus(0);
+        info.setDel(1);
         List<SysDiyInfo> list = sysDiyInfoMapper.selectAsList(info);
         if(list != null && list.size() > 0){
             return list.get(0);
