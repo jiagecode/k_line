@@ -107,5 +107,5 @@ public class AccountRecord extends QueryRequest implements Serializable {
     @ApiModelProperty("数据状态")
     private Integer del;
     private String remarks;
-
+    private Integer diyId = 0;
 }

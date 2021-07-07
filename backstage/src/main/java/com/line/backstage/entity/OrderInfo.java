@@ -146,6 +146,7 @@ public class OrderInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
+    private Integer diyId = 0;
     private Integer inPoint;
     private Integer outPoint;
     private Integer integral;

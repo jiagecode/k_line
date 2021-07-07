@@ -2,6 +2,7 @@ package com.line.backstage.entity;
 
 import com.line.backstage.bases.QueryRequest;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.io.Serializable;
 import io.swagger.annotations.*;
@@ -168,4 +169,8 @@ public class AccountInfo extends QueryRequest implements Serializable {
      */
     @Transient
     private Integer todayNum;
+    /**
+     * 自定义金额
+     */
+    private BigDecimal diyMoney = BigDecimal.ZERO;
 }

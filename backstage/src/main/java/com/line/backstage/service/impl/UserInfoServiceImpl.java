@@ -101,6 +101,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setDelStatus(0);
         userInfo.setUserRefereeAble(1);
         userInfo.setDel(1);
+        userInfo.setDiyFlag(0);
         int newId  = userInfoMapper.insert(userInfo);
         if(newId == 1){
             newId = userInfoMapper.queryUserIdForPhone(tel);

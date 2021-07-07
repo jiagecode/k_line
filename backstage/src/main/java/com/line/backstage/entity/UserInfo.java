@@ -160,6 +160,15 @@ public class UserInfo extends QueryRequest implements Serializable {
     @ApiModelProperty("数据状态")
     private Integer del;
     /**
+     * 是否为DIY用户 默认0 不是
+     */
+    @ApiModelProperty("是否为DIY用户")
+    private Integer diyFlag = 0;
+    /**
+     * DIY用户类型 默认未1 普通用户
+     */
+    private Integer diyUserType = 1;
+    /**
      * 备注
      */
     @ApiModelProperty("备注")
@@ -191,4 +200,5 @@ public class UserInfo extends QueryRequest implements Serializable {
     private Double commissionRate;
     @Transient
     private Double userMoney;
+    private String diyUserName;
 }

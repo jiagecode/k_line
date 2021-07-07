@@ -17,6 +17,7 @@
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
         <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -39,12 +40,13 @@
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
         <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
         <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="record_vo_Column_List">
         r.RECORD_ID,r.ACCOUNT_ID,r.RECORD_TYPE,r.CHANGE_MONEY,r.BEFORE_MONEY,r.AFTER_MONEY,
         r.COMMISSION_MONEY,r.REMARKS,r.ADD_DATE,r.EDIT_DATE,r.ORDER_ID,r.SERVICE_CHARGE,r.ADD_USER_ID,
-        r.EDIT_USER_ID,r.DEL,u.USER_REAL_NAME,u.USER_ID,u.AGENT_NAME,o.INTEGRAL
+        r.EDIT_USER_ID,r.DEL,r.DIY_ID,u.USER_REAL_NAME,u.USER_ID,u.AGENT_NAME,o.INTEGRAL
     </sql>
     <select id="sumAllMoneyRecord" parameterType="java.util.Map" resultType="java.util.Map">
         select sum(CHANGE_MONEY) todayWater,sum(SERVICE_CHARGE) todayFee from t_account_record where DEL = 1

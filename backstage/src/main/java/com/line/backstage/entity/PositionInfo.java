@@ -141,5 +141,5 @@ public class PositionInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
-
+    private Integer diyId = 0;
 }

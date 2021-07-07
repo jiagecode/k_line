@@ -22,5 +22,6 @@
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>
