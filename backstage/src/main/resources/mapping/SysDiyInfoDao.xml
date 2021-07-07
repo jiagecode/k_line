@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.SysDiyInfoMapper">
+ 
+    <resultMap type="com.line.backstage.entity.SysDiyInfo" id="diyInfoMap">
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+        <result property="sysUserId" column="SYS_USER_ID" jdbcType="INTEGER"/>
+        <result property="beforeName" column="BEFORE_NAME" jdbcType="VARCHAR"/>
+        <result property="afterName" column="AFTER_NAME" jdbcType="VARCHAR"/>
+        <result property="beforeMoney" column="BEFORE_MONEY" jdbcType="NUMERIC"/>
+        <result property="afterMoney" column="AFTER_MONEY" jdbcType="NUMERIC"/>
+        <result property="beforeUserType" column="BEFORE_USER_TYPE" jdbcType="INTEGER"/>
+        <result property="afterUserType" column="AFTER_USER_TYPE" jdbcType="INTEGER"/>
+        <result property="diyOrderStatus" column="DIY_ORDER_STATUS" jdbcType="INTEGER"/>
+        <result property="diyCashStatus" column="DIY_CASH_STATUS" jdbcType="INTEGER"/>
+        <result property="diyRecordStatus" column="DIY_RECORD_STATUS" jdbcType="INTEGER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="diyStatus" column="DIY_STATUS" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="info_diy_sql">
+        DIY_ID,USER_ID,SYS_USER_ID,BEFORE_NAME,AFTER_NAME,BEFORE_MONEY,AFTER_MONEY,BEFORE_USER_TYPE,AFTER_USER_TYPE,
+        DIY_ORDER_STATUS,DIY_CASH_STATUS,DIY_RECORD_STATUS,ADD_DATE,ADD_USER_ID,EDIT_DATE,EDIT_USER_ID,DIY_STATUS
+    </sql>
+
+    <select id="selectAsList" parameterType="com.line.backstage.entity.SysDiyInfo" resultMap="diyInfoMap">
+        select <include refid="info_diy_sql"/>
+        from t_sys_diy_info
+        where DEL = #{del}
+        <if test="userId != null ">
+            and USER_ID = #{userId}
+        </if>
+        <if test=" diyId!= null ">
+            and DIY_ID = #{diyId}
+        </if>
+        <if test=" sysUserId!= null ">
+            and  SYS_USER_ID = #{sysUserId}
+        </if>
+        <if test=" diyOrderStatus!= null ">
+            and  DIY_ORDER_STATUS = #{diyOrderStatus}
+        </if>
+        <if test=" diyCashStatus != null ">
+            and DIY_CASH_STATUS = #{diyCashStatus}
+        </if>
+        <if test=" diyRecordStatus!= null ">
+            and  DIY_RECORD_STATUS = #{diyRecordStatus}
+        </if>
+        <if test=" diyStatus != null ">
+            and DIY_STATUS = #{diyStatus}
+        </if>
+        order by DIY_ID desc
+    </select>
+
+    <select id="querySkuDataList" resultType="java.util.Map">
+        select SKU_ID skuId,SKU_CODE skuCode, SKU_NAME skuName,NOW_PRICE nowPrice
+        from t_sku_info where DEL = 1 ORDER BY SKU_ID DESC
+    </select>
+
+</mapper>

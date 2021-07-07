@@ -81,6 +81,11 @@ public class AccountRecord extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("关联订单")
     private Integer orderId;
+    /**
+     * 提现/充值id
+     */
+    @ApiModelProperty("提现/充值id")
+    private Integer cashId;
 
     /**
      * 手续费
