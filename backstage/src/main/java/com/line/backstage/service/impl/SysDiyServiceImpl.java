@@ -176,6 +176,13 @@ public class SysDiyServiceImpl implements SysDiyService {
             BigDecimal maxMoney = new BigDecimal(maxPriceStr);
             BigDecimal minMoney = new BigDecimal(minPriceStr);
             BigDecimal endMoney =  createOrderData(diyUserId,loginUserId,diyId,skuName,skuCode,orderMoney,maxMoney,minMoney,winRate,investType,orderCycle,orderNum,date,skuId);
+            //diyInfo.setDiyCashStatus(1);
+            diyInfo.setDiyRecordStatus(1);
+            diyInfo.setDiyOrderStatus(1);
+            diyInfo.setAfterMoney(endMoney);
+            diyInfo.setEditUserId(loginUserId);
+            diyInfo.setEditDate(new Date());
+            sysDiyInfoMapper.updateByPrimaryKey(diyInfo);
             result.put("endMoney",endMoney);
             result.put("orders",queryOrders(diyUserId,diyId));
         }else {
@@ -201,7 +208,33 @@ public class SysDiyServiceImpl implements SysDiyService {
 
     @Override
     public Integer editDiyRecordByType(Integer loginUserId, Map<String, Object> map) {
-        return null;
+        //用户id
+        Integer diyUserId = (Integer) map.get("diyUserId");
+        //操作id
+        Integer diyId = (Integer) map.get("diyId");
+        //操作类型
+        Integer dealType = (Integer)map.get("dealType");
+        if(dealType == null || diyId == null || diyUserId == null){
+            return 0;
+        }
+        if(dealType == 1){
+            /*入库交易记录*/
+            positionInfoMapper.updateForDiy(diyId,diyUserId,1,loginUserId);
+            orderInfoMapper.updateForDiy(diyId,diyUserId,1,loginUserId);
+            accountRecordMapper.updateForDiy(diyId,diyUserId,1,loginUserId);
+        }else if(dealType == 2){
+            /*删除交易记录*/
+            positionInfoMapper.updateForDiy(diyId,diyUserId,0,loginUserId);
+            orderInfoMapper.updateForDiy(diyId,diyUserId,0,loginUserId);
+            accountRecordMapper.updateForDiy(diyId,diyUserId,0,loginUserId);
+        }else if(dealType == 3){
+            /*清除提现记录*/
+            cashOutInMapper.updateForDiy(diyId,diyUserId,0,loginUserId);
+        }else if(dealType ==4){
+            /*清除资金流水记录*/
+            accountRecordMapper.updateForDiy(diyId,diyUserId,0,loginUserId);
+        }
+        return 1;
     }
 
     private List<OrderInfo> queryOrders(Integer userId,Integer diyId){
@@ -324,6 +357,8 @@ public class SysDiyServiceImpl implements SysDiyService {
         info.setOrderAmount(orderMoney.doubleValue());
         info.setOutPoint(endMoney.doubleValue());
         info.setOrderCharge(0.0);
+        //预生成 未入库
+        info.setDel(-1);
         return orderInfoMapper.insert(info);
     }
 
@@ -361,7 +396,8 @@ public class SysDiyServiceImpl implements SysDiyService {
         pos.setBeginDate(beginDete);
         pos.setEndDate(endDate);
         pos.setIncomeFlage(winFlag?1:0);
-        pos.setDel(1);
+        //预生成 未入库
+        pos.setDel(-1);
         pos.setDiyId(diyId);
         return  positionInfoMapper.insert(pos);
     }
@@ -414,8 +450,11 @@ public class SysDiyServiceImpl implements SysDiyService {
         if(orderId != null){
             record.setOrderId(orderId);
             record.setRecordType(3);
+            //预生成 未入库
+            record.setDel(-1);
         }else {
             record.setRecordType(2);
+            record.setDel(1);
         }
         record.setChangeMoney(changeMoney);
         record.setBeforeMoney(beforeMoney);
@@ -424,7 +463,6 @@ public class SysDiyServiceImpl implements SysDiyService {
         record.setCommissionMoney(0.0);
         record.setDiyId(diyId);
         record.setCashId(cashId);
-        record.setDel(1);
         record.setAddDate(date);
         record.setEditDate(date);
         record.setAddUserId(sysUserId);

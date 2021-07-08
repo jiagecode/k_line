@@ -93,4 +93,9 @@
             and c.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
+
+    <update id="updateForDiy" parameterType="java.lang.Integer" >
+        update t_cash_out_in set DEL = #{del} ,editUserId = #{sysUserId},EDIT_DATE = now()
+        WHERE USER_ID = #{userId} AND DIY_ID = #{diyId}
+    </update>
 </mapper>

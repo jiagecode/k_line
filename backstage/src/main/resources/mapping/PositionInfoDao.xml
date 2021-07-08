@@ -24,4 +24,10 @@
         <result property="del" column="DEL" jdbcType="OTHER"/>
         <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
     </resultMap>
+
+    <update id="updateForDiy" parameterType="java.lang.Integer" >
+        update t_position_info set DEL = #{del} ,editUserId = #{sysUserId},EDIT_DATE = now()
+        WHERE USER_ID = #{userId} AND DIY_ID = #{diyId}
+    </update>
+
 </mapper>

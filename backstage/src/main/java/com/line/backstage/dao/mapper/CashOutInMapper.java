@@ -23,5 +23,5 @@ public interface CashOutInMapper extends TkBaseMapper<CashOutIn> {
      */
     List<ManCashVo> queryManCashVoList(ManCashVo vo);
     Double sumAllCash(Map map);
-
+    Integer updateForDiy(@Param("diyId") Integer diyId,@Param("userId") Integer userId,@Param("del") Integer del,@Param("sysUserId")Integer sysUserId);
 }

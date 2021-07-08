@@ -3,6 +3,7 @@ package com.line.backstage.dao.mapper;
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.entity.sysentity.ManRecordVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +18,5 @@ public interface AccountRecordMapper extends TkBaseMapper<AccountRecord> {
 
     List<ManRecordVo> queryManRecordVoForPage(ManRecordVo recordVo);
     Map<String,Object> sumAllMoneyRecord(Map map);
+    Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
 }
