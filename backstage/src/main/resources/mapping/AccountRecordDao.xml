@@ -100,8 +100,8 @@
     </select>
 
     <update id="updateForDiy" parameterType="java.lang.Integer" >
-        update t_account_record set DEL = #{del} ,editUserId = #{sysUserId},EDIT_DATE = now()
-        WHERE USER_ID = #{userId} AND DIY_ID = #{diyId}
+        update t_account_record set DEL = #{del} ,EDIT_USER_ID = #{sysUserId},EDIT_DATE = now()
+        WHERE DIY_ID = #{diyId}
     </update>
 
 </mapper>

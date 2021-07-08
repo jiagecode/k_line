@@ -48,6 +48,7 @@ public class SysDiyServiceImpl implements SysDiyService {
             if(info == null){
                 msg = "该用户不存在";
             }else {
+                AccountInfo acc = accountInfoMapper.queryByUserId(userId);
                 //推广码
               result.put("userRefereeCode",info.getUserRefereeCode());
               //用户id
@@ -56,7 +57,7 @@ public class SysDiyServiceImpl implements SysDiyService {
               result.put("diyUserName",info.getUserRealName());
               result.put("tel",info.getUserPhone());
               result.put("userType",info.getUserType());
-              result.put("trueMoney",info.getUserMoney());
+              result.put("trueMoney",acc.getDiyMoney() == null?0:acc.getDiyMoney());
               SysDiyInfo sysDiyInfo = findSysDiyInfo(loginUserId,userId);
               if(sysDiyInfo != null){
                   result.put("diyId",sysDiyInfo.getDiyId());
@@ -182,6 +183,7 @@ public class SysDiyServiceImpl implements SysDiyService {
             diyInfo.setAfterMoney(endMoney);
             diyInfo.setEditUserId(loginUserId);
             diyInfo.setEditDate(new Date());
+            diyInfo.setDel(1);
             sysDiyInfoMapper.updateByPrimaryKey(diyInfo);
             result.put("endMoney",endMoney);
             result.put("orders",queryOrders(diyUserId,diyId));
@@ -198,6 +200,7 @@ public class SysDiyServiceImpl implements SysDiyService {
               diyInfo.setDiyRecordStatus(1);
               diyInfo.setEditUserId(loginUserId);
               diyInfo.setEditDate(new Date());
+              diyInfo.setDel(1);
               sysDiyInfoMapper.updateByPrimaryKey(diyInfo);
               result.put("endMoney",money);
             }
@@ -241,7 +244,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId(userId);
         orderInfo.setDiyId(diyId);
-        orderInfo.setDel(1);
+        orderInfo.setDel(-1);
         return orderInfoMapper.select(orderInfo);
     }
     /**
@@ -285,21 +288,21 @@ public class SysDiyServiceImpl implements SysDiyService {
                 }
             }
             //金额范围
-            BigDecimal subMoney = maxMoney.subtract(minMoney).setScale(10);
+            BigDecimal subMoney = maxMoney.subtract(minMoney).setScale(10,BigDecimal.ROUND_UP);
             //订单结果金额
-            BigDecimal amount = subMoney.multiply( new BigDecimal(rate)).setScale(10);
+            BigDecimal amount = subMoney.multiply( new BigDecimal(rate)).setScale(10,BigDecimal.ROUND_UP);
             BigDecimal accAfter = winFlag? accBefore.add(amount):accBefore.subtract(amount);
             if(winFlag){
                 if(inestFlag){
-                    endMoney = minMoney.add(amount).setScale(10);
+                    endMoney = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
                 }else {
-                    endMoney = minMoney.subtract(amount).setScale(10);
+                    endMoney = minMoney.subtract(amount).setScale(10,BigDecimal.ROUND_UP);
                 }
             }else {
                 if(inestFlag){
-                    endMoney = minMoney.subtract(amount).setScale(10);
+                    endMoney = minMoney.subtract(amount).setScale(10,BigDecimal.ROUND_UP);
                 }else {
-                    endMoney = minMoney.add(amount).setScale(10);
+                    endMoney = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
                 }
             }
             //持仓信息
