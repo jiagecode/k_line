@@ -48,4 +48,12 @@ public interface SysDiyService {
      * @return
      */
     Integer editDiyRecordByType(Integer loginUserId,Map<String,Object> map);
+
+    /**
+     * 修改用户资金
+     * @param loginUserId
+     * @param map
+     * @return
+     */
+    Integer editUserMoney(Integer loginUserId,Map<String,Object> map);
 }

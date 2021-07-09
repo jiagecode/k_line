@@ -87,7 +87,7 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">查询资金
+                           @click="changeMoney(scope.$index, scope.row)">资金管理
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="changeUser(scope.$index, scope.row)">下级代理
@@ -127,11 +127,17 @@
           <el-form-item label="用户姓名：" prop="username" v-if="!bjShow">
             <el-input v-model="form.userRealName"></el-input>
           </el-form-item>
-          <el-form-item label="用户昵称：" prop="ptname">
+          <el-form-item label="用户昵称：" prop="pname">
             <el-input v-model="form.userNickName"></el-input>
           </el-form-item>
           <el-form-item label="手机号码：" prop="tel">
             <el-input v-model.number="form.userPhone" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="佣金：" prop="commission">
+            <el-input v-model.number="form.commission" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="红利：" prop="bonus">
+            <el-input v-model.number="form.bonus" type="number"></el-input>
           </el-form-item>
           <el-form-item label="用户密码：" prop="userPassword" v-if="!bjShow">
             <el-input type="password" v-model="form.userPassword1"></el-input>
@@ -159,16 +165,24 @@
             </span>
       <div class="payNameDiaBox">
         <el-form ref="changeForm" :model="changeForm" label-width="130px" :rules="rules">
-          <el-form-item label="金额：" prop="moeny">
+          <el-form-item label="当前余额：" prop="moeny">
+            <el-input v-model="changeForm.beforeMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="调整金额：" prop="moeny">
             <el-input v-model="changeForm.moeny" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="类型：" prop="leixing">
-            <el-select v-model="changeForm.leixing" placeholder="请选择类型">
+          <el-form-item label="调整类型：" prop="leixing">
+            <el-select v-model="changeForm.leixing"  placeholder="请选择类型" @change="moneyChangeLx">
+              <el-option label="手动入金" value="0"></el-option>
               <el-option label="系统加款" value="1"></el-option>
               <el-option label="系统扣款" value="2"></el-option>
+              <el-option label="提现扣款" value="3"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="备注：" prop="beizhu">
+          <el-form-item label="调后余额：" prop="moeny">
+            <el-input v-model="changeForm.afterMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="调整备注：" prop="beizhu">
             <el-input v-model="changeForm.beizhu"></el-input>
           </el-form-item>
           <el-form-item>
@@ -305,15 +319,17 @@ export default {
                 }
             ],
             form: {
-                username: '',
-                ptname: '',
+                userRealName: '',
+                userNickName: '',
                 tel: '',
                 userPassword1: '',
                 userPassword2: '',
                 region: '',
                 txt: '',
-                sysUserId: '',
-                merchantInfoId: '',
+                bonus:'',
+                commission:'',
+                userId: '',
+                userPhone: '',
                 userType: 1
             },
             text: '',
@@ -355,7 +371,10 @@ export default {
             //  修改金额
             dialogFormVisibleChange: false,
             changeForm: {
+                userId:'',
                 moeny: '',
+                beforeMoney:'',
+                afterMoney:'',
                 leixing: '',
                 beizhu: ''
             },
@@ -368,21 +387,33 @@ export default {
         // this.getpeopleList()
     },
     methods: {
+      moneyChangeLx(){
+        var t = this.changeForm.leixing;
+        var m = this.changeForm.moeny;
+        if(m === '' || m===undefined){
+          m=0.0;
+        }
+        if(t<2 ){
+          m = 0- m;
+        }
+        this.changeForm.afterMoney = this.changeForm.beforeMoney - m;
+      },
         //修改余额
         changeMoney (index, row) {
             this.dialogFormVisibleChange = true
             console.log(row)
-            this.changeId = row.merchantInfo.merchantInfoId
+            this.changeForm.userId = row.userId;
+            this.changeForm.beforeMoney = row.userMoney;
+            this.changeForm.afterMoney = row.userMoney;
         },
         submitFormChange (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     console.log(this.changeForm)
                     var data = {
-                        consumptionAmount: this.changeForm.moeny,
-                        remarks: this.changeForm.beizhu,
-                        consumptionType: this.changeForm.leixing,
-                        merchantInfoId: this.changeId
+                      dealType : this.changeForm.leixing,
+                      userId:this.changeForm.userId,
+                      money:this.changeForm.moeny
                     }
                     changeUserMoney(data).then(res => {
                         if (res.code == 10000) {
@@ -423,15 +454,16 @@ export default {
             this.bjShow = true
             this.text = '编辑客户'
             this.dialogFormVisible = true
-            this.telRoleid = row.roleId
+            this.telRoleid = row.userId
             this.form = {
-                username: row.sysUserName,
-                ptname: row.merchantInfo.platformName,
-                tel: row.phone,
-                region: row.role.roleName,
-                txt: row.remarks,
-                sysUserId: row.sysUserId,
-                merchantInfoId: row.merchantInfo.merchantInfoId
+              userId: row.userId,
+              username: row.userRealName,
+              userNickName: row.userNickName,
+              userRealName: row.userRealName,
+              userPhone: row.userPhone,
+              commission: row.commissionRate,
+              txt: row.remarks,
+              bonus: row.bonusRate
             }
         },
         //查询
@@ -550,12 +582,15 @@ export default {
             this.text = t
             this.dialogFormVisible = true
             this.form = {
+                userId: '',
                 userNickName: '',
                 userRealName: '',
                 userPhone: '',
                 userPassword1: '',
                 userPassword2: '',
                 userType: userType,
+               commission: '',
+               bonus: '',
                 txt: ''
             }
         },
@@ -568,11 +603,15 @@ export default {
                     }
                     console.log(this.form)
                     var data = {
+                        userId:this.form.userId,
                         userNickName: this.form.userNickName,
                         userRealName: this.form.userRealName,
                         userPhone: this.form.userPhone,
                         userPassword: this.form.userPassword1,
-                        userType: this.form.userType
+                        userType: this.form.userType,
+                      commissionRate: this.form.commission,
+                      bonusRate: this.form.bonus,
+                      remarks: this.form.txt
                     }
                     addUser(data).then(res => {
                         console.log(res)

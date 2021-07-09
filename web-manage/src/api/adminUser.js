@@ -109,10 +109,10 @@ export function guanliUser(data) {
   })
 }
 
-//修改商户余额
+//修改用户户余额
 export function changeUserMoney(data) {
   return request({
-    url: '/consumption/updateMerchantAmount',
+    url: '/sysDiy/editAccount',
     method: 'post',
     data:data
   })

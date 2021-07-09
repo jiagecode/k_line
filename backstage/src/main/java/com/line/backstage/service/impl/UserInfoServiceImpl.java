@@ -182,8 +182,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public int update(Integer loginUserId, UserInfo userInfo) {
         UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getUserId());
+        if(u != null){
+            return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+        }
         // FIXME 待完善
-        return userInfoMapper.updateByPrimaryKeySelective(u);
+       return 0;
     }
 
     /**

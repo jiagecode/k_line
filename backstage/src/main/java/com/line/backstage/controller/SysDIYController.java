@@ -63,4 +63,10 @@ public class SysDIYController {
         return ResponseHelper.success(sysDiyService.editDiyRecordByType(Integer.valueOf(loginUserId),paramMap));
     }
 
+    @PostMapping("editAccount")
+    @ApiOperation(value = "编辑用户资金", notes = "修改资金")
+    public ResponseModel editUserMoney(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String,Object> paramMap){
+        return ResponseHelper.success(sysDiyService.editUserMoney(Integer.valueOf(loginUserId),paramMap));
+    }
+
 }

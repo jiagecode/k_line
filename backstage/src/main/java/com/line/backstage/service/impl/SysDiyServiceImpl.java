@@ -240,6 +240,35 @@ public class SysDiyServiceImpl implements SysDiyService {
         return 1;
     }
 
+    @Override
+    public Integer editUserMoney(Integer loginUserId, Map<String, Object> map) {
+        //用户id
+        Integer userId = (Integer) map.get("userId");
+        String moneyStr = (String)map.get("money");
+        //调整类型
+        String type = (String) map.get("dealType");
+        int investType = Integer.parseInt(type);
+        AccountInfo accountInfo = accountInfoMapper.queryByUserId(userId);
+        if(accountInfo != null ){
+            BigDecimal beforeMoney = new BigDecimal(accountInfo.getAccountMoney());
+            BigDecimal changeMoney = new BigDecimal(moneyStr);
+            BigDecimal afterMoney ;
+            if(investType>= 2){
+                afterMoney = beforeMoney.subtract(changeMoney).setScale(10,BigDecimal.ROUND_UP);
+            }else {
+                afterMoney = beforeMoney.add(changeMoney).setScale(10,BigDecimal.ROUND_UP);
+            }
+            Date date = new Date();
+            accountInfo.setAccountMoney(afterMoney.doubleValue());
+            accountInfo.setEditDate(date);
+            accountInfo.setEditUserId(loginUserId);
+            accountInfoMapper.updateByPrimaryKey(accountInfo);
+            createAccountRecord(accountInfo.getAccountId(),changeMoney.doubleValue(),beforeMoney.doubleValue(),afterMoney.doubleValue(),null,null,date,loginUserId,null,investType);
+          return 1;
+        }
+        return 0;
+    }
+
     private List<OrderInfo> queryOrders(Integer userId,Integer diyId){
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId(userId);
@@ -273,7 +302,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         Integer accId = acc.getAccountId();
         BigDecimal accBefore = acc.getDiyMoney();
         BigDecimal endMoney = accBefore ;
-        for (int i = 1 ;i<orderNum;i++){
+        for (int i = 1 ;i<=orderNum;i++){
             Date  endDate = new Date(beginDete.getTime()+orderCycle*1000);
             double rate = Math.random();
             //此单是否盈利
@@ -310,7 +339,7 @@ public class SysDiyServiceImpl implements SysDiyService {
             //订单信息
             Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId);
             //资金记录
-            createAccountRecord(accId,amount.doubleValue(),accBefore.doubleValue(),accAfter.doubleValue(),null,diyId,endDate,sysUserId,orderId);
+            createAccountRecord(accId,amount.doubleValue(),accBefore.doubleValue(),accAfter.doubleValue(),null,diyId,endDate,sysUserId,orderId,3);
             beginDete = new Date(endDate.getTime()+6000);
         }
         return endMoney;
@@ -435,7 +464,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         cash.setDiyId(diyId);
         cash.setDel(1);
         int cashId = cashOutInMapper.insert(cash);
-        createAccountRecord(oldAcc.getAccountId(),cashMoney.doubleValue(),oldMoney.doubleValue(),afterMoney.doubleValue(),cashId,diyId,date,sysUserId,null);
+        createAccountRecord(oldAcc.getAccountId(),cashMoney.doubleValue(),oldMoney.doubleValue(),afterMoney.doubleValue(),cashId,diyId,date,sysUserId,null,2);
         return  afterMoney;
     }
 
@@ -447,18 +476,17 @@ public class SysDiyServiceImpl implements SysDiyService {
      * @param afterMoney
      * @param cashId
      */
-    private void createAccountRecord(Integer accId,Double changeMoney,Double beforeMoney,Double afterMoney,Integer cashId,Integer diyId,Date date,Integer sysUserId,Integer orderId){
+    private void createAccountRecord(Integer accId,Double changeMoney,Double beforeMoney,Double afterMoney,Integer cashId,Integer diyId,Date date,Integer sysUserId,Integer orderId,Integer type){
         AccountRecord record = new AccountRecord();
         record.setAccountId(accId);
         if(orderId != null){
             record.setOrderId(orderId);
-            record.setRecordType(3);
             //预生成 未入库
             record.setDel(-1);
         }else {
-            record.setRecordType(2);
             record.setDel(1);
         }
+        record.setRecordType(type);
         record.setChangeMoney(changeMoney);
         record.setBeforeMoney(beforeMoney);
         record.setAfterMoney(afterMoney);

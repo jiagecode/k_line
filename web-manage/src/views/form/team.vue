@@ -426,7 +426,7 @@
           tel: row.phone,
           region: row.role.roleName,
           txt: row.remarks,
-          sysUserId: row.sysUserId,
+          userId: row.sysUserId,
           merchantInfoId: row.merchantInfo.merchantInfoId
         }
       },
