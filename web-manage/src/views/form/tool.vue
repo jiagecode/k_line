@@ -90,7 +90,7 @@
                   <div class="tool_row_title">货币种类</div>
                 </el-col>
                 <el-col :span="4">
-                  <el-select @change="skuSelectInfoChange" v-model="this.skuSelectInfo.skuName" placeholder="请选择" style="width:100%;">
+                  <el-select @change="skuSelectInfoChange" v-model="skuSelectInfo.skuName" placeholder="请选择" style="width:100%;">
                     <el-option
                             v-for="item in skuInfoVoList"
                             :key="item.skuId"
@@ -107,15 +107,15 @@
                   <el-input
                           size="small"
                           readonly
-                          v-model="this.skuSelectInfo.skuCode">
+                          v-model="skuSelectInfo.skuCode">
                   </el-input>
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">购买方向</div>
                 </el-col>
                 <el-col :span="2">
-                  <el-radio-group v-model="toolUserFrom.type">
-                    <el-radio :label="1" >涨</el-radio>
+                  <el-radio-group v-model="dataCreateObject.investType">
+                    <el-radio :label="1">涨</el-radio>
                     <el-radio :label="2">跌</el-radio>
                   </el-radio-group>
                 </el-col>
@@ -123,13 +123,7 @@
                   <div class="tool_row_title">赢率</div>
                 </el-col>
                 <el-col :span="2">
-                  <el-input
-                          size="small"
-                          maxlength="2"
-                          minlength="1"
-                          placeholder="23"
-                          v-model="toolUserFrom.type">
-                  </el-input>
+                  <el-input-number size="mini" v-model="dataCreateObject.winRate" :min="0" :max="10" :step="1" label="赢率"></el-input-number>
                 </el-col>
                 <el-col :span="4">&nbsp;</el-col>
               </el-row>
@@ -139,34 +133,28 @@
                 </el-col>
                 <el-col :span="4">
                   <el-date-picker
-                          style="width: 100%"
-                          v-model="toolUserFrom.type"
-                          type="date"
-                          placeholder="选择日期">
+                          v-model="dataCreateObject.dateStr"
+                          @change="date1Change"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="datetime"
+                          placeholder="选择日期时间"
+                          style="width: 100%;"
+                  >
                   </el-date-picker>
-                </el-col>
-                <el-col :span="2">
-                  <el-time-picker
-                          v-model="toolUserFrom.type"
-                          :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
-                          placeholder="任意时间点">
-                  </el-time-picker>
+
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">购买局数</div>
                 </el-col>
                 <el-col :span="2">
-                  <el-input
-                          size="small"
-                          placeholder="12"
-                          v-model="toolUserFrom.type">
-                  </el-input>
+                  <el-input-number size="mini" label="局数" v-model="dataCreateObject.orderNum" :min="1" style="width: 100%;"></el-input-number>
                 </el-col>
+                <el-col :span="2">&nbsp;</el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">购买类型</div>
                 </el-col>
                 <el-col :span="6">
-                  <el-radio-group v-model="toolUserFrom.type">
+                  <el-radio-group v-model="dataCreateObject.orderCycle">
                     <el-radio :label="1">30秒</el-radio>
                     <el-radio :label="2">60秒</el-radio>
                     <el-radio :label="3">180秒</el-radio>
@@ -179,31 +167,18 @@
                   <div class="tool_row_title">起始金额</div>
                 </el-col>
                 <el-col :span="4">
-                  <el-input
-                          size="small"
-                          placeholder="23"
-                          v-model="toolUserFrom.type">
-                  </el-input>
+                  <el-input-number size="mini" label="起始金额" v-model="dataCreateObject.moneyStr" :min="1" :precision="2" style="width: 100%;"></el-input-number>
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">价格区间</div>
                 </el-col>
-                <el-col :span="4">
-                  <el-input
-                          size="small"
-                          placeholder="12"
-                          v-model="toolUserFrom.type">
-                  </el-input>
+                <el-col :span="3">
+                  <el-input-number size="mini" label="价格" v-model="dataCreateObject.minPriceStr" :min="1" :precision="2" style="width: 100%;"></el-input-number>
                 </el-col>
-                <el-col :span="4">
-                  <el-input
-                          size="small"
-                          placeholder="23"
-                          v-model="toolUserFrom.type">
-                  </el-input>
-
+                <el-col :span="3">
+                  <el-input-number size="mini" label="价格" v-model="dataCreateObject.maxPriceStr" :min="1" :precision="2" style="width: 100%;"></el-input-number>
                 </el-col>
-                <el-col :span="4"></el-col>
+                <el-col :span="6">&nbsp;</el-col>
               </el-row>
 
               <div class="div-line"></div>
@@ -211,33 +186,44 @@
               <el-row class="tool_row">
                 <el-col :span="2">&nbsp;</el-col>
                 <el-col :span="4">
-                  <el-button type="small" @click="toolUserSubmit(1)">赢率生成</el-button>
+                  <el-button type="small" @click="toolSendSubmit()" style="width: 100%;">生成模拟数据</el-button>
                 </el-col>
-                <el-col :span="10">
-                  <el-button type="small" @click="toolUserSubmit(1)">生成模拟数据</el-button>
-                </el-col>
-                <el-col :span="8">&nbsp;</el-col>
+                <el-col :span="18">&nbsp;</el-col>
               </el-row>
-              <el-row class="tool_row" style="min-height: 100px;max-height: 500px;">
-                <el-col :span="2">&nbsp;</el-col>
-                <el-col :span="4">
-                  <el-table
-                          :data="null"
-                          border
-                          style="width: 100%">
-
-                  </el-table>
-                </el-col>
-                <el-col :span="10">
-                  <el-table
-                          :data="null"
-                          border
-                          style="width: 100%">
-
-                  </el-table>
-                </el-col>
-                <el-col :span="8"></el-col>
-              </el-row>
+              <el-table
+                      :data="dataVirtualItem.orders"
+                      border
+                      style="width: 94%; margin: 0 auto;">
+                <el-table-column prop="skuName" label="商品名称"></el-table-column>
+                <el-table-column prop="skuCode" label="商品代码"></el-table-column>
+                <el-table-column prop="inPoint" label="买入点位"></el-table-column>
+                <el-table-column label="投资方向">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.investType === 1"><div style="color: red">买涨</div></span>
+                    <span v-if="scope.row.investType === 2"><div style="color: green">买跌</div></span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="orderAmount" label="订单金额"></el-table-column>
+<!--                <el-table-column prop="orderCharge" label="手续费"></el-table-column>-->
+                <el-table-column label="订单周期(s)">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.orderCycle === 1">30</span>
+                    <span v-if="scope.row.orderCycle === 2">60</span>
+                    <span v-if="scope.row.orderCycle === 3">180</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="outPoint" label="结算点位" width="150px"></el-table-column>
+                <el-table-column prop="subMoney" label="实际盈亏金额" width="150px"></el-table-column>
+                <el-table-column prop="addDate" label="买入时间" width="160px"></el-table-column>
+                <el-table-column prop="editDate" label="结算时间" width="160px"></el-table-column>
+              </el-table>
+<!--              <el-row class="tool_row" style="min-height: 100px;max-height: 500px;">-->
+<!--                <el-col :span="2">&nbsp;</el-col>-->
+<!--                <el-col :span="20" style="display: flex;flex-wrap: wrap;">-->
+<!--                  <div style="clear:both;height:0;font-size: 1px;line-height: 0px;"></div>-->
+<!--                </el-col>-->
+<!--                <el-col :span="2">&nbsp;</el-col>-->
+<!--              </el-row>-->
 
               <div class="div-line"></div>
 
@@ -246,13 +232,13 @@
                   <div class="tool_row_title">起始金额</div>
                 </el-col>
                 <el-col :span="4">
-                  0
+                  {{dataCreateObject.moneyStr}}
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">剩余金额</div>
                 </el-col>
                 <el-col :span="4">
-                  0
+                  {{dataVirtualItem.endMoney}}
                 </el-col>
                 <el-col :span="6">&nbsp;</el-col>
                 <el-col :span="6">
@@ -400,7 +386,7 @@
 
 <script>
 import { listUser } from '@/api/adminUser'
-import { querySpecialUserInfo, updateSpecialUserInfo, querySkuDataList } from '@/api/tool'
+import { createImitateData, querySkuDataList, querySpecialUserInfo, updateSpecialUserInfo } from '@/api/tool'
 
 export default {
     name: 'tool',
@@ -417,21 +403,68 @@ export default {
                 tel: '',
                 trueMoney: 0,
                 userRefereeCode: null,
-                userType: null,
+                userType: null
             },
             skuInfoVoList: [
                 {
                     nowPrice: 0,
                     skuCode: 1,
                     skuId: 0,
-                    skuName: '',
-                },
+                    skuName: ''
+                }
             ],
             skuSelectInfo: {
                 nowPrice: '',
                 skuCode: '',
                 skuId: '',
+                skuName: ''
+            },
+            // tempDateItem: {
+            //     date1: new Date(),
+            //     date2: new Date()
+            // },
+            dataCreateObject: {
+                diyUserId: null,
+                dealType: 1,
+                diyId: null,
+                dateStr: '',
+                diyUserName: '',
                 skuName: '',
+                skuCode: '',
+                skuId: null,
+                moneyStr: '1000',
+                maxPriceStr: '36000',
+                minPriceStr: '35000',
+                winRate: 5,
+                investType: 1,
+                orderCycle: 1,
+                orderNum: 1,
+                diyUserType: null,
+                diyUserMoney: ''
+            },
+            dataVirtualItem: {
+                diyId: 1,
+                endMoney: 0,
+                orders: [
+                    {
+                        skuName: '比特币1号',
+                        inPoint: 36000,
+                        integral: 0,
+                        investType: 1,
+                        orderAmount: 1000,
+                        orderCharge: 0,
+                        orderCycle: 1,
+                        orderId: 48,
+                        orderStatus: 2,
+                        orderType: 1,
+                        outPoint: 35498.3761963851,
+                        skuCode: 'BTC001',
+                        subMoney: -501.6238036149,
+                        userId: 13,
+                        addDate: '2021-07-09 15:18:55',
+                        editDate: '2021-07-09 15:18:56'
+                    }
+                ]
             },
             userInfo: {
                 id: '',
@@ -474,10 +507,11 @@ export default {
                 diyUserId: this.specialUserInfo.diyUserId,
                 diyUserName: this.specialUserInfo.diyUserName,
                 diyUserType: subtype,
-                diyUserMoney: this.specialUserInfo.trueMoney,
+                diyUserMoney: this.specialUserInfo.trueMoney
             }
             updateSpecialUserInfo(data).then(res => {
                 if (res.code == 10000) {
+                    this.$message.success('修改成功！')
                     // 重新查询用户信息
                     this.querySpecialUserInfo()
                 } else {
@@ -504,9 +538,8 @@ export default {
             })
         },
         // 查询商品列表
-        querySkuData(){
-            var data = {
-            }
+        querySkuData () {
+            var data = {}
             querySkuDataList(data).then(res => {
                 console.log(res)
                 if (res.code == 10000) {
@@ -533,12 +566,12 @@ export default {
             this.dialogUserTabVisible = false
         },
         // 查询用户信息
-        querySpecialUserInfo(){
+        querySpecialUserInfo () {
             // 查询用户信息
             var data = {
-                diyUserId:this.tempUserInfo.userId
+                diyUserId: this.tempUserInfo.userId
             }
-            querySpecialUserInfo(data).then(res=>{
+            querySpecialUserInfo(data).then(res => {
                 if (res.code == 10000) {
                     this.specialUserInfo = res.data
                 } else {
@@ -547,13 +580,88 @@ export default {
             })
         },
         // 下拉框事件
-        skuSelectInfoChange(data){
-            console.log(data)
+        skuSelectInfoChange (data) {
             this.skuSelectInfo.skuId = data.skuId
             this.skuSelectInfo.skuCode = data.skuCode
             this.skuSelectInfo.skuName = data.skuName
             this.skuSelectInfo.nowPrice = data.nowPrice
+        },
+        // 日期改变
+        date1Change (value) {
+            this.dataCreateObject.dateStr = value
+        },
+        // 点击模拟请求
+        toolSendSubmit () {
+            // 货币种类
+            if (this.skuSelectInfo.skuCode == null || typeof this.skuSelectInfo.skuCode == 'undefined' || this.skuSelectInfo.skuCode === '') {
+                console.log('111')
+                this.$message.error('请选择货币种类！')
+                return
+            }
+            // 赢率
+            if (this.dataCreateObject.winRate == null || typeof this.dataCreateObject.winRate == 'undefined') {
+                this.$message.error('请输入赢率！')
+                return
+            }
+            // 起始时间
+            if (this.dataCreateObject.dateStr == null || typeof this.dataCreateObject.dateStr == 'undefined' || this.dataCreateObject.dateStr === '') {
+                this.$message.error('请输入起始时间！')
+                return
+            }
+            // 局数
+            if (this.dataCreateObject.orderNum == null || typeof this.dataCreateObject.orderNum == 'undefined') {
+                this.$message.error('请输入局数！')
+                return
+            }
+            // 起始金额
+            if (this.dataCreateObject.moneyStr == null || typeof this.dataCreateObject.moneyStr == 'undefined') {
+                this.$message.error('请输入起始金额！')
+                return
+            }
+            // 价格区间 1
+            if (this.dataCreateObject.minPriceStr == null || typeof this.dataCreateObject.minPriceStr == 'undefined') {
+                this.$message.error('请输入起始价格区间！')
+                return
+            }
+            // 价格区间 2
+            if (this.dataCreateObject.maxPriceStr == null || typeof this.dataCreateObject.maxPriceStr == 'undefined') {
+                this.$message.error('请输入结束价格区间！')
+                return
+            }
+
+            var data = {
+                diyUserId: this.specialUserInfo.diyUserId,
+                dealType: 1,
+                diyId: this.specialUserInfo.diyId,
+                dateStr: this.dataCreateObject.dateStr,
+                diyUserName: this.specialUserInfo.diyUserName,
+                skuName: this.skuSelectInfo.skuName,
+                skuCode: this.skuSelectInfo.skuCode,
+                skuId: this.skuSelectInfo.skuId,
+                moneyStr: String(this.dataCreateObject.moneyStr),
+                maxPriceStr: String(this.dataCreateObject.minPriceStr),
+                minPriceStr: String(this.dataCreateObject.maxPriceStr),
+                winRate: this.dataCreateObject.winRate,
+                investType: this.dataCreateObject.investType,
+                orderCycle: this.dataCreateObject.orderCycle,
+                orderNum: this.dataCreateObject.orderNum,
+                diyUserType: this.specialUserInfo.userType,
+                diyUserMoney: String(this.dataCreateObject.diyUserMoney)
+            }
+            this.createImitateData(data)
+        },
+        // 提交模拟请求
+        createImitateData (data) {
+            createImitateData(data).then(res => {
+                if (res.code == 10000) {
+                    this.$message.success("生成模拟数据成功！")
+                    this.dataVirtualItem = res.data
+                } else {
+                    this.$message.error(res.message)
+                }
+            })
         }
+
     }
 
 }
@@ -580,10 +688,10 @@ export default {
     line-height: 30px;
     margin-bottom: 15px;
   }
-
   .el-row:last-child {
     margin-bottom: 0;
   }
+
 
   /*.el-row:nth-child(2n){background:orange;}*/
 
