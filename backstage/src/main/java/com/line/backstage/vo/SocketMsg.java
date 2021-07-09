@@ -3,26 +3,32 @@ package com.line.backstage.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author scxfsc
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SocketMsg {
-    /**
-     * 消息类型
-     */
-    private String msgType;
-    /**
-     * 消息内容
-     */
-    private Object content;
 
-    public static SocketMsg createWxMsg(String msg) {
-        SocketMsg socketMsg = new SocketMsg();
-        socketMsg.setMsgType("1");
-        socketMsg.setContent(msg);
-        return socketMsg;
-    }
+    /**
+     * 发给什么类型用户
+     */
+    private String msdToUserType;
 
+    /**
+     * 用户id
+     */
+    private String msdToSid;
+
+    /**
+     * 类容
+     */
+    private String content;
+
+    /**
+     * 类容
+     */
+    private Date createDate;
 }

@@ -36,15 +36,74 @@
 				msg:"",
 				socketOpen: false,
 				socketMsgQueue:[],
-				msgList:[]
+				msgList:[],
+				socketMsg:{}
 			}
 		},
+		async mounted() {
+			console.log(this.socketOpen);
+			this.socketOpen = true;
+			this.wsInit();
+		},
 		methods: {
+			// 连接websocket服务器
+			wsInit(){
+				
+				var _this = this;
+				if (!_this.socketOpen) return
+				// 销毁ws
+				// this.wsDestroy()
+			
+				// 根据用户ID创建websocket连接
+				var user = uni.getStorageSync('userInfo');
+				console.log(user.userId)
+				uni.connectSocket({
+					url: 'ws://192.168.1.9:1686/study/websocket/' + user.userId +'/user',
+					success:((res)=>{
+						console.log(res);
+					})
+				});
+			
+				uni.onSocketOpen((res)=> {
+				  console.log('WebSocket连接已打开！');
+				  _this.socketOpen = true;
+				});
+				
+				uni.onSocketError(function (res) {
+				  console.log('WebSocket连接打开失败，请检查！');
+				});
+				
+				uni.onSocketMessage(function (res) {
+				  var str = res.data; 
+				  console.log('收到服务器内容：' + str);
+				  // 字符串转json对象
+				  var jsonStr = str.replace(" ", ""); 
+				  if (typeof jsonStr != 'object') { 
+					  jsonStr = jsonStr.replace(/\ufeff/g, "");//重点 
+					  var jj = JSON.parse(jsonStr); 
+					  res.data = jj; 
+				  }
+				  let a = {"userType": "user", "sid": null, "content": "当前在线客服繁忙，请稍后再试"};
+				  console.log(a.content)
+				  _this.socketMsg = '{"msdToUserType":"sys","msdToSid":"' +  res.data.msdToSid + '","content":"' + res.data.content + '"}';
+				  _this.msgList.push({"type" : "server", "msg" : res.data.content});
+				  
+				  // 处理消息盒子
+				  if(_this.msgList.length > 6){
+					  _this.msgList.shift()
+				  }
+				});
+					
+			},
 			
 			send(){
 			  if (this.socketOpen) {
+				  
+				let sid = this.socketMsg.msdToSid !== undefined ? this.socketMsg.msdToSid : null;
+				let socketMsg = '{"msdToUserType":"sys","msdToSid":' + sid + ',"content":"' + this.msg + '"}';
+				console.log(socketMsg)
 				uni.sendSocketMessage({
-				  data: this.msg
+				  data: socketMsg
 				});
 			  } else {
 				this.socketMsgQueue.push(this.msg);
@@ -67,7 +126,7 @@
 		onLoad() {
 			
 			var token = uni.getStorageSync('token');
-			
+			console.log(token)
 			// 非法访问，请重新登录
 			if (token === null || token === undefined || token === '') {
 			  // 跳转页面
@@ -75,39 +134,10 @@
 				url: '../login/login'
 			  });
 			}
-			
-			// 根据用户ID创建websocket连接
-			var user = uni.getStorageSync('userInfo');
-			uni.connectSocket({
-			    url: 'ws://192.168.1.9:1686/study/websocket/' + user.userId,
-				success:((res)=>{
-					console.log(res);
-				})
-			});
-			
-			uni.onSocketOpen((res)=> {
-			  console.log('WebSocket连接已打开！');
-			  this.socketOpen = true;
-			});
-			
-			uni.onSocketError(function (res) {
-			  console.log('WebSocket连接打开失败，请检查！');
-			});
-
 		},
 		onShow() {
 			var _this = this;
 			document.title = '币安秒合约';
-			
-			uni.onSocketMessage(function (res) {
-			  console.log('收到服务器内容：' + res.data);
-			  _this.msgList.push({"type" : "server", "msg" : res.data});
-			  
-			  // 处理消息盒子
-			  if(_this.msgList.length > 6){
-				  _this.msgList.shift()
-			  }
-			});
 		}
 	}
 </script>

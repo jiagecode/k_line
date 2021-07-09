@@ -272,6 +272,19 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/customer-service',
+    component: Layout,
+    redirect: 'noRedirect',
+    children: [
+      {
+        path: 'index',
+        name: 'index',
+        component: () => import('@/views/customer-service/index'),
+        meta: { title: '客服系统', icon: 'people' }
+      },
+    ]
+  },
+  {
     path: '/wosen',
     component: Layout,
     redirect: 'noRedirect',

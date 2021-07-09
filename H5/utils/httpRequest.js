@@ -1,6 +1,6 @@
 
 // 请求跟地址
-const baseUrl = 'http://192.168.1.4:1688/study'
+const baseUrl = 'http://192.168.1.9:1686/study'
 
 /*
 	method: get post
