@@ -92,9 +92,6 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="changeUser(scope.$index, scope.row)">下级代理
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="showTool(scope.$index, scope.row)">辅助工具
-                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -182,324 +179,6 @@
       </div>
     </el-dialog>
 
-    <!-- 辅助工具 -->
-    <el-dialog width="60%" title="辅助工具" :visible.sync="dialogToolVisible">
-      <div class="tool_conent" style="width: 94%;margin: 0 auto;">
-        <el-form :inline="true" :model="toolUserFrom" class="tool-conent-form-inline">
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">推广码</div>
-            </el-col>
-            <el-col :span="4">
-              <div>53</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">用户名</div>
-            </el-col>
-            <el-col :span="4">
-              <div>xx</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">电话</div>
-            </el-col>
-            <el-col :span="4">
-              <div>13399992222</div>
-            </el-col>
-            <el-col :span="6"></el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">类型</div>
-            </el-col>
-            <el-col :span="4">
-              <div>超级管理员</div>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">更改为代理</el-button>
-              <el-button type="small" @click="toolUserSubmit(1)">更改为玩家</el-button>
-            </el-col>
-            <el-col :span="12">
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">金额</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="请输入金额"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">更改金额</el-button>
-            </el-col>
-            <el-col :span="12">
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">姓名</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="请输入姓名"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">更改姓名</el-button>
-            </el-col>
-            <el-col :span="12">
-            </el-col>
-          </el-row>
-        </el-form>
-
-        <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-        <el-form :inline="true" :model="toolUserFrom" class="tool-conent-form-inline">
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">货币种类</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="比特币"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">货币编号</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">购买方向</div>
-            </el-col>
-            <el-col :span="4">
-              <el-radio-group v-model="toolUserFrom.type">
-                <el-radio :label="1">涨</el-radio>
-                <el-radio :label="2">跌</el-radio>
-              </el-radio-group>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">赢率</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      maxlength="2"
-                      minlength="1"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">起始时间</div>
-            </el-col>
-            <el-col :span="4">
-              <el-date-picker
-                      v-model="toolUserFrom.type"
-                      type="date"
-                      placeholder="选择日期">
-              </el-date-picker>
-            </el-col>
-            <el-col :span="4">
-              <el-time-picker
-                      v-model="toolUserFrom.type"
-                      :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
-                      placeholder="任意时间点">
-              </el-time-picker>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">购买局数</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="12"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">购买类型</div>
-            </el-col>
-            <el-col :span="6">
-              <el-radio-group v-model="toolUserFrom.type">
-                <el-radio :label="1">30秒</el-radio>
-                <el-radio :label="2">60秒</el-radio>
-                <el-radio :label="3">180秒</el-radio>
-              </el-radio-group>
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">起始金额</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">价格区间</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="12"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-
-            </el-col>
-            <el-col :span="4"></el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="4">
-              <el-button type="small" @click="toolUserSubmit(1)">赢率生成</el-button>
-            </el-col>
-            <el-col :span="10">
-              <el-button type="small" @click="toolUserSubmit(1)">生成模拟数据</el-button>
-            </el-col>
-            <el-col :span="8">&nbsp;</el-col>
-          </el-row>
-          <el-row class="tool_row" style="min-height: 100px;max-height: 500px;">
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="4">
-              <el-table
-                      :data="null"
-                      border
-                      style="width: 100%">
-                <el-table-body>
-
-                </el-table-body>
-              </el-table>
-            </el-col>
-            <el-col :span="10">
-              <el-table
-                      :data="null"
-                      border
-                      style="width: 100%">
-                <el-table-body>
-
-                </el-table-body>
-              </el-table>
-            </el-col>
-            <el-col :span="8"></el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">起始金额</div>
-            </el-col>
-            <el-col :span="4">
-              0
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">剩余金额</div>
-            </el-col>
-            <el-col :span="4">
-              0
-            </el-col>
-            <el-col :span="6">&nbsp;</el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">入库交易记录</el-button>
-              <el-button type="small" @click="toolUserSubmit(1)">清除交易记录</el-button>
-            </el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">提现时间</div>
-            </el-col>
-            <el-col :span="4">
-              <el-date-picker
-                      v-model="toolUserFrom.type"
-                      type="date"
-                      placeholder="选择日期">
-              </el-date-picker>
-            </el-col>
-            <el-col :span="4">
-              <el-time-picker
-                      v-model="toolUserFrom.type"
-                      :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
-                      placeholder="任意时间点">
-              </el-time-picker>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">提现金额</div>
-            </el-col>
-            <el-col :span="2">
-              <el-input
-                      size="small"
-                      placeholder="12"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="4">
-              <el-radio-group v-model="toolUserFrom.type">
-                <el-radio :label="1">通过</el-radio>
-                <el-radio :label="2">拒绝</el-radio>
-              </el-radio-group>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">入库交易记录</el-button>
-              <el-button type="small" @click="toolUserSubmit(1)">清除交易记录</el-button>
-            </el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="18">
-              <div>
-                生成“历史订单”和“提现记录”都会生成相应的资金流水记录。
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">清除资金流水记录</el-button>
-            </el-col>
-          </el-row>
-
-        </el-form>
-      </div>
-
-      <div class="user_info">
-
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogToolVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogToolVisible = false">确 定</el-button>
-      </div>
-    </el-dialog>
-
   </div>
 </template>
 
@@ -575,7 +254,6 @@ export default {
         return {
             bjShow: false,
             dialogFormVisible: false,
-            dialogToolVisible: false,
             currentPage: 1,
             input1: '',
             input2: '',
@@ -682,9 +360,7 @@ export default {
                 beizhu: ''
             },
             changeId: '',
-            toolUserFrom: {
-                type: ''
-            }
+
         }
     },
     created () {
@@ -920,15 +596,6 @@ export default {
             this.$refs[formName].resetFields()
             this.dialogFormVisible = false
         },
-        // 显示工具页面
-        showTool (index, row) {
-            console.log(row)
-            this.dialogToolVisible = true
-        },
-        // 工具页面提交事件
-        toolUserSubmit (subtype) {
-            console.log('submit!' + subtype)
-        }
     },
     filters: {
         // locked(val){
@@ -937,20 +604,6 @@ export default {
     }
 }
 </script>
-
-<style type="text/css">
-  .tool_row {
-    height: 40px;
-    line-height: 40px;
-  }
-
-  .tool_row_title {
-    text-align: right;
-    padding-right: 10px;
-  }
-
-
-</style>
 
 <style lang="less">
   #eerchant {
