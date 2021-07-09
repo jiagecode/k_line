@@ -37,7 +37,9 @@
                   <div class="tool_row_title">类型</div>
                 </el-col>
                 <el-col :span="4">
-                  <div>{{specialUserInfo.userType}}</div>
+                  <div v-if="specialUserInfo.userType === 0"> 超级管理员</div>
+                  <div v-if="specialUserInfo.userType === 1"> 玩家</div>
+                  <div v-if="specialUserInfo.userType === 2"> 代理</div>
                 </el-col>
                 <el-col :span="6">
                   <el-button type="small" @click="toolUserSubmit(2)">更改为代理</el-button>
@@ -186,7 +188,7 @@
               <el-row class="tool_row">
                 <el-col :span="2">&nbsp;</el-col>
                 <el-col :span="4">
-                  <el-button type="small" @click="toolSendSubmit()" style="width: 100%;">生成模拟数据</el-button>
+                  <el-button type="small" @click="toolSendSubmit(1)" style="width: 100%;">生成模拟数据</el-button>
                 </el-col>
                 <el-col :span="18">&nbsp;</el-col>
               </el-row>
@@ -204,7 +206,7 @@
                   </template>
                 </el-table-column>
                 <el-table-column prop="orderAmount" label="订单金额"></el-table-column>
-<!--                <el-table-column prop="orderCharge" label="手续费"></el-table-column>-->
+                <!--                <el-table-column prop="orderCharge" label="手续费"></el-table-column>-->
                 <el-table-column label="订单周期(s)">
                   <template slot-scope="scope">
                     <span v-if="scope.row.orderCycle === 1">30</span>
@@ -217,14 +219,6 @@
                 <el-table-column prop="addDate" label="买入时间" width="160px"></el-table-column>
                 <el-table-column prop="editDate" label="结算时间" width="160px"></el-table-column>
               </el-table>
-<!--              <el-row class="tool_row" style="min-height: 100px;max-height: 500px;">-->
-<!--                <el-col :span="2">&nbsp;</el-col>-->
-<!--                <el-col :span="20" style="display: flex;flex-wrap: wrap;">-->
-<!--                  <div style="clear:both;height:0;font-size: 1px;line-height: 0px;"></div>-->
-<!--                </el-col>-->
-<!--                <el-col :span="2">&nbsp;</el-col>-->
-<!--              </el-row>-->
-
               <div class="div-line"></div>
 
               <el-row class="tool_row">
@@ -242,8 +236,8 @@
                 </el-col>
                 <el-col :span="6">&nbsp;</el-col>
                 <el-col :span="6">
-                  <el-button type="small" @click="toolUserSubmit(1)">入库交易记录</el-button>
-                  <el-button type="small" @click="toolUserSubmit(1)">清除交易记录</el-button>
+                  <el-button type="small" @click="editDiyRecordByType(1)">入库交易记录</el-button>
+                  <el-button type="small" @click="editDiyRecordByType(2)">清除交易记录</el-button>
                 </el-col>
               </el-row>
 
@@ -255,38 +249,33 @@
                 </el-col>
                 <el-col :span="4">
                   <el-date-picker
-                          style="width: 100%"
-                          v-model="toolUserFrom.type"
-                          type="date"
-                          placeholder="选择日期">
+                          v-model="dataCreateTxObject.dateStr"
+                          @change="date1Change"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                          type="datetime"
+                          placeholder="选择日期时间"
+                          style="width: 100%;"
+                  >
                   </el-date-picker>
-                </el-col>
-                <el-col :span="4">
-                  <el-time-picker
-                          v-model="toolUserFrom.type"
-                          :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
-                          placeholder="任意时间点">
-                  </el-time-picker>
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">提现金额</div>
                 </el-col>
+                <el-col :span="4">
+                  <el-input-number size="mini" label="提现金额" v-model="dataCreateTxObject.cashStr" :min="1" :precision="2" style="width: 100%;"></el-input-number>
+                </el-col>
                 <el-col :span="2">
-                  <el-input
-                          size="small"
-                          placeholder="12"
-                          v-model="toolUserFrom.type">
-                  </el-input>
+                  <div class="tool_row_title">审核</div>
                 </el-col>
                 <el-col :span="4">
-                  <el-radio-group v-model="toolUserFrom.type">
-                    <el-radio :label="1">通过</el-radio>
-                    <el-radio :label="2">拒绝</el-radio>
+                  <el-radio-group v-model="dataCreateTxObject.checkStatus">
+                    <el-radio :label="3">通过</el-radio>
+                    <el-radio :label="4">拒绝</el-radio>
                   </el-radio-group>
                 </el-col>
                 <el-col :span="6">
-                  <el-button type="small" @click="toolUserSubmit(1)">入库交易记录</el-button>
-                  <el-button type="small" @click="toolUserSubmit(1)">清除交易记录</el-button>
+                  <el-button type="small" @click="toolSendSubmit(2)">生成提现记录</el-button>
+                  <el-button type="small" @click="editDiyRecordByType(3)">清除提现记录</el-button>
                 </el-col>
               </el-row>
 
@@ -299,7 +288,7 @@
                   </div>
                 </el-col>
                 <el-col :span="6">
-                  <el-button type="small" @click="toolUserSubmit(1)">清除资金流水记录</el-button>
+                  <el-button type="small" @click="toolUserSubmit(4)">清除资金流水记录</el-button>
                 </el-col>
               </el-row>
 
@@ -386,7 +375,7 @@
 
 <script>
 import { listUser } from '@/api/adminUser'
-import { createImitateData, querySkuDataList, querySpecialUserInfo, updateSpecialUserInfo } from '@/api/tool'
+import { createImitateData, editDiyRecordByType, querySkuDataList, querySpecialUserInfo, updateSpecialUserInfo } from '@/api/tool'
 
 export default {
     name: 'tool',
@@ -442,39 +431,20 @@ export default {
                 diyUserType: null,
                 diyUserMoney: ''
             },
+            dataCreateTxObject: {
+                diyUserId: null,
+                dealType: 2,
+                diyId: null,
+                cashStr: '',
+                checkStatus: 3,
+                dateStr: ''
+            },
             dataVirtualItem: {
                 diyId: 1,
                 endMoney: 0,
-                orders: [
-                    {
-                        skuName: '比特币1号',
-                        inPoint: 36000,
-                        integral: 0,
-                        investType: 1,
-                        orderAmount: 1000,
-                        orderCharge: 0,
-                        orderCycle: 1,
-                        orderId: 48,
-                        orderStatus: 2,
-                        orderType: 1,
-                        outPoint: 35498.3761963851,
-                        skuCode: 'BTC001',
-                        subMoney: -501.6238036149,
-                        userId: 13,
-                        addDate: '2021-07-09 15:18:55',
-                        editDate: '2021-07-09 15:18:56'
-                    }
-                ]
+                orders: []
             },
-            userInfo: {
-                id: '',
-                name: ''
-            },
-            changeForm: {
-                type: ''
-            }, toolUserFrom: {
-                type: ''
-            }
+            toolUserFrom: {}
         }
     },
     // 初始化
@@ -591,7 +561,17 @@ export default {
             this.dataCreateObject.dateStr = value
         },
         // 点击模拟请求
-        toolSendSubmit () {
+        toolSendSubmit (type) {
+            if (type === 1) {
+                // 生成模拟数据
+                this.createMoniData()
+            }
+            if (type === 2) {
+                // 生成提现记录
+                this.createTixData()
+            }
+        },
+        createMoniData () {
             // 货币种类
             if (this.skuSelectInfo.skuCode == null || typeof this.skuSelectInfo.skuCode == 'undefined' || this.skuSelectInfo.skuCode === '') {
                 console.log('111')
@@ -650,12 +630,66 @@ export default {
             }
             this.createImitateData(data)
         },
-        // 提交模拟请求
+        createTixData () {
+            // 起始时间
+            if (this.dataCreateTxObject.dateStr == null || typeof this.dataCreateTxObject.dateStr == 'undefined' || this.dataCreateTxObject.dateStr === '') {
+                this.$message.error('请输入提现时间！')
+                return
+            }
+            // 提现金额
+            if (this.dataCreateTxObject.cashStr == null || typeof this.dataCreateTxObject.cashStr == 'undefined') {
+                this.$message.error('请输入起始金额！')
+                return
+            }
+
+            var data = {
+                diyUserId: this.specialUserInfo.diyUserId,
+                dealType: 2,
+                diyId: this.specialUserInfo.diyId,
+                dateStr: this.dataCreateTxObject.dateStr,
+                cashStr: String(this.dataCreateTxObject.cashStr),
+                checkStatus: this.dataCreateTxObject.checkStatus
+            }
+            this.createImitateData(data)
+        },
+
+        // 提交请求
         createImitateData (data) {
             createImitateData(data).then(res => {
                 if (res.code == 10000) {
-                    this.$message.success("生成模拟数据成功！")
-                    this.dataVirtualItem = res.data
+                    if (data.dealType === 1) {
+                        this.$message.success('生成模拟数据成功！')
+                        this.dataVirtualItem = res.data
+                    }
+                    if (data.dealType === 2) {
+                        this.$message.success('生成提现记录成功！')
+                    }
+                } else {
+                    this.$message.error(res.message)
+                }
+            })
+        },
+        // 入库交易记录1 删除交易记录2 清除提现记录3 清除资金流水记录4
+        editDiyRecordByType (type) {
+            var data = {
+                diyUserId: this.specialUserInfo.diyUserId,
+                diyId: this.specialUserInfo.diyId,
+                dealType: type
+            }
+            editDiyRecordByType(data).then(res => {
+                if (res.code == 10000) {
+                    if (type === 1) {
+                        this.$message.success('入库交易记录成功！')
+                    }
+                    if (type === 2) {
+                        this.$message.success('删除交易记录成功！')
+                    }
+                    if (type === 3) {
+                        this.$message.success('清除提现记录成功！')
+                    }
+                    if (type === 4) {
+                        this.$message.success('清除资金流水记录成功！')
+                    }
                 } else {
                     this.$message.error(res.message)
                 }
@@ -688,6 +722,7 @@ export default {
     line-height: 30px;
     margin-bottom: 15px;
   }
+
   .el-row:last-child {
     margin-bottom: 0;
   }
