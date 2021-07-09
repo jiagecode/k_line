@@ -4,15 +4,15 @@
       <div class="app-box-tab">
         <div class="app-box-title">我的团队</div>
         <div class="app-box-changeBox">
-<!--          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia">新增-->
-<!--          </el-button>-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">用户ID：</div>
-            <el-input placeholder="请输入商户ID" v-model="input1"></el-input>
-          </div>
-          <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">用户：</div>
-            <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
+            <div class="app-box-input-txt">代理商：</div>
+            <el-select v-model="form.userAgentId"  placeholder="请选择代理">
+              <el-option
+                v-for="item in agentOpt"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </div>
           <div class="app-btn-box">
             <el-button type="primary" icon="el-icon-search" @click="seeOther">查找</el-button>
@@ -21,13 +21,14 @@
         </div>
         <div class="app-tab-box">
           <el-table
-            :data="shoppingList.list"
+            :data="userInfoVoList.list"
             border
             :max-height="600+'px'"
             :header-cell-style="tabheaderFn"
             style="width: 100%">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :key="index"
               :prop="item.prop"
               :label="item.label">
               <template slot-scope="scope">
@@ -41,10 +42,10 @@
                 <span v-else-if="item.prop==='userRealName'">
                              {{scope.row.userRealName}}
                             </span>
-                <span v-else-if="item.prop==='userRegisterDate'">
+                <span v-else-if="item.prop==='userRegisterDate'" style="width:150px; ">
                              {{scope.row.userRegisterDate}}
                             </span>
-                <span v-else-if="item.prop==='lastLoginDate'">
+                <span v-else-if="item.prop==='lastLoginDate'" style="width: 150px;">
                              {{scope.row.lastLoginDate}}
                             </span>
                 <span v-else-if="item.prop==='orderNum'">
@@ -54,7 +55,7 @@
                              {{scope.row.userMoney}}
                             </span>
                 <span v-else-if="item.prop==='userType'">
-                             {{scope.row.userType}}
+                             {{showTypeDesc(scope.row.userType)}}
                             </span>
                 <span v-else-if="item.prop==='bonusRate'">
                              {{scope.row.bonusRate}}
@@ -66,37 +67,25 @@
                              {{scope.row.agentName}}
                             </span>
 
-<!--                <span v-else-if="item.prop==='merchantInfo.platformName'">-->
-<!--                             {{scope.row.merchantInfo['platformName']}}-->
-<!--                            </span>-->
+                <!--                <span v-else-if="item.prop==='merchantInfo.platformName'">-->
+                <!--                             {{scope.row.merchantInfo['platformName']}}-->
+                <!--                            </span>-->
                 <!-- 正常的其他列 -->
                 <span v-else>{{scope.row[item.prop]}}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="操作"
-              width="250">
+              width="300">
               <template slot-scope="scope">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">修改余额
+                           @click="changeMoney(scope.$index, scope.row)">资金管理
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.locked==1"
-                           @click="changeUser(scope.$index, scope.row)">禁用
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
+                           @click="signUpForUser(scope.$index, scope.row)">签约
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">启用
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">下级客户
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">下级代理
-                </el-button><el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.locked==2"
-                           @click="changeUser(scope.$index, scope.row)">签约
-                </el-button>
-
               </template>
             </el-table-column>
           </el-table>
@@ -109,7 +98,7 @@
                 :page-size=10
                 background
                 layout="prev, pager, next, jumper"
-                :total=shoppingList.total>
+                :total=userInfoVoList.total>
               </el-pagination>
             </div>
             <div class="refresh">
@@ -132,11 +121,31 @@
           <el-form-item label="用户姓名：" prop="username" v-if="!bjShow">
             <el-input v-model="form.userRealName"></el-input>
           </el-form-item>
-          <el-form-item label="用户昵称：" prop="ptname">
+          <el-form-item label="用户昵称：" prop="pname">
             <el-input v-model="form.userNickName"></el-input>
           </el-form-item>
           <el-form-item label="手机号码：" prop="tel">
             <el-input v-model.number="form.userPhone" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="佣金：" prop="commission">
+            <el-input v-model.number="form.commission" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="红利：" prop="bonus">
+            <el-input v-model.number="form.bonus" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="用户密码：" prop="userPassword" v-if="!bjShow">
+            <el-input type="password" v-model="form.userPassword1"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码：" prop="userPassword" v-if="!bjShow">
+            <el-input type="password" v-model="form.userPassword2"></el-input>
+          </el-form-item>
+          <el-form-item label="所属代理：" prop="leixing">
+            <el-select v-model="form.userAgentId"  placeholder="请选择代理">
+              <el-option
+                v-for="item in agentOpt"
+                :label="item.label"
+                :value="item.value"
+              ></el-option></el-select>
           </el-form-item>
           <el-form-item label="备注：">
             <el-input v-model="form.txt"></el-input>
@@ -158,16 +167,24 @@
             </span>
       <div class="payNameDiaBox">
         <el-form ref="changeForm" :model="changeForm" label-width="130px" :rules="rules">
-          <el-form-item label="金额：" prop="moeny" >
+          <el-form-item label="当前余额：" prop="moeny">
+            <el-input v-model="changeForm.beforeMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="调整金额：" prop="moeny">
             <el-input v-model="changeForm.moeny" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="类型：" prop="leixing">
-            <el-select v-model="changeForm.leixing" placeholder="请选择类型">
+          <el-form-item label="调整类型：" prop="leixing">
+            <el-select v-model="changeForm.leixing"  placeholder="请选择类型" @change="moneyChangeLx">
+              <el-option label="手动入金" value="0"></el-option>
               <el-option label="系统加款" value="1"></el-option>
               <el-option label="系统扣款" value="2"></el-option>
+              <el-option label="提现扣款" value="3"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="备注：" prop="beizhu">
+          <el-form-item label="调后余额：" prop="moeny">
+            <el-input v-model="changeForm.afterMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="调整备注：" prop="beizhu">
             <el-input v-model="changeForm.beizhu"></el-input>
           </el-form-item>
           <el-form-item>
@@ -182,413 +199,431 @@
 </template>
 
 <script>
-  import { listUser, listPeople, addUser, removeUser, changeUser, guanliUser,changeUserMoney } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType } from '@/api/adminUser'
 
-  export default {
-    name: 'index',
-    data() {
-      var username = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入用户名称'))
-        } else {
-          callback()
+export default {
+  name: 'index',
+  data () {
+    return {
+      bjShow: false,
+      dialogFormVisible: false,
+      currentPage: 1,
+      input1: '',
+      input2: '',
+      region: '',
+      tabHead: [
+        {
+          label: '用户ID',
+          prop: 'userId'
+        },
+        {
+          label: '用户信息',
+          prop: 'userNickName'
+        },
+        {
+          label: '客户姓名',
+          prop: 'userRealName'
+        },
+        {
+          label: '创建日期',
+          prop: 'userRegisterDate'
+        },
+        {
+          label: '最后登录',
+          prop: 'lastLoginDate'
+        },
+        {
+          label: '订单数',
+          prop: 'orderNum'
+        },
+        {
+          label: '账户余额',
+          prop: 'userMoney'
+        },
+        {
+          label: '身份',
+          prop: 'userType'
+        },
+        {
+          label: '红利',
+          prop: 'bonusRate'
+        },
+        {
+          label: '佣金',
+          prop: 'commissionRate'
+        },
+        {
+          label: '归属代理商',
+          prop: 'agentName'
         }
-      }
-      var ptname = (rule, value, callback) => {
-        if (value === '') {
-         return  callback(new Error('请输入平台名称'))
-        } else if (value.length < 3 || value.length > 11) {
-          callback(new Error('长度在3到11个字符'))
-        } else {
-          callback()
-        }
-      }
-      var gettel = (rule, value, callback) => {
-        var reg = /^1[3456789]\d{9}$/
-        if (value === '') {
-          callback(new Error('请输入手机号码'))
-        } else if (!reg.test(value)) {
-          callback(new Error('请输入正确手机号'))
-        } else {
-          callback()
-        }
-      }
-      var region = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请选择商户类型'))
-        } else {
-          callback()
-        }
-      }
-      var txt = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入备注'))
-        } else {
-          callback()
-        }
-      }
-
-      var moeny = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入金额'))
-        } else {
-          callback()
-        }
-      }
-      var leixing = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请选择类型'))
-        } else {
-          callback()
-        }
-      }
-      var beizhu = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入备注'))
-        } else {
-          callback()
-        }
-      }
-
-      return {
-        bjShow: false,
-        dialogFormVisible: false,
-        currentPage: 1,
-        input1: '',
-        input2: '',
+      ],
+      form: {
+        userRealName: '',
+        userNickName: '',
+        tel: '',
+        userAgentId:'',
+        userPassword1: '',
+        userPassword2: '',
         region: '',
-        tabHead: [
-          {
-            label: '用户ID',
-            prop: 'userId'
-          },
-          {
-            label: '用户信息',
-            prop: 'userNickName'
-          },
-          {
-            label: '客户姓名',
-            prop: 'userRealName'
-          },
-          {
-            label: '创建日期',
-            prop: 'userRegisterDate'
-          },
-          {
-            label: '最后登录',
-            prop: 'lastLoginDate'
-          },
-          {
-            label: '订单数',
-            prop: 'orderNum'
-          },
-          {
-            label: '账户余额',
-            prop: 'userMoney'
-          },
-          {
-            label: '身份',
-            prop: 'userType'
-          },
-          {
-            label: '红利',
-            prop: 'bonusRate'
-          },
-          {
-            label: '佣金',
-            prop: 'commissionRate'
-          },
-          {
-            label: '归属代理商',
-            prop: 'agentName'
-          }
-        ],
-        form: {
-          username: '',
-          ptname: '',
-          tel: '',
-          region: '',
-          txt: '',
-          sysUserId: '',
-          merchantInfoId: ''
-        },
-        text: '',
-        dialogFormVisibleTel: false,
-        formtel: {
-          tel: ''
-        },
-        telRoleid: '',
-        rules: {
-          // username: [
-          //   { validator: username, trigger: 'blur' }
-          // ],
-          // ptname: [
-          //   { required: true, message: '请输入平台名称', trigger: 'blur' },
-          //   { min: 3, max: 11, message: '长度在 3 到 11 个字符', trigger: 'blur' }
-          // ],
-          // tel: [
-          //   { required: true, validator: gettel, trigger: 'blur' }
-          // ],
-          // region: [
-          //   { validator: region, trigger: 'blur' }
-          // ],
-          // txt: [
-          //   { validator: txt, trigger: 'blur' }
-          // ],
-          //
-          // moeny: [
-          //   { validator: moeny, trigger: 'blur' }
-          // ],
-          // leixing: [
-          //   { validator: leixing, trigger: 'blur' }
-          // ],
-          // beizhu: [
-          //   { validator: beizhu, trigger: 'blur' }
-          // ],
-        },
-        peopleList: [],
-        shoppingList: '',
-        //  修改金额
-        dialogFormVisibleChange: false,
-        changeForm: {
-          moeny: '',
-          leixing: '',
-          beizhu: ''
-        },
-        changeId:""
-      }
-    },
-    created() {
-      this.getshlist()
-      this.getpeopleList()
-    },
-    methods: {
-      //修改余额
-      changeMoney(index, row) {
-        this.dialogFormVisibleChange = true;
-        console.log(row)
-        this.changeId = row.merchantInfo.merchantInfoId
+        txt: '',
+        bonus:'',
+        commission:'',
+        userId: '',
+        userPhone: '',
+        userType: 1
       },
-      submitFormChange(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.changeForm)
-            var data={
-              consumptionAmount:this.changeForm.moeny,
-              remarks:this.changeForm.beizhu,
-              consumptionType:this.changeForm.leixing,
-              merchantInfoId:this.changeId
-            }
-            changeUserMoney(data).then(res=>{
-              if(res.code==10000){
-                this.$message.success(res.message);
-                this.dialogFormVisibleChange = false
-                this.$refs[`changeForm`].resetFields();
-                this.getshlist();
-              }else {
-                this.$message.error(res.message);
-              }
-            })
-
-
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+      text: '',
+      dialogFormVisibleTel: false,
+      formtel: {
+        tel: ''
       },
-      resetFormChange(){
-        this.dialogFormVisibleChange = false
-        this.$refs[`changeForm`].resetFields()
+      telRoleid: '',
+      rules: {
+        // username: [
+        //   { validator: username, trigger: 'blur' }
+        // ],
+        // ptname: [
+        //   { required: true, message: '请输入平台名称', trigger: 'blur' },
+        //   { min: 3, max: 11, message: '长度在 3 到 11 个字符', trigger: 'blur' }
+        // ],
+        // tel: [
+        //   { required: true, validator: gettel, trigger: 'blur' }
+        // ],
+        // region: [
+        //   { validator: region, trigger: 'blur' }
+        // ],
+        // txt: [
+        //   { validator: txt, trigger: 'blur' }
+        // ],
+        //
+        // moeny: [
+        //   { validator: moeny, trigger: 'blur' }
+        // ],
+        // leixing: [
+        //   { validator: leixing, trigger: 'blur' }
+        // ],
+        // beizhu: [
+        //   { validator: beizhu, trigger: 'blur' }
+        // ],
       },
-      ai_dialog_closeChange() {
-        this.dialogFormVisibleChange = false
-        this.$refs[`changeForm`].resetFields()
+      peopleList: [],
+      userInfoVoList: '',
+      //  修改金额
+      dialogFormVisibleChange: false,
+      changeForm: {
+        userId:'',
+        moeny: '',
+        beforeMoney:'',
+        afterMoney:'',
+        leixing: '',
+        beizhu: ''
       },
-      //复制
-      handleCopy(e) {
-        this.copy(e)
-      },
-      getroleId(val) {
-        console.log(val)
-        this.telRoleid = val
-      },
-      //编辑
-      bjTab(index, row) {
-        console.log(row)
-        this.bjShow = true
-        this.text = '编辑客户'
-        this.dialogFormVisible = true
-        this.telRoleid = row.roleId
-        this.form = {
-          username: row.sysUserName,
-          ptname: row.merchantInfo.platformName,
-          tel: row.phone,
-          region: row.role.roleName,
-          txt: row.remarks,
-          userId: row.sysUserId,
-          merchantInfoId: row.merchantInfo.merchantInfoId
-        }
-      },
-      //查询
-      seeOther() {
-        this.currentPage = 1
-        var data = {
-          userNickName: this.input2,
-          userId: this.input1,
-          pageNum: this.currentPage,
-        }
-        listUser(data).then(res => {
-          console.log(res)
-          if (res.code == 10000) {
-            this.shoppingList = res.data
-          } else {
-            this.$message.error(res.message)
-          }
-        })
-      },
-      seeAll() {
-        this.input1 = ''
-        this.input2 = ''
-        this.currentPage = 1
-        this.getshlist()
-      },
-      //获取商户列表
-      getshlist() {
-        var data = {
-          pageNum: this.currentPage,
-        }
-        listUser(data).then(res => {
-          console.log(res)
-          if (res.code == 10000) {
-            this.shoppingList = res.data
-          } else {
-            this.$message.error(res.message)
-          }
-        })
-      },
-      tabheaderFn() {
-        return 'background:#F6F7FB;color:#3B3269'
-      },
-      removeThis() {
-
-      },
-      //分页事件
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
-
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
-        this.getshlist()
-      },
-      refresh() {
-        this.currentPage = 1
-        this.getshlist()
-      },
-      ai_dialog_close() {
-        this.dialogFormVisible = false
-        this.$refs[`form`].resetFields()
-      },
-      //获取角色组
-      // getpeopleList() {
-      //   var data = {
-      //     pageNum: this.currentPage
-      //   }
-      //   listPeople(data).then(res => {
-      //     console.log(res)
-      //     if (res.code == 10000) {
-      //       let list = res.data.list
-      //       var arr = []
-      //       for (var i = 0; i < list.length; i++) {
-      //         var obj = {}
-      //         obj.userId = list[i].userId
-      //         // obj.roleName = list[i].roleName
-      //         arr.push(obj)
-      //       }
-      //       this.peopleList = arr
-      //     } else {
-      //       this.$message.error(res.message)
-      //     }
-      //   })
-      // },
-      //禁用启用
-      // changeUser(index, row) {
-      //   console.log(row)
-      //   let locked = row.locked
-      //   var userlocked = ''
-      //   if (locked == 1) {
-      //     userlocked = 2
-      //   } else {
-      //     userlocked = 1
-      //   }
-      //   var data = {
-      //     locked: userlocked,
-      //     sysUserId: row.sysUserId
-      //   }
-      //   guanliUser(data).then(res => {
-      //     console.log(res)
-      //     if (res.code == 10000) {
-      //       this.getshlist()
-      //     } else {
-      //       this.$message.error(res.message)
-      //     }
-      //   })
-      // },
-
-      //新增
-      openDia() {
-        // this.openDia = false;
-        this.bjShow = false
-        this.text = '新增客户'
-        this.dialogFormVisible = true
-        this.form = {
-          userNickName: '',
-          userRealName: '',
-          userPhone: '',
-          userType: '',
-          txt: ''
-        }
-      },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.form)
-            var data = {
-              userNickName: this.form.userNickName,
-              userRealName: this.form.userRealName,
-              userPhone: this.form.userPhone,
-              userType: 1,
-            }
-            addUser(data).then(res => {
-              console.log(res)
-              if (res.code == 10000) {
-                this.getshlist()
-                this.$message.success(res.message)
-                this.$refs[formName].resetFields()
-                this.dialogFormVisible = false
-              } else {
-                this.$message.error(res.message)
-              }
-
-            })
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields()
-        this.dialogFormVisible = false
-      }
-    },
-    filters: {
-      // locked(val){
-      //   return val==1?""
-      // }
+      changeId: '',
+      agentOpt:[]
     }
+  },
+  created () {
+    this.queryListForUserVo()
+    this.queryOptData1Met()
+  },
+  methods: {
+
+    signUpForUser(index, row) {
+      // console.log(row)
+      this.$confirm('此操作将签约用户为代理商, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        changeUserType(row).then(res=>{
+          if (res.code == 10000) {
+            this.$message.info('签约成功');
+            this.queryListForUserVo();
+          }else {
+            this.$message.error(res.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    showTypeDesc(userTYpe){
+      return userTYpe === 2? '代理商':'用户';
+    },
+    queryOptData1Met(){
+      queryOptData1().then(res =>{
+        if (res.code == 10000) {
+          this.agentOpt = res.data;
+        }else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    moneyChangeLx(){
+      var t = this.changeForm.leixing;
+      var m = this.changeForm.moeny;
+      if(m === '' || m===undefined){
+        m=0.0;
+      }
+      if(t<2 ){
+        m = 0- m;
+      }
+      this.changeForm.afterMoney = this.changeForm.beforeMoney - m;
+    },
+    //修改余额
+    changeMoney (index, row) {
+      this.dialogFormVisibleChange = true
+      console.log(row)
+      this.changeForm.userId = row.userId;
+      this.changeForm.beforeMoney = row.userMoney;
+      this.changeForm.afterMoney = row.userMoney;
+    },
+    submitFormChange (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          console.log(this.changeForm)
+          var data = {
+            dealType : this.changeForm.leixing,
+            userId:this.changeForm.userId,
+            money:this.changeForm.moeny
+          }
+          changeUserMoney(data).then(res => {
+            if (res.code == 10000) {
+              this.$message.success(res.message)
+              this.dialogFormVisibleChange = false
+              this.$refs[`changeForm`].resetFields()
+              this.queryListForUserVo()
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetFormChange () {
+      this.dialogFormVisibleChange = false
+      this.$refs[`changeForm`].resetFields()
+    },
+    ai_dialog_closeChange () {
+      this.dialogFormVisibleChange = false
+      this.$refs[`changeForm`].resetFields()
+    },
+    //复制
+    handleCopy (e) {
+      this.copy(e)
+    },
+    getroleId (val) {
+      console.log(val)
+      this.telRoleid = val
+    },
+    //编辑
+    bjTab (index, row) {
+      console.log(row)
+      this.bjShow = true
+      this.text = '编辑客户'
+      this.dialogFormVisible = true
+      this.telRoleid = row.userId
+      this.form = {
+        userId: row.userId,
+        username: row.userRealName,
+        userNickName: row.userNickName,
+        userRealName: row.userRealName,
+        userPhone: row.userPhone,
+        commission: row.commissionRate,
+        txt: row.remarks,
+        bonus: row.bonusRate,
+        userAgentId: row.agentId,
+      }
+    },
+    //查询
+    seeOther () {
+      this.currentPage = 1
+      var data = {
+        userNickName: this.input2,
+        userId: this.input1,
+        agentId: this.form.userAgentId,
+        pageNum: this.currentPage
+      }
+      listUser(data).then(res => {
+        console.log(res)
+        if (res.code == 10000) {
+          this.userInfoVoList = res.data
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    seeAll () {
+      this.input1 = ''
+      this.input2 = ''
+      this.currentPage = 1,
+      this.form.userAgentId ='',
+      this.queryListForUserVo()
+    },
+    //获取用户列表
+    queryListForUserVo () {
+      var data = {
+        agentId: this.form.userAgentId,
+        pageNum: this.currentPage
+      }
+      listUser(data).then(res => {
+        console.log(res)
+        if (res.code == 10000) {
+          this.userInfoVoList = res.data
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    tabheaderFn () {
+      return 'background:#F6F7FB;color:#3B3269'
+    },
+    removeThis () {
+
+    },
+    //分页事件
+    handleSizeChange (val) {
+      console.log(`每页 ${val} 条`)
+
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`)
+      this.queryListForUserVo()
+    },
+    refresh () {
+      this.currentPage = 1
+      this.queryListForUserVo()
+    },
+    ai_dialog_close () {
+      this.dialogFormVisible = false
+      this.$refs[`form`].resetFields()
+    },
+    queryForBut (type) {
+      this.currentPage = 1
+      var data
+      if (type === 2) {
+        //所有客户
+        data = {
+          userType: 1,
+          del: 1,
+          pageNum: this.currentPage
+        }
+      } else if (type === 3) {
+        //所有代理商
+        data = {
+          userType: 2,
+          del: 1,
+          pageNum: this.currentPage
+        }
+      } else if (type === 4) {
+        //今日客户
+        data = {
+          queryDateFlag: 1,
+          del: 1,
+          pageNum: this.currentPage
+        }
+      } else if (type === 5) {
+        //今日代理商
+        data = {
+          queryDateFlag: 2,
+          del: 1,
+          userType: 2,
+          pageNum: this.currentPage
+        }
+      } else {
+        //所有用户
+        data = {
+          del: 1,
+          pageNum: this.currentPage
+        }
+      }
+      listUser(data).then(res => {
+        console.log(res)
+        if (res.code == 10000) {
+          this.userInfoVoList = res.data
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    //新增
+    openDia (userType) {
+      // this.openDia = false;
+      this.bjShow = false
+      var t = userType === 1 ? '新增客户' : '新增代理商'
+      this.text = t
+      this.dialogFormVisible = true
+      this.form = {
+        userId: '',
+        userNickName: '',
+        userRealName: '',
+        userPhone: '',
+        userPassword1: '',
+        userPassword2: '',
+        userType: userType,
+        commission: '',
+        bonus: '',
+        txt: '',
+        userAgentId: ''
+      }
+    },
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.form.userPassword1 != this.form.userPassword2) {
+            this.$message.error('两次密码不一致')
+            return false
+          }
+          console.log(this.form)
+          var data = {
+            userId:this.form.userId,
+            userNickName: this.form.userNickName,
+            userRealName: this.form.userRealName,
+            userPhone: this.form.userPhone,
+            userPassword: this.form.userPassword1,
+            userType: this.form.userType,
+            commissionRate: this.form.commission,
+            bonusRate: this.form.bonus,
+            remarks: this.form.txt,
+            agentId:this.form.userAgentId
+          }
+          addUser(data).then(res => {
+            console.log(res)
+            if (res.code == 10000) {
+              this.queryListForUserVo()
+              this.$message.success(res.message)
+              this.$refs[formName].resetFields()
+              this.dialogFormVisible = false
+            } else {
+              this.$message.error(res.message)
+            }
+
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.dialogFormVisible = false
+    },
+  },
+  filters: {
+    // locked(val){
+    //   return val==1?""
+    // }
   }
+}
 </script>
 
 <style lang="less">
