@@ -1,5 +1,7 @@
 package com.line.backstage.service;
 
+import com.line.backstage.entity.sysentity.ManOptionVo;
+
 import java.util.List;
 import java.util.Map;
 
@@ -56,4 +58,11 @@ public interface SysDiyService {
      * @return
      */
     Integer editUserMoney(Integer loginUserId,Map<String,Object> map);
+
+    /**
+     * 查询代理商下拉框
+     * @param loginUserId
+     * @return
+     */
+    List<ManOptionVo> queryOptionsForAgent(Integer loginUserId);
 }

@@ -2,6 +2,7 @@ package com.line.backstage.service.impl;
 
 import com.line.backstage.dao.mapper.*;
 import com.line.backstage.entity.*;
+import com.line.backstage.entity.sysentity.ManOptionVo;
 import com.line.backstage.service.SysDiyService;
 import com.line.backstage.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -267,6 +268,11 @@ public class SysDiyServiceImpl implements SysDiyService {
           return 1;
         }
         return 0;
+    }
+
+    @Override
+    public List<ManOptionVo> queryOptionsForAgent(Integer loginUserId) {
+        return sysDiyInfoMapper.queryOptionsForAgent();
     }
 
     private List<OrderInfo> queryOrders(Integer userId,Integer diyId){

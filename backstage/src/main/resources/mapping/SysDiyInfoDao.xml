@@ -60,4 +60,8 @@
         from t_sku_info where DEL = 1 ORDER BY SKU_ID DESC
     </select>
 
+    <select id="queryOptionsForAgent" resultType="com.line.backstage.entity.sysentity.ManOptionVo">
+        SELECT distinct AGENT_NAME `label` ,AGENT_ID  as `value`  FROM t_USER_info where DEL = 1 and USER_TYPE = 2
+    </select>
+
 </mapper>

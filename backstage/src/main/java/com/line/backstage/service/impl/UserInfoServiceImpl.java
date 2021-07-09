@@ -102,6 +102,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserRefereeAble(1);
         userInfo.setDel(1);
         userInfo.setDiyFlag(0);
+        if(userInfo.getAgentId() != null){
+            userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
+        }
         int newId  = userInfoMapper.insert(userInfo);
         if(newId == 1){
             newId = userInfoMapper.queryUserIdForPhone(tel);
@@ -183,10 +186,29 @@ public class UserInfoServiceImpl implements UserInfoService {
     public int update(Integer loginUserId, UserInfo userInfo) {
         UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getUserId());
         if(u != null){
+            if(userInfo.getAgentId() != null){
+                userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
+            }
             return userInfoMapper.updateByPrimaryKeySelective(userInfo);
         }
         // FIXME 待完善
        return 0;
+    }
+
+    @Override
+    public int updateUserType(Integer loginUserId, UserInfo userInfo) {
+        UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getUserId());
+        if(u != null){
+            userInfo.setAgentId(u.getUserId());
+            Date date = new Date();
+            userInfo.setAgentTime(date);
+            userInfo.setEditUserId(loginUserId);
+            userInfo.setAgentName(StringUtils.isEmpty(u.getUserNickName())?u.getUserRealName():u.getUserNickName());
+            userInfo.setEditDate(date);
+            userInfo.setUserType(2);
+            return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+        }
+        return 0;
     }
 
     /**

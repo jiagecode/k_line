@@ -62,7 +62,8 @@ public interface UserInfoService {
      * @return 是否成功
      */
     int update(Integer loginUserId, UserInfo userInfo);
- 
+    int updateUserType(Integer loginUserId, UserInfo userInfo);
+
     /**
      * 通过ID查询单条数据
      *

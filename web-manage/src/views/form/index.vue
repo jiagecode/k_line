@@ -61,7 +61,7 @@
                              {{scope.row.userMoney}}
                             </span>
                 <span v-else-if="item.prop==='userType'">
-                             {{scope.row.userType}}
+                             {{showTypeDesc(scope.row.userType)}}
                             </span>
                 <span v-else-if="item.prop==='bonusRate'">
                              {{scope.row.bonusRate}}
@@ -89,8 +89,8 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="changeMoney(scope.$index, scope.row)">资金管理
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeUser(scope.$index, scope.row)">下级代理
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
+                           @click="signUpForUser(scope.$index, scope.row)">签约
                 </el-button>
               </template>
             </el-table-column>
@@ -145,6 +145,14 @@
           <el-form-item label="确认密码：" prop="userPassword" v-if="!bjShow">
             <el-input type="password" v-model="form.userPassword2"></el-input>
           </el-form-item>
+          <el-form-item label="所属代理：" prop="leixing">
+            <el-select v-model="form.userAgentId"  placeholder="请选择代理">
+              <el-option
+                v-for="item in agentOpt"
+                :label="item.label"
+                :value="item.value"
+              ></el-option></el-select>
+          </el-form-item>
           <el-form-item label="备注：">
             <el-input v-model="form.txt"></el-input>
           </el-form-item>
@@ -197,74 +205,11 @@
 </template>
 
 <script>
-import { addUser, changeUserMoney, listUser } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType } from '@/api/adminUser'
 
 export default {
     name: 'index',
     data () {
-        var username = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入用户名称'))
-            } else {
-                callback()
-            }
-        }
-        var ptname = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error('请输入平台名称'))
-            } else if (value.length < 3 || value.length > 11) {
-                callback(new Error('长度在3到11个字符'))
-            } else {
-                callback()
-            }
-        }
-        var gettel = (rule, value, callback) => {
-            var reg = /^1[3456789]\d{9}$/
-            if (value === '') {
-                callback(new Error('请输入手机号码'))
-            } else if (!reg.test(value)) {
-                callback(new Error('请输入正确手机号'))
-            } else {
-                callback()
-            }
-        }
-        var region = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请选择商户类型'))
-            } else {
-                callback()
-            }
-        }
-        var txt = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入备注'))
-            } else {
-                callback()
-            }
-        }
-
-        var moeny = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入金额'))
-            } else {
-                callback()
-            }
-        }
-        var leixing = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请选择类型'))
-            } else {
-                callback()
-            }
-        }
-        var beizhu = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入备注'))
-            } else {
-                callback()
-            }
-        }
-
         return {
             bjShow: false,
             dialogFormVisible: false,
@@ -322,6 +267,7 @@ export default {
                 userRealName: '',
                 userNickName: '',
                 tel: '',
+                userAgentId:'',
                 userPassword1: '',
                 userPassword2: '',
                 region: '',
@@ -379,14 +325,50 @@ export default {
                 beizhu: ''
             },
             changeId: '',
-
+            agentOpt:[]
         }
     },
     created () {
         this.queryListForUserVo()
-        // this.getpeopleList()
+        this.queryOptData1Met()
     },
     methods: {
+
+      signUpForUser(index, row) {
+       // console.log(row)
+        this.$confirm('此操作将签约用户为代理商, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          changeUserType(row).then(res=>{
+            if (res.code == 10000) {
+              this.$message.info('签约成功');
+              this.queryListForUserVo();
+            }else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      },
+      showTypeDesc(userTYpe){
+        return userTYpe === 2? '代理商':'用户';
+      },
+      queryOptData1Met(){
+        queryOptData1().then(res =>{
+          if (res.code == 10000) {
+              this.agentOpt = res.data;
+          }else {
+            this.$message.error(res.message)
+          }
+        })
+      },
       moneyChangeLx(){
         var t = this.changeForm.leixing;
         var m = this.changeForm.moeny;
@@ -463,7 +445,8 @@ export default {
               userPhone: row.userPhone,
               commission: row.commissionRate,
               txt: row.remarks,
-              bonus: row.bonusRate
+              bonus: row.bonusRate,
+              userAgentId: row.agentId,
             }
         },
         //查询
@@ -591,7 +574,8 @@ export default {
                 userType: userType,
                commission: '',
                bonus: '',
-                txt: ''
+                txt: '',
+              userAgentId: ''
             }
         },
         submitForm (formName) {
@@ -611,7 +595,8 @@ export default {
                         userType: this.form.userType,
                       commissionRate: this.form.commission,
                       bonusRate: this.form.bonus,
-                      remarks: this.form.txt
+                      remarks: this.form.txt,
+                      agentId:this.form.userAgentId
                     }
                     addUser(data).then(res => {
                         console.log(res)

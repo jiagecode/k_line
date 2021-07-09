@@ -30,4 +30,6 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
     Integer countUserNum(Map map);
 
     Integer queryUserIdForPhone(@Param("tel") String phone);
+
+    String queryAgentNameByAgentId(@Param("agentId")Integer agentId);
 }
