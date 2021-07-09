@@ -178,7 +178,22 @@ public class SysUserInfoController {
     @PostMapping("addNewOne")
     @ApiOperation(value = "列表", notes = "后台系统添加用户")
     public ResponseModel addNewUser(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
-        return ResponseHelper.success(userInfoService.addNewUser(Integer.valueOf(ManageUserId), manUserVo));
+        if(manUserVo.getUserId()!=null){
+            return ResponseHelper.success(userInfoService.save(Integer.valueOf(ManageUserId),manUserVo));
+        }else {
+            return ResponseHelper.success(userInfoService.addNewUser(Integer.valueOf(ManageUserId), manUserVo));
+        }
+    }
+    /**
+     * 管理端-签约 改用户为代理商
+     * @param ManageUserId
+     * @param manUserVo
+     * @return
+     */
+    @PostMapping("updateUserType")
+    @ApiOperation(value = "改用户为代理商", notes = "改用户为代理商")
+    public ResponseModel updateUserType(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
+        return ResponseHelper.success(userInfoService.updateUserType(Integer.valueOf(ManageUserId),manUserVo));
     }
 
     /**

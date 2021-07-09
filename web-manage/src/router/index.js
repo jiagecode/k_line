@@ -143,6 +143,12 @@ export const constantRoutes = [
         component: () => import('@/views/form/bankcard'),
         meta: { title: '银行卡管理' }
       },
+      {
+        path: 'tool',
+        name: 'tool',
+        component: () => import('@/views/form/tool'),
+        meta: { title: '辅助工具' }
+      },
     ]
   },{
     path: '/table',

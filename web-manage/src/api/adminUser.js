@@ -64,6 +64,13 @@ export function queryHomeData(params) {
     params
   })
 }
+//查询代理商下拉框
+export function queryOptData1() {
+  return request({
+    url: '/sysDiy/optionList1',
+    method: 'get',
+  })
+}
 //资金报表汇总
 export function moneyTableAll(data) {
   return request({
@@ -98,6 +105,14 @@ export function changeUser(data) {
     data:data
   })
 }
+//更新用户类型
+export function changeUserType(data) {
+  return request({
+    url: '/sysUserInfo/updateUserType',
+    method: 'post',
+    data:data
+  })
+}
 
 
 //账户管理
@@ -109,10 +124,10 @@ export function guanliUser(data) {
   })
 }
 
-//修改商户余额
+//修改用户户余额
 export function changeUserMoney(data) {
   return request({
-    url: '/consumption/updateMerchantAmount',
+    url: '/sysDiy/editAccount',
     method: 'post',
     data:data
   })

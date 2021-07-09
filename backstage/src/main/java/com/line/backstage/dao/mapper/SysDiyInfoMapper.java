@@ -2,6 +2,7 @@ package com.line.backstage.dao.mapper;
 
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.SysDiyInfo;
+import com.line.backstage.entity.sysentity.ManOptionVo;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +17,5 @@ public interface SysDiyInfoMapper extends TkBaseMapper<SysDiyInfo> {
 
     List<SysDiyInfo> selectAsList(SysDiyInfo sysDiyInfo);
     List<Map<String, Object>> querySkuDataList();
+    List<ManOptionVo> queryOptionsForAgent();
 }

@@ -116,5 +116,7 @@
             and USER_REGISTER_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
-
+    <select id="queryAgentNameByAgentId" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select AGENT_NAME from t_user_info where USER_ID = #{agentId} AND DEL = 1 LIMIT 1
+    </select>
 </mapper>

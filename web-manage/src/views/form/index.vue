@@ -61,7 +61,7 @@
                              {{scope.row.userMoney}}
                             </span>
                 <span v-else-if="item.prop==='userType'">
-                             {{scope.row.userType}}
+                             {{showTypeDesc(scope.row.userType)}}
                             </span>
                 <span v-else-if="item.prop==='bonusRate'">
                              {{scope.row.bonusRate}}
@@ -87,13 +87,10 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">查询资金
+                           @click="changeMoney(scope.$index, scope.row)">资金管理
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeUser(scope.$index, scope.row)">下级代理
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="showTool(scope.$index, scope.row)">辅助工具
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
+                           @click="signUpForUser(scope.$index, scope.row)">签约
                 </el-button>
               </template>
             </el-table-column>
@@ -130,17 +127,31 @@
           <el-form-item label="用户姓名：" prop="username" v-if="!bjShow">
             <el-input v-model="form.userRealName"></el-input>
           </el-form-item>
-          <el-form-item label="用户昵称：" prop="ptname">
+          <el-form-item label="用户昵称：" prop="pname">
             <el-input v-model="form.userNickName"></el-input>
           </el-form-item>
           <el-form-item label="手机号码：" prop="tel">
             <el-input v-model.number="form.userPhone" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="佣金：" prop="commission">
+            <el-input v-model.number="form.commission" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="红利：" prop="bonus">
+            <el-input v-model.number="form.bonus" type="number"></el-input>
           </el-form-item>
           <el-form-item label="用户密码：" prop="userPassword" v-if="!bjShow">
             <el-input type="password" v-model="form.userPassword1"></el-input>
           </el-form-item>
           <el-form-item label="确认密码：" prop="userPassword" v-if="!bjShow">
             <el-input type="password" v-model="form.userPassword2"></el-input>
+          </el-form-item>
+          <el-form-item label="所属代理：" prop="leixing">
+            <el-select v-model="form.userAgentId"  placeholder="请选择代理">
+              <el-option
+                v-for="item in agentOpt"
+                :label="item.label"
+                :value="item.value"
+              ></el-option></el-select>
           </el-form-item>
           <el-form-item label="备注：">
             <el-input v-model="form.txt"></el-input>
@@ -162,16 +173,24 @@
             </span>
       <div class="payNameDiaBox">
         <el-form ref="changeForm" :model="changeForm" label-width="130px" :rules="rules">
-          <el-form-item label="金额：" prop="moeny">
+          <el-form-item label="当前余额：" prop="moeny">
+            <el-input v-model="changeForm.beforeMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="调整金额：" prop="moeny">
             <el-input v-model="changeForm.moeny" type="number"></el-input>
           </el-form-item>
-          <el-form-item label="类型：" prop="leixing">
-            <el-select v-model="changeForm.leixing" placeholder="请选择类型">
+          <el-form-item label="调整类型：" prop="leixing">
+            <el-select v-model="changeForm.leixing"  placeholder="请选择类型" @change="moneyChangeLx">
+              <el-option label="手动入金" value="0"></el-option>
               <el-option label="系统加款" value="1"></el-option>
               <el-option label="系统扣款" value="2"></el-option>
+              <el-option label="提现扣款" value="3"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="备注：" prop="beizhu">
+          <el-form-item label="调后余额：" prop="moeny">
+            <el-input v-model="changeForm.afterMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="调整备注：" prop="beizhu">
             <el-input v-model="changeForm.beizhu"></el-input>
           </el-form-item>
           <el-form-item>
@@ -182,400 +201,18 @@
       </div>
     </el-dialog>
 
-    <!-- 辅助工具 -->
-    <el-dialog width="60%" title="辅助工具" :visible.sync="dialogToolVisible">
-      <div class="tool_conent" style="width: 94%;margin: 0 auto;">
-        <el-form :inline="true" :model="toolUserFrom" class="tool-conent-form-inline">
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">推广码</div>
-            </el-col>
-            <el-col :span="4">
-              <div>53</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">用户名</div>
-            </el-col>
-            <el-col :span="4">
-              <div>xx</div>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">电话</div>
-            </el-col>
-            <el-col :span="4">
-              <div>13399992222</div>
-            </el-col>
-            <el-col :span="6"></el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">类型</div>
-            </el-col>
-            <el-col :span="4">
-              <div>超级管理员</div>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">更改为代理</el-button>
-              <el-button type="small" @click="toolUserSubmit(1)">更改为玩家</el-button>
-            </el-col>
-            <el-col :span="12">
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">金额</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="请输入金额"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">更改金额</el-button>
-            </el-col>
-            <el-col :span="12">
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">姓名</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="请输入姓名"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">更改姓名</el-button>
-            </el-col>
-            <el-col :span="12">
-            </el-col>
-          </el-row>
-        </el-form>
-
-        <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-        <el-form :inline="true" :model="toolUserFrom" class="tool-conent-form-inline">
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">货币种类</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="比特币"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">货币编号</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">购买方向</div>
-            </el-col>
-            <el-col :span="4">
-              <el-radio-group v-model="toolUserFrom.type">
-                <el-radio :label="1">涨</el-radio>
-                <el-radio :label="2">跌</el-radio>
-              </el-radio-group>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">赢率</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      maxlength="2"
-                      minlength="1"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">起始时间</div>
-            </el-col>
-            <el-col :span="4">
-              <el-date-picker
-                      v-model="toolUserFrom.type"
-                      type="date"
-                      placeholder="选择日期">
-              </el-date-picker>
-            </el-col>
-            <el-col :span="4">
-              <el-time-picker
-                      v-model="toolUserFrom.type"
-                      :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
-                      placeholder="任意时间点">
-              </el-time-picker>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">购买局数</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="12"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">购买类型</div>
-            </el-col>
-            <el-col :span="6">
-              <el-radio-group v-model="toolUserFrom.type">
-                <el-radio :label="1">30秒</el-radio>
-                <el-radio :label="2">60秒</el-radio>
-                <el-radio :label="3">180秒</el-radio>
-              </el-radio-group>
-            </el-col>
-          </el-row>
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">起始金额</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">价格区间</div>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="12"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="4">
-              <el-input
-                      size="small"
-                      placeholder="23"
-                      v-model="toolUserFrom.type">
-              </el-input>
-
-            </el-col>
-            <el-col :span="4"></el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="4">
-              <el-button type="small" @click="toolUserSubmit(1)">赢率生成</el-button>
-            </el-col>
-            <el-col :span="10">
-              <el-button type="small" @click="toolUserSubmit(1)">生成模拟数据</el-button>
-            </el-col>
-            <el-col :span="8">&nbsp;</el-col>
-          </el-row>
-          <el-row class="tool_row" style="min-height: 100px;max-height: 500px;">
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="4">
-              <el-table
-                      :data="null"
-                      border
-                      style="width: 100%">
-                <el-table-body>
-
-                </el-table-body>
-              </el-table>
-            </el-col>
-            <el-col :span="10">
-              <el-table
-                      :data="null"
-                      border
-                      style="width: 100%">
-                <el-table-body>
-
-                </el-table-body>
-              </el-table>
-            </el-col>
-            <el-col :span="8"></el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">起始金额</div>
-            </el-col>
-            <el-col :span="4">
-              0
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">剩余金额</div>
-            </el-col>
-            <el-col :span="4">
-              0
-            </el-col>
-            <el-col :span="6">&nbsp;</el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">入库交易记录</el-button>
-              <el-button type="small" @click="toolUserSubmit(1)">清除交易记录</el-button>
-            </el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="2">
-              <div class="tool_row_title">提现时间</div>
-            </el-col>
-            <el-col :span="4">
-              <el-date-picker
-                      v-model="toolUserFrom.type"
-                      type="date"
-                      placeholder="选择日期">
-              </el-date-picker>
-            </el-col>
-            <el-col :span="4">
-              <el-time-picker
-                      v-model="toolUserFrom.type"
-                      :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
-                      placeholder="任意时间点">
-              </el-time-picker>
-            </el-col>
-            <el-col :span="2">
-              <div class="tool_row_title">提现金额</div>
-            </el-col>
-            <el-col :span="2">
-              <el-input
-                      size="small"
-                      placeholder="12"
-                      v-model="toolUserFrom.type">
-              </el-input>
-            </el-col>
-            <el-col :span="4">
-              <el-radio-group v-model="toolUserFrom.type">
-                <el-radio :label="1">通过</el-radio>
-                <el-radio :label="2">拒绝</el-radio>
-              </el-radio-group>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">入库交易记录</el-button>
-              <el-button type="small" @click="toolUserSubmit(1)">清除交易记录</el-button>
-            </el-col>
-          </el-row>
-
-          <div style="width: 100%; height: 10px;border-bottom: 2px solid #808080;margin-bottom: 10px"></div>
-
-          <el-row class="tool_row">
-            <el-col :span="18">
-              <div>
-                生成“历史订单”和“提现记录”都会生成相应的资金流水记录。
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <el-button type="small" @click="toolUserSubmit(1)">清除资金流水记录</el-button>
-            </el-col>
-          </el-row>
-
-        </el-form>
-      </div>
-
-      <div class="user_info">
-
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogToolVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogToolVisible = false">确 定</el-button>
-      </div>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { addUser, changeUserMoney, listUser } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType } from '@/api/adminUser'
 
 export default {
     name: 'index',
     data () {
-        var username = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入用户名称'))
-            } else {
-                callback()
-            }
-        }
-        var ptname = (rule, value, callback) => {
-            if (value === '') {
-                return callback(new Error('请输入平台名称'))
-            } else if (value.length < 3 || value.length > 11) {
-                callback(new Error('长度在3到11个字符'))
-            } else {
-                callback()
-            }
-        }
-        var gettel = (rule, value, callback) => {
-            var reg = /^1[3456789]\d{9}$/
-            if (value === '') {
-                callback(new Error('请输入手机号码'))
-            } else if (!reg.test(value)) {
-                callback(new Error('请输入正确手机号'))
-            } else {
-                callback()
-            }
-        }
-        var region = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请选择商户类型'))
-            } else {
-                callback()
-            }
-        }
-        var txt = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入备注'))
-            } else {
-                callback()
-            }
-        }
-
-        var moeny = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入金额'))
-            } else {
-                callback()
-            }
-        }
-        var leixing = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请选择类型'))
-            } else {
-                callback()
-            }
-        }
-        var beizhu = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入备注'))
-            } else {
-                callback()
-            }
-        }
-
         return {
             bjShow: false,
             dialogFormVisible: false,
-            dialogToolVisible: false,
             currentPage: 1,
             input1: '',
             input2: '',
@@ -627,15 +264,18 @@ export default {
                 }
             ],
             form: {
-                username: '',
-                ptname: '',
+                userRealName: '',
+                userNickName: '',
                 tel: '',
+                userAgentId:'',
                 userPassword1: '',
                 userPassword2: '',
                 region: '',
                 txt: '',
-                sysUserId: '',
-                merchantInfoId: '',
+                bonus:'',
+                commission:'',
+                userId: '',
+                userPhone: '',
                 userType: 1
             },
             text: '',
@@ -677,36 +317,85 @@ export default {
             //  修改金额
             dialogFormVisibleChange: false,
             changeForm: {
+                userId:'',
                 moeny: '',
+                beforeMoney:'',
+                afterMoney:'',
                 leixing: '',
                 beizhu: ''
             },
             changeId: '',
-            toolUserFrom: {
-                type: ''
-            }
+            agentOpt:[]
         }
     },
     created () {
         this.queryListForUserVo()
-        // this.getpeopleList()
+        this.queryOptData1Met()
     },
     methods: {
+
+      signUpForUser(index, row) {
+       // console.log(row)
+        this.$confirm('此操作将签约用户为代理商, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          changeUserType(row).then(res=>{
+            if (res.code == 10000) {
+              this.$message.info('签约成功');
+              this.queryListForUserVo();
+            }else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      },
+      showTypeDesc(userTYpe){
+        return userTYpe === 2? '代理商':'用户';
+      },
+      queryOptData1Met(){
+        queryOptData1().then(res =>{
+          if (res.code == 10000) {
+              this.agentOpt = res.data;
+          }else {
+            this.$message.error(res.message)
+          }
+        })
+      },
+      moneyChangeLx(){
+        var t = this.changeForm.leixing;
+        var m = this.changeForm.moeny;
+        if(m === '' || m===undefined){
+          m=0.0;
+        }
+        if(t<2 ){
+          m = 0- m;
+        }
+        this.changeForm.afterMoney = this.changeForm.beforeMoney - m;
+      },
         //修改余额
         changeMoney (index, row) {
             this.dialogFormVisibleChange = true
             console.log(row)
-            this.changeId = row.merchantInfo.merchantInfoId
+            this.changeForm.userId = row.userId;
+            this.changeForm.beforeMoney = row.userMoney;
+            this.changeForm.afterMoney = row.userMoney;
         },
         submitFormChange (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     console.log(this.changeForm)
                     var data = {
-                        consumptionAmount: this.changeForm.moeny,
-                        remarks: this.changeForm.beizhu,
-                        consumptionType: this.changeForm.leixing,
-                        merchantInfoId: this.changeId
+                      dealType : this.changeForm.leixing,
+                      userId:this.changeForm.userId,
+                      money:this.changeForm.moeny
                     }
                     changeUserMoney(data).then(res => {
                         if (res.code == 10000) {
@@ -747,15 +436,17 @@ export default {
             this.bjShow = true
             this.text = '编辑客户'
             this.dialogFormVisible = true
-            this.telRoleid = row.roleId
+            this.telRoleid = row.userId
             this.form = {
-                username: row.sysUserName,
-                ptname: row.merchantInfo.platformName,
-                tel: row.phone,
-                region: row.role.roleName,
-                txt: row.remarks,
-                sysUserId: row.sysUserId,
-                merchantInfoId: row.merchantInfo.merchantInfoId
+              userId: row.userId,
+              username: row.userRealName,
+              userNickName: row.userNickName,
+              userRealName: row.userRealName,
+              userPhone: row.userPhone,
+              commission: row.commissionRate,
+              txt: row.remarks,
+              bonus: row.bonusRate,
+              userAgentId: row.agentId,
             }
         },
         //查询
@@ -874,13 +565,17 @@ export default {
             this.text = t
             this.dialogFormVisible = true
             this.form = {
+                userId: '',
                 userNickName: '',
                 userRealName: '',
                 userPhone: '',
                 userPassword1: '',
                 userPassword2: '',
                 userType: userType,
-                txt: ''
+               commission: '',
+               bonus: '',
+                txt: '',
+              userAgentId: ''
             }
         },
         submitForm (formName) {
@@ -892,11 +587,16 @@ export default {
                     }
                     console.log(this.form)
                     var data = {
+                        userId:this.form.userId,
                         userNickName: this.form.userNickName,
                         userRealName: this.form.userRealName,
                         userPhone: this.form.userPhone,
                         userPassword: this.form.userPassword1,
-                        userType: this.form.userType
+                        userType: this.form.userType,
+                      commissionRate: this.form.commission,
+                      bonusRate: this.form.bonus,
+                      remarks: this.form.txt,
+                      agentId:this.form.userAgentId
                     }
                     addUser(data).then(res => {
                         console.log(res)
@@ -920,15 +620,6 @@ export default {
             this.$refs[formName].resetFields()
             this.dialogFormVisible = false
         },
-        // 显示工具页面
-        showTool (index, row) {
-            console.log(row)
-            this.dialogToolVisible = true
-        },
-        // 工具页面提交事件
-        toolUserSubmit (subtype) {
-            console.log('submit!' + subtype)
-        }
     },
     filters: {
         // locked(val){
@@ -937,20 +628,6 @@ export default {
     }
 }
 </script>
-
-<style type="text/css">
-  .tool_row {
-    height: 40px;
-    line-height: 40px;
-  }
-
-  .tool_row_title {
-    text-align: right;
-    padding-right: 10px;
-  }
-
-
-</style>
 
 <style lang="less">
   #eerchant {
