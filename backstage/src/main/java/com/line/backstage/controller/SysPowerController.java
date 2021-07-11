@@ -12,7 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
- 
+import java.util.Map;
+
 /**
  * 后台管理系统角色与菜单对应关系(SysPower)表控制层
  *
@@ -41,6 +42,12 @@ public class SysPowerController {
     @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统角色与菜单对应关系的一条数据")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色与菜单对应关系对象", required = true) @RequestBody @Validated SysPower sysPower) {
             return ResponseHelper.success(sysPowerService.save(Integer.valueOf(loginUserId), sysPower));
+    }
+
+    @PostMapping("saveForAuth")
+    @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统角色与菜单对应关系的一条数据")
+    public ResponseModel saveForAuth(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色与菜单对应关系对象", required = true) @RequestBody Map<String,String> map) {
+            return ResponseHelper.success(sysPowerService.saveForAuth(Integer.valueOf(loginUserId), map));
     }
  
     /**

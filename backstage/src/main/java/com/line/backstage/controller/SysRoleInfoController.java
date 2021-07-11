@@ -8,11 +8,13 @@ import com.line.backstage.vo.ResponseModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
- 
+import java.util.Map;
+
 /**
  * 后台管理系统角色表(SysRoleInfo)表控制层
  *
@@ -47,13 +49,17 @@ public class SysRoleInfoController {
      * 通过主键删除数据
      *
      * @param loginUserId 用户ID
-     * @param roleId 主键
+     * @param
      * @return 是否成功
      */
-    @DeleteMapping("delete/{roleId}")
+    @PostMapping("delete")
     @ApiOperation(value = "删除单条数据", notes = "删除主键roleId的单条数据")
-    public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色表主键roleId", required = true) @PathVariable("roleId") Integer roleId) {
-            return ResponseHelper.success(sysRoleInfoService.delete(Integer.valueOf(loginUserId), roleId));
+    public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色表主键roleId", required = true) @RequestBody Map<String ,Object> map) {
+        Integer roleId = (Integer) map.get("roleId");
+           if(roleId != null){
+               return ResponseHelper.success(sysRoleInfoService.delete(Integer.valueOf(loginUserId), roleId));
+           }
+        return ResponseHelper.failedWith("查询失败");
     }
  
     /**

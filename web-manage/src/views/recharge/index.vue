@@ -2,7 +2,7 @@
   <div id="recharge" class="app-container">
     <div class="app-box">
       <div class="app-box-tab">
-        <div class="app-box-title">角色管理</div>
+        <div class="app-box-title">角色copy管理</div>
         <div class="app-box-changeBox">
           <div class="app-box-input app-marginR">
             <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia">新增</el-button>

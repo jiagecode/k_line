@@ -76,7 +76,12 @@
           <el-form-item label="角色名称：" prop="username">
             <el-input v-model="form.username"></el-input>
           </el-form-item>
-
+          <el-form-item label="英文标志：" prop="roleEnglishName">
+            <el-input v-model="form.roleEnglishName"></el-input>
+          </el-form-item>
+          <el-form-item label="备注：" prop="universal">
+            <el-input v-model="form.universal"></el-input>
+          </el-form-item>
           <el-form-item>
             <el-button class="payNameBnt1" @click="resetForm('form')">取消</el-button>
             <el-button class="payNameBnt2" @click="submitForm('form')">确定</el-button>
@@ -95,6 +100,12 @@
         <el-form ref="formbj" :model="formbj" label-width="130px" :rules="rules">
           <el-form-item label="角色名称：" prop="username">
             <el-input v-model="formbj.username"></el-input>
+          </el-form-item>
+          <el-form-item label="英文标志：" prop="roleEnglishName">
+            <el-input v-model="formbj.roleEnglishName"></el-input>
+          </el-form-item>
+          <el-form-item label="备注：" prop="universal">
+            <el-input v-model="formbj.universal"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button class="payNameBnt1" @click="resetFormbj('formbj')">取消</el-button>
@@ -133,23 +144,45 @@
         input1: '',
         tabHead: [
           {
-            label: '角色名称',
-            prop: 'roleName'
+            label: '角色ID',
+            prop: 'roleId'
           },
           {
+            label: '角色名称',
+            prop: 'roleName'
+          }, {
+            label: '英文标志',
+            prop: 'roleEnglishName'
+          }, {
+            label: '子账户组',
+            prop: 'roleType'
+          }, {
+            label: '是否启用',
+            prop: 'locked'
+          }, {
+            label: '备注',
+            prop: 'universal'
+          }, {
             label: '创建时间',
-            prop: 'createTime'
+            prop: 'addTime'
+          }, {
+            label: '修改时间',
+            prop: 'editTime'
           },
         ],
         dialogFormVisible:false,
         dialogFormVisiblebj:false,
         dialogFormVisiblesq:false,
         form:{
-          username:""
+          username:"",
+          roleEnglishName:"",
+          universal:''
         },
         formbj:{
           username:"",
-          roleId:''
+          roleId:'',
+          roleEnglishName:'',
+          universal:''
         },
         rules:{
           username:[
@@ -288,7 +321,6 @@
           pageNum:this.currentPage
         }
         listPeople(data).then(res => {
-          console.log(res)
           if(res.code==10000){
             this.peopleList = res.data
           }else {
@@ -305,7 +337,9 @@
           if (valid) {
             console.log(this.form.username)
             var data={
-              roleName:this.form.username
+              roleName:this.form.username,
+              universal:this.form.universal,
+              del :1
             }
             addPeople(data).then(res => {
               console.log(res)
@@ -334,6 +368,8 @@
         this.dialogFormVisiblebj=true;
         this.formbj.username = row.roleName;
         this.formbj.roleId = row.roleId;
+        this.formbj.universal = row.universal;
+        this.formbj.roleEnglishName = row.roleEnglishName;
       },
       resetFormbj(formName) {
         this.$refs[formName].resetFields();
@@ -345,6 +381,8 @@
             var data={
               roleName:this.formbj.username,
               roleId:this.formbj.roleId,
+              universal:this.formbj.universal,
+              roleEnglishName:this.formbj.roleEnglishName,
             }
             addPeople(data).then(res => {
               console.log(res)
@@ -378,8 +416,7 @@
       removeThis(index,row) {
         console.log(row)
         var data={
-          id:row.roleId,
-          flag:1
+          roleId:row.roleId
         }
 
         this.$confirm('您确定删除角色组对应的用户信息吗？', '提示', {

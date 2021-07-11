@@ -53,6 +53,14 @@ public class SysRoleInfoServiceImpl implements SysRoleInfoService {
     @Override
     public int insert(Integer loginUserId, SysRoleInfo sysRoleInfo) {
         sysRoleInfo.setAddUserId(loginUserId);
+        sysRoleInfo.setDel(1);
+        sysRoleInfo.setEditUserId(loginUserId);
+        sysRoleInfo.setEditTime(new Date());
+        sysRoleInfo.setAddTime(new Date());
+        if(sysRoleInfo.getRoleType() == null){
+            sysRoleInfo.setRoleType(1);
+        }
+        sysRoleInfo.setLocked(1);
         return sysRoleInfoMapper.insertSelective(sysRoleInfo);
     }
  
@@ -68,7 +76,7 @@ public class SysRoleInfoServiceImpl implements SysRoleInfoService {
 		SysRoleInfo sysRoleInfo = sysRoleInfoMapper.selectByPrimaryKey(roleId);
         sysRoleInfo.setEditUserId(loginUserId);
         sysRoleInfo.setEditTime(new Date());
-        sysRoleInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        sysRoleInfo.setDel(DataEnum.FLAG_STATUS_VALID.getCode());
         return sysRoleInfoMapper.updateByPrimaryKeySelective(sysRoleInfo);
     }
  
@@ -82,7 +90,12 @@ public class SysRoleInfoServiceImpl implements SysRoleInfoService {
     public int update(Integer loginUserId, SysRoleInfo sysRoleInfo){
 		SysRoleInfo s = sysRoleInfoMapper.selectByPrimaryKey(sysRoleInfo.getRoleId());
 		// FIXME 待完善
-        return sysRoleInfoMapper.updateByPrimaryKeySelective(s);
+        if(s != null){
+            s.setEditTime(new Date());
+            s.setEditUserId(loginUserId);
+            return sysRoleInfoMapper.updateByPrimaryKeySelective(sysRoleInfo);
+        }
+        return 0;
 	}
  
     /**
@@ -106,7 +119,7 @@ public class SysRoleInfoServiceImpl implements SysRoleInfoService {
     @Override
     public PageWrapper<SysRoleInfo> list(Integer loginUserId, SysRoleInfo sysRoleInfo) {
         PageHelper.startPage(sysRoleInfo.getPageNum(), sysRoleInfo.getPageSize());
-        sysRoleInfo.setDel(DataEnum.FLAG_STATUS_VALID.getCode());
+        sysRoleInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         PageInfo<SysRoleInfo> page = new PageInfo<>(sysRoleInfoMapper.select(sysRoleInfo));
         PageHelper.clearPage();
         return new PageWrapper<>(page);

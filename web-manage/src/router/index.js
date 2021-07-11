@@ -86,7 +86,7 @@ export const constantRoutes = [
         path: 'recharge',
         name: 'Recharge',
         component: () => import('@/views/recharge/index'),
-        meta: { title: '角色管理' }
+        meta: { title: '角色copy管理' }
       },
       {
         path: 'transaction',
@@ -236,19 +236,13 @@ export const constantRoutes = [
         name: 'role',
         noCache: true,
         component: () => import('@/views/role/index'),
+        meta: { title: '菜单管理' }
+      },
+      {
+        path: 'menu',
+        name: 'menus',
+        component: () => import('@/views/role/menu'),
         meta: { title: '角色管理' }
-      },
-      {
-        path: 'menu',
-        name: 'menus',
-        component: () => import('@/views/role/menu'),
-        meta: { title: '角色设置' }
-      },
-      {
-        path: 'menu',
-        name: 'menus',
-        component: () => import('@/views/role/menu'),
-        meta: { title: '角色设置' }
       },
       {
         path: 'bank',

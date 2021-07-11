@@ -2,7 +2,9 @@ package com.line.backstage.service;
 
 import com.line.backstage.entity.SysPower;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.Map;
+
 /**
  * 后台管理系统角色与菜单对应关系(SysPower)表服务实现类
  *
@@ -54,7 +56,8 @@ public interface SysPowerService {
      * @return 实例对象
      */
     SysPower queryById(Integer id);
- 
+
+    int saveForAuth(Integer loginUserId,Map<String,String> map);
     /**
      * 查询多条数据
      *
