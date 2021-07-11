@@ -64,6 +64,14 @@ export function queryHomeData(params) {
     params
   })
 }
+//统计提现金额
+export function sumMoneyForCash(params) {
+  return request({
+    url: '/sysDiy/sumMoneyForCash',
+    method: 'get',
+    params
+  })
+}
 //查询代理商下拉框
 export function queryOptData1() {
   return request({

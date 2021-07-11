@@ -3,6 +3,7 @@ package com.line.backstage.service;
 import com.line.backstage.entity.CashOutIn;
 import com.line.backstage.entity.sysentity.ManOptionVo;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,14 @@ public interface SysDiyService {
      * @return
      */
     Integer checkForCashOutIn(Integer loginUserId, CashOutIn cash);
+
+    /**
+     * 统计提现/充值金额
+     * @param loginUserId
+     * @param cashType
+     * @return
+     */
+    Double queryAllCashMoney(Integer loginUserId,Integer cashType);
 
     /**
      * 查询代理商下拉框

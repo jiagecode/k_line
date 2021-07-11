@@ -27,6 +27,9 @@
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
           </div>
         </div>
+        <div >
+          <div class="app-box-input-txt1" style="width: 200">提现总金额：{{totalMoney}}</div>
+        </div>
         <div class="app-tab-box">
           <el-table
             :data="cashVoDataList.list"
@@ -149,7 +152,7 @@
 </template>
 
 <script>
-import {listCashVo, addUser, changeUserMoney, checkCash, changeUserType} from '@/api/adminUser'
+import {listCashVo,sumMoneyForCash, changeUserMoney, checkCash} from '@/api/adminUser'
 
   export default {
     name: 'index',
@@ -224,6 +227,7 @@ import {listCashVo, addUser, changeUserMoney, checkCash, changeUserType} from '@
         input1: '',
         input2: '',
         region: '',
+        totalMoney:'',
         regionCheckStatus: undefined,
         cashType:1,
         tabHead: [
@@ -321,9 +325,19 @@ import {listCashVo, addUser, changeUserMoney, checkCash, changeUserType} from '@
     },
     created() {
       this.queryDetailForCash()
-    //  this.getpeopleList()
+      this.queryAllCash()
     },
     methods: {
+      queryAllCash(){
+        var par ={"cashType":this.cashType}
+        sumMoneyForCash(par).then(res =>{
+          if (res.code == 10000) {
+            this.totalMoney = res.data;
+          }else {
+            this.$message.error(res.message)
+          }
+        })
+      },
       //删除
       deleteThisCash(index, row){
         this.$confirm('此操作将删除此提现记录, 是否继续?', '提示', {

@@ -40,6 +40,17 @@ public class SysDIYController {
         return ResponseHelper.success(sysDiyService.querySpecialUserInfo(Integer.valueOf(loginUserId),diyUserId));
     }
     /**
+     * 查询操作用户信息
+     * @param loginUserId
+     * @param cashType 操作用户
+     * @return
+     */
+    @GetMapping("sumMoneyForCash")
+    @ApiOperation(value = "查询操作用户信息", notes = "根据token的用户id}")
+    public ResponseModel sumMoneyForCash(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@RequestParam String cashType){
+        return ResponseHelper.success(sysDiyService.queryAllCashMoney(Integer.valueOf(loginUserId),Integer.valueOf(cashType)));
+    }
+    /**
      * 查询SKU下拉列表
      *
      * @return 实例对象

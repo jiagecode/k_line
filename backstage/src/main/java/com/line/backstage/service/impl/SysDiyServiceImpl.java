@@ -290,6 +290,13 @@ public class SysDiyServiceImpl implements SysDiyService {
     }
 
     @Override
+    public Double queryAllCashMoney(Integer loginUserId, Integer cashType) {
+        Map<String ,Object> map = new HashMap<>();
+        map.put("cashType",cashType);
+        return cashOutInMapper.sumAllCash(map);
+    }
+
+    @Override
     public List<ManOptionVo> queryOptionsForAgent(Integer loginUserId) {
         return sysDiyInfoMapper.queryOptionsForAgent();
     }
