@@ -208,14 +208,15 @@
         console.log(row)
         this.sqroleId = row.roleId
         var data={
-          roleId:row.roleId
+          roleId:row.roleId,
+          del :1
         }
         getpeopleSq(data).then(res=>{
           console.log(res)
           if(res.code==10000){
             var _this = this;
             _this.dialogFormVisiblesq = true;
-            _this.roleSq = res.data.menuTreeData;
+            _this.roleSq = res.data.treeList;
             const checkedIds =  res.data.checkedIds;
             let menuIdArr = [];
             for (let j = 0; j < checkedIds.length; j++) {

@@ -27,7 +27,7 @@ export function removePeople(data) {
 //获取角色授权
 export function getpeopleSq(data) {
   return request({
-    url: '/role/authorize',
+    url: '/sysMenuInfo/queryList',
     method: 'post',
     data
   })
