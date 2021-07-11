@@ -54,7 +54,7 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
     @Override
     public int insert(Integer loginUserId, BankCardInfo bankCardInfo) {
         bankCardInfo.setAddUserId(loginUserId);
-        bankCardInfo.setUserId(loginUserId);
+        bankCardInfo.setAddDate(new Date());
         return bankCardInfoMapper.insertSelective(bankCardInfo);
     }
 
@@ -83,8 +83,13 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
     @Override
     public int update(Integer loginUserId, BankCardInfo bankCardInfo) {
         BankCardInfo b = bankCardInfoMapper.selectByPrimaryKey(bankCardInfo.getBankCardId());
-        // FIXME 待完善
-        return bankCardInfoMapper.updateByPrimaryKeySelective(b);
+        if(b!= null){
+            // FIXME 待完善
+            bankCardInfo.setEditUserId(loginUserId);
+            bankCardInfo.setEditDate(new Date());
+            return bankCardInfoMapper.updateByPrimaryKeySelective(bankCardInfo);
+        }
+        return 0;
     }
 
     /**

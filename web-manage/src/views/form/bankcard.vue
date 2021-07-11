@@ -4,6 +4,7 @@
       <div class="app-box-tab">
         <div class="app-box-title">银行卡管理</div>
         <div class="app-box-changeBox">
+          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia()">添加银行卡+</el-button>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt">用户：</div>
             <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
@@ -52,7 +53,6 @@
               <template slot-scope="scope">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2">禁用</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -75,18 +75,79 @@
 
 
         </div>
+        <!--编辑-->
+        <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false"
+                   :before-close="ai_dialog_close">
+            <span slot="title" class="dialog-footer">
+                <span>{{text}}</span>
+            </span>
+          <div class="payNameDiaBox">
+            <el-form ref="form" :model="form" label-width="130px" :rules="rules">
+              <el-form-item label="编号：" prop="bankCardId" v-show="bjShow" >
+                <el-input v-model="form.bankCardId" type="number" ></el-input>
+              </el-form-item>
+              <el-form-item label="用户编号：" prop="userId" >
+                <el-input v-model="form.userId" type="number"></el-input>
+              </el-form-item>
+              <el-form-item label="开户行：" prop="bankName">
+                <el-input v-model="form.bankName" ></el-input>
+              </el-form-item>
+              <el-form-item label="省份：" prop="province">
+                <el-input v-model.number="form.province"></el-input>
+              </el-form-item>
+              <el-form-item label="城市：" prop="city">
+                <el-input v-model.number="form.city"></el-input>
+              </el-form-item>
+              <el-form-item label="支行：" prop="subBranch">
+                <el-input v-model.number="form.subBranch"></el-input>
+              </el-form-item>
+              <el-form-item label="开户名：" prop="cardOwnerName">
+                <el-input v-model.number="form.cardOwnerName"></el-input>
+              </el-form-item>
+              <el-form-item label="卡号：" prop="cardNo">
+                <el-input v-model.number="form.cardNo" type="number"></el-input>
+              </el-form-item>
+              <el-form-item label="持卡人身份证号：" prop="cardOwnerNo">
+                <el-input v-model.number="form.cardOwnerNo" type="number"></el-input>
+              </el-form-item>
+              <el-form-item label="预留手机号：" prop="cardPhone">
+                <el-input v-model.number="form.cardPhone" type="number"></el-input>
+              </el-form-item>
+              <el-form-item label="卡状态：" prop="cardStatus">
+                <el-select v-model="form.cardStatus" placeholder="请选择卡状态">
+                  <el-option label="激活" value="0"></el-option>
+                  <el-option label="禁用" value="1"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="是否删除：" prop="cardStatus">
+                <el-select v-model="form.del" placeholder="请选择是否删除">
+                  <el-option label="是" value="0"></el-option>
+                  <el-option label="否" value="1"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="备注：">
+                <el-input v-model="form.remarks"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button class="payNameBnt1" @click="resetFormChange('form')">取消</el-button>
+                <el-button class="payNameBnt2" @click="submitForm('form')">确定</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { queryBankVoData} from '@/api/adminUser'
+import {queryBankVoData, editBankCard} from '@/api/adminUser'
 
   export default {
     name: 'bankcard',
     data() {
       return {
+        bjShow: false,
         dialogFormVisible: false,
         currentPage: 1,
         input2: '',
@@ -148,12 +209,110 @@
         cardDataList: '',
         //  修改金额
         dialogFormVisibleChange: false,
+        form: {
+          bankCardId: '',
+          userId: '',
+          bankName: '',
+          province: '',
+          city: '',
+          subBranch:  '',
+          cardOwnerName:  '',
+          remarks:  '',
+          cardNo: '',
+          cardOwnerNo:  '',
+          cardPhone: '',
+          cardStatus:  '',
+          del:  '',
+        },
       }
     },
     created() {
       this.queryBankDataList()
     },
     methods: {
+      openDia () {
+        this.bjShow = false
+        this.text = '新增银行卡'
+        this.dialogFormVisible = true
+        this.form = {
+          bankCardId: '',
+          userId: '',
+          bankName: '',
+          province: '',
+          city: '',
+          subBranch:  '',
+          cardOwnerName:  '',
+          remarks:  '',
+          cardNo: '',
+          cardOwnerNo:  '',
+          cardPhone: '',
+          cardStatus:  '',
+          del:  '',
+        }
+      },
+      //编辑
+      bjTab(index, row) {
+       // console.log(row)
+        this.bjShow = true
+        this.text = '银行卡管理'
+        this.dialogFormVisible = true
+        this.form = {
+          bankCardId:row.bankCardId,
+          userId: row.userId,
+          bankName: row.bankName,
+          province: row.province,
+          city: row.city,
+          subBranch: row.subBranch,
+          cardOwnerName: row.cardOwnerName,
+          remarks: row.remarks,
+          cardNo: row.cardNo,
+          cardOwnerNo: row.cardOwnerNo,
+          cardPhone: row.cardPhone,
+          cardStatus: row.cardStatus,
+          del: row.del,
+        }
+      },
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+           // console.log(this.form)
+            var data = {
+              bankCardId: this.form.bankCardId,
+              userId:  this.form.userId,
+              bankName:  this.form.bankName,
+              province:  this.form.province,
+              city:  this.form.city,
+              subBranch:   this.form.subBranch,
+              cardOwnerName: this.form.cardOwnerName,
+              remarks:  this.form.remarks,
+              cardNo: this.form.cardNo,
+              cardOwnerNo:  this.form.cardOwnerNo,
+              cardPhone: this.form.cardPhone,
+              cardStatus:  this.form.cardStatus,
+              del:  this.form.del,
+            }
+            editBankCard(data).then(res => {
+              //console.log(res)
+              if (res.code == 10000) {
+                this.queryBankDataList()
+                this.$message.success(res.message)
+                this.$refs[formName].resetFields()
+                this.dialogFormVisible = false
+              } else {
+                this.$message.error(res.message)
+              }
+
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      resetFormChange () {
+        this.dialogFormVisible= false
+        this.$refs[`form`].resetFields()
+      },
       //查询
       seeOther() {
         this.currentPage = 1
@@ -207,8 +366,7 @@
       removeThis() {
 
       },
-      //编辑
-      bjTab(index, row) {},
+
       //分页事件
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`)

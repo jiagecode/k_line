@@ -141,5 +141,13 @@ export function checkCash(data) {
     data:data
   })
 }
+//银行卡管理
+export function editBankCard(data) {
+  return request({
+    url: '/sysDiy/editBankCard',
+    method: 'post',
+    data:data
+  })
+}
 
 

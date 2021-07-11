@@ -1,7 +1,9 @@
 package com.line.backstage.controller;
 
 import com.line.backstage.annotation.LoginUserId;
+import com.line.backstage.entity.BankCardInfo;
 import com.line.backstage.entity.CashOutIn;
+import com.line.backstage.service.BankCardInfoService;
 import com.line.backstage.service.SysDiyService;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
@@ -24,6 +26,8 @@ public class SysDIYController {
     @Resource
     private SysDiyService sysDiyService;
 
+    @Resource
+    private BankCardInfoService bankCardInfoService;
     /**
      * 查询操作用户信息
      * @param loginUserId
@@ -84,6 +88,12 @@ public class SysDIYController {
     @ApiOperation(value = "审核、删除提现/充值", notes = "修改资金")
     public ResponseModel checkForCash(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody CashOutIn cash){
         return ResponseHelper.success(sysDiyService.checkForCashOutIn(Integer.valueOf(loginUserId),cash));
+    }
+
+    @PostMapping("editBankCard")
+    @ApiOperation(value = "银行卡管理", notes = "修改资金")
+    public ResponseModel editBankCard(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody BankCardInfo bankCardInfo){
+        return ResponseHelper.success(bankCardInfoService.save(Integer.valueOf(loginUserId),bankCardInfo));
     }
 
 }
