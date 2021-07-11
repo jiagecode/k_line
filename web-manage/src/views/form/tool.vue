@@ -702,6 +702,12 @@ export default {
 </script>
 
 <style scoped>
+  #eerchant {
+    opacity: 1;
+    margin: 0 auto;
+    margin-top: 30px;
+  }
+
   .app-box-tab {
     width: 95%;
     height: 100%;
