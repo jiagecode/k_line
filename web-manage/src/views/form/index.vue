@@ -89,6 +89,9 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="changeMoney(scope.$index, scope.row)">资金管理
                 </el-button>
+                <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                           @click="changeWinRate(scope.$index, scope.row)">调整胜率
+                </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
                            @click="signUpForUser(scope.$index, scope.row)">签约
                 </el-button>
@@ -165,7 +168,6 @@
     </el-dialog>
 
     <!--修改金额-->
-
     <el-dialog :visible.sync="dialogFormVisibleChange" :close-on-click-modal="false"
                :before-close="ai_dialog_closeChange">
             <span slot="title" class="dialog-footer">
@@ -200,7 +202,39 @@
         </el-form>
       </div>
     </el-dialog>
-
+    <!--修改胜率-->
+    <el-dialog :visible.sync="dialogFormVisibleWin" :close-on-click-modal="false"
+               :before-close="ai_dialog_closeChange">
+            <span slot="title" class="dialog-footer">
+                <span>调整胜率</span>
+            </span>
+      <div class="payNameDiaBox">
+        <el-form ref="changeForm" :model="winForm" label-width="130px" :rules="rules">
+          <el-form-item label="用户编号：" prop="userId">
+            <el-input v-model="winForm.userId" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户姓名：" prop="userRealName" v-if="!bjShow">
+            <el-input v-model="winForm.userRealName"  disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户昵称：" prop="userNickName">
+            <el-input v-model="winForm.userNickName"  disabled></el-input>
+          </el-form-item>
+          <el-form-item label="当前胜率(%)：" prop="moeny">
+            <el-input v-model="winForm.beforeWin" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="胜率调为(%)：" prop="winRate">
+            <el-input-number v-model="winForm.winRate" type="number" :max="100" :min="0" ></el-input-number>
+          </el-form-item>
+          <el-form-item label="调整备注：" prop="remarks">
+            <el-input v-model="winForm.remarks"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="payNameBnt1" @click="resetFormChange('changeForm')">取消</el-button>
+            <el-button class="payNameBnt2" @click="submitForm('changeForm')">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -213,6 +247,7 @@ export default {
         return {
             bjShow: false,
             dialogFormVisible: false,
+          dialogFormVisibleWin: false,
             currentPage: 1,
             input1: '',
             input2: '',
@@ -257,6 +292,10 @@ export default {
                 {
                     label: '佣金',
                     prop: 'commissionRate'
+                },
+              {
+                    label: '胜率(%)',
+                    prop: 'winRate'
                 },
                 {
                     label: '归属代理商',
@@ -316,6 +355,14 @@ export default {
             userInfoVoList: '',
             //  修改金额
             dialogFormVisibleChange: false,
+            winForm:{
+              userId:'',
+              winRate:'',
+              remarks:'',
+              userRealName: '',
+              userNickName: '',
+              beforeWin: '',
+            },
             changeForm: {
                 userId:'',
                 moeny: '',
@@ -380,6 +427,16 @@ export default {
         }
         this.changeForm.afterMoney = this.changeForm.beforeMoney - m;
       },
+      //调整胜率
+      changeWinRate(index, row){
+        this.winForm.userId = row.userId,
+          this.winForm.remarks = row.remarks,
+          this.winForm.beforeWin = row.winRate,
+          this.winForm.winRate = row.winRate,
+          this.winForm.userRealName = row.userRealName,
+          this.winForm.userNickName = row.userNickName,
+          this.dialogFormVisibleWin = true;
+      },
         //修改余额
         changeMoney (index, row) {
             this.dialogFormVisibleChange = true
@@ -414,9 +471,11 @@ export default {
                 }
             })
         },
-        resetFormChange () {
+        resetFormChange (formName) {
+            this.dialogFormVisibleWin = false;
             this.dialogFormVisibleChange = false
             this.$refs[`changeForm`].resetFields()
+            this.$refs[`winForm`].resetFields()
         },
         ai_dialog_closeChange () {
             this.dialogFormVisibleChange = false
@@ -585,19 +644,27 @@ export default {
                         this.$message.error('两次密码不一致')
                         return false
                     }
-                    console.log(this.form)
-                    var data = {
-                        userId:this.form.userId,
-                        userNickName: this.form.userNickName,
-                        userRealName: this.form.userRealName,
-                        userPhone: this.form.userPhone,
-                        userPassword: this.form.userPassword1,
-                        userType: this.form.userType,
+                   // console.log(this.form)
+                  var data;
+                  if(formName === "form"){
+                    data = {
+                      userId:this.form.userId,
+                      userNickName: this.form.userNickName,
+                      userRealName: this.form.userRealName,
+                      userPhone: this.form.userPhone,
+                      userPassword: this.form.userPassword1,
+                      userType: this.form.userType,
                       commissionRate: this.form.commission,
                       bonusRate: this.form.bonus,
                       remarks: this.form.txt,
                       agentId:this.form.userAgentId
                     }
+                  }else {
+                    data = {
+                      userId:this.winForm.userId,
+                      winRate: this.winForm.winRate,
+                    }
+                  }
                     addUser(data).then(res => {
                         console.log(res)
                         if (res.code == 10000) {

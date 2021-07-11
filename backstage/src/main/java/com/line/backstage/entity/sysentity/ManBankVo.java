@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author DWanBean
+ * @Author
  * @Date 2021/7/5 9:50
  * @Version 1.0
  * @Desc 后台管理系统-银行卡对象

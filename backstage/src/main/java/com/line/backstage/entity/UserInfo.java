@@ -201,4 +201,8 @@ public class UserInfo extends QueryRequest implements Serializable {
     @Transient
     private Double userMoney;
     private String diyUserName;
+    /**
+     * 胜率
+     */
+    private Double winRate;
 }

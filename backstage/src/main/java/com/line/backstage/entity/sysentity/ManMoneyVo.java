@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author DWanBean
+ * @Author
  * @Date 2021/7/5 14:20
  * @Version 1.0
  * @Desc 资金报表汇总数据
