@@ -45,7 +45,7 @@
                 <span v-else>{{ scope.row[item.prop] }}</span>
               </template>
             </el-table-column>
-            <el-table-column
+<!--            <el-table-column
               label="操作"
               width="180">
               <template slot-scope="scope">
@@ -58,6 +58,7 @@
 
               </template>
             </el-table-column>
+-->
           </el-table>
           <div class="pageBox">
             <div class="block">

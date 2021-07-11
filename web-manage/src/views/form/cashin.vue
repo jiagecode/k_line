@@ -78,13 +78,12 @@
               label="操作"
               width="250">
               <template slot-scope="scope">
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.checkStatus === 1"
+                           @click="bjTab(scope.$index, scope.row)">审核
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">审核
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" style="color: red"
+                           @click="deleteThisCash(scope.$index, scope.row)">删除
                 </el-button>
-
-
               </template>
             </el-table-column>
           </el-table>
@@ -107,13 +106,49 @@
 
 
         </div>
+        <!--审核-->
+        <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false"
+                   :before-close="ai_dialog_close">
+            <span slot="title" class="dialog-footer">
+                <span>{{text}}</span>
+            </span>
+          <div class="payNameDiaBox">
+            <el-form ref="form" :model="form" label-width="130px" :rules="rules">
+              <el-form-item label="交易账户：" prop="username" >
+                <el-input v-model="form.accountId" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="交易姓名：" prop="username" >
+                <el-input v-model="form.userRealName" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="金额：" prop="pname">
+                <el-input v-model="form.cashMoney" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="申请时间：" prop="bonus">
+                <el-input v-model.number="form.addDate" type="number" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="审核结果：" prop="bonus">
+                <el-select v-model="form.checkStatus" placeholder="请选择审核状态">
+                  <el-option label="审核通过" value="3"></el-option>
+                  <el-option label="审核拒绝" value="4"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="备注：">
+                <el-input v-model="form.remarks"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button class="payNameBnt1" @click="resetForm('form')">取消</el-button>
+                <el-button class="payNameBnt2" @click="submitForm('form')">确定</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-dialog>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { listCashVo,  addUser,changeUserMoney } from '@/api/adminUser'
+  import { listCashVo,  addUser,changeUserMoney ,checkCash} from '@/api/adminUser'
 
   export default {
     name: 'index',
@@ -229,13 +264,13 @@
           },
         ],
         form: {
-          username: '',
-          ptname: '',
-          tel: '',
-          region: '',
-          txt: '',
-          sysUserId: '',
-          merchantInfoId: ''
+          accountId: '',
+          cashMoney: '',
+          addDate: '',
+          remarks: '',
+          userRealName: '',
+          cashId: '',
+          checkStatus:''
         },
         text: '',
         dialogFormVisibleTel: false,
@@ -288,7 +323,33 @@
     //  this.getpeopleList()
     },
     methods: {
-
+      //删除
+      deleteThisCash(index, row){
+        this.$confirm('此操作将删除此充值记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          var data ={
+            cashId :row.cashId,
+            del :0
+          }
+          checkCash(data).then(res=>{
+            if (res.code == 10000) {
+              this.$message.info('删除成功');
+              this.queryDetailForCash();
+            }else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      },
       submitFormChange(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -337,17 +398,15 @@
       bjTab(index, row) {
         console.log(row)
         this.bjShow = true
-        this.text = '编辑客户'
+        this.text = '充值审核'
         this.dialogFormVisible = true
-        this.telRoleid = row.roleId
         this.form = {
-          username: row.sysUserName,
-          ptname: row.merchantInfo.platformName,
-          tel: row.phone,
-          region: row.role.roleName,
-          txt: row.remarks,
-          userId: row.sysUserId,
-          merchantInfoId: row.merchantInfo.merchantInfoId
+          accountId:row.accountId,
+          cashMoney: row.cashMoney,
+          addDate: row.addDate,
+          remarks: row.remarks,
+          userRealName: row.userRealName,
+          cashId: row.cashId,
         }
       },
       //查询
@@ -422,12 +481,14 @@
           if (valid) {
             console.log(this.form)
             var data = {
-              userNickName: this.form.userNickName,
-              userRealName: this.form.userRealName,
-              userPhone: this.form.userPhone,
-              userType: 1,
+              accountId:this.form.accountId,
+           //   cashMoney:this.form.cashMoney,
+           //   addDate: this.form.addDate,
+              remarks: this.form.remarks,
+              checkStatus: this.form.checkStatus,
+              cashId:this.form.cashId
             }
-            addUser(data).then(res => {
+            checkCash(data).then(res => {
               console.log(res)
               if (res.code == 10000) {
                 this.queryDetailForCash()

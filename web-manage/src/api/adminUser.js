@@ -133,4 +133,13 @@ export function changeUserMoney(data) {
   })
 }
 
+//审核提现、充值
+export function checkCash(data) {
+  return request({
+    url: '/sysDiy/checkForCash',
+    method: 'post',
+    data:data
+  })
+}
+
 

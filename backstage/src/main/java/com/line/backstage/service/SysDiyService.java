@@ -1,5 +1,6 @@
 package com.line.backstage.service;
 
+import com.line.backstage.entity.CashOutIn;
 import com.line.backstage.entity.sysentity.ManOptionVo;
 
 import java.util.List;
@@ -58,6 +59,14 @@ public interface SysDiyService {
      * @return
      */
     Integer editUserMoney(Integer loginUserId,Map<String,Object> map);
+
+    /**
+     * 提现审核
+     * @param loginUserId
+     * @param cash
+     * @return
+     */
+    Integer checkForCashOutIn(Integer loginUserId, CashOutIn cash);
 
     /**
      * 查询代理商下拉框

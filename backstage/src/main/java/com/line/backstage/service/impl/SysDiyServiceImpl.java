@@ -271,6 +271,25 @@ public class SysDiyServiceImpl implements SysDiyService {
     }
 
     @Override
+    public Integer checkForCashOutIn(Integer loginUserId, CashOutIn cash) {
+        CashOutIn outIn = cashOutInMapper.selectByPrimaryKey(cash);
+        Date date = new Date();
+        if(outIn !=null ){
+            if(cash.getDel() != null){
+                outIn.setDel(cash.getDel());
+            }else {
+                outIn.setCheckStatus(cash.getCheckStatus());
+                outIn.setCheckDate(date);
+                outIn.setRemarks(cash.getRemarks());
+            }
+            outIn.setEditUserId(loginUserId);
+            outIn.setEditDate(date);
+            return cashOutInMapper.updateByPrimaryKey(outIn);
+        }
+        return 0;
+    }
+
+    @Override
     public List<ManOptionVo> queryOptionsForAgent(Integer loginUserId) {
         return sysDiyInfoMapper.queryOptionsForAgent();
     }
