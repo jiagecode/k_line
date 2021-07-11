@@ -67,27 +67,24 @@
                 <span v-else>{{ scope.row[item.prop] }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="操作"
-              width="180">
-              <template slot-scope="scope">
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.topUpStatus==0"
-                           @click="sucBtn(scope.$index, scope.row)">完成
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.topUpStatus==0"
-                           @click="cancelBtn(scope.$index, scope.row)">取消
-                </el-button>
+            <!--   <el-table-column
+                 label="操作"
+                 width="180">
+                 <template slot-scope="scope">
+                   <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.topUpStatus==0"
+                              @click="sucBtn(scope.$index, scope.row)">完成
+                   </el-button>
+                   <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.topUpStatus==0"
+                              @click="cancelBtn(scope.$index, scope.row)">取消
+                   </el-button>
 
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.topUpStatus!=0" disabled>完成
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.topUpStatus!=0" disabled>取消
-                </el-button>
-                <!--                <el-button type="primary" class="app-tab-btn app-tab-btn3" @click="removeThis(scope.$index, scope.row)">-->
-                <!--                  删除-->
-                <!--                </el-button>-->
-
-              </template>
-            </el-table-column>
+                   <el-button type="primary" class="app-tab-btn app-tab-btn2" v-if="scope.row.topUpStatus!=0" disabled>完成
+                   </el-button>
+                   <el-button type="primary" class="app-tab-btn app-tab-btn3" v-if="scope.row.topUpStatus!=0" disabled>取消
+                   </el-button>
+                 </template>
+               </el-table-column>
+               -->
           </el-table>
           <div class="pageBox">
             <div class="block">

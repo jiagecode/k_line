@@ -51,6 +51,17 @@ public class SysDIYController {
         return ResponseHelper.success(sysDiyService.queryAllCashMoney(Integer.valueOf(loginUserId),Integer.valueOf(cashType)));
     }
     /**
+     * 查询订单详情
+     * @param loginUserId
+     * @param orderId 订单号
+     * @return
+     */
+    @GetMapping("orderDetail")
+    @ApiOperation(value = "查询订单详情", notes = "根据token的用户id}")
+    public ResponseModel orderDetail(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@RequestParam String orderId){
+        return ResponseHelper.success(sysDiyService.queryDetailForOrder(Integer.valueOf(loginUserId),Integer.valueOf(orderId)));
+    }
+    /**
      * 查询SKU下拉列表
      *
      * @return 实例对象

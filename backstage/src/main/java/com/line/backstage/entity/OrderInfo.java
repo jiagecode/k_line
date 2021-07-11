@@ -153,4 +153,16 @@ public class OrderInfo extends QueryRequest implements Serializable {
     private Double subMoney;
     private Double resultMoney;
     private String skuName;
+    /**
+     * 交易姓名
+     */
+    @Transient
+    private String userRealName;
+    @Transient
+    private String orderStatusDesc;
+    /**
+     * 用户账户余额
+     */
+    @Transient
+    private Double userMoney;
 }

@@ -72,6 +72,14 @@ export function sumMoneyForCash(params) {
     params
   })
 }
+//查看订单详情
+export function orderDetail(params) {
+  return request({
+    url: '/sysDiy/orderDetail',
+    method: 'get',
+    params
+  })
+}
 //查询代理商下拉框
 export function queryOptData1() {
   return request({

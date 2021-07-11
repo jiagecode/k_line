@@ -13,16 +13,7 @@ import java.util.Date;
  */
 @Data
 public class ManOrderVo extends OrderInfo {
-    /**
-     * 交易姓名
-     */
-    private String userRealName;
-
     private String agentName;
-    /**
-     * 用户账户余额
-     */
-    private Double userMoney;
     private Double todayMoney;
     private Double allMoney;
     private Double afterMoney;

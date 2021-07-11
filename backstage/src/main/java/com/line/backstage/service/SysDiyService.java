@@ -1,6 +1,7 @@
 package com.line.backstage.service;
 
 import com.line.backstage.entity.CashOutIn;
+import com.line.backstage.entity.OrderInfo;
 import com.line.backstage.entity.sysentity.ManOptionVo;
 
 import java.math.BigDecimal;
@@ -83,4 +84,6 @@ public interface SysDiyService {
      * @return
      */
     List<ManOptionVo> queryOptionsForAgent(Integer loginUserId);
+
+    OrderInfo queryDetailForOrder(Integer loginUserId,Integer orderId);
 }

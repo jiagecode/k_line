@@ -301,6 +301,16 @@ public class SysDiyServiceImpl implements SysDiyService {
         return sysDiyInfoMapper.queryOptionsForAgent();
     }
 
+    @Override
+    public OrderInfo queryDetailForOrder(Integer loginUserId,Integer orderId) {
+
+        OrderInfo o = orderInfoMapper.queryOneById(orderId);
+        if(o!= null){
+            o.setOrderStatusDesc(o.getOrderStatus() == 1?"持仓":"平仓");
+        }
+        return  o;
+    }
+
     private List<OrderInfo> queryOrders(Integer userId,Integer diyId){
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId(userId);
