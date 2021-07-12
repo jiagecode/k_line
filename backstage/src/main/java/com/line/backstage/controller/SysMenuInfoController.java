@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 后台管理系统菜单表(SysMenuInfo)表控制层
  *
- * @author Zy
- * @since 2021-07-01 11:35:35
+ * @author jack
+ * @since 2000-07-01 11:35:35
  */
 @Api(tags = "后台管理系统菜单表(SysMenuInfo)") 
 @RestController

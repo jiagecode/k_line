@@ -17,8 +17,8 @@ import java.util.List;
 /**
  * 自选商品信息表(SkuCusInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-02 18:09:07
+ * @author jack
+ * @since 2000-07-02 18:09:07
  */
 @Service("skuCusInfoService")
 public class SkuCusInfoServiceImpl implements SkuCusInfoService {

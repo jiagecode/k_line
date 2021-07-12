@@ -6,8 +6,8 @@ import com.line.backstage.utils.PageWrapper;
 /**
  * 后台管理系统充值路径配置表(SysRechageConfig)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:35:55
+ * @author jack
+ * @since 2000-07-01 11:35:55
  */
 public interface SysRechageConfigService {
  

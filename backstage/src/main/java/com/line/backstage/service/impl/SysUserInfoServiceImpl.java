@@ -28,8 +28,8 @@ import java.util.*;
 /**
  * 后台管理系统用户表(SysUserInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:36:19
+ * @author jack
+ * @since 2000-07-01 11:36:19
  */
 @Slf4j
 @Service("sysUserInfoService")

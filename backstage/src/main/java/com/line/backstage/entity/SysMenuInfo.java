@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * 菜单表(SysMenuInfo)实体类
  *
- * @author Zy
- * @since 2021-07-03 10:18:13
+ * @author jack
+ * @since 2000-07-03 10:18:13
  */
 @Data
 @Table(name = "t_sys_menu_info")

@@ -13,8 +13,8 @@ import javax.persistence.*;
 /**
  * 用户账户(AccountInfo)实体类
  *
- * @author Zy
- * @since 2021-07-01 11:34:17
+ * @author jack
+ * @since 2000-07-01 11:34:17
  */
 @Data
 @Table(name = "t_account_info")

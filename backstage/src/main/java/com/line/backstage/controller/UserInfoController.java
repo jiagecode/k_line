@@ -21,8 +21,8 @@ import java.util.Objects;
 /**
  * 用户信息(UserInfo)表控制层
  *
- * @author Zy
- * @since 2021-06-24 10:29:24
+ * @author jack
+ * @since 2000-06-24 10:29:24
  */
 @Api(tags = "用户信息(UserInfo)") 
 @RestController

@@ -4,8 +4,9 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 
 /**
- * shiro MD5盐值加密
- * @author scxfsc
+ * shiro
+ * MD5盐值加密
+ * @author jack
  */
 public class PasswordHelper {
 
@@ -13,7 +14,8 @@ public class PasswordHelper {
     private static final int hashIterations = 1024;
 
     /**
-     * 密码加密
+     * 密码
+     * 加密
      *
      * @param account
      * @param password

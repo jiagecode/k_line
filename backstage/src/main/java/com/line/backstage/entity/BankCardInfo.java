@@ -14,8 +14,8 @@ import javax.persistence.GenerationType;
 /**
  * 银行卡信息(BankCardInfo)实体类
  *
- * @author Zy
- * @since 2021-06-24 10:49:55
+ * @author jack
+ * @since 2000-06-24 10:49:55
  */
 @Data
 @Table(name = "t_bank_card_info")

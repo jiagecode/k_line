@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @author scxfsc
+ * @author jack
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

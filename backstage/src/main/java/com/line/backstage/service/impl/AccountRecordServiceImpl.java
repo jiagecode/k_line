@@ -16,8 +16,8 @@ import java.util.Date;
 /**
  * 用户资金账户变动记录(AccountRecord)表服务实现类
  *
- * @author Zy
- * @since 2021-06-29 14:46:07
+ * @author jack
+ * @since 2000-06-29 14:46:07
  */
 @Service("accountRecordService")
 public class AccountRecordServiceImpl implements AccountRecordService {

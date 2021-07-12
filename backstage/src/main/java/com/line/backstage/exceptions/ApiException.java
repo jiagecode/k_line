@@ -5,7 +5,7 @@ import lombok.Getter;
 
 /**
  * 针对继承的异常封装响应码和响应信息
- * @author BaoBao
+ * @author mmd
  */
 @Getter
 public class ApiException extends RuntimeException{
@@ -16,7 +16,8 @@ public class ApiException extends RuntimeException{
     public String msg;
 
     /**
-     * 指定响应码和其它响应信息
+     * 指定响应码和
+     * 其它响应信息
      * @param msg
      */
     public ApiException(String msg){
@@ -25,7 +26,8 @@ public class ApiException extends RuntimeException{
     }
 
     /**
-     * 其它响应码和响应信息
+     * 其它响应码
+     * 和响应信息
      * @param code
      * @param msg
      */

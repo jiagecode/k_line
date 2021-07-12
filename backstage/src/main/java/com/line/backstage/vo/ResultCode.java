@@ -3,7 +3,7 @@ package com.line.backstage.vo;
 import lombok.Getter;
 
 /**
- * @author BaoBao
+ * @author mmd
  */
 @Getter
 public enum ResultCode {

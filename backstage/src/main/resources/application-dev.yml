@@ -1,21 +1,17 @@
-#项目参数配置
 server:
   port: 1686
   tomcat:
     max-http-form-post-size: 8192
-    uri-encoding: utf-8 #编码格式
+    uri-encoding: utf-8
   servlet:
-    context-path: /study    #设置项目名  SpringBoot版本2.X的设置方式
+    context-path: /study
     session:
-      timeout: 30m  #session生命周期
+      timeout: 30m
 
-#框架参数配置
 spring:
-  #mysql数据库相关配置      时区问题，serverTimezone=UTC，将这个UTC改成serverTimezone=CTT即可，CTT（Asia&Shanghai）北京时间。UTC：世界统一时间，世界标准时间，国际协调时间
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true?tinyInt1isBit=false
-    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://192.168.1.9:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
     password: 123456
     max-idle: 10
@@ -23,7 +19,6 @@ spring:
     min-idle: 5
     initial-size: 5
 
-  #统一处理json时间返回问题  实体对象 属性注解方式：@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

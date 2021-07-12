@@ -6,8 +6,8 @@ import com.line.backstage.utils.PageWrapper;
 /**
  * 用户资金账户变动记录(AccountRecord)表服务实现类
  *
- * @author Zy
- * @since 2021-06-29 14:46:07
+ * @author jack
+ * @since 2000-06-29 14:46:07
  */
 public interface AccountRecordService {
  

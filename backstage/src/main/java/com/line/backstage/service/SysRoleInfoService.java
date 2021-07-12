@@ -6,8 +6,8 @@ import com.line.backstage.utils.PageWrapper;
 /**
  * 后台管理系统角色表(SysRoleInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:36:06
+ * @author jack
+ * @since 2000-07-01 11:36:06
  */
 public interface SysRoleInfoService {
  

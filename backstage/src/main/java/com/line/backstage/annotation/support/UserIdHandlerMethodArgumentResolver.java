@@ -10,24 +10,17 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * userId注解
+ * 注解
  * @author pc
- * 接口说明：
- * supportsParameter：用于判定是否需要处理该参数分解，返回true为需要，并会去调用下面的方法resolveArgument。
- * resolveArgument：真正用于处理参数分解的方法，返回的Object就是controller方法上的形参对象。
  */
 public class UserIdHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    /**
-     * 获取header中的key
-     */
     public static final String LOGIN_TOKEN_KEY = "Authorization";
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
 
         Class<?> class1 = methodParameter.getParameterType();
-        // class1.isAssignableFrom(Class<?>2) 判定此 Class1 对象所表示的类或接口与指定的 Class<?>2 参数所表示的类或接口是否相同，或是否是其超类或超接口。如果是则返回 true；否则返回 false。
         return methodParameter.hasParameterAnnotation(LoginUserId.class) && class1.isAssignableFrom(String.class);
     }
 

@@ -15,8 +15,8 @@ import java.util.Date;
 /**
  * 后台管理系统用户表(SysUserInfo)实体类
  *
- * @author Zy
- * @since 2021-07-02 10:16:06
+ * @author jack
+ * @since 2000-07-02 10:16:06
  */
 @Data
 @Table(name = "t_sys_user_info")

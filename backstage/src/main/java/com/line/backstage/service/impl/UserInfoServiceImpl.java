@@ -28,8 +28,8 @@ import java.util.Set;
 /**
  * 用户信息(UserInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-06-24 10:48:03
+ * @author jack
+ * @since 2000-06-24 10:48:03
  */
 @Slf4j
 @Service("userInfoService")

@@ -18,7 +18,7 @@ import java.util.Random;
 
 /**
  * websocket连接后端服务
- * @author scxfsc
+ * @author jack
  */
 @Slf4j
 @Component

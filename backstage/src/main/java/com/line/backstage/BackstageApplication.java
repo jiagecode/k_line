@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author scxfsc
+ * @author jack
  */
 @SpringBootApplication
 @MapperScan("com.line.backstage.dao.mapper")

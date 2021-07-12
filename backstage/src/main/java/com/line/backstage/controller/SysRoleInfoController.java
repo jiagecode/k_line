@@ -18,8 +18,8 @@ import java.util.Map;
 /**
  * 后台管理系统角色表(SysRoleInfo)表控制层
  *
- * @author Zy
- * @since 2021-07-01 11:36:06
+ * @author jack
+ * @since 2000-07-01 11:36:06
  */
 @Api(tags = "后台管理系统角色表(SysRoleInfo)") 
 @RestController

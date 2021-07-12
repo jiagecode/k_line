@@ -15,8 +15,8 @@ import java.util.Map;
 /**
  * 角色菜单表  (SysPower)表服务实现类
  *
- * @author Zy
- * @since 2021-07-03 10:24:46
+ * @author jack
+ * @since 2000-07-03 10:24:46
  */
 @Service("sysPowerService")
 public class SysPowerServiceImpl implements SysPowerService {

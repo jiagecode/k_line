@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 订单信息(OrderInfo)表控制层
  *
- * @author Zy
- * @since 2021-06-29 14:53:19
+ * @author jack
+ * @since 2000-06-29 14:53:19
  */
 @Api(tags = "订单信息(OrderInfo)") 
 @RestController

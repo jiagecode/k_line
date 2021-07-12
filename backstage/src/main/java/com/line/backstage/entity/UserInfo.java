@@ -11,8 +11,8 @@ import java.util.Date;
 /**
  * 用户信息(UserInfo)实体类
  *
- * @author Zy
- * @since 2021-07-01 18:51:52
+ * @author jack
+ * @since 2000-07-01 18:51:52
  */
 @Data
 @Table(name = "t_user_info")

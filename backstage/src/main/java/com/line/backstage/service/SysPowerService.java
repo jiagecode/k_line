@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * 后台管理系统角色与菜单对应关系(SysPower)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:35:45
+ * @author jack
+ * @since 2000-07-01 11:35:45
  */
 public interface SysPowerService {
  

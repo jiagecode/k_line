@@ -15,8 +15,8 @@ import java.util.Date;
 /**
  * 自选商品信息表(SkuCusInfo)实体类
  *
- * @author Zy
- * @since 2021-07-02 18:09:07
+ * @author jack
+ * @since 2000-07-02 18:09:07
  */
 @Data
 @Table(name = "t_sku_cus_info")

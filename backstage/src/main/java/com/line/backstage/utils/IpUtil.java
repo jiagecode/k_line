@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * 获取请求端的IP
+ * IP
  * @author pc
  */
 public class IpUtil {

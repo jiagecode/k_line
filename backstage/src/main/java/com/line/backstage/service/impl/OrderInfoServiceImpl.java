@@ -24,8 +24,8 @@ import java.util.Date;
 /**
  * 订单信息(OrderInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-06-29 14:53:18
+ * @author jack
+ * @since 2000-06-29 14:53:18
  */
 @Service("orderInfoService")
 public class OrderInfoServiceImpl implements OrderInfoService {

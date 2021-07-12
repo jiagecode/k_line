@@ -4,7 +4,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 
 /**
  * 自定义token
- * @author scxfsc
+ * @author jack
  */
 public class JwtToken implements AuthenticationToken {
 

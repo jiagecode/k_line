@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 商品信息表(SkuInfo)表控制层
  *
- * @author Zy
- * @since 2021-07-01 11:35:00
+ * @author jack
+ * @since 2000-07-01 11:35:00
  */
 @Api(tags = "商品信息表(SkuInfo)") 
 @RestController

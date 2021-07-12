@@ -14,8 +14,8 @@ import javax.persistence.GenerationType;
 /**
  * 商品信息表(SkuInfo)实体类
  *
- * @author Zy
- * @since 2021-07-01 11:35:00
+ * @author jack
+ * @since 2000-07-01 11:35:00
  */
 @Data
 @Table(name = "t_sku_info")

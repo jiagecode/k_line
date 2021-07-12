@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author scxfsc
+ * @author jack
  */
 @Component
 public class SystemRealm extends AuthorizingRealm {

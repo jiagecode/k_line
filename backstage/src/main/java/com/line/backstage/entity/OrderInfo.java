@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * 订单信息(OrderInfo)实体类
  *
- * @author Zy
- * @since 2021-06-29 14:53:16
+ * @author jack
+ * @since 2000-06-29 14:53:16
  */
 @Data
 @Table(name = "t_order_info")
