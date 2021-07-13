@@ -4,20 +4,20 @@
       <div class="app-box-tab">
         <div class="app-box-title">客户列表</div>
         <div class="app-box-changeBox">
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(1)">所有用户</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(2)">所有客户</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(3)">所有代理商</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(4)">今日客户</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(5)">今日代理商</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(1)">添加客户+</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(2)">添加代理+</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(1)">所有用户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(2)">所有客户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(3)">所有代理商</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(4)">今日客户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(5)">今日代理商</el-button>
+          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(1)">添加客户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(2)">添加代理</el-button>
 
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">用户ID：</div>
-            <el-input placeholder="请输入商户ID" v-model="input1"></el-input>
+            <div class="app-box-input-txt" style="width: 55px;">用户ID：</div>
+            <div style="width: 150px;"><el-input placeholder="请输入用户ID" v-model="input1"></el-input></div>
           </div>
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">用户：</div>
+            <div class="app-box-input-txt" style="width: 40px;">用户：</div>
             <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
           </div>
           <div class="app-btn-box">
@@ -34,6 +34,7 @@
                   style="width: 100%">
             <el-table-column
                     v-for="(item,index) in tabHead"
+                    :min-width="columnWidth(item.prop)"
                     :key="index"
                     :prop="item.prop"
                     :label="item.label">
@@ -48,10 +49,10 @@
                 <span v-else-if="item.prop==='userRealName'">
                              {{scope.row.userRealName}}
                             </span>
-                <span v-else-if="item.prop==='userRegisterDate'" style="width:150px; ">
+                <span v-else-if="item.prop==='userRegisterDate'">
                              {{scope.row.userRegisterDate}}
                             </span>
-                <span v-else-if="item.prop==='lastLoginDate'" style="width: 150px;">
+                <span v-else-if="item.prop==='lastLoginDate'">
                              {{scope.row.lastLoginDate}}
                             </span>
                 <span v-else-if="item.prop==='orderNum'">
@@ -82,20 +83,22 @@
             </el-table-column>
             <el-table-column
                     label="操作"
-                    width="300">
-              <template slot-scope="scope">
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">资金管理
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeWinRate(scope.$index, scope.row)">调整胜率
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
-                           @click="signUpForUser(scope.$index, scope.row)">签约
-                </el-button>
-              </template>
+                    width="250">
+                <template slot-scope="scope">
+                  <div style="display: flex; justify-content: flex-start;">
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                               @click="changeMoney(scope.$index, scope.row)">资金
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                               @click="changeWinRate(scope.$index, scope.row)">胜率
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
+                               @click="signUpForUser(scope.$index, scope.row)">签约
+                    </el-button>
+                  </div>
+                </template>
             </el-table-column>
           </el-table>
           <div class="pageBox">
@@ -247,7 +250,7 @@ export default {
         return {
             bjShow: false,
             dialogFormVisible: false,
-          dialogFormVisibleWin: false,
+            dialogFormVisibleWin: false,
             currentPage: 1,
             input1: '',
             input2: '',
@@ -265,10 +268,10 @@ export default {
                     label: '客户姓名',
                     prop: 'userRealName'
                 },
-                {
-                    label: '创建日期',
-                    prop: 'userRegisterDate'
-                },
+                // {
+                //     label: '创建日期',
+                //     prop: 'userRegisterDate'
+                // },
                 {
                     label: '最后登录',
                     prop: 'lastLoginDate'
@@ -305,6 +308,7 @@ export default {
             form: {
                 userRealName: '',
                 userNickName: '',
+                lastLoginDate:'',
                 tel: '',
                 userAgentId:'',
                 userPassword1: '',
@@ -380,6 +384,40 @@ export default {
         this.queryOptData1Met()
     },
     methods: {
+      // 动态设置宽度
+      columnWidth(item) {
+        let widthStr = ''
+        // if(item)
+        switch (item) {
+          case 'userId':
+            widthStr = '50'
+            break
+          case 'userNickName':
+            widthStr = '150'
+            break
+          // case 'userRegisterDate':
+          //   widthStr = '155'
+          //   break
+          case 'lastLoginDate':
+            widthStr = '140'
+            break
+          case 'orderNum':
+            widthStr = '60'
+            break
+          case 'bonusRate':
+            widthStr = '60'
+            break
+          case 'commissionRate':
+            widthStr = '60'
+            break
+          case 'winRate':
+            widthStr = '60'
+            break
+          default:
+            widthStr = '80'
+        }
+        return widthStr
+      },
 
       signUpForUser(index, row) {
        // console.log(row)

@@ -4,7 +4,7 @@
       <div class="app-box-tab">
         <div class="app-box-title">银行卡管理</div>
         <div class="app-box-changeBox">
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia()">添加银行卡+</el-button>
+          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia()">添加银行卡</el-button>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt">用户：</div>
             <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
@@ -36,6 +36,7 @@
             style="width: 100%">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :min-width="columnWidth(item.prop)"
               :prop="item.prop"
               :label="item.label">
               <template slot-scope="scope">
@@ -49,7 +50,7 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="250">
+              width="80">
               <template slot-scope="scope">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
@@ -154,38 +155,43 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
         value1: '',
         value2: '',
         tabHead: [
-          {
-            label: '编号',
-            prop: 'bankCardId'
-          },
+          // {
+          //   label: '编号',
+          //   prop: 'bankCardId'
+          // },
           {
             label: '用户ID',
             prop: 'userId'
           },
+          // {
+          //   label: '用户姓名',
+          //   prop: 'userRealName'
+          // },
           {
-            label: '用户姓名',
-            prop: 'userRealName'
+            label: '持卡人',
+            prop: 'cardOwnerName'
+          },
+          {
+            label: '省份',
+            prop: 'province'
+          },
+          {
+            label: '城市',
+            prop: 'city'
+          },
+          {
+            label: '卡号',
+            prop: 'cardNo'
           },
           {
             label: '开户行',
             prop: 'bankName'
           },
           {
-            label: '省份',
-            prop: 'province'
-          }, {
-            label: '城市',
-            prop: 'city'
-          }, {
             label: '支行',
             prop: 'subBranch'
-          }, {
-            label: '持卡人',
-            prop: 'cardOwnerName'
-          }, {
-            label: '卡号',
-            prop: 'cardNo'
-          }, {
+          },
+          {
             label: '手机号',
             prop: 'cardPhone'
           },
@@ -230,6 +236,44 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
       this.queryBankDataList()
     },
     methods: {
+      // 动态设置宽度
+      columnWidth(item) {
+        console.log(item);
+        let widthStr = ''
+        // if(item)
+        switch (item) {
+          case 'bankName':
+            widthStr = '115'
+            break
+          case 'province':
+            widthStr = '65'
+            break
+          case 'city':
+            widthStr = '65'
+            break
+          case 'addDate':
+            widthStr = '155'
+            break
+          case 'subBranch':
+            widthStr = '190'
+            break
+          case 'cardNo':
+            widthStr = '165'
+            break
+          case 'cardPhone':
+            widthStr = '110'
+            break
+          case 'userMoney':
+            widthStr = '100'
+            break
+          case 'remarks':
+            widthStr = '150'
+            break
+          default:
+            widthStr = '80'
+        }
+        return widthStr
+      },
       openDia () {
         this.bjShow = false
         this.text = '新增银行卡'

@@ -4,6 +4,11 @@
       <div class="app-box-tab">
         <div class="app-box-title">提现列表</div>
         <div class="app-box-changeBox">
+          <!--总提现金额-->
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt" style="width: 80px;">提现总金额：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{totalMoney}}</div>
+          </div>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt">用户ID：</div>
             <el-input placeholder="请输入商户ID" v-model="input1"></el-input>
@@ -27,9 +32,6 @@
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
           </div>
         </div>
-        <div >
-          <div class="app-box-input-txt1" style="width: 200">提现总金额：{{totalMoney}}</div>
-        </div>
         <div class="app-tab-box">
           <el-table
             :data="cashVoDataList.list"
@@ -39,6 +41,7 @@
             style="width: 100%">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :min-width="columnWidth(item.prop)"
               :prop="item.prop"
               :label="item.label">
               <template slot-scope="scope">
@@ -79,16 +82,16 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="250">
+              width="160">
               <template slot-scope="scope">
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.checkStatus === 1"
-                           @click="bjTab(scope.$index, scope.row)">审核
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" style="color: red"
-                           @click="deleteThisCash(scope.$index, scope.row)">删除
-                </el-button>
-
-
+                <div style="display: flex; justify-content: flex-start;">
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.checkStatus === 1" style="margin-left: 10px;"
+                             @click="bjTab(scope.$index, scope.row)">审核
+                  </el-button>
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" style="color: red"
+                             @click="deleteThisCash(scope.$index, scope.row)">删除
+                  </el-button>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -244,10 +247,6 @@ import {listCashVo,sumMoneyForCash, changeUserMoney, checkCash} from '@/api/admi
             prop: 'userRealName'
           },
           {
-            label: '操作时间',
-            prop: 'addDate'
-          },
-          {
             label: '交易金额',
             prop: 'cashMoney'
           },
@@ -256,17 +255,21 @@ import {listCashVo,sumMoneyForCash, changeUserMoney, checkCash} from '@/api/admi
             prop: 'userMoney'
           },
           {
-            label: '备注',
-            prop: 'remarks'
+            label: '审核状态',
+            prop: 'checkStatus'
+          },
+          {
+            label: '操作时间',
+            prop: 'addDate'
           },
           {
             label: '审核时间',
             prop: 'checkDate'
           },
           {
-            label: '审核状态',
-            prop: 'checkStatus'
-          },
+            label: '备注',
+            prop: 'remarks'
+          }
         ],
         form: {
           accountId: '',
@@ -328,6 +331,29 @@ import {listCashVo,sumMoneyForCash, changeUserMoney, checkCash} from '@/api/admi
       this.queryAllCash()
     },
     methods: {
+      // 动态设置宽度
+      columnWidth(item) {
+        console.log(item)
+        let widthStr = ''
+        // if(item)
+        switch (item) {
+          case 'addDate':
+            widthStr = '150'
+            break
+          case 'checkDate':
+            widthStr = '150'
+            break
+          case 'userMoney':
+            widthStr = '100'
+            break
+          case 'remarks':
+            widthStr = '200'
+            break
+          default:
+            widthStr = '80'
+        }
+        return widthStr
+      },
       queryAllCash(){
         var par ={"cashType":this.cashType}
         sumMoneyForCash(par).then(res =>{

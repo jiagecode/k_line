@@ -43,8 +43,8 @@
 	export default {
 		data() {
 			return {
-				phone: '123456',
-				password: '123456',
+				phone: '',
+				password: '',
 				value: 1,
 				countryAndCode: '',
 				isXy: true
@@ -97,7 +97,7 @@
 			// 同意协议
 			xy() {
 				this.isXy = !this.isXy;
-				console.log("按钮被点击了，且传入的参数是：" + this.isXy)
+				// console.log("按钮被点击了，且传入的参数是：" + this.isXy)
 			}
 		}
 	}

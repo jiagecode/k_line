@@ -28,6 +28,7 @@
             style="width: 100%">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :min-width="columnWidthTeam(item.prop)"
               :key="index"
               :prop="item.prop"
               :label="item.label">
@@ -76,8 +77,9 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="300">
+              width="250">
               <template slot-scope="scope">
+                <div style="display: flex; justify-content: flex-start;">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
                 </el-button>
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
@@ -86,6 +88,7 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
                            @click="signUpForUser(scope.$index, scope.row)">签约
                 </el-button>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -224,10 +227,10 @@ export default {
           label: '客户姓名',
           prop: 'userRealName'
         },
-        {
-          label: '创建日期',
-          prop: 'userRegisterDate'
-        },
+        // {
+        //   label: '创建日期',
+        //   prop: 'userRegisterDate'
+        // },
         {
           label: '最后登录',
           prop: 'lastLoginDate'
@@ -327,6 +330,40 @@ export default {
     this.queryOptData1Met()
   },
   methods: {
+    // 动态设置宽度
+    columnWidthTeam(item) {
+      let widthStr = ''
+      // if(item)
+      switch (item) {
+        case 'userId':
+          widthStr = '50'
+          break
+        case 'userNickName':
+          widthStr = '150'
+          break
+        // case 'userRegisterDate':
+        //   widthStr = '155'
+        //   break
+        case 'lastLoginDate':
+          widthStr = '140'
+          break
+        case 'orderNum':
+          widthStr = '60'
+          break
+        case 'bonusRate':
+          widthStr = '60'
+          break
+        case 'commissionRate':
+          widthStr = '60'
+          break
+        case 'winRate':
+          widthStr = '60'
+          break
+        default:
+          widthStr = '80'
+      }
+      return widthStr
+    },
 
     signUpForUser(index, row) {
       // console.log(row)
