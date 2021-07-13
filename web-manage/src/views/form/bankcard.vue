@@ -44,8 +44,12 @@
                 <span v-if="item.prop==='bankCardId'" >
                              {{scope.row.bankCardId}}
                 </span>
+                <!-- 是否 禁用-->
+                <span v-else-if="item.prop==='cardStatus'" >
+                             {{scope.row.cardStatus === 0 ? "否" : "是"}}
+                </span>
                 <!-- 正常的其他列 -->
-                <span v-else>{{scope.row[item.prop]}}</span>
+                <span v-else >{{scope.row[item.prop]}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -83,57 +87,59 @@
                 <span>{{text}}</span>
             </span>
           <div class="payNameDiaBox">
-            <el-form ref="form" :model="form" label-width="130px" :rules="rules">
-              <el-form-item label="编号：" prop="bankCardId" v-show="bjShow" >
-                <el-input v-model="form.bankCardId" type="number" ></el-input>
-              </el-form-item>
-              <el-form-item label="用户编号：" prop="userId" >
-                <el-input v-model="form.userId" type="number"></el-input>
-              </el-form-item>
-              <el-form-item label="开户行：" prop="bankName">
-                <el-input v-model="form.bankName" ></el-input>
-              </el-form-item>
-              <el-form-item label="省份：" prop="province">
-                <el-input v-model.number="form.province"></el-input>
-              </el-form-item>
-              <el-form-item label="城市：" prop="city">
-                <el-input v-model.number="form.city"></el-input>
-              </el-form-item>
-              <el-form-item label="支行：" prop="subBranch">
-                <el-input v-model.number="form.subBranch"></el-input>
-              </el-form-item>
-              <el-form-item label="开户名：" prop="cardOwnerName">
-                <el-input v-model.number="form.cardOwnerName"></el-input>
-              </el-form-item>
-              <el-form-item label="卡号：" prop="cardNo">
-                <el-input v-model.number="form.cardNo" type="number"></el-input>
-              </el-form-item>
-              <el-form-item label="持卡人身份证号：" prop="cardOwnerNo">
-                <el-input v-model.number="form.cardOwnerNo" type="number"></el-input>
-              </el-form-item>
-              <el-form-item label="预留手机号：" prop="cardPhone">
-                <el-input v-model.number="form.cardPhone" type="number"></el-input>
-              </el-form-item>
-              <el-form-item label="卡状态：" prop="cardStatus">
-                <el-select v-model="form.cardStatus" placeholder="请选择卡状态">
-                  <el-option label="激活" value="0"></el-option>
-                  <el-option label="禁用" value="1"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="是否删除：" prop="cardStatus">
-                <el-select v-model="form.del" placeholder="请选择是否删除">
-                  <el-option label="是" value="0"></el-option>
-                  <el-option label="否" value="1"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="备注：">
-                <el-input v-model="form.remarks"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button class="payNameBnt1" @click="resetFormChange('form')">取消</el-button>
-                <el-button class="payNameBnt2" @click="submitForm('form')">确定</el-button>
-              </el-form-item>
-            </el-form>
+            <div style="margin-left: -80px;">
+              <el-form ref="form" :model="form" label-width="200px" :rules="rules">
+  <!--              <el-form-item label="编号：" prop="bankCardId" v-show="bjShow" >-->
+  <!--                <el-input v-model="form.bankCardId" type="number" ></el-input>-->
+  <!--              </el-form-item>-->
+  <!--              <el-form-item label="用户编号：" prop="userId" >-->
+  <!--                <el-input v-model="form.userId" type="number"></el-input>-->
+  <!--              </el-form-item>-->
+                <el-form-item label="开户行：" prop="bankName">
+                  <el-input v-model="form.bankName" ></el-input>
+                </el-form-item>
+                <el-form-item label="省份：" prop="province">
+                  <el-input v-model.number="form.province"></el-input>
+                </el-form-item>
+                <el-form-item label="城市：" prop="city">
+                  <el-input v-model.number="form.city"></el-input>
+                </el-form-item>
+                <el-form-item label="支行：" prop="subBranch">
+                  <el-input v-model.number="form.subBranch"></el-input>
+                </el-form-item>
+                <el-form-item label="开户名：" prop="cardOwnerName">
+                  <el-input v-model.number="form.cardOwnerName"></el-input>
+                </el-form-item>
+                <el-form-item label="卡号：" prop="cardNo">
+                  <el-input v-model.number="form.cardNo" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="持卡人身份证号：" prop="cardOwnerNo">
+                  <el-input v-model.number="form.cardOwnerNo" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="预留手机号：" prop="cardPhone">
+                  <el-input v-model.number="form.cardPhone" type="number"></el-input>
+                </el-form-item>
+                <el-form-item label="卡状态：" prop="cardStatus">
+                  <el-select v-model="form.cardStatus" placeholder="请选择卡状态">
+                    <el-option label="否" value="0"></el-option>
+                    <el-option label="是" value="1"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="是否删除：" prop="cardStatus">
+                  <el-select v-model="form.del" placeholder="请选择是否删除">
+                    <el-option label="是" value="0"></el-option>
+                    <el-option label="否" value="1"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="备注：">
+                  <el-input v-model="form.remarks"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button class="payNameBnt1" @click="resetFormChange('form')">取消</el-button>
+                  <el-button class="payNameBnt2" @click="submitForm('form')">确定</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
         </el-dialog>
       </div>
@@ -312,8 +318,8 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
           cardNo: row.cardNo,
           cardOwnerNo: row.cardOwnerNo,
           cardPhone: row.cardPhone,
-          cardStatus: row.cardStatus,
-          del: row.del,
+          cardStatus: String(row.cardStatus),
+          del: String(row.del),
         }
       },
       submitForm (formName) {
@@ -332,7 +338,7 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
               cardNo: this.form.cardNo,
               cardOwnerNo:  this.form.cardOwnerNo,
               cardPhone: this.form.cardPhone,
-              cardStatus:  this.form.cardStatus,
+              cardStatus:  Number(this.form.cardStatus),
               del:  this.form.del,
             }
             editBankCard(data).then(res => {
