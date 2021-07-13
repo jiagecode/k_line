@@ -365,16 +365,14 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
           time1 = this.value1.getTime()
         }
         if (this.value2 != '' && this.value2 != null) {
-          time2 = this.value2.getTime() + 86399000
+          time2 = this.value2.getTime()
         }
-        if (this.input1 == '') {
-          this.input1 = undefined
           var data = {
-          userRealName: this.input2,
-          pageNum: this.currentPage,
-          beginDate: time1,
-          endDate: time2,
-        }
+            userRealName: this.input2,
+            pageNum: this.currentPage,
+            beginDate: time1,
+            endDate: time2,
+          }
         queryBankVoData(data).then(res => {
           console.log(res)
           if (res.code == 10000) {
@@ -383,7 +381,7 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
             this.$message.error(res.message)
           }
         })
-      }},
+      },
       seeAll() {
         this.input1 = ''
         this.input2 = ''
