@@ -105,7 +105,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if(userInfo.getAgentId() != null){
             userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
         }
-        int newId  = userInfoMapper.insert(userInfo);
+        int newId  = userInfoMapper.insertSelective(userInfo);
         if(newId == 1){
             newId = userInfoMapper.queryUserIdForPhone(tel);
             userInfo.setUserId(newId);
@@ -143,6 +143,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public String createUserInfo(UserInfo userInfo) {
+        userInfo.setUserNickName(userInfo.getUserRealName());
         int result = addNewUser(-1, userInfo);
         return result == -1 ? JwtUtil.sign(String.valueOf(userInfo.getUserId()), userInfo.getUserPassword()) : result + "";
     }

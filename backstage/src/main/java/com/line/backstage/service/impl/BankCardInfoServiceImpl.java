@@ -54,6 +54,7 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
     @Override
     public int insert(Integer loginUserId, BankCardInfo bankCardInfo) {
         bankCardInfo.setAddUserId(loginUserId);
+        bankCardInfo.setUserId(loginUserId);
         bankCardInfo.setAddDate(new Date());
         return bankCardInfoMapper.insertSelective(bankCardInfo);
     }

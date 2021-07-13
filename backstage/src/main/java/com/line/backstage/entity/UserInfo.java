@@ -163,11 +163,11 @@ public class UserInfo extends QueryRequest implements Serializable {
      * 是否为DIY用户 默认0 不是
      */
     @ApiModelProperty("是否为DIY用户")
-    private Integer diyFlag = 0;
+    private Integer diyFlag;
     /**
      * DIY用户类型 默认未1 普通用户
      */
-    private Integer diyUserType = 1;
+    private Integer diyUserType;
     /**
      * 备注
      */

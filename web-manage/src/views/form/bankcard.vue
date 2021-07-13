@@ -244,7 +244,6 @@ import {queryBankVoData, editBankCard} from '@/api/adminUser'
     methods: {
       // 动态设置宽度
       columnWidth(item) {
-        console.log(item);
         let widthStr = ''
         // if(item)
         switch (item) {

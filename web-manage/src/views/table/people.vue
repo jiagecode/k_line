@@ -39,8 +39,8 @@
               :label="item.label">
               <template slot-scope="scope">
                 <span v-if="item.prop==='orderId'">
-                             {{ scope.row.orderId }}
-                  <button @click="queryDet(scope.row.orderId)">查看订单详情</button>
+                  {{ scope.row.orderId }}
+                  <el-button type="info"size="mini" round="true" @click="queryDet(scope.row.orderId)">查看订单详情</el-button>
                 </span>
                 <!-- 正常的其他列 -->
                 <span v-else>{{ scope.row[item.prop] }}</span>
@@ -80,54 +80,57 @@
         </div>
         <!--订单详情-->
         <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false"
-                   :before-close="ai_dialog_close">
+                   :before-close="ai_dialog_close"
+                   width="60%">
             <span slot="title" class="dialog-footer">
                 <span>订单详情</span>
             </span>
           <div class="payNameDiaBox">
             <el-form  :model="orderDetail" label-width="130px" >
-              <el-form-item label="用户名：" prop="userRealName" >
-                <el-input v-model="orderDetail.userRealName" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="用户编号：" prop="userId" >
-                <el-input v-model="orderDetail.userId" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="用户余额：" prop="userMoney">
-                <el-input v-model="orderDetail.userMoney" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="订单编号：" prop="orderId">
-                <el-input v-model.number="orderDetail.orderId"  disabled></el-input>
-              </el-form-item>
-              <el-form-item label="商品：" prop="skuName">
-                <el-input v-model.number="orderDetail.skuName"  disabled></el-input>
-              </el-form-item>
-              <el-form-item label="订单状态：" prop="orderStatusDesc">
-                <el-input v-model.number="orderDetail.orderStatusDesc" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="入仓价格：" prop="inPoint">
-                <el-input v-model.number="orderDetail.inPoint" type="number" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="平仓价格：" prop="outPoint">
-                <el-input v-model.number="orderDetail.outPoint" type="number" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="入仓金额：" prop="investAmount">
-                <el-input v-model.number="orderDetail.investAmount" type="number" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="入仓时间：" prop="addDate">
-                <el-input v-model.number="orderDetail.addDate" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="平仓时间：" prop="editDate">
-                <el-input v-model.number="orderDetail.editDate"  disabled></el-input>
-              </el-form-item>
-              <el-form-item label="本单盈亏：" prop="subMoney">
-                <el-input v-model.number="orderDetail.subMoney" type="number" disabled></el-input>
-              </el-form-item>
-              <el-form-item label="备注：">
-                <el-input v-model="orderDetail.remarks" disabled></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button class="payNameBnt2" @click="closeDetail()">确定</el-button>
-              </el-form-item>
+              <div style="    display: flex; flex-wrap: wrap;">
+                <el-form-item label="用户名：" prop="userRealName" >
+                  <el-input v-model="orderDetail.userRealName" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="用户编号：" prop="userId" >
+                  <el-input v-model="orderDetail.userId" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="用户余额：" prop="userMoney">
+                  <el-input v-model="orderDetail.userMoney" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="订单编号：" prop="orderId">
+                  <el-input v-model.number="orderDetail.orderId"  disabled></el-input>
+                </el-form-item>
+                <el-form-item label="商品：" prop="skuName">
+                  <el-input v-model.number="orderDetail.skuName"  disabled></el-input>
+                </el-form-item>
+                <el-form-item label="订单状态：" prop="orderStatusDesc">
+                  <el-input v-model.number="orderDetail.orderStatusDesc" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="入仓价格：" prop="inPoint">
+                  <el-input v-model.number="orderDetail.inPoint" type="number" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="平仓价格：" prop="outPoint">
+                  <el-input v-model.number="orderDetail.outPoint" type="number" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="入仓金额：" prop="investAmount">
+                  <el-input v-model.number="orderDetail.investAmount" type="number" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="入仓时间：" prop="addDate">
+                  <el-input v-model.number="orderDetail.addDate" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="平仓时间：" prop="editDate">
+                  <el-input v-model.number="orderDetail.editDate"  disabled></el-input>
+                </el-form-item>
+                <el-form-item label="本单盈亏：" prop="subMoney">
+                  <el-input v-model.number="orderDetail.subMoney" type="number" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="备注：">
+                  <el-input v-model="orderDetail.remarks" disabled></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button class="payNameBnt2" @click="closeDetail()">确定</el-button>
+                </el-form-item>
+              </div>
             </el-form>
           </div>
         </el-dialog>
@@ -340,6 +343,19 @@ export default {
 
   .app-box-date > .el-input__inner {
     width: 140px !important;
+  }
+
+  .payNameBnt2 {
+    width: 60px;
+    height: 28px;
+    background: rgba(92, 56, 130, 1);
+    opacity: 1;
+    line-height: 28px;
+    padding: 0;
+    color: #FFFFFF;
+    font-size: 13px;
+    border-color: rgba(92, 56, 130, 1);
+    float: right;
   }
 }
 </style>

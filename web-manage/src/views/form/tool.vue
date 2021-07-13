@@ -302,7 +302,8 @@
     <!--选择用户-->
     <el-dialog :visible.sync="dialogUserTabVisible"
                :close-on-click-modal="false"
-               :before-close="select_user_dialog_close">
+               :before-close="select_user_dialog_close"
+               width="60%">
       <span slot="title" class="dialog-footer">
           <span>选择用户</span>
       </span>
@@ -361,8 +362,8 @@
           </div>
         </div>
       </div>
-      <div style="margin: 0 auto">
-        <el-button class="payNameBnt1" @click="select_user_dialog_close()">取消</el-button>
+      <div style="display: flex; justify-content: flex-end;">
+        <el-button class="payNameBnt1" disabled @click="select_user_dialog_close()">取消</el-button>
         <el-button class="payNameBnt2" @click="select_user_dialog_ok()">确定</el-button>
       </div>
     </el-dialog>
@@ -751,5 +752,31 @@ export default {
     height: 20px;
     border-bottom: 2px solid #cacdd1;
     margin-bottom: 20px
+  }
+
+  .payNameBnt1 {
+    width: 60px;
+    height: 28px;
+    background: rgba(246, 232, 255, 1);
+    opacity: 1;
+    line-height: 28px;
+    padding: 0;
+    color: #3B3269;
+    font-size: 13px;
+    border-color: rgba(246, 232, 255, 1);
+    float: left;
+  }
+
+  .payNameBnt2 {
+    width: 60px;
+    height: 28px;
+    background: rgba(92, 56, 130, 1);
+    opacity: 1;
+    line-height: 28px;
+    padding: 0;
+    color: #FFFFFF;
+    font-size: 13px;
+    border-color: rgba(92, 56, 130, 1);
+    float: right;
   }
 </style>
