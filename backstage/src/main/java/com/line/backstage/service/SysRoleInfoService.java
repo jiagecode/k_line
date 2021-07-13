@@ -2,7 +2,10 @@ package com.line.backstage.service;
  
 import com.line.backstage.entity.SysRoleInfo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * 后台管理系统角色表(SysRoleInfo)表服务实现类
  *
@@ -63,4 +66,9 @@ public interface SysRoleInfoService {
      * @return 对象列表
      */
     PageWrapper<SysRoleInfo> list(Integer loginUserId, SysRoleInfo sysRoleInfo);
+    /**
+     * 授权菜单信息
+     */
+    List<Map> authorize(Integer userId);
+    List<Integer> findMenuIdsByRoleId(Integer roleId);
 }

@@ -133,7 +133,7 @@
 </template>
 
 <script>
-  import {listPeople,addPeople,removePeople,getpeopleSq,sqtoPeople} from '@/api/people'
+  import {listPeople,addPeople,removePeople,sqtoPeople,queryUserAuthorize} from '@/api/people'
   export default {
     name: 'menus',
     data() {
@@ -208,15 +208,14 @@
         console.log(row)
         this.sqroleId = row.roleId
         var data={
-          roleId:row.roleId,
-          del :1
+          roleId:row.roleId
         }
-        getpeopleSq(data).then(res=>{
+        queryUserAuthorize(data).then(res=>{
           console.log(res)
           if(res.code==10000){
             var _this = this;
             _this.dialogFormVisiblesq = true;
-            _this.roleSq = res.data.treeList;
+            _this.roleSq = res.data.menuTreeData;
             const checkedIds =  res.data.checkedIds;
             let menuIdArr = [];
             for (let j = 0; j < checkedIds.length; j++) {
@@ -340,6 +339,7 @@
             var data={
               roleName:this.form.username,
               universal:this.form.universal,
+              roleEnglishName:this.form.roleEnglishName,
               del :1
             }
             addPeople(data).then(res => {

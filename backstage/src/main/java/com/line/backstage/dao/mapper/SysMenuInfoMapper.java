@@ -32,4 +32,10 @@ public interface SysMenuInfoMapper extends TkBaseMapper<SysMenuInfo> {
      * @return
      */
     int getChildCountByMenuId(@Param("parentIdsLike") String parentIdsLike);
+    /**
+     * 获取角色对应的菜单id
+     * @param roleId
+     * @return
+     */
+    List<Integer> findMenuIdsByRoleId(@Param("roleId") Integer roleId);
 }

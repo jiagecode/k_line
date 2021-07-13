@@ -8,6 +8,7 @@ import com.line.backstage.service.SysPowerService;
 import com.line.backstage.utils.PageWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -92,12 +93,14 @@ public class SysPowerServiceImpl implements SysPowerService {
 	}
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int saveForAuth(Integer loginUserId,Map<String, String> map) {
         String roleIdStr = map.get("roleId");
-        String menuIdStr = map.get("menuId");
+        String menuIdStr = map.get("menuIdStr");
         if(StringUtils.isNotEmpty(roleIdStr) && StringUtils.isNotEmpty(menuIdStr)){
             String ms [] = menuIdStr.split(",");
             Integer roldId = Integer.parseInt(roleIdStr);
+            sysPowerMapper.deleteForAuth(roldId);
             for (String s:ms){
                 Integer mid = Integer.parseInt(s);
                 SysPower power = new SysPower();

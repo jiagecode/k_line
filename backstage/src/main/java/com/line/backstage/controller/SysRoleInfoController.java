@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.google.common.collect.Maps;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysRoleInfo;
 import com.line.backstage.service.SysRoleInfoService;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,5 +88,16 @@ public class SysRoleInfoController {
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色表对象", required = true) @RequestBody SysRoleInfo sysRoleInfo) {
         return ResponseHelper.success(sysRoleInfoService.list(Integer.valueOf(loginUserId), sysRoleInfo));
     }
- 
+    @PostMapping("authorize")
+    @ApiOperation(value = "授权", notes = "角色菜单授权列表")
+    public ResponseModel authorize(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String ,String> map) {
+        String roleId = map.get("roleId");
+        Integer rid = Integer.valueOf(roleId);
+        List<Map> menuList = sysRoleInfoService.authorize(rid);
+        List<Integer> checkedMenuIds = sysRoleInfoService.findMenuIdsByRoleId(rid);
+        Map<String, Object> dataMap = Maps.newHashMap();
+        dataMap.put("menuTreeData", menuList);
+        dataMap.put("checkedIds", checkedMenuIds);
+        return ResponseHelper.success(dataMap);
+    }
 }

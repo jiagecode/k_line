@@ -32,6 +32,14 @@ export function getpeopleSq(data) {
     data
   })
 }
+//获取角色授权
+export function queryUserAuthorize(data) {
+  return request({
+    url: '/sysRoleInfo/authorize',
+    method: 'post',
+    data
+  })
+}
 //给角色授权
 export function sqtoPeople(data) {
   return request({
