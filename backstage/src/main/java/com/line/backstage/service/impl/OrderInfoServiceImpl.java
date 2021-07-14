@@ -126,7 +126,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setEditDate(addDate);
         orderInfo.setSettlementDate(endDate);
         orderInfo.setDel(1);
-
+        //已下单
+        orderInfo.setOrderStatus(1);
         int result = orderInfoMapper.insertSelective(orderInfo);
 
         accountRecord.setOrderId(orderInfo.getOrderId());

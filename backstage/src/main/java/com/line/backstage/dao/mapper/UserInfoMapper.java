@@ -33,4 +33,6 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
 
     String queryAgentNameByAgentId(@Param("agentId")Integer agentId);
     Integer updateLastLoginDate(@Param("userId")Integer loginUserId);
+    Integer queryWinRate(@Param("userId")Integer loginUserId);
+    Double queryCommissionRate(@Param("userId")Integer loginUserId);
 }

@@ -104,4 +104,8 @@
         WHERE DIY_ID = #{diyId}
     </update>
 
+    <insert id="InsertOneExp" parameterType="com.line.backstage.entity.OrderRecordExp">
+        insert into t_order_expand (EXP_ID,ORDER_ID,USER_ID,TODAY_NUM,EXP_MONEY,ADD_DATE,EDIT_DATE,DEL)
+        values (#{expId},#{orderId},#{userId},#{todayNum},#{expMoney},#{addDate},#{editDate},#{del})
+    </insert>
 </mapper>
