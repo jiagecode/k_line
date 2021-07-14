@@ -289,4 +289,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 //        resMap.put("avatar", user.getPhoto());
         return resMap;
     }
+
+    @Override
+    public void updateLastLoginDate(Integer loginUserId) {
+        userInfoMapper.updateLastLoginDate(loginUserId);
+    }
 }

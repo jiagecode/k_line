@@ -133,6 +133,7 @@ public class UserInfoController {
                 throw new LockedAccountException(DataEnum.USER_FORBID_FLAG.getDesc());
             } else {
                 String token = JwtUtil.sign(String.valueOf(user.getUserId()), userInfo.getUserPassword());
+                userInfoService.updateLastLoginDate(user.getUserId());
                 return ResponseHelper.success(token);
             }
         } else {

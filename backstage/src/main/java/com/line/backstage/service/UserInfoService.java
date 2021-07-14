@@ -94,4 +94,6 @@ public interface UserInfoService {
      * @return
      */
     Map getUserInfo(String userId);
+
+    void updateLastLoginDate(Integer loginUserId);
 }
