@@ -70,15 +70,20 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     public int insert(Integer loginUserId, OrderInfo orderInfo) {
         // 查询用户信息
         AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
-
+        //设置当前时间为下单时间
+        Date addDate = new Date();
+        //购买时长 秒数
+        Integer orderCycle = orderInfo.getOrderCycle();
+        //订单结算时间
+        Date endDate = new Date(addDate.getTime()+orderCycle*1000);
         // 新增资金变动记录
         AccountRecord accountRecord = new AccountRecord();
         accountRecord.setAccountId(accountInfo.getAccountId());
         accountRecord.setRecordType(3);
         accountRecord.setChangeMoney(orderInfo.getInvestAmount());
         accountRecord.setBeforeMoney(accountInfo.getAccountMoney());
-        accountRecord.setAddDate(new Date());
-        accountRecord.setEditDate(new Date());
+        accountRecord.setAddDate(addDate);
+        accountRecord.setEditDate(addDate);
         accountRecord.setServiceCharge(orderInfo.getOrderCharge());
 
         // 修改账户余额
@@ -99,9 +104,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         positionInfo.setBeaginPrice(orderInfo.getSkuPrice());
         positionInfo.setNowPrice(orderInfo.getSkuPrice());
         positionInfo.setInvestAmount(orderInfo.getInvestAmount());
-        positionInfo.setBeginDate(new Date());
-        positionInfo.setAddDate(new Date());
-        positionInfo.setEditDate(new Date());
+        positionInfo.setBeginDate(addDate);
+        positionInfo.setAddDate(addDate);
+        positionInfo.setEditDate(addDate);
+        positionInfo.setEndDate(endDate);
         positionInfo.setAddUserId(loginUserId);
         positionInfo.setEditUserId(loginUserId);
 
@@ -111,7 +117,16 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         // 新增订单信息
         orderInfo.setAddUserId(loginUserId);
         orderInfo.setUserId(loginUserId);
+        orderInfo.setEditUserId(loginUserId);
         orderInfo.setPositionId(positionInfo.getPositionId());
+        if(orderInfo.getWinFlag() == null){
+            orderInfo.setWinFlag(0);
+        }
+        orderInfo.setAddDate(addDate);
+        orderInfo.setEditDate(addDate);
+        orderInfo.setSettlementDate(endDate);
+        orderInfo.setDel(1);
+
         int result = orderInfoMapper.insertSelective(orderInfo);
 
         accountRecord.setOrderId(orderInfo.getOrderId());

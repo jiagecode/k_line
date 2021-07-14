@@ -15,6 +15,7 @@
         <result property="orderAmount" column="ORDER_AMOUNT" jdbcType="NUMERIC"/>
         <result property="orderCharge" column="ORDER_CHARGE" jdbcType="NUMERIC"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="settlementDate" column="SETTLEMENT_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="orderCycle" column="ORDER_CYCLE" jdbcType="INTEGER"/>
         <result property="investAmount" column="INVEST_AMOUNT" jdbcType="NUMERIC"/>
@@ -31,6 +32,7 @@
         <result property="resultMoney" column="RESULT_MONEY" jdbcType="NUMERIC"/>
         <result property="subMoney" column="SUB_MONEY" jdbcType="NUMERIC"/>
         <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
+        <result property="winFlag" column="WIN_FLAG" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap type="com.line.backstage.entity.sysentity.ManOrderVo" id="ManOrderVoInfoMap">
         <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
@@ -45,6 +47,7 @@
         <result property="orderAmount" column="ORDER_AMOUNT" jdbcType="NUMERIC"/>
         <result property="orderCharge" column="ORDER_CHARGE" jdbcType="NUMERIC"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="settlementDate" column="SETTLEMENT_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="orderCycle" column="ORDER_CYCLE" jdbcType="INTEGER"/>
         <result property="investAmount" column="INVEST_AMOUNT" jdbcType="NUMERIC"/>
@@ -67,13 +70,14 @@
         <result property="todayMoney" column="TODAY_MONEY" jdbcType="NUMERIC"/>
         <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
         <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
+        <result property="winFlag" column="WIN_FLAG" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="orderInfo_Column_List">
         o.ORDER_ID,o.POSITION_ID,o.ORDER_TYPE,o.USER_ID,o.ORDER_STATUS,o.SKU_ID,o.SKU_CODE,o.SKU_QTY,o.SKU_PRICE,o.ORDER_AMOUNT,
         o.ORDER_CHARGE,o.ADD_DATE,o.EDIT_DATE,o.ORDER_CYCLE,o.INVEST_AMOUNT,o.INVEST_TYPE,o.EXPECTED_RETURN,o.GUARANTEED_AMOUNT,
-        o.ADD_USER_ID,o.EDIT_USER_ID,o.DEL,o.INTEGRAL,o.SKU_NAME,o.IN_POINT,o.OUT_POINT,o.RESULT_MONEY,o.SUB_MONEY,o.DIY_ID,
-        re.AFTER_MONEY,a.ALL_MONEY,a.ACCOUNT_ID,a.ACCOUNT_MONEY userMoney, u.USER_REAL_NAME,u.AGENT_NAME,ext.TODAY_MONEY
+        o.ADD_USER_ID,o.EDIT_USER_ID,o.DEL,o.INTEGRAL,o.SKU_NAME,o.IN_POINT,o.OUT_POINT,o.RESULT_MONEY,o.SUB_MONEY,o.DIY_ID,o.WIN_FLAG,
+        o.SETTLEMENT_DATE,re.AFTER_MONEY,a.ALL_MONEY,a.ACCOUNT_ID,a.ACCOUNT_MONEY userMoney, u.USER_REAL_NAME,u.AGENT_NAME,ext.TODAY_MONEY
     </sql>
     <select id="queryOneById" parameterType="java.lang.Integer" resultType="com.line.backstage.entity.OrderInfo">
         select o.*,u.USER_REAL_NAME userRealName,a.ACCOUNT_MONEY userMoney

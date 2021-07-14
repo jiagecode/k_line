@@ -92,6 +92,11 @@ public class OrderInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("创建时间")
     private Date addDate;
+    /**
+     * 结算时间
+     */
+    @ApiModelProperty("结算时间")
+    private Date settlementDate;
 
     /**
      * 修改时间
@@ -146,6 +151,7 @@ public class OrderInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
+    private Integer winFlag;
     private Integer diyId = 0;
     private Double inPoint;
     private Double outPoint;
