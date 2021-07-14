@@ -135,9 +135,10 @@ public class DateUtil {
         return sdf.format(date);
     }
 
-    public static int getTodayIntNum(){
+    public static int getTodayIntNum() {
         return Integer.parseInt(formatShortDate(new Date()));
     }
+
     /**
      * 格式日期字符串（短格式：yyyyMMdd）
      *
@@ -329,7 +330,7 @@ public class DateUtil {
      * @param date
      * @return 日期
      */
-    public static Date getStandardDateNext(Date date,Integer number) {
+    public static Date getStandardDateNext(Date date, Integer number) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.add(Calendar.DATE, number);
@@ -512,7 +513,7 @@ public class DateUtil {
      * @param jdTimeStr
      * @param num
      */
-    public static String addMin(String jdTimeStr, Integer num,String pattern) {
+    public static String addMin(String jdTimeStr, Integer num, String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.CHINA);
         try {
             long time = sdf.parse(jdTimeStr).getTime();
@@ -527,6 +528,7 @@ public class DateUtil {
 
     /**
      * 根据身份证号计算年龄
+     *
      * @param pensonnelIdCard
      * @return
      */
@@ -548,7 +550,7 @@ public class DateUtil {
             int age = yearMinus; //先大致赋值
             if (yearMinus == 0) { //出生年份为当前年份
                 age = 0;
-            }else{ //出生年份大于当前年份
+            } else { //出生年份大于当前年份
                 if (monthMinus < 0) {//出生月份小于当前月份时，还没满周岁
                     age = age - 1;
                 }
@@ -559,10 +561,91 @@ public class DateUtil {
                 }
             }
             return age;
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         return -1;
     }
 
+    /**
+     * 时间戳转换成日期格式字符串
+     *
+     * @param seconds 精确到秒的字符串
+     */
+    public static String timeStamp2DateStr(String seconds, String format) {
+        if (seconds == null || seconds.isEmpty() || seconds.equals("null")) {
+            return "";
+        }
+        if (format == null || format.isEmpty()) {
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(new Date(Long.valueOf(seconds + "000")));
+    }
+
+    /**
+     * 时间戳转换成日期格式字符串
+     *
+     * @param seconds 精确到秒的字符串
+     */
+    public static Date timeStamp2Date(String seconds) {
+        if (seconds == null || seconds.isEmpty() || seconds.equals("null")) {
+            return new Date();
+        }
+        return new Date(Long.valueOf(seconds + "000"));
+    }
+
+    /**
+     * 日期格式字符串转换成时间戳
+     *
+     * @param date_str 字符串日期
+     */
+    public static String date2TimeStamp(String date_str, String format) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            return String.valueOf(sdf.parse(date_str).getTime() / 1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 取得当前时间戳（精确到秒）
+     *
+     * @return
+     */
+    public static String timeStamp() {
+        long time = System.currentTimeMillis();
+        String t = String.valueOf(time / 1000);
+        return t;
+    }
+
+    /**
+     * 取得当前时间戳（精确到分钟）
+     *
+     * @return
+     */
+    public static String getNowMinuteStamp() {
+        return String.valueOf((System.currentTimeMillis()) / 60000);
+    }
+
+    /**
+     * 取得5分钟后时间戳（精确到分钟）
+     *
+     * @return
+     */
+    public static String getFiveMinuteAfterStamp() {
+        return String.valueOf((System.currentTimeMillis() + 300000) / 60000);
+    }
+
+    /**
+     * 取得当前秒钟数
+     *
+     * @return
+     */
+    public static String getMillionNow() {
+        SimpleDateFormat sdf = new SimpleDateFormat("ss");
+        return sdf.format(new Date());
+    }
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.line.backstage.dao.mapper.SkuInfoMapper">
- 
+
     <resultMap type="com.line.backstage.entity.SkuInfo" id="SkuInfoMap">
         <result property="skuId" column="SKU_ID" jdbcType="INTEGER"/>
         <result property="skuCode" column="SKU_CODE" jdbcType="VARCHAR"/>
@@ -20,4 +20,10 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="INTEGER"/>
     </resultMap>
+    <select id="queryListAll" resultType="com.line.backstage.vo.SkuInfoVo">
+        select SKU_ID,SKU_CODE,SKU_NAME from t_sku_info where SKU_STATUS=1 AND DEL=1
+    </select>
+    <select id="updetaBySkuInfoVo" parameterType="com.line.backstage.vo.SkuInfoVo" >
+        UPDATE t_sku_info SET NOW_PRICE=#{nowPrice},MIN_PRICE=#{minPrice},MAX_PRICE=#{maxPrice},OPEN_PRICE=#{openPrice} WHERE SKU_CODE=#{skuCode}
+    </select>
 </mapper>
