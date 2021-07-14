@@ -17,7 +17,7 @@
 			</view>
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>卡类型：</text>
-				<uni-easyinput type="text" :inputBorder="false" placeholder="持卡人" v-model="bankInfo.bankName" />
+				<uni-easyinput type="text" :inputBorder="false" placeholder="储蓄卡/信用卡" v-model="bankInfo.bankName" />
 			</view>
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>手机号：</text>

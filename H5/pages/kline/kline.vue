@@ -1,6 +1,6 @@
 <template>
 	<div class='divchart' style='background-color:#ffffff;'>
-		<uni-row class="uni-row-top">
+<!-- 		<uni-row class="uni-row-top">
 			<uni-col :span="9">
 				<view class="uni-col-top dark topText">
 					<div id="t_price">{{SocketMsg.PRICE}}</div>
@@ -24,8 +24,37 @@
 					<div id="t_highday">{{SocketMsg.HIGHDAY}}</div>
 				</view>
 			</uni-col>
-		</uni-row>
-
+		</uni-row> -->
+		<!-- top信息 -->
+		<view class="uni-row-top d-flex">
+			<!-- 实时价格 -->
+			<view id="t_price" class="d-flex flex-1 j-center a-center font-lgg">{{topValue.PRICE}}</view>
+			<!-- 当前行情 -->
+			<view class="flex-1">
+				<view class="d-flex flex-1">
+					<view class="flex-1 d-block">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最高</text>
+						<text id="t_highday" class="d-flex a-center j-center font" style="line-height: none;">{{topValue.LOWDAY}}</text>
+					</view>
+					<view class="flex-1 d-block">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">开盘</text>
+						<text id="t_openday" class="d-flex a-center j-center font">{{topValue.OPENDAY}}</text>
+					</view>
+				</view>
+				<view class="d-flex flex-1">
+					<view class="flex-1">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最低</text>
+						<view id="t_lowday" class="d-flex a-center j-center font">{{topValue.LOWDAY}}</view>
+					</view>
+					<view class="flex-1" @tap="addSelect">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">自选</text>
+						<view class="d-flex a-center j-center">
+							<image style="width: 25rpx; height: 25rpx;" src="/static/px.png" />
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
 		<!--  #ifdef  H5  -->
 		<div>
 			<div class='kline' id="kline" ref='kline'></div>
@@ -521,7 +550,7 @@
 	}
 
 	.uni-row-bot {
-		height: 70px;
+		height: 130rpx;
 	}
 
 	.uni-col-bot {
@@ -852,7 +881,7 @@
 				OrderCoinPrice: null,
 				OrderExpectEarnings: 18.8,
 				OrderGuarantee: 0.00,
-
+				topValue:{} // top信息对象
 			};
 
 			return data;
@@ -922,6 +951,11 @@
 					if (typeof msgData.PRICE != 'undefined') {
 						that.SocketMsg.PRICE = msgData.PRICE;
 						that.OrderCoinPrice = msgData.PRICE;
+						// XXX top信息赋值
+						that.topValue = msgData;
+						console.log("=================");
+						console.log(that.topValue);
+						console.log("=================");
 						document.getElementById("t_price").innerText = msgData.PRICE;
 						var xjItems = document.getElementsByClassName("page-2-xj");
 						if (xjItems.length > 0) {
@@ -987,6 +1021,9 @@
 		},
 
 		methods: {
+			addSelect() {
+				console.log("添加自选");
+			},
 			// 跳转持仓
 			ClickCc(){
 				uni.navigateTo({

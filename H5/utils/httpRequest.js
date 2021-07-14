@@ -1,5 +1,6 @@
 
 // 请求跟地址
+// const baseUrl = 'h5'
 const baseUrl = 'http://192.168.1.9:1686/study'
 
 /*
