@@ -1,6 +1,5 @@
 package com.line.backstage.service.impl;
 
-import com.line.backstage.annotation.Log;
 import com.line.backstage.dao.mapper.*;
 import com.line.backstage.entity.*;
 import com.line.backstage.service.TaskOrderSettlementService;
@@ -15,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Author DWanBean
+ * @Author
  * @Date 2021/7/14 16:30
  * @Version 1.0
  * @Desc
@@ -41,7 +40,6 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
      * 处理订单结算
      */
     @Override
-    @Log
     public void dealOrderSettlement() {
         //已当前时间为结算时间
         Date settlementDate = new Date();

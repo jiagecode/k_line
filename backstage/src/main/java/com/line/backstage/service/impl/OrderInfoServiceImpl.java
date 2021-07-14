@@ -128,6 +128,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setDel(1);
         //已下单
         orderInfo.setOrderStatus(1);
+        if(orderInfo.getInvestAmount() ==null){
+            orderInfo.setInvestAmount(orderInfo.getOrderAmount());
+        }
         int result = orderInfoMapper.insertSelective(orderInfo);
 
         accountRecord.setOrderId(orderInfo.getOrderId());
