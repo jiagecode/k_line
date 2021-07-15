@@ -49,7 +49,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         boolean settFlag = true;
         Integer todayNum = DateUtil.getTodayIntNum();
         while (settFlag && num <MAX_NUM){
-            List<OrderInfo> orders = queryAllNeedSettlementOrders(settlementDate);
+            List<OrderInfo> orders = orderInfoMapper.queryAllNeedSettlementOrders(settlementDate);
             if(CollectionUtils.isEmpty(orders)){
                 settFlag = false;
                 continue;
@@ -76,14 +76,6 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         return 0;
     }
 
-    /**
-     * 查询待结算订单
-     * @param settlementDate
-     * @return
-     */
-    private List<OrderInfo> queryAllNeedSettlementOrders(Date settlementDate){
-        return orderInfoMapper.queryAllNeedSettlementOrders(settlementDate);
-    }
     /**
      * 订单结算
      * @param orderInfo
