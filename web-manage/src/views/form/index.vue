@@ -189,10 +189,10 @@
           </el-form-item>
           <el-form-item label="调整类型：" prop="leixing">
             <el-select v-model="changeForm.leixing"  placeholder="请选择类型" @change="moneyChangeLx">
-              <el-option label="手动入金" value="0"></el-option>
+<!--              <el-option label="手动入金" value="0"></el-option>-->
               <el-option label="系统加款" value="1"></el-option>
               <el-option label="系统扣款" value="2"></el-option>
-              <el-option label="提现扣款" value="3"></el-option>
+<!--              <el-option label="提现扣款" value="3"></el-option>-->
             </el-select>
           </el-form-item>
           <el-form-item label="调后余额：" prop="moeny">

@@ -32,6 +32,7 @@ public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
 
     Double sumAllUserProfitAndLoss();
 
+    int updateForCashOut(AccountInfo accountInfo);
     /**
      * 根据用户id查询 AccountInfo
      *

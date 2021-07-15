@@ -273,20 +273,88 @@ public class SysDiyServiceImpl implements SysDiyService {
     @Override
     public Integer checkForCashOutIn(Integer loginUserId, CashOutIn cash) {
         CashOutIn outIn = cashOutInMapper.selectByPrimaryKey(cash);
+        Integer cashType = outIn.getCashType();
+        Integer cashStatus = cash.getCheckStatus();
         Date date = new Date();
         if(outIn !=null ){
             if(cash.getDel() != null){
                 outIn.setDel(cash.getDel());
             }else {
-                outIn.setCheckStatus(cash.getCheckStatus());
+                outIn.setCheckStatus(cashStatus);
                 outIn.setCheckDate(date);
                 outIn.setRemarks(cash.getRemarks());
             }
             outIn.setEditUserId(loginUserId);
             outIn.setEditDate(date);
+            if(cashType == 2 && cashStatus == 3){
+                // 变动类型为充值2 且审核成功3
+                AccountInfo accountInfo = new AccountInfo();
+                accountInfo.setAccountId(outIn.getAccountId());
+                accountInfo = accountInfoMapper.selectByPrimaryKey(accountInfo);
+                dealForCashOut(accountInfo,outIn.getCashMoney(),outIn.getCashId(),cashType,loginUserId,date);
+            }
             return cashOutInMapper.updateByPrimaryKey(outIn);
         }
         return 0;
+    }
+
+    private void dealForCashOut(AccountInfo account,Double money,Integer cashId,Integer cashType,Integer loginUserId,Date date){
+        AccountInfo info = new AccountInfo();
+        info.setAccountId(account.getAccountId());
+        info.setEditUserId(loginUserId);
+        Double before = account.getAccountMoney();
+        Double after ;
+        if(cashType ==1){
+            info.setAccountMoney(0 - money );
+            info.setAllOutNum(1);
+            info.setAllInNum(0);
+            info.setAllInMoney(0.0);
+            info.setAllOutMoney(money);
+            info.setReallyInMoney(0 - money);
+            after = before -money;
+        }else if(cashType ==2){
+            info.setAccountMoney(money );
+            info.setAllOutNum(0);
+            info.setAllInNum(1);
+            info.setAllInMoney(money);
+            info.setAllOutMoney(0.0);
+            info.setReallyInMoney(money);
+            after = before + money;
+        }else {
+            return;
+        }
+        accountInfoMapper.updateForCashOut(info);
+        addOneRecord(account.getAccountId(),money,cashType,before,after,date,account.getUserId(),cashId);
+    }
+
+    /**
+     * 记录资金变动
+     * @param accId
+     * @param changeMoney
+     * @param cashType
+     * @param before
+     * @param after
+     * @param date
+     * @param uid
+     * @param cashId
+     */
+    private void  addOneRecord(int accId,Double changeMoney,Integer cashType,Double before ,Double after,Date date,Integer uid,Integer cashId){
+        AccountRecord record = new AccountRecord();
+        record.setAccountId(accId);
+        record.setRecordType(cashType == 1? 2 :1);
+        record.setBeforeMoney(before);
+        record.setAfterMoney(after);
+        record.setChangeMoney(changeMoney);
+        record.setAddDate(date);
+        record.setEditDate(date);
+        record.setAddUserId(uid);
+        record.setEditUserId(uid);
+        record.setCashId(cashId);
+        record.setDel(1);
+        record.setCommissionMoney(0.0);
+        record.setServiceCharge(0.0);
+        record.setRemarks("用户"+(cashType == 1? "提现":"充值")+changeMoney);
+        accountRecordMapper.insertSelective(record);
     }
 
     @Override
@@ -528,6 +596,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         }else {
             record.setDel(1);
         }
+        /*type 管理员系统加款扣款对应充值和提现  此处描述待完善*/
         record.setRecordType(type);
         record.setChangeMoney(changeMoney);
         record.setBeforeMoney(beforeMoney);

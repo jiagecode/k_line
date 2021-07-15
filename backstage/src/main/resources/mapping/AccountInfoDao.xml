@@ -103,4 +103,16 @@
         SELECT * FROM t_account_info WHERE USER_ID = #{userId}
     </select>
 
+    <update id="updateForCashOut" parameterType="com.line.backstage.entity.AccountInfo">
+        update t_account_info  set
+        ACCOUNT_MONEY = ACCOUNT_MONEY + #{accountMoney},
+        ALL_IN_MONEY = ALL_IN_MONEY + #{allInMoney},
+        ALL_OUT_MONEY = ALL_OUT_MONEY + #{allOutMoney},
+        ALL_IN_NUM = ALL_IN_NUM + #{allInNum},
+        ALL_OUT_NUM = ALL_OUT_NUM + #{allOutNum},
+        REALLY_IN_MONEY = REALLY_IN_MONEY + #{reallyInMoney}
+        EDIT_USER_ID = #{editUserId} ,EDIT_DATE = now()
+        where ACCOUNT_ID = #{accountId}
+    </update>
+
 </mapper>

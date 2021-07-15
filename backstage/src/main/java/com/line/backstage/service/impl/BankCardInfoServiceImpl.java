@@ -4,12 +4,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.line.backstage.dao.mapper.BankCardInfoMapper;
 import com.line.backstage.entity.BankCardInfo;
+import com.line.backstage.entity.sysentity.ManOptionVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.BankCardInfoService;
 import com.line.backstage.utils.PageWrapper;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -125,5 +128,27 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
         PageInfo<BankCardInfo> page = new PageInfo<>(bankCardInfoLists);
         PageHelper.clearPage();
         return new PageWrapper<>(page);
+    }
+
+    @Override
+    public List<ManOptionVo> queryManOptionVoForBank(Integer loginUserId, Integer accountId) {
+        Integer userId = bankCardInfoMapper.queryUserId(accountId);
+        List<ManOptionVo> list = new ArrayList<>();
+        if(userId != null){
+            BankCardInfo bankCardInfo = new BankCardInfo();
+            bankCardInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+            bankCardInfo.setUserId(userId);
+            bankCardInfo.setCardStatus(0);
+            List<BankCardInfo> bankCardInfoLists = bankCardInfoMapper.select(bankCardInfo);
+            if(CollectionUtils.isEmpty(bankCardInfoLists)){
+                for (BankCardInfo b : bankCardInfoLists){
+                    ManOptionVo vo = new ManOptionVo();
+                    vo.setValue(b.getBankCardId()+"");
+                    vo.setLabel(b.getBankName()+ "**"+b.getCardNo().substring(13));
+                    list.add(vo);
+                }
+            }
+        }
+        return list;
     }
 }

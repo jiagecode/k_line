@@ -3,6 +3,7 @@ package com.line.backstage.dao.mapper;
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.BankCardInfo;
 import com.line.backstage.entity.sysentity.ManBankVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ import java.util.List;
 public interface BankCardInfoMapper extends TkBaseMapper<BankCardInfo> {
 
     List<ManBankVo> queryManBankVoForPage(ManBankVo bankVo);
+    Integer queryUserId(@Param("accountId") Integer accountId);
 }

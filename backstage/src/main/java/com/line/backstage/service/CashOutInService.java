@@ -28,7 +28,15 @@ public interface CashOutInService {
      * @return 是否成功
      */
     int insert(Integer loginUserId, CashOutIn cashOutIn);
- 
+
+    /**
+     * 新增提现/充值记录  前后端共用
+     * @param loginUserId
+     * @param cashOutIn
+     * @return
+     */
+    int insertForNew(Integer loginUserId, CashOutIn cashOutIn);
+
     /**
      * 通过主键删除数据
      *
