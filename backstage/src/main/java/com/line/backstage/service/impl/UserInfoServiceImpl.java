@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -131,6 +132,19 @@ public class UserInfoServiceImpl implements UserInfoService {
         accountInfo.setOrderNum(0);
         accountInfo.setAccountMoney(0.0);
         accountInfo.setAccountStatus(0);
+        accountInfo.setMoneyStatus(0);
+        accountInfo.setAllInMoney(0.0);
+        accountInfo.setReallyInMoney(0.0);
+        accountInfo.setDiyMoney(BigDecimal.ZERO);
+        accountInfo.setHandInMoney(0.0);
+        accountInfo.setAllOutNum(0);
+        accountInfo.setAllInNum(0);
+        accountInfo.setAllCommission(0.0);
+        accountInfo.setAllBonus(0.0);
+        accountInfo.setAllOutMoney(0.0);
+        accountInfo.setReallyMoney(0.0);
+        accountInfo.setAllFee(0.0);
+        accountInfo.setRemarks("用户注册 创建资金账户");
         int r = accountInfoMapper.insert(accountInfo);
         return loginUserId == -1 ? -1 : r;
     }

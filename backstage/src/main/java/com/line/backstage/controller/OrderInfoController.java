@@ -40,7 +40,13 @@ public class OrderInfoController {
     @PostMapping("save")
     @ApiOperation(value = "新增/修改", notes = "新增/修改订单信息的一条数据")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单信息对象", required = true) @RequestBody @Validated OrderInfo orderInfo) {
-            return ResponseHelper.success(orderInfoService.save(Integer.valueOf(loginUserId), orderInfo));
+        int result = orderInfoService.save(Integer.valueOf(loginUserId), orderInfo);
+        if(-1 == result){
+            return ResponseHelper.failedWith("账户被冻结 无法下单");
+        }else if(-2 == result){
+            return ResponseHelper.failedWith("资金被冻结 无法下单");
+        }
+        return ResponseHelper.success(result);
     }
  
     /**

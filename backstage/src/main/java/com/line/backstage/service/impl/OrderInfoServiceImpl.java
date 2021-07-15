@@ -41,7 +41,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private AccountInfoService accountInfoService;
     @Autowired
     private AccountRecordService accountRecordService;
-
+    /**
+     * 冻结标志
+     */
+    private final int FORBID_INT = 1;
     /**
      * 保存数据
      *
@@ -70,6 +73,14 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     public int insert(Integer loginUserId, OrderInfo orderInfo) {
         // 查询用户信息
         AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
+        if(accountInfo.getAccountStatus() == FORBID_INT){
+            //用户账户被冻结
+            return -1;
+        }
+        if(accountInfo.getMoneyStatus() == FORBID_INT){
+            //用户资金被冻结
+            return -2 ;
+        }
         //设置当前时间为下单时间
         Date addDate = new Date();
         //购买时长 秒数
@@ -163,8 +174,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public int update(Integer loginUserId, OrderInfo orderInfo) {
         OrderInfo o = orderInfoMapper.selectByPrimaryKey(orderInfo.getOrderId());
-        // FIXME 待完善
-        return orderInfoMapper.updateByPrimaryKeySelective(o);
+        if(o != null){
+            // FIXME 待完善
+            return orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+        }
+       return 0;
     }
 
     /**

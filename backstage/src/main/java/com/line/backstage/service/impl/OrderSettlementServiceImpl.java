@@ -111,26 +111,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         orderInfo.setResultMoney(changeMoney);
         orderInfo.setSubMoney(changeMoney - investAmount);
         orderInfoMapper.updateByPrimaryKey(orderInfo);
-        AccountInfo accountInfo = accountInfoMapper.queryByUserId(userId);
-        Double beforeMoney = accountInfo.getAccountMoney();
-        Double endMoney = beforeMoney + changeMoney;
-        Double allMoney = accountInfo.getAllMoney() ==null? 0.0 : accountInfo.getAllMoney();
-        if(changeMoney > 0){
-            /* 步骤2 ==》 跟新账户信息*/
-            accountInfo.setAccountMoney(endMoney);
-            accountInfo.setEditDate(settlementDate);
-            accountInfo.setAllInMoney(allMoney + endMoney - investAmount);
-            Double inMoney = accountInfo.getAllInMoney() == null? 0.0 : accountInfo.getAllInMoney();
-            accountInfo.setAllInMoney(inMoney + changeMoney);
-            Integer inNum = accountInfo.getAllInNum() == null ? 0: accountInfo.getAllInNum();
-            accountInfo.setAllInNum(++inNum);
-            Double allComm = accountInfo.getAllCommission() == null? 0.0:accountInfo.getAllCommission();
-            Double reIn = accountInfo.getReallyInMoney() == null ? 0.0 : accountInfo.getReallyInMoney();
-            accountInfo.setAllCommission(allComm +changeMoney);
-            accountInfo.setReallyInMoney(reIn +endMoney - investAmount );
-            accountInfoMapper.updateByPrimaryKey(accountInfo);
-        }
-        /* 步骤3 ==》 跟新持仓信息*/
+        /* 步骤2 ==》 跟新持仓信息*/
         PositionInfo positionInfo = new PositionInfo();
         positionInfo.setPositionId(orderInfo.getPositionId());
         positionInfo = positionInfoMapper.selectByPrimaryKey(positionInfo);
@@ -144,6 +125,31 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
             positionInfo.setEndAmout(changeMoney);
             positionInfo.setEditDate(settlementDate);
             positionInfoMapper.selectByPrimaryKey(positionInfo);
+        }
+        AccountInfo accountInfo = accountInfoMapper.queryByUserId(userId);
+        //账户是否冻结
+        boolean forbid = accountInfo.getAccountStatus() == 1 || accountInfo.getMoneyStatus() == 1;
+        if(forbid){
+            //账户已冻结 不处理资金
+            return;
+        }
+        Double beforeMoney = accountInfo.getAccountMoney();
+        Double endMoney = beforeMoney + changeMoney;
+        Double allMoney = accountInfo.getAllMoney() ==null? 0.0 : accountInfo.getAllMoney();
+        if(changeMoney > 0 ){
+            /* 步骤2 ==》 跟新账户信息*/
+            accountInfo.setAccountMoney(endMoney);
+            accountInfo.setEditDate(settlementDate);
+            accountInfo.setAllInMoney(allMoney + endMoney - investAmount);
+            Double inMoney = accountInfo.getAllInMoney() == null? 0.0 : accountInfo.getAllInMoney();
+            accountInfo.setAllInMoney(inMoney + changeMoney);
+            Integer inNum = accountInfo.getAllInNum() == null ? 0: accountInfo.getAllInNum();
+            accountInfo.setAllInNum(++inNum);
+            Double allComm = accountInfo.getAllCommission() == null? 0.0:accountInfo.getAllCommission();
+            Double reIn = accountInfo.getReallyInMoney() == null ? 0.0 : accountInfo.getReallyInMoney();
+            accountInfo.setAllCommission(allComm +changeMoney);
+            accountInfo.setReallyInMoney(reIn +endMoney - investAmount );
+            accountInfoMapper.updateByPrimaryKey(accountInfo);
         }
         /* 步骤4 ==》 记录资金变动*/
         addOneRecord(accountInfo.getAccountId(),changeMoney,beforeMoney,endMoney,settlementDate,userId,orderInfo.getOrderId());

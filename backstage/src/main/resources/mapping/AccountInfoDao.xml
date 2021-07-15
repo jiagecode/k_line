@@ -7,6 +7,7 @@
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="accountMoney" column="ACCOUNT_MONEY" jdbcType="NUMERIC"/>
         <result property="accountStatus" column="ACCOUNT_STATUS" jdbcType="INTEGER"/>
+        <result property="moneyStatus" column="MONEY_STATUS" jdbcType="INTEGER"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
@@ -36,7 +37,7 @@
         a.ACCOUNT_ID,a.USER_ID,a.ACCOUNT_MONEY,a.ACCOUNT_STATUS,a.ADD_DATE,a.EDIT_DATE,a.ADD_USER_ID,a.EDIT_USER_ID,
         a.DEL,a.ORDER_NUM,a.ALL_MONEY,a.ALL_IN_MONEY,a.ALL_IN_NUM,a.HAND_IN_MONEY,a.ALL_OUT_MONEY,a.ALL_OUT_NUM,
         a.ALL_COMMISSION,a.ALL_BONUS,a.REALLY_MONEY,a.REALLY_IN_MONEY,a.ALL_FEE,a.REMARKS,u.AGENT_NAME,a.DIY_MONEY,
-        u.USER_REAL_NAME,co.ALL_CHECK_MONEY
+        a.MONEY_STATUS,u.USER_REAL_NAME,co.ALL_CHECK_MONEY
     </sql>
     <select id="queryMyAccountIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select ACCOUNT_ID from  t_account_info where  DEL = 1 and USER_ID = #{userId}
