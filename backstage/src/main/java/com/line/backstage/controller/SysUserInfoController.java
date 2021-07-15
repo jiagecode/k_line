@@ -146,6 +146,18 @@ public class SysUserInfoController {
     public ResponseModel queryBankVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManBankVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManBankVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
+
+    /**
+     * 封禁或解封用户账户
+     * @param ManageUserId
+     * @param accountInfo
+     * @return
+     */
+    @PostMapping("openOrForbidAccount")
+    @ApiOperation(value = "列表", notes = "封禁或解封用户账户")
+    public ResponseModel openOrForbidAccount(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody AccountInfo accountInfo) {
+        return ResponseHelper.success(sysUserInfoService.openOrForbidAccount(Integer.valueOf(ManageUserId),accountInfo));
+    }
     /**
      * 管理端-资金报表
      * @param ManageUserId

@@ -128,7 +128,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         }
         AccountInfo accountInfo = accountInfoMapper.queryByUserId(userId);
         //账户是否冻结
-        boolean forbid = accountInfo.getAccountStatus() == 1 || accountInfo.getMoneyStatus() == 1;
+        boolean forbid = accountInfo.getAccountStatus() == 1 ;
         if(forbid){
             //账户已冻结 不处理资金
             return;

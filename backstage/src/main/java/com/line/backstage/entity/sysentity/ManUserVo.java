@@ -30,4 +30,7 @@ public class ManUserVo extends UserInfo {
      * 查询结束时间
      */
     private Date endDate;
+
+    private Integer moneyStatus;
+    private Integer accountStatus;
 }

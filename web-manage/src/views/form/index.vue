@@ -94,6 +94,9 @@
                     <el-button type="primary" class="app-tab-btn app-tab-btn2"
                                @click="changeWinRate(scope.$index, scope.row)">胜率
                     </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                               @click="changeForbid(scope.$index, scope.row)">账户
+                    </el-button>
                     <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
                                @click="signUpForUser(scope.$index, scope.row)">签约
                     </el-button>
@@ -205,6 +208,42 @@
         </el-form>
       </div>
     </el-dialog>
+    <!--封禁或解封账号-->
+    <el-dialog :visible.sync="forbidFormVisible" :close-on-click-modal="false"
+               :before-close="ai_dialog_closeChange">
+            <span slot="title" class="dialog-footer">
+                <span>封禁或解封账号</span>
+            </span>
+      <div class="payNameDiaBox">
+        <el-form ref="changeForm" :model="forbidForm" label-width="130px" :rules="rules">
+          <el-form-item label="用户姓名：" prop="username">
+            <el-input v-model="forbidForm.userRealName" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="账户金额：" prop="userMoney">
+            <el-input v-model="forbidForm.userMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="账户状态：" prop="accountStatus">
+            <el-select v-model="forbidForm.accountStatus" >
+              <el-option label="封禁" value="1"></el-option>
+              <el-option label="解封" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="资金状态：" prop="moneyStatus">
+            <el-select v-model="forbidForm.moneyStatus"  placeholder="请选择">
+              <el-option label="封禁" value="1"></el-option>
+              <el-option label="解封" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="备注：" prop="remarks">
+            <el-input v-model="forbidForm.remarks"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="payNameBnt1" @click="resetFormForbid('forbidForm')">取消</el-button>
+            <el-button class="payNameBnt2" @click="submitFormForbid('changeForm')">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
     <!--修改胜率-->
     <el-dialog :visible.sync="dialogFormVisibleWin" :close-on-click-modal="false"
                :before-close="ai_dialog_closeChange">
@@ -242,7 +281,7 @@
 </template>
 
 <script>
-import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType,openOrForbid } from '@/api/adminUser'
 
 export default {
     name: 'index',
@@ -251,6 +290,7 @@ export default {
             bjShow: false,
             dialogFormVisible: false,
             dialogFormVisibleWin: false,
+            forbidFormVisible: false,
             currentPage: 1,
             input1: '',
             input2: '',
@@ -320,6 +360,14 @@ export default {
                 userId: '',
                 userPhone: '',
                 userType: 1
+            },
+            forbidForm:{
+              userRealName:'',
+              userId:'',
+              userMoney:'',
+              moneyStatus:'',
+              accountStatus:'',
+              remarks:''
             },
             text: '',
             dialogFormVisibleTel: false,
@@ -418,7 +466,14 @@ export default {
         }
         return widthStr
       },
-
+      changeForbid(index, row){
+        this.forbidForm.accountStatus = row.accountStatus,
+        this.forbidForm.moneyStatus = row.moneyStatus,
+        this.forbidForm.userId = row.userId,
+        this.forbidForm.userRealName = row.userRealName,
+        this.forbidForm.userMoney = row.userMoney,
+        this.forbidFormVisible = true;
+      },
       signUpForUser(index, row) {
        // console.log(row)
         this.$confirm('此操作将签约用户为代理商, 是否继续?', '提示', {
@@ -509,11 +564,40 @@ export default {
                 }
             })
         },
+         submitFormForbid(formName) {
+        this.$confirm('此操作将严重影响用户下单、提现和资金结算, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          var  data = this.forbidForm;
+          openOrForbid(data).then(res=>{
+            if (res.code == 10000) {
+              this.$message.success(res.message)
+              this.forbidFormVisible = false
+              this.$refs[`forbidForm`].resetFields()
+              this.queryListForUserVo()
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+        },
         resetFormChange (formName) {
             this.dialogFormVisibleWin = false;
             this.dialogFormVisibleChange = false
             this.$refs[`changeForm`].resetFields()
             this.$refs[`winForm`].resetFields()
+        },
+      resetFormForbid (formName) {
+            this.forbidFormVisible = false;
+            this.$refs[`forbidForm`].resetFields()
         },
         ai_dialog_closeChange () {
             this.dialogFormVisibleChange = false

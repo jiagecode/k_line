@@ -341,6 +341,25 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     }
 
     @Override
+    public Integer openOrForbidAccount(Integer loginUserId, AccountInfo accountInfo) {
+       Integer userId = accountInfo.getUserId();
+       if(userId != null){
+           AccountInfo account = accountInfoMapper.queryByUserId(userId);
+           if(account != null){
+               account.setAccountStatus(accountInfo.getAccountStatus());
+               account.setMoneyStatus(accountInfo.getMoneyStatus());
+               account.setEditDate(new Date());
+               account.setEditUserId(loginUserId);
+               if(StringUtils.isNotEmpty(accountInfo.getRemarks())){
+                   account.setRemarks(accountInfo.getRemarks());
+               }
+               return accountInfoMapper.updateByPrimaryKey(account);
+           }
+       }
+        return 0;
+    }
+
+    @Override
     public SysUserInfo login(SysUserInfo sysUserInfo) {
 
         // XXX 加密密码

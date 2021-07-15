@@ -134,6 +134,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         accountInfo.setAccountStatus(0);
         accountInfo.setMoneyStatus(0);
         accountInfo.setAllInMoney(0.0);
+        accountInfo.setAllMoney(0.0);
         accountInfo.setReallyInMoney(0.0);
         accountInfo.setDiyMoney(BigDecimal.ZERO);
         accountInfo.setHandInMoney(0.0);

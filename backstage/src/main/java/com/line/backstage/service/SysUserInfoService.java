@@ -91,6 +91,7 @@ public interface SysUserInfoService {
     ManMoneyVo queryManMoneyVo(Integer loginUserId, ManMoneyVo manMoneyVo);
     Map<String,Object> queryHomePageData();
     List<Map<String, Object>>queryHomePageDataForDate(String dateStr);
+    Integer openOrForbidAccount(Integer loginUserId,AccountInfo accountInfo);
     /**
      * 系统管理员登录
      * @param sysUserInfo
