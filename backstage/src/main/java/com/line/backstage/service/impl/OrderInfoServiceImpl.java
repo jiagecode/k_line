@@ -81,6 +81,13 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             //用户资金被冻结
             return -2 ;
         }
+        if(orderInfo.getOrderAmount() > accountInfo.getAccountMoney()){
+            //用户资金不足
+            return -3;
+        }
+        if(orderInfo.getInvestAmount() ==null){
+            orderInfo.setInvestAmount(orderInfo.getOrderAmount());
+        }
         //设置当前时间为下单时间
         Date addDate = new Date();
         //购买时长 秒数
@@ -139,9 +146,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setDel(1);
         //已下单
         orderInfo.setOrderStatus(1);
-        if(orderInfo.getInvestAmount() ==null){
-            orderInfo.setInvestAmount(orderInfo.getOrderAmount());
-        }
+
         int result = orderInfoMapper.insertSelective(orderInfo);
 
         accountRecord.setOrderId(orderInfo.getOrderId());

@@ -78,8 +78,53 @@
                 <span v-if="item.prop==='userRealName'">
                              {{ scope.row.userRealName }}
                 </span>
+                <span v-if="item.prop==='agentName'">
+                             {{ scope.row.agentName }}
+                </span>
+                <span v-if="item.prop==='allInMoney'">
+                             {{ scope.row.allInMoney }}
+                </span>
+                <span v-if="item.prop==='allInNum'">
+                             {{ scope.row.allInNum }}
+                </span>
+                <span v-if="item.prop==='handInMoney'">
+                             {{ scope.row.handInMoney }}
+                </span>
+                <span v-if="item.prop==='allOutMoney'">
+                             {{ scope.row.allOutMoney }}
+                </span>
+                <span v-if="item.prop==='allOutNum'">
+                             {{ scope.row.allOutNum }}
+                </span>
+                <span v-if="item.prop==='allCheckMoney'">
+                   {{ showTodayMoneyDesc(scope.row.allCheckMoney) }}
+                </span>
+                <span v-if="item.prop==='allCommission'">
+                             {{ scope.row.allCommission }}
+                </span>
+                <span v-if="item.prop==='allBonus'">
+                             {{ scope.row.allBonus }}
+                </span>
+                <span v-if="item.prop==='accountMoney'">
+                             {{ scope.row.accountMoney }}
+                </span>
+                <span v-if="item.prop==='reallyMoney'">
+                             {{ scope.row.reallyMoney }}
+                </span>
+                <span v-if="item.prop==='reallyInMoney'">
+                             {{ scope.row.reallyInMoney }}
+                </span>
+                <span v-if="item.prop==='todayMoney'">
+                             {{ showTodayMoneyDesc(scope.row.todayMoney) }}
+                </span>
+                <span v-if="item.prop==='allMoney'">
+                             {{ scope.row.allMoney }}
+                </span>
+                <span v-if="item.prop==='allFee'">
+                             {{ scope.row.allFee }}
+                </span>
                 <!-- 正常的其他列 -->
-                <span v-else>{{ scope.row[item.prop] }}</span>
+<!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
               </template>
             </el-table-column>
           </el-table>
@@ -178,6 +223,9 @@ export default {
     this.queryTotal()
   },
   methods: {
+    showTodayMoneyDesc(todayMoney){
+      return (todayMoney ==null || todayMoney ==undefined) ? 0 :todayMoney;
+    },
     // 动态设置宽度
     columnWidth(item) {
       let widthStr = ''

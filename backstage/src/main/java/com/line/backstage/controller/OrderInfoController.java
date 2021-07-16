@@ -45,6 +45,8 @@ public class OrderInfoController {
             return ResponseHelper.failedWith("账户被冻结 无法下单");
         }else if(-2 == result){
             return ResponseHelper.failedWith("资金被冻结 无法下单");
+        }else if(-3 == result){
+            return ResponseHelper.failedWith("余额不足 无法下单");
         }
         return ResponseHelper.success(result);
     }

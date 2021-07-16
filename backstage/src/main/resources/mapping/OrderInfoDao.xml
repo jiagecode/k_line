@@ -89,10 +89,10 @@
 
     <select id="queryManOrderVoForPage" parameterType="com.line.backstage.entity.sysentity.ManOrderVo" resultMap="ManOrderVoInfoMap">
         select <include refid="orderInfo_Column_List"/>
-        from t_order_info o
+        from (SELECT * FROM t_account_record WHERE del = 1 and RECORD_TYPE >2 ) re
+        left join t_order_info o on re.ORDER_ID = o.ORDER_ID
         left join t_user_info u on o.USER_ID = u.USER_ID
-        left join t_account_info a on u.USER_ID = a.USER_ID
-        left join t_account_record re on re.ORDER_ID = o.ORDER_ID
+        left join t_account_info a on o.USER_ID = a.USER_ID
         left join (SELECT sum(EXP_MONEY) TODAY_MONEY,USER_ID FROM t_order_expand WHERE TODAY_NUM = #{todayNum} and DEL = 1 GROUP BY USER_ID ) as ext
         on ext.USER_ID = o.USER_ID
         where o.DEL = #{del}
