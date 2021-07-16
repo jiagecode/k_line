@@ -84,7 +84,12 @@ public class AccountInfoServiceImpl implements AccountInfoService {
 		// FIXME 待完善
         return accountInfoMapper.updateByPrimaryKeySelective(a);
 	}
- 
+
+    @Override
+    public int updateOfOrder(AccountInfo accountInfo) {
+        return accountInfoMapper.updateByPrimaryKeySelective(accountInfo);
+    }
+
     /**
      * 通过ID查询单条数据
      *

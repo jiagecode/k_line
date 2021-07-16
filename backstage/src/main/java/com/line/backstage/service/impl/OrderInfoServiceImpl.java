@@ -107,11 +107,12 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         // 修改账户余额
         accountInfo.setAccountMoney(BigDecimal.valueOf(accountInfo.getAccountMoney()).subtract(BigDecimal.valueOf(orderInfo.getInvestAmount())).doubleValue());
         accountInfo.setOrderNum(accountInfo.getOrderNum() + 1);
-
+        accountInfo.setEditUserId(loginUserId);
+        accountInfo.setEditDate(addDate);
         // 记录变动后的金额
         accountRecord.setAfterMoney(accountInfo.getAccountMoney());
 
-        accountInfoService.update(loginUserId, accountInfo);
+        accountInfoService.updateOfOrder(accountInfo);
 
         // 生成持仓数据
         PositionInfo positionInfo = new PositionInfo();

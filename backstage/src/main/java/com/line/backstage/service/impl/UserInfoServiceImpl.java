@@ -43,7 +43,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private AccountInfoMapper accountInfoMapper;
-
+    /**
+     * 默认佣金红利系数
+     */
+    private final double DEF_COMM = 0.5;
     /**
      * 保存数据
      *
@@ -79,6 +82,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         if(userInfo.getUserType() == null){
             userInfo.setUserType(1);
+            userInfo.setDiyUserType(1);
         }
         if(userInfo.getUserType() != 1 && userInfo.getUserType() != 2){
             userInfo.setUserType(1);
@@ -103,6 +107,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserRefereeAble(1);
         userInfo.setDel(1);
         userInfo.setDiyFlag(0);
+        userInfo.setWinRate(50.0);
+        userInfo.setCommissionRate(DEF_COMM);
+        userInfo.setBonusRate(DEF_COMM);
         if(userInfo.getAgentId() != null){
             userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
         }
@@ -128,6 +135,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (loginUserId != -1) {
             accountInfo.setEditUserId(loginUserId);
             accountInfo.setAddUserId(loginUserId);
+        }else {
+            accountInfo.setEditUserId(newId);
+            accountInfo.setAddUserId(newId);
         }
         accountInfo.setOrderNum(0);
         accountInfo.setAccountMoney(0.0);

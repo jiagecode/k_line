@@ -103,7 +103,11 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         //是否赢
         boolean isWin = orderIsWin(outPoint,inPoint,investType,winFlag);
         //结算金额
-        double changeMoney = getUserEndMoney(isWin,userId,investAmount);
+//        double changeMoney = getUserEndMoney(isWin,userId,investAmount);
+        double changeMoney = orderInfo.getExpectedReturn();
+        if(!isWin){
+            changeMoney =0;
+        }
         /* 步骤1 ==》 跟新订单*/
         orderInfo.setEditDate(settlementDate);
         //订单已完成

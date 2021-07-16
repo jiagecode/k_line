@@ -116,5 +116,5 @@ public class CashOutIn extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("备注")
     private String remarks;
-    private Integer diyId = 0;
+    private Integer diyId ;
 }

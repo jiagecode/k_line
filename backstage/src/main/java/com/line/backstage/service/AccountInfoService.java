@@ -46,7 +46,8 @@ public interface AccountInfoService {
      * @return 是否成功
      */
     int update(Integer loginUserId, AccountInfo accountInfo);
- 
+
+    int updateOfOrder( AccountInfo accountInfo);
     /**
      * 通过ID查询单条数据
      *
