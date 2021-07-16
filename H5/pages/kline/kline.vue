@@ -46,11 +46,9 @@
 						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最低</text>
 						<view id="t_lowday" class="d-flex a-center j-center font">{{topValue.LOWDAY}}</view>
 					</view>
-					<view class="flex-1" @tap="addSelect">
-						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">自选</text>
-						<view class="d-flex a-center j-center">
-							<image style="width: 25rpx; height: 25rpx;" src="/static/px.png" />
-						</view>
+					<view class="flex-1 d-flex a-center j-center" @tap="addSelect">
+						<!-- <text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">自选</text> -->
+						<image style="width: 65rpx; height: 65rpx;" src="/static/zxuan.png"><view class="d-flex flex-column"><text class="font-sm" style="line-height: 22rpx; margin-bottom: 6rpx;">自</text><text class="j-center font-sm" style="line-height: 22rpx;">选</text></view></image>
 					</view>
 				</view>
 			</view>
@@ -834,6 +832,7 @@
 		data() {
 			let data = {
 				// PairName:Bitcoin,Symbol:btc.BIT,Name:btc
+				id:'',
 				Symbol: 'btc.BIT',
 				Name: 'btc',
 				PairName: 'Bitcoin', //货币代码
@@ -889,6 +888,16 @@
 
 		onLoad(obj) {
 			var that = this;
+			var token = uni.getStorageSync('token');
+			// 用户信息
+			that.UserData = uni.getStorageSync('userInfo');
+			// 非法访问，请重新登录
+			if (token === null || token === undefined || token === '' || this.UserData === null) {
+				// 跳转页面
+				uni.reLaunch({
+					url: '../login/login'
+				});
+			}
 
 			// 订阅币种切换事件
 			uni.$on("ChangeSymbol", (rel) => {
@@ -901,16 +910,6 @@
 
 		onShow() {
 			var that = this;
-			// 用户信息
-			this.UserData = uni.getStorageSync('userInfo');
-			var token = uni.getStorageSync('token');
-			// 非法访问，请重新登录
-			if (token === null || token === undefined || token === '' || this.UserData === null) {
-				// 跳转页面
-				uni.reLaunch({
-					url: '../login/login'
-				});
-			}
 			// 系统信息
 			uni.getSystemInfo({
 				success: (res) => {
@@ -1022,7 +1021,28 @@
 
 		methods: {
 			addSelect() {
-				console.log("添加自选");
+				let data = {
+					"skuCode": this.id
+				}
+				https.saveSkuCusInfo(data).then((res) => {
+					console.log(res);
+					let msg = res === 1 ? '添加成功!' : res === -1 ? '添加失败!' : '取消成功!';
+					// 提示用户
+					this.vusui.msg(
+						msg, {
+							icon: 0,
+							shade: 0.6,
+						}, () => {
+							// 关闭当前弹窗
+							this.vusui.close('page');
+							// 重新获取用户信息 余额
+							// todo
+							// 跳转页面
+							// uni.navigateTo({
+							// 	url: '../transaction-records/transaction-now'
+							// })
+					});
+				});
 			},
 			// 跳转持仓
 			ClickCc(){
@@ -1430,6 +1450,8 @@
 			ChangeSymbol: function(item) {
 				var symbol = item.symbol;
 				var name = item.name;
+				// 虚拟币ID
+				this.id = item.id;
 				if (this.PairName == name) return;
 				this.PairName = name;
 				this.Symbol = symbol + '.BIT';

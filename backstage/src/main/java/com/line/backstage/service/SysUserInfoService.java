@@ -105,4 +105,10 @@ public interface SysUserInfoService {
      * @return
      */
     Map getUserInfo(Integer userId);
+
+    /**
+     * 退出
+     * @return
+     */
+    String logout(Integer userId);
 }

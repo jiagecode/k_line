@@ -1,5 +1,5 @@
 package com.line.backstage.service.impl;
- 
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.line.backstage.dao.mapper.SkuCusInfoMapper;
@@ -7,8 +7,10 @@ import com.line.backstage.entity.SkuCusInfo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SkuCusInfoService;
 import com.line.backstage.utils.PageWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -20,6 +22,7 @@ import java.util.List;
  * @author jack
  * @since 2000-07-02 18:09:07
  */
+@Slf4j
 @Service("skuCusInfoService")
 public class SkuCusInfoServiceImpl implements SkuCusInfoService {
  
@@ -53,9 +56,27 @@ public class SkuCusInfoServiceImpl implements SkuCusInfoService {
      * @return 是否成功
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insert(Integer loginUserId, SkuCusInfo skuCusInfo) {
-        skuCusInfo.setAddUserId(loginUserId);
-        return skuCusInfoMapper.insertSelective(skuCusInfo);
+        if (StringUtils.isEmpty(skuCusInfo.getSkuCode())) {
+            return -1;
+        }
+        skuCusInfo.setUserId(loginUserId);
+        SkuCusInfo s = skuCusInfoMapper.selectOne(skuCusInfo);
+        if(s == null){
+            skuCusInfo.setAddUserId(loginUserId);
+            skuCusInfo.setAddDate(new Date());;
+            skuCusInfo.setDel(1);
+            skuCusInfoMapper.insertSelective(skuCusInfo);
+            return 1;
+        } else {
+            s.setEditUserId(loginUserId);
+            s.setEditDate(new Date());
+            int del = s.getDel() == 0 ? 1 : 0;
+            s.setDel(del);
+            skuCusInfoMapper.updateByPrimaryKey(s);
+            return del;
+        }
     }
  
     /**

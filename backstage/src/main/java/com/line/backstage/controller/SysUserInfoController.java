@@ -261,7 +261,6 @@ public class SysUserInfoController {
     @GetMapping("logout")
     @ApiOperation(value = "查询单条数据", notes = "根据token的用户id}")
     public ResponseModel logout(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
-        return ResponseHelper.success("success");
+        return ResponseHelper.success(sysUserInfoService.logout(Integer.valueOf(loginUserId)));
     }
- 
 }

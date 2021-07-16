@@ -13,11 +13,9 @@ import com.line.backstage.entity.sysentity.*;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
 import com.line.backstage.utils.DateUtil;
-import com.line.backstage.utils.DateUtils;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.MenuRouteVo;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -399,6 +397,15 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         resMap.put("menus", routes);
         resMap.put("name", user.getSysUserName());
         return resMap;
+    }
+
+    /**
+     * 退出登录
+     * @return
+     */
+    @Override
+    public String logout(Integer userId) {
+        return "" + userId;
     }
 
     /**

@@ -12,6 +12,7 @@ const urls = {
 	userRegister: "/userInfo/createUserInfo", // H5用户注册
 	bankCardInfoSave: "/bankCardInfo/save", // 新增银行卡
 	submitOrder: "/orderInfo/save", //提交订单
+	saveSkuCusInfo:"/skuCusInfo/save" //添加自选
 }
 
 module.exports = {
@@ -47,5 +48,8 @@ module.exports = {
 	},
 	submitOrder(data) {
 		return doRequest('POST', urls.submitOrder, data)
+	},
+	saveSkuCusInfo(data) {
+		return doRequest('POST', urls.saveSkuCusInfo, data)
 	}
 }

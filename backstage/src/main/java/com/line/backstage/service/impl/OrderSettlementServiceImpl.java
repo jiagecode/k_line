@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
     public void dealOrderSettlement() {
         //已当前时间为结算时间
         Date settlementDate = new Date();
-        logger.error("结算订单任务开始时间为："+settlementDate);
+        logger.info("结算订单任务开始时间为：{}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
         int num = 0;
         //是否进行结算
         boolean settFlag = true;
@@ -58,7 +60,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
                num += dealOneOrder(orderInfo,settlementDate,todayNum);
            }
         }
-        logger.error("结算订单条数为："+num);
+        logger.info("结算订单条数为：{}", num);
     }
 
     /**

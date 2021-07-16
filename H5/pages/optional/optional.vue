@@ -22,17 +22,19 @@
 				</view>
             <!-- 实时价格 -->
             <view style="width: 290rpx;">
-              <view class="d-flex" style="height: 40rpx; font-size: 33rpx; font-weight: bold;">
-                <view style="height: 40rpx; margin-top: -8rpx;">${{item.current_price}}</view>
-              </view>
-              <view class="num" style="font-size: 25rpx; color: #999999; margin-top: 5rpx; height: 27rpx;">≈￥{{item.current_price}}</view>
-              <view style="height: 38rpx;"></view>
+				<view class="d-flex" style="height: 40rpx; font-size: 33rpx; font-weight: bold;">
+					<view style="height: 40rpx; margin-top: -8rpx;">${{item.current_price}}</view>
+				</view>
+				<view class="num" style="font-size: 25rpx; color: #999999; margin-top: 5rpx; height: 27rpx;">≈￥{{item.current_price_cny}}</view>
+				<view style="height: 38rpx;"></view>
             </view>
             <!-- 涨幅榜 -->
             <view style="width: 170rpx;">
-              <!-- align-items: center; 垂直居中  justify-content: center; 水平居中 -->
-              <view class="d-flex a-center j-center" v-if="item.current_price > 0" style="width: 143rpx; height: 62rpx; background-color: #00c68d; color: #FFFFFF;">+{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
-              <view class="d-flex a-center j-center" v-else style="width: 143rpx; height: 62rpx; background-color: #fd6d48; color: #FFFFFF; ">{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
+				<!-- align-items: center; 垂直居中  justify-content: center; 水平居中 -->
+				<view class="d-flex a-center j-center" v-if="item.price_change_percentage_24h > 0" 
+				style="width: 143rpx; height: 62rpx; background-color: #00c68d; color: #FFFFFF;">+{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
+				<view class="d-flex a-center j-center" v-else 
+				style="width: 143rpx; height: 62rpx; background-color: #fd6d48; color: #FFFFFF; ">{{item.price_change_percentage_24h !== null ? item.price_change_percentage_24h.toFixed(2) : 0}}%</view>
             </view>
           </view>
         </block>
@@ -52,12 +54,13 @@ export default {
     }
   },
   methods: {
-    toKline(){
-      console.clear("toKline");
-      uni.navigateTo({
-        url: '../kline/kline'
-      });
-    },
+	toKline(item){
+		console.clear("toKline");
+		uni.$emit("ChangeSymbol",item);
+		uni.switchTab({
+			url: '../kline/kline'
+		});
+	},
 	// 处理数据
 	processingdData(data){
 		for (const d of data) {
