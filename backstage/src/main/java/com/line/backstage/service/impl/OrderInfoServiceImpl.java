@@ -103,7 +103,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         accountRecord.setAddDate(addDate);
         accountRecord.setEditDate(addDate);
         accountRecord.setServiceCharge(orderInfo.getOrderCharge());
-
+        accountRecord.setDiyId(0);
         // 修改账户余额
         accountInfo.setAccountMoney(BigDecimal.valueOf(accountInfo.getAccountMoney()).subtract(BigDecimal.valueOf(orderInfo.getInvestAmount())).doubleValue());
         accountInfo.setOrderNum(accountInfo.getOrderNum() + 1);
@@ -129,7 +129,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         positionInfo.setEndDate(endDate);
         positionInfo.setAddUserId(loginUserId);
         positionInfo.setEditUserId(loginUserId);
-
+        positionInfo.setDiyId(0);
         // 新增持仓数据
         positionInfoService.insert(loginUserId, positionInfo);
 
@@ -145,6 +145,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setEditDate(addDate);
         orderInfo.setSettlementDate(endDate);
         orderInfo.setDel(1);
+        orderInfo.setDiyId(0);
         //已下单
         orderInfo.setOrderStatus(1);
 

@@ -118,10 +118,11 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         orderInfo.setSubMoney(changeMoney - investAmount);
         orderInfoMapper.updateByPrimaryKey(orderInfo);
         /* 步骤2 ==》 跟新持仓信息*/
-        PositionInfo positionInfo = new PositionInfo();
-        positionInfo.setPositionId(orderInfo.getPositionId());
-        positionInfo = positionInfoMapper.selectByPrimaryKey(positionInfo);
+        PositionInfo positionInfo = positionInfoMapper.queryOne(orderInfo.getPositionId());
+//        System.out.println("==1==>");
+//        System.out.println(orderInfo.getPositionId());
         if(positionInfo !=null){
+//            System.out.println("==2==>");
             positionInfo.setPositionStatus(2);
             positionInfo.setNowPrice(outPoint);
             positionInfo.setEndPrice(outPoint);
@@ -130,7 +131,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
             positionInfo.setEndDate(settlementDate);
             positionInfo.setEndAmout(changeMoney);
             positionInfo.setEditDate(settlementDate);
-            positionInfoMapper.selectByPrimaryKey(positionInfo);
+            positionInfoMapper.updateByPrimaryKey(positionInfo);
         }
         AccountInfo accountInfo = accountInfoMapper.queryByUserId(userId);
         //账户是否冻结

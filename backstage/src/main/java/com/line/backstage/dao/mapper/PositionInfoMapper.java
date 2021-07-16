@@ -11,6 +11,6 @@ import org.apache.ibatis.annotations.Param;
  * @since 2000-07-01 11:34:50
  */
 public interface PositionInfoMapper extends TkBaseMapper<PositionInfo> {
-
+    PositionInfo queryOne(@Param("posId") Integer posId);
     Integer updateForDiy(@Param("diyId") Integer diyId,@Param("userId") Integer userId,@Param("del") Integer del,@Param("sysUserId")Integer sysUserId);
 }
