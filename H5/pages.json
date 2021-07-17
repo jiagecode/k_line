@@ -31,7 +31,7 @@
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
-				"enablePullDownRefresh":false
+				"enablePullDownRefresh":true
             }
             
         },
@@ -76,7 +76,7 @@
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
-				"enablePullDownRefresh":false
+				"enablePullDownRefresh":true
             }
             
         }
@@ -87,7 +87,7 @@
 				"navigationBarTitleText": "交易记录",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
             
         },
@@ -98,7 +98,7 @@
 				"navigationBarTitleText": "持仓记录",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
 
         }
@@ -120,7 +120,7 @@
                 "navigationBarTitleText": "账户提现",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
             
         },{
@@ -130,7 +130,7 @@
                 "navigationBarTitleText": "提现记录",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
 
         }
@@ -141,7 +141,7 @@
                 "navigationBarTitleText": "资金流水",
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": true
             }
             
         }

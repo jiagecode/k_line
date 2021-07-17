@@ -53,34 +53,56 @@ export default {
       coingeckoUrl:"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false",
     }
   },
-  methods: {
-	toKline(item){
-		console.clear("toKline");
-		uni.$emit("ChangeSymbol",item);
-		uni.switchTab({
-			url: '../kline/kline'
-		});
-	},
-	// 处理数据
-	processingdData(data){
-		for (const d of data) {
-			console.log(d)
-			// 美元转换人名币
-			let market_cap = d.market_cap * 6.47;
-			let current_price = d.current_price * 6.47;
-			
-			// 转换亿元
-			d.market_cap = (this.numFormat(d.market_cap / 100000000)) + "亿";
-			// 实时人民币价格
-			d.current_price_cny = (this.numFormat(d.current_price));
+	methods: {
+		loadData(){
+			var reqUrl = this.coingeckoUrl;
+			//查询我的自选id数据
+			https.myCusSkuCode(this.queryData).then((res) => {
+			  if (res != null && res != '') {
+				 // console.log("我的自选id数据:" + res);
+				  reqUrl = reqUrl+"&ids="+res;
+			   //   console.log("查询商品请求url:" + reqUrl);
+				  uni.request({
+					url: reqUrl,
+					method: 'get',
+					success: (res) => {
+						// 数据请求完成之后停止下拉刷新
+						uni.stopPullDownRefresh();
+						console.log(res.data);
+						// this.marketsList = res.data;
+					  this.marketsList = this.processingdData(res.data);
+					}
+				  });
+				}
+			})
+		},
+		toKline(item){
+			console.clear("toKline");
+			uni.$emit("ChangeSymbol",item);
+			uni.switchTab({
+				url: '../kline/kline'
+			});
+		},
+		// 处理数据
+		processingdData(data){
+			for (const d of data) {
+				console.log(d)
+				// 美元转换人名币
+				let market_cap = d.market_cap * 6.47;
+				let current_price = d.current_price * 6.47;
+				
+				// 转换亿元
+				d.market_cap = (this.numFormat(d.market_cap / 100000000)) + "亿";
+				// 实时人民币价格
+				d.current_price_cny = (this.numFormat(d.current_price));
+			}
+			return data;
+		},
+		// js 金额用，隔开
+		numFormat(num) {
+			return (num.toString().indexOf('.') !== -1) ? num.toLocaleString('CNY', {maximumFractionDigits : 2}) : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
 		}
-		return data;
 	},
-	// js 金额用，隔开
-	numFormat(num) {
-		return (num.toString().indexOf('.') !== -1) ? num.toLocaleString('CNY', {maximumFractionDigits : 2}) : num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-	}
-  },
   onLoad() {
     //非法访问，请重新登录
     if(uni.getStorageSync('token') === null || uni.getStorageSync('token') === undefined || uni.getStorageSync('token') === ''){
@@ -89,30 +111,19 @@ export default {
         url: '../login/login'
       });
     }
-
-    var reqUrl = this.coingeckoUrl;
-    //查询我的自选id数据
-    https.myCusSkuCode(this.queryData).then((res) => {
-      if (res != null && res != '') {
-         // console.log("我的自选id数据:" + res);
-          reqUrl = reqUrl+"&ids="+res;
-       //   console.log("查询商品请求url:" + reqUrl);
-          uni.request({
-            url: reqUrl,
-            method: 'get',
-            success: (res) => {
-              console.log(res.data);
-              // this.marketsList = res.data;
-              this.marketsList = this.processingdData(res.data);
-            }
-          });
-        }
-
-    })
   },
-  onShow() {
-    document.title = '币安秒合约';
-  }
+	onShow() {
+		document.title = '币安秒合约';
+		this.loadData();
+	},
+	// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		this.loadData();
+		uni.showToast({
+			title: '刷新成功！',
+			duration: 500,
+		})
+	}
 }
 </script>
 

@@ -32,14 +32,6 @@ export default {
     }
   },
   onLoad() {
-  },
-  methods: {
-    showUpOrDown(investType, money) {
-      let desc = investType === 1 ? "买涨" : "买跌";
-      return desc + " (￥" + money + ")";
-    },
-  },
-  mounted: async function () {
     var token = uni.getStorageSync('token');
     // 非法访问，请重新登录
     if (token === null || token === undefined || token === '') {
@@ -48,18 +40,37 @@ export default {
         url: '../login/login'
       });
     }
-    var data = {"positionStatus": this.positionStatus};
-    //发起查询数据
-    https.myPosition(data).then((res) => {
-      if (res != null) {
-        this.positionList = res.list;
-        console.log("交易历史数据:" + res.list);
-      }
-    })
+  },
+  methods: {
+    showUpOrDown(investType, money) {
+      let desc = investType === 1 ? "买涨" : "买跌";
+      return desc + " (￥" + money + ")";
+    },
+	loadData(){
+		var data = {"positionStatus": this.positionStatus};
+		//发起查询数据
+		https.myPosition(data).then((res) => {
+		  if (res != null) {
+			this.positionList = res.list;
+			// 数据请求完成之后停止下拉刷新
+			uni.stopPullDownRefresh();
+			console.log("交易历史数据:" + res.list);
+		  }
+		})
+	}
   },
   onShow() {
     document.title = '币安秒合约';
-  }
+	this.loadData();
+  },
+	// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		this.loadData();
+		uni.showToast({
+			title: '刷新成功！',
+			duration: 500,
+		})
+	}
 }
 </script>
 

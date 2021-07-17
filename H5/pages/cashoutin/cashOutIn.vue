@@ -25,6 +25,14 @@ export default {
     }
   },
   onLoad() {
+    var token = uni.getStorageSync('token');
+    // 非法访问，请重新登录
+    if (token === null || token === undefined || token === '') {
+      // 跳转页面
+      uni.reLaunch({
+        url: '../login/login'
+      });
+    }
   },
   methods: {
     showOutInDesc(cashType, money) {
@@ -42,28 +50,30 @@ export default {
       }
       return "已通过";
     },
-  },
-  mounted: async function () {
-    var token = uni.getStorageSync('token');
-    // 非法访问，请重新登录
-    if (token === null || token === undefined || token === '') {
-      // 跳转页面
-      uni.reLaunch({
-        url: '../login/login'
-      });
-    }
-    var data = {};
-    //发起查询数据
-    https.myOutIn(data).then((res) => {
-      if (res != null) {
-        this.cashDetailList = res.list;
-        console.log("提现充值数据:" + res.list);
-      }
-    })
+	loadData(){
+		//发起查询数据
+		https.myOutIn({}).then((res) => {
+		  if (res != null) {
+			this.cashDetailList = res.list;
+			// 数据请求完成之后停止下拉刷新
+			uni.stopPullDownRefresh();
+			console.log("提现充值数据:" + res.list);
+		  }
+		})
+	}
   },
   onShow() {
     document.title = '币安秒合约';
-  }
+	this.loadData();
+  },
+	// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		this.loadData();
+		uni.showToast({
+			title: '刷新成功！',
+			duration: 500,
+		})
+	}
 }
 </script>
 

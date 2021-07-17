@@ -52,6 +52,17 @@
 			}
 		},
 		methods: {
+		   loadData() {
+				uni.request({
+					url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false',
+					method: 'get',
+					success: (res) => {
+						// 数据请求完成之后停止下拉刷新
+						uni.stopPullDownRefresh();
+						this.marketsList = this.processingdData(res.data);
+					}
+				})
+            },
 			toKline(item){
 				console.clear("toKline");
 				uni.$emit("ChangeSymbol",item);
@@ -91,26 +102,6 @@
 					});
 				})
 			}
-			// js将数值转化为万、亿、万亿并保留两位小数
-			// numberFormat(value) {
-			// 	var param = {};
-			// 	var k = 10000,
-			// 		sizes = ['', '万', '亿', '万亿'],
-			// 		i;
-			// 		if(value < k){
-			// 			param.value =value
-			// 			param.unit=''
-			// 		}else{
-			// 			// Math.floor() 返回小于或等于一个给定数字的最大整数
-			// 			// Math.log() 函数返回一个数的自然对数
-			// 			// Math.pow() 函数返回基数（base）的指数（exponent）次幂
-			// 			i = Math.floor(Math.log(value) / Math.log(k)); 
-			// 			console.log((value/ 100000000).toFixed(2))
-			// 			param.value = ((value / Math.pow(k, i))).toFixed(2);
-			// 			param.unit = sizes[i];
-			// 		}
-			// 	return param;
-			// }
 		},
 		onLoad() {
 			// 非法访问，请重新登录
@@ -120,17 +111,18 @@
 				    url: '../login/login'
 				});
 			}
-			
-			uni.request({
-			    url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false',
-				method: 'get',
-			    success: (res) => {
-					this.marketsList = this.processingdData(res.data);
-			    }
-			});
 		},
 		onShow() {
 			document.title = '币安秒合约';
+			this.loadData();
+		},
+		// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+		onPullDownRefresh() {
+			this.loadData();
+			uni.showToast({
+				title: '刷新成功！',
+				duration: 500,
+			})
 		}
 	}
 </script>
