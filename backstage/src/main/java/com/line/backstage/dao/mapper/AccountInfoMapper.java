@@ -28,9 +28,9 @@ public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
 
     ManMoneyVo queryManMoneyVo(ManMoneyVo manMoneyVo);
 
-    Double sumAllUserMoney();
+    Double sumAllUserMoney(@Param("agentId") Integer agentId);
 
-    Double sumAllUserProfitAndLoss();
+    Double sumAllUserProfitAndLoss(@Param("agentId") Integer agentId);
 
     int updateForCashOut(AccountInfo accountInfo);
     /**

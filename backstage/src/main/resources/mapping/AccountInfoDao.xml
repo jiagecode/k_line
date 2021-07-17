@@ -45,11 +45,23 @@
     <select id="queryMyMoneyByUserId" parameterType="java.lang.Integer" resultType="java.lang.Double">
         select ACCOUNT_MONEY from  t_account_info where  DEL = 1 and USER_ID = #{userId}
     </select>
-    <select id="sumAllUserMoney" resultType="java.lang.Double">
-        select sum(ACCOUNT_MONEY) from  t_account_info where  DEL = 1
+    <select id="sumAllUserMoney" resultType="java.lang.Double" parameterType="java.lang.Integer">
+        select sum(a.ACCOUNT_MONEY)
+        from  t_account_info a
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        where  a.DEL = 1
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
+        </if>
     </select>
-    <select id="sumAllUserProfitAndLoss" resultType="java.lang.Double">
-        select sum(ALL_MONEY) from  t_account_info where  DEL = 1
+    <select id="sumAllUserProfitAndLoss" resultType="java.lang.Double" parameterType="java.lang.Integer">
+        select sum(a.ALL_MONEY)
+        from  t_account_info a
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        where  a.DEL = 1
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
+        </if>
     </select>
     <select id="queryForPage" parameterType="com.line.backstage.entity.AccountInfo" resultMap="AccountInfoMap">
         select <include refid="account_info_sql"/>

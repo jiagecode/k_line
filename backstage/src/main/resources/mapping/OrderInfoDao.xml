@@ -132,12 +132,17 @@
     </select>
 
     <select id="countTodayOrderNum" parameterType="java.util.Map" resultType="java.lang.Integer">
-        select count(1) from t_order_info where DEL = 1
+        select count(1) from t_order_info o
+        left join t_user_info u on o.USER_ID = u.USER_ID
+        where o.DEL = 1
         <if test=" beginDate != null ">
-            and ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+            and o.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
         </if>
         <if test=" endDate != null ">
-            and ADD_DATE <![CDATA[ <= ]]> #{endDate}
+            and o.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
     <update id="updateForDiy" parameterType="java.lang.Integer" >

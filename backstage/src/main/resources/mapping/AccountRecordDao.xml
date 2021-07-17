@@ -51,12 +51,19 @@
         r.EDIT_USER_ID,r.DEL,r.DIY_ID,r.CASH_ID,u.USER_REAL_NAME,u.USER_ID,u.AGENT_NAME,o.INTEGRAL
     </sql>
     <select id="sumAllMoneyRecord" parameterType="java.util.Map" resultType="java.util.Map">
-        select sum(CHANGE_MONEY) todayWater,sum(SERVICE_CHARGE) todayFee from t_account_record where DEL = 1
+        select sum(r.CHANGE_MONEY) todayWater,sum(r.SERVICE_CHARGE) todayFee
+        from t_account_record r
+        left join  t_account_info a on r.ACCOUNT_ID = a.ACCOUNT_ID
+        left join t_user_info u on u.USER_ID = a.USER_ID
+        where r.DEL = 1
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
+        </if>
         <if test=" beginDate != null ">
-            and ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+            and r.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
         </if>
         <if test=" endDate != null ">
-            and ADD_DATE <![CDATA[ <= ]]> #{endDate}
+            and r.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
 

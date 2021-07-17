@@ -14,6 +14,7 @@ import com.line.backstage.vo.ResponseModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.LockedAccountException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -251,6 +252,21 @@ public class SysUserInfoController {
     public ResponseModel queryHomeData(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId,@RequestParam String endTime){
 //        return ResponseHelper.success(sysUserInfoService.queryHomePageData());
         return ResponseHelper.success(sysUserInfoService.queryHomePageDataForDate(endTime));
+    }
+
+    /**
+     * 查询代理商统计数据
+     * @param loginUserId
+     * @param agentId
+     * @return
+     */
+    @GetMapping("queryAgentData")
+    @ApiOperation(value = "代理商统计数据", notes = "根据token的用户id}")
+    public ResponseModel queryHomeDataForAgent(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId,@RequestParam String agentId){
+        if(StringUtils.isEmpty(agentId)){
+            agentId = "-1";
+        }
+        return ResponseHelper.success(sysUserInfoService.queryHomePageData(Integer.valueOf(agentId)));
     }
 
     /**

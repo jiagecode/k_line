@@ -89,7 +89,7 @@ public interface SysUserInfoService {
     PageWrapper<ManBankVo> queryManBankVoForPage(Integer loginUserId, ManBankVo recordVo);
     PageWrapper<AccountInfo> queryAccountInfoForPage(Integer loginUserId, AccountInfo recordVo);
     ManMoneyVo queryManMoneyVo(Integer loginUserId, ManMoneyVo manMoneyVo);
-    Map<String,Object> queryHomePageData();
+    Map<String,Object> queryHomePageData(Integer agentId);
     List<Map<String, Object>>queryHomePageDataForDate(String dateStr);
     Integer openOrForbidAccount(Integer loginUserId,AccountInfo accountInfo);
     /**

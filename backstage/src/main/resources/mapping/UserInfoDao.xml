@@ -113,6 +113,9 @@
         <if test=" userType != null ">
             and USER_TYPE = #{userType}
         </if>
+        <if test=" agentId != -1 ">
+            and AGENT_ID = #{agentId} and USER_ID <![CDATA[ <> ]]>#{agentId}
+        </if>
         <if test=" beginDate != null ">
             and USER_REGISTER_DATE <![CDATA[ >= ]]> #{beginDate}
         </if>

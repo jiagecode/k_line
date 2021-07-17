@@ -95,6 +95,13 @@ export function queryOptData1() {
     method: 'get',
   })
 }
+export function queryAgentData1(params) {
+  return request({
+    url: '/sysUserInfo/queryAgentData',
+    method: 'get',
+    params
+  })
+}
 //资金报表汇总
 export function moneyTableAll(data) {
   return request({

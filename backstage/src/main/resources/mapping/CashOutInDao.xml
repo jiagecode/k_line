@@ -53,15 +53,21 @@
         where DEL = 1 and ACCOUNT_ID = #{accountId} and CASH_TYPE =#{cashType}
     </select>
     <select id="sumAllCash" parameterType="java.util.Map" resultType="java.lang.Double">
-        select sum(CASH_MONEY)  from t_cash_out_in where DEL = 1
+        select sum(r.CASH_MONEY)  from t_cash_out_in r
+        left join  t_account_info a on r.ACCOUNT_ID = a.ACCOUNT_ID
+        left join t_user_info u on u.USER_ID = a.USER_ID
+        where r.DEL = 1
         <if test=" cashType != null ">
-            and CASH_TYPE = #{cashType}
+            and r.CASH_TYPE = #{cashType}
+        </if>
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
         </if>
         <if test=" beginDate != null ">
-            and ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+            and r.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
         </if>
         <if test=" endDate != null ">
-            and ADD_DATE <![CDATA[ <= ]]> #{endDate}
+            and r.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
     <sql id="cashOutIn_Column_List">

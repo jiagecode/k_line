@@ -279,18 +279,24 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         return vo;
     }
 
+
+
     @Override
-    public Map<String, Object> queryHomePageData() {
+    public Map<String, Object> queryHomePageData(Integer agentId) {
+        if(agentId == null){
+            agentId = -1;
+        }
         Map<String, Object> map = new HashMap<>();
+        map.put("agentId",agentId);
         //用户总数
         Integer allUserNum = userInfoMapper.countUserNum(map);
         //用户总余额
-        Double userAllMoney = accountInfoMapper.sumAllUserMoney();
+        Double userAllMoney = accountInfoMapper.sumAllUserMoney(agentId);
         if(userAllMoney == null){
             userAllMoney = 0.0;
         }
         //用户总盈亏
-        Double profitAndLoss = accountInfoMapper.sumAllUserProfitAndLoss();
+        Double profitAndLoss = accountInfoMapper.sumAllUserProfitAndLoss(agentId);
         if(profitAndLoss == null){
             profitAndLoss = 0.0;
         }

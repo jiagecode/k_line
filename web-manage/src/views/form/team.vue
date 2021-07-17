@@ -19,6 +19,22 @@
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
           </div>
         </div>
+        <div class="dashboard-header">
+          <div class="dashboard-header-title">总数据统计</div>
+        </div>
+        <div class="app-box-changeBox">
+          <div class="allmoney-div2_2">今日新增用户:<br/><span class="span-data-s">{{homeData.todayUserNum}}</span></div>
+          <div class="allmoney-div2_2">今日新增代理:<br/><span class="span-data-s">{{homeData.todayAgentNum}}</span></div>
+          <div class="allmoney-div2_2">总用户:<br/><span class="span-data-s">{{homeData.allUserNum}}</span></div>
+          <div class="allmoney-div2_2">用户总余额:<br/><span class="span-data-s">{{homeData.userAllMoney}}</span></div>
+          <div class="allmoney-div2_2">今日订单:<br/><span class="span-data-s">{{homeData.todayOrderNum}}</span></div>
+          <div class="allmoney-div2_2">今日订单:<br/><span class="span-data-s">{{homeData.todayOrderNum}}</span></div>
+          <div class="allmoney-div2_2">客户盈亏:<br/><span class="span-data-s">{{homeData.profitAndLoss}}</span></div>
+          <div class="allmoney-div2_2">今日流水:<br/><span class="span-data-s">{{homeData.todayWater}}</span></div>
+          <div class="allmoney-div2_2">今日充值:<br/><span class="span-data-s">{{homeData.cashIn}}</span></div>
+          <div class="allmoney-div2_2">今日提现:<br/><span class="span-data-s">{{homeData.cashOut}}</span></div>
+          <div class="allmoney-div2_2">今日手续费:<br/><span class="span-data-s">{{homeData.todayFee}}</span></div>
+        </div>
         <div class="app-tab-box">
           <el-table
             :data="userInfoVoList.list"
@@ -202,7 +218,7 @@
 </template>
 
 <script>
-import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType ,queryAgentData1} from '@/api/adminUser'
 
 export default {
   name: 'index',
@@ -322,12 +338,14 @@ export default {
         beizhu: ''
       },
       changeId: '',
-      agentOpt:[]
+      agentOpt:[],
+      homeData:{}
     }
   },
   created () {
     this.queryListForUserVo()
     this.queryOptData1Met()
+    this.queryAnt();
   },
   methods: {
     // 动态设置宽度
@@ -390,6 +408,18 @@ export default {
     },
     showTypeDesc(userTYpe){
       return userTYpe === 2? '代理商':'用户';
+    },
+    queryAnt(){
+     var par = {
+       agentId:this.form.userAgentId
+     }
+     queryAgentData1(par).then(res =>{
+       if (res.code == 10000) {
+         this.homeData = res.data;
+       }else {
+         this.$message.error(res.message)
+       }
+     })
     },
     queryOptData1Met(){
       queryOptData1().then(res =>{
@@ -496,7 +526,8 @@ export default {
         } else {
           this.$message.error(res.message)
         }
-      })
+      }),
+        this.queryAnt();
     },
     seeAll () {
       this.input1 = ''
@@ -504,6 +535,7 @@ export default {
       this.currentPage = 1,
       this.form.userAgentId ='',
       this.queryListForUserVo()
+      this.queryAnt();
     },
     //获取用户列表
     queryListForUserVo () {
@@ -673,7 +705,11 @@ export default {
     .el-select {
       width: 150px !important;
     }
-
+.allmoney-div2_2{
+  width: 120px;
+  height: 50px;
+  float: left;
+}
     .el-table {
       border-radius: 10px;
       text-align: center;
@@ -681,7 +717,9 @@ export default {
       td, tr, th {
         text-align: center;
       }
-
+  .span-data-s{
+    font-size: 35px;
+  }
       .removeBnt {
         font-size: 20px;
         color: #F75F78;
