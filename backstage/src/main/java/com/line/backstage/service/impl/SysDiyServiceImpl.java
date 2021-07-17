@@ -319,6 +319,7 @@ public class SysDiyServiceImpl implements SysDiyService {
             info.setAllInMoney(money);
             info.setAllOutMoney(0.0);
             info.setReallyInMoney(money);
+            info.setAllFee(0.0);
             after = before + money;
         }else {
             return;

@@ -7,6 +7,8 @@
         <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
         <result property="cashType" column="CASH_TYPE" jdbcType="INTEGER"/>
         <result property="cashMoney" column="CASH_MONEY" jdbcType="NUMERIC"/>
+        <result property="arriveMoney" column="ARRIVE_MONEY" jdbcType="NUMERIC"/>
+        <result property="cashFee" column="CASH_FEE" jdbcType="NUMERIC"/>
         <result property="checkStatus" column="CHECK_STATUS" jdbcType="INTEGER"/>
         <result property="checkDate" column="CHECK_DATE" jdbcType="TIMESTAMP"/>
         <result property="checkManUserId" column="CHECK_MAN_USER_ID" jdbcType="INTEGER"/>
@@ -26,6 +28,8 @@
         <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
         <result property="cashType" column="CASH_TYPE" jdbcType="INTEGER"/>
         <result property="cashMoney" column="CASH_MONEY" jdbcType="NUMERIC"/>
+        <result property="arriveMoney" column="ARRIVE_MONEY" jdbcType="NUMERIC"/>
+        <result property="cashFee" column="CASH_FEE" jdbcType="NUMERIC"/>
         <result property="checkStatus" column="CHECK_STATUS" jdbcType="INTEGER"/>
         <result property="checkDate" column="CHECK_DATE" jdbcType="TIMESTAMP"/>
         <result property="checkManUserId" column="CHECK_MAN_USER_ID" jdbcType="INTEGER"/>
@@ -61,7 +65,7 @@
         </if>
     </select>
     <sql id="cashOutIn_Column_List">
-        c.CASH_ID,c.ACCOUNT_ID,c.CASH_TYPE,c.CASH_MONEY,c.CHECK_STATUS,c.CHECK_DATE,c.CHECK_MAN_USER_ID,
+        c.CASH_ID,c.ACCOUNT_ID,c.CASH_TYPE,c.CASH_MONEY,c.ARRIVE_MONEY,c.CASH_FEE,c.CHECK_STATUS,c.CHECK_DATE,c.CHECK_MAN_USER_ID,
         c.ADD_DATE,c.EDIT_DATE,c.BANK_CARD_ID,c.EXCHANGE_RATE,c.ADD_USER_ID,c.EDIT_USER_ID,c.DEL,c.REMARKS,
         a.ACCOUNT_MONEY,u.USER_REAL_NAME,c.DIY_ID
     </sql>

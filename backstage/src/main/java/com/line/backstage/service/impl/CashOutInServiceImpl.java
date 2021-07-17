@@ -39,6 +39,10 @@ public class CashOutInServiceImpl implements CashOutInService {
     @Resource
     private AccountRecordMapper accountRecordMapper;
     /**
+     * 手续费率1%
+     */
+    private final double FEE_RATE = 0.01;
+    /**
      * 保存数据
      *
      * @param loginUserId 用户ID
@@ -88,6 +92,8 @@ public class CashOutInServiceImpl implements CashOutInService {
             //资金不足
             return -3 ;
         }
+        Double fee = FEE_RATE * money;
+        Double arrive = money - fee;
         Date date = new Date();
         cashOutIn.setCheckStatus(1);
         cashOutIn.setAddDate(date);
@@ -96,6 +102,13 @@ public class CashOutInServiceImpl implements CashOutInService {
         cashOutIn.setEditUserId(loginUserId);
         cashOutIn.setDel(1);
         cashOutIn.setDiyId(0);
+        if(cashType == 1){
+            cashOutIn.setArriveMoney(arrive);
+            cashOutIn.setCashFee(fee);
+        }else {
+            cashOutIn.setArriveMoney(money);
+            cashOutIn.setCashFee(0.0);
+        }
         if(StringUtils.isEmpty(cashOutIn.getRemarks())){
             cashOutIn.setRemarks("用户"+(cashType == 1? "提现":"充值")+money);
         }
@@ -104,13 +117,13 @@ public class CashOutInServiceImpl implements CashOutInService {
         }
         int num =  cashOutInMapper.insertSelective(cashOutIn);
         if(cashType == 1){
-            dealForCashOut(account,money,cashOutIn.getCashId(),cashType,loginUserId,date);
+            dealForCashOut(account,money,cashOutIn.getCashId(),cashType,loginUserId,date,fee);
         }
         return num ;
     }
 
 
-    private void dealForCashOut(AccountInfo account,Double money,Integer cashId,Integer cashType,Integer loginUserId,Date date){
+    private void dealForCashOut(AccountInfo account,Double money,Integer cashId,Integer cashType,Integer loginUserId,Date date,Double fee){
         AccountInfo info = new AccountInfo();
         info.setAccountId(account.getAccountId());
         info.setEditUserId(loginUserId);
@@ -123,6 +136,7 @@ public class CashOutInServiceImpl implements CashOutInService {
             info.setAllInMoney(0.0);
             info.setAllOutMoney(money);
             info.setReallyInMoney(0 - money);
+            info.setAllFee(fee);
             after = before -money;
         }else if(cashType ==2){
             info.setAccountMoney(money );
@@ -131,12 +145,13 @@ public class CashOutInServiceImpl implements CashOutInService {
             info.setAllInMoney(money);
             info.setAllOutMoney(0.0);
             info.setReallyInMoney(money);
+            info.setAllFee(0.0);
             after = before + money;
         }else {
             return;
         }
         accountInfoMapper.updateForCashOut(info);
-        addOneRecord(account.getAccountId(),money,cashType,before,after,date,account.getUserId(),cashId);
+        addOneRecord(account.getAccountId(),money,cashType,before,after,date,account.getUserId(),cashId,fee);
     }
 
     /**
@@ -150,7 +165,7 @@ public class CashOutInServiceImpl implements CashOutInService {
      * @param uid
      * @param cashId
      */
-    private void  addOneRecord(int accId,Double changeMoney,Integer cashType,Double before ,Double after,Date date,Integer uid,Integer cashId){
+    private void  addOneRecord(int accId,Double changeMoney,Integer cashType,Double before ,Double after,Date date,Integer uid,Integer cashId,Double fee){
         AccountRecord record = new AccountRecord();
         record.setAccountId(accId);
         record.setRecordType(cashType == 1? 2 :1);
@@ -164,7 +179,7 @@ public class CashOutInServiceImpl implements CashOutInService {
         record.setCashId(cashId);
         record.setDel(1);
         record.setCommissionMoney(0.0);
-        record.setServiceCharge(0.0);
+        record.setServiceCharge(fee);
         record.setRemarks("用户"+(cashType == 1? "提现":"充值")+changeMoney);
         accountRecordMapper.insertSelective(record);
     }
