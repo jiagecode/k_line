@@ -3,7 +3,7 @@
     <div class="app-box">
       <div class="app-box-tab">
         <div class="app-box-title">我的团队</div>
-        <div class="app-box-changeBox">
+        <div class="app-box-changeBox" style="margin-top: -8px;">
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt">代理商：</div>
             <el-select v-model="form.userAgentId"  placeholder="请选择代理">
@@ -14,26 +14,63 @@
               ></el-option>
             </el-select>
           </div>
-          <div class="app-btn-box">
+          <div class="app-btn-box" style="margin-right: 15px;">
             <el-button type="primary" icon="el-icon-search" @click="seeOther">查找</el-button>
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
           </div>
+          <!--总用户数-->
+          <div class="app-box-input app-marginR" style="width: 250px;">
+            <div class="app-box-input-txt" style="width: 50%;">币安合约总用户数：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 50%;">{{homeData.allUserNum}}</div>
+          </div>
+          <!--总用户余额-->
+          <div class="app-box-input app-marginR" style="width: 250px;">
+            <div class="app-box-input-txt" style="width: 90px;">总用户余额：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{homeData.userAllMoney}}</div>
+          </div>
+          <!--今日新增用户-->
+          <div class="app-box-input app-marginR" style="width: 250px;">
+            <div class="app-box-input-txt" style="width: 100px;">今日新增用户：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 40px;">{{homeData.todayUserNum}}</div>
+          </div>
+          <!--今日新增代理-->
+          <div class="app-box-input app-marginR" style="width: 250px;">
+            <div class="app-box-input-txt" style="width: 100px;">今日新增代理：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 40px;">{{homeData.todayAgentNum}}</div>
+          </div>
         </div>
-        <div class="dashboard-header">
-          <div class="dashboard-header-title">总数据统计</div>
-        </div>
-        <div class="app-box-changeBox">
-          <div class="allmoney-div2_2">今日新增用户:<br/><span class="span-data-s">{{homeData.todayUserNum}}</span></div>
-          <div class="allmoney-div2_2">今日新增代理:<br/><span class="span-data-s">{{homeData.todayAgentNum}}</span></div>
-          <div class="allmoney-div2_2">总用户:<br/><span class="span-data-s">{{homeData.allUserNum}}</span></div>
-          <div class="allmoney-div2_2">用户总余额:<br/><span class="span-data-s">{{homeData.userAllMoney}}</span></div>
-          <div class="allmoney-div2_2">今日订单:<br/><span class="span-data-s">{{homeData.todayOrderNum}}</span></div>
-          <div class="allmoney-div2_2">今日订单:<br/><span class="span-data-s">{{homeData.todayOrderNum}}</span></div>
-          <div class="allmoney-div2_2">客户盈亏:<br/><span class="span-data-s">{{homeData.profitAndLoss}}</span></div>
-          <div class="allmoney-div2_2">今日流水:<br/><span class="span-data-s">{{homeData.todayWater}}</span></div>
-          <div class="allmoney-div2_2">今日充值:<br/><span class="span-data-s">{{homeData.cashIn}}</span></div>
-          <div class="allmoney-div2_2">今日提现:<br/><span class="span-data-s">{{homeData.cashOut}}</span></div>
-          <div class="allmoney-div2_2">今日手续费:<br/><span class="span-data-s">{{homeData.todayFee}}</span></div>
+
+        <div class="app-box-changeBox" style="margin: -30px 0 -15px 0;">
+          <!--今日订单-->
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">今日订单：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.todayOrderNum}}</div>
+          </div>
+          <!--客户盈亏-->
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">客户盈亏：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{homeData.profitAndLoss}}</div>
+          </div>
+          <!--今日流水-->
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">今日流水：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.todayWater}}</div>
+          </div>
+          <!--今日充值-->
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">今日充值：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.cashIn}}</div>
+          </div>
+          <!--今日提现-->
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">今日提现：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.cashOut}}</div>
+          </div>
+          <!--今日手续费-->
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">今日手续费：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.todayFee}}</div>
+          </div>
         </div>
         <div class="app-tab-box">
           <el-table
