@@ -23,6 +23,11 @@ public class SocketMsg {
     private String msdToSid;
 
     /**
+     * 用户名称
+     */
+    private String sidName;
+
+    /**
      * 类容
      */
     private String content;
