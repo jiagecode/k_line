@@ -48,6 +48,16 @@
 			}
 		},
     onLoad() {
+			
+		var token = uni.getStorageSync('token');
+		// 非法访问，请重新登录
+		if (token === null || token === undefined || token === '') {
+		  // 跳转页面
+		  uni.reLaunch({
+			url: '../login/login'
+		  });
+		}
+		
         // 进入这个页面的时候创建websocket连接【整个页面随时使用】
         this.connectSocketInit();
     },

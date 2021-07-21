@@ -31,7 +31,7 @@
                 </div>
                 <!-- 用户消息数 -->
                 <div class="d-flex flex1 a-center" style="flex-wrap:wrap; padding: 5px 0px;">
-                  <div style="width: 100%; font-size: 12px; color: #97a8be; margin-top: 5px;">{{new Date().toLocaleTimeString().substr(2, 8)}}</div>
+                  <div style="width: 100%; font-size: 12px; color: #97a8be; margin-top: 5px;">{{item.createDate.substr(11, 12)}}</div>
                   <div class="d-flex" v-if="item.isShow" style="justify-content: flex-end; width: 60%;">
                     <div class="d-flex a-center j-center" style="height: 25px; width: 25px; border-radius: 50%; background-color: #f56c6c; font-size: 12px; color: #FFFFFF;">{{ item.msgSize }}</div>
                   </div>
@@ -44,10 +44,10 @@
           <el-col style="height: 78%;">
             <div class="d-flex a-center" style="font-size: 22px; height: 51px; border-bottom: #392525 solid 1px; ">
               <div style="margin-left: 10px; ">
-                浮生若梦
+                {{ nowUserInfo.userName }}
               </div>
               <div style="margin-left: 10px; ">
-                2020-02-02 02:02:02
+                {{ new Date().toLocaleTimeString() }}
               </div>
               <div v-show="wsIsRun" style="margin-left: 10px; color: springgreen;">
                 在线
@@ -282,7 +282,7 @@ export default {
         str = jj;
       }
       this.socketMsg = str;
-      // console.log(this.socketMsg);
+      console.log(this.socketMsg);
       // 拆分用户名和id
       let info = str.msdToSid.split(",");
 
@@ -295,7 +295,8 @@ export default {
           userName : info[1],
           msgSize : 1,
           userListMsg:[{'type': 'user', 'msg': str.content, 'createDate': null}],
-          isShow:true
+          isShow:true,
+          createDate:new Date(str.createDate).toLocaleString()
         })
       } else {
         // 先判断是否存在，存在追加一个用户聊天信息
@@ -307,6 +308,8 @@ export default {
             u.msgSize = u.msgSize + 1;
             // 新消息追加
             u.userListMsg.push({'type': 'user', 'msg': str.content, 'createDate': null});
+            // 更新最新消息时间
+            u.createDate = new Date(str.createDate).toLocaleString()
             // 显示消息数
             if(this.nowUserInfo.id !== u.id){
               u.isShow = true;
@@ -324,7 +327,8 @@ export default {
             userName : info[1],
             msgSize : 1,
             userListMsg:[{'type': 'user', 'msg': str.content, 'createDate': null}],
-            isShow:true
+            isShow:true,
+            createDate:new Date(str.createDate).toLocaleString()
           }
           // 追加
           this.userList.push(u);
