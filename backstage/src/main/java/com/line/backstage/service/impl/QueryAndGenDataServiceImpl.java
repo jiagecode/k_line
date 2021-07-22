@@ -77,7 +77,7 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
                 redisUtil.set(ohlcv.getSkuCode() + "_mm_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), 0);
             }
             // 调用异步线程生成分钟数据
-            asyncGenMinDataService.autoGenDataMain(list);
+            asyncGenMinDataService.autoGenDataMain(list, sku.getSkuCode());
             params.clear();
         }
     }

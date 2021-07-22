@@ -630,6 +630,17 @@ public class DateUtil {
     }
 
     /**
+     * 取得昨天8点时间戳
+     *
+     * @return
+     */
+    public static String getYesterdayEightStamp() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)-1,8,0,0);
+        return String.valueOf(calendar.getTime().getTime()/1000);
+    }
+
+    /**
      * 取得昨天此时时间戳
      *
      * @return
@@ -661,7 +672,6 @@ public class DateUtil {
     public static String getTodayZeroStamp() {
         long nowTime = System.currentTimeMillis();
         long todayStartTime = nowTime - ((nowTime + TimeZone.getDefault().getRawOffset()) % (24 * 60 * 60 * 1000L));
-
         return String.valueOf((todayStartTime / 1000));
     }
 

@@ -14,7 +14,7 @@ public class QueryAndGenDataSchedulerTask {
     private QueryAndGenDataService queryAndGenDataService;
 
     /**
-     * 每分钟的0和30秒执行
+     * 每小时
      */
 //    @Scheduled(cron = "0,30 1-59 * * * ? ")
     @Scheduled(cron = "0 0 0/1 * * ? ")

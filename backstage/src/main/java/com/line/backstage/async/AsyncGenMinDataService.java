@@ -1,7 +1,10 @@
 package com.line.backstage.async;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.line.backstage.redis.RedisUtil;
+import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.JsonUtils;
+import com.line.backstage.utils.StrUtils;
 import com.line.backstage.vo.SkuInfoOhlcvVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -18,29 +21,15 @@ public class AsyncGenMinDataService {
     private RedisUtil redisUtil;
 
     @Async
-    public void autoGenDataMain(List<SkuInfoOhlcvVo> listOhlcv) {
+    public void autoGenDataMain(List<SkuInfoOhlcvVo> listOhlcv, String skuCode) {
+        // 获取当天的基础数据
+        JsonNode maindata = JsonUtils.toJsonNode(StrUtils.objToStr(redisUtil.get(skuCode + "_dd_" + DateUtil.getYesterdayEightStamp())));
         BigDecimal beforNowPrice;
         BigDecimal afterNowPrice;
         BigDecimal tempPiceNowPrice;
-        BigDecimal beforMaxPrice;
-        BigDecimal afterMaxPrice;
-        BigDecimal tempPiceMaxPrice;
-        BigDecimal beforMinPrice;
-        BigDecimal afterMinPrice;
-        BigDecimal tempPiceMinPrice;
-        BigDecimal beforOpenPrice;
-        BigDecimal afterOpenPrice;
-        BigDecimal tempPiceOpenPrice;
-        BigDecimal beforClose;
-        BigDecimal afterClose;
-        BigDecimal tempPiceClose;
         SkuInfoOhlcvVo temp;
         // 临时字段
         BigDecimal price;
-        BigDecimal maxPrice;
-        BigDecimal minPrice;
-        BigDecimal openPrice;
-        BigDecimal close;
         for (int i = 1; i < listOhlcv.size(); i++) {
             System.out.println("coin: " + listOhlcv.get(0).getSkuCode() + " All:" + listOhlcv.size() + " Now:" + i);
             SkuInfoOhlcvVo beforOne = listOhlcv.get(i - 1);
@@ -50,50 +39,25 @@ public class AsyncGenMinDataService {
             beforNowPrice = BigDecimal.valueOf(beforOne.getOpenPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
             afterNowPrice = BigDecimal.valueOf(afterOne.getOpenPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
             tempPiceNowPrice = afterNowPrice.subtract(beforNowPrice).setScale(4, BigDecimal.ROUND_HALF_UP);
-            // 最高
-            beforMaxPrice = BigDecimal.valueOf(beforOne.getMaxPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            afterMaxPrice = BigDecimal.valueOf(afterOne.getMaxPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            tempPiceMaxPrice = afterMaxPrice.subtract(beforMaxPrice).setScale(4, BigDecimal.ROUND_HALF_UP);
-            // 最低
-            beforMinPrice = BigDecimal.valueOf(beforOne.getMinPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            afterMinPrice = BigDecimal.valueOf(afterOne.getMinPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            tempPiceMinPrice = afterMinPrice.subtract(beforMinPrice).setScale(4, BigDecimal.ROUND_HALF_UP);
-            // 开盘
-            beforOpenPrice = BigDecimal.valueOf(beforOne.getOpenPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            afterOpenPrice = BigDecimal.valueOf(afterOne.getOpenPrice()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            tempPiceOpenPrice = afterOpenPrice.subtract(beforOpenPrice).setScale(4, BigDecimal.ROUND_HALF_UP);
-            // close
-            beforClose = BigDecimal.valueOf(beforOne.getClose()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            afterClose = BigDecimal.valueOf(afterOne.getClose()).setScale(4, BigDecimal.ROUND_HALF_UP);
-            tempPiceClose = afterClose.subtract(beforClose).setScale(4, BigDecimal.ROUND_HALF_UP);
-
 
             // 生成每秒一条数据
             for (int j = 1; j <= 60; j++) {
                 Long timeStamp = Long.parseLong(beforOne.getTimeStamp()) + j;
                 price = this.genPrice(beforNowPrice, afterNowPrice, tempPiceNowPrice).setScale(4);
-                maxPrice = this.genOtherPrice(beforMaxPrice, afterMaxPrice, tempPiceMaxPrice).setScale(4);
-                minPrice = this.genOtherPrice(beforMinPrice, afterMinPrice, tempPiceMinPrice).setScale(4);
-                openPrice = this.genOtherPrice(beforOpenPrice, afterOpenPrice, tempPiceOpenPrice).setScale(4);
-                close = this.genOtherPrice(beforClose, afterClose, tempPiceClose).setScale(4);
                 temp = new SkuInfoOhlcvVo();
-                temp.setTimeStamp(String.valueOf(timeStamp));
                 temp.setOrderNum(j);
+                temp.setTimeStamp(String.valueOf(timeStamp));
                 temp.setSkuCode(beforOne.getSkuCode());
-                temp.setMaxPrice(maxPrice.doubleValue());
-                temp.setMinPrice(minPrice.doubleValue());
                 temp.setNowPrice(price.doubleValue());
-                temp.setOpenPrice(openPrice.doubleValue());
-                temp.setVolumeFrom(beforOne.getVolumeFrom());
-                temp.setVolumeTo(beforOne.getVolumeTo());
-                temp.setClose(close.doubleValue());
+
+                temp.setOpenPrice(maindata.get("openPrice").asDouble());
+                temp.setClose(maindata.get("close").asDouble());
+                temp.setMaxPrice(maindata.get("maxPrice").asDouble());
+                temp.setMinPrice(maindata.get("minPrice").asDouble());
+                temp.setVolumeTo(maindata.get("volumeTo").asDouble());
+                temp.setVolumeFrom(maindata.get("volumeFrom").asDouble());
                 redisUtil.set(beforOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), 0);
             }
-
-            // 只生成一个时间段下的数据
-//            if(i == 1){
-//                break;
-//            }
         }
     }
 
@@ -172,57 +136,6 @@ public class AsyncGenMinDataService {
             result = beforNowPrice.add(BigDecimal.valueOf(baseNum)).subtract(BigDecimal.valueOf(randomNum).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP));
         }
         return result;
-    }
-
-    /**
-     * 根据差距金额返回生成金额
-     *
-     * @return
-     */
-    private BigDecimal genOtherPrice(BigDecimal beforNowPrice, BigDecimal afterNowPrice, BigDecimal price) {
-        BigDecimal result;
-        BigDecimal temp = BigDecimal.ZERO;
-        int tempPrice = price.abs().intValue();
-        if (tempPrice <= 0) {
-            tempPrice = new Random().nextInt(10) + 1;
-        }
-
-        // 差距太小时，根据数据大小补偿
-        int tempPriceInt = beforNowPrice.intValue();
-        // 1位数 补偿0.2以内
-        if (tempPriceInt > 1 && tempPriceInt <= 10) {
-            temp = BigDecimal.valueOf(new Random().nextInt(2000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
-        }
-        // 2位数 补偿0.5以内
-        if (tempPriceInt > 10 && tempPriceInt <= 100) {
-            temp = BigDecimal.valueOf(new Random().nextInt(5000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
-        }
-        // 3位数 补偿1.5以内
-        if (tempPriceInt > 100 && tempPriceInt <= 1000) {
-            temp = BigDecimal.valueOf(new Random().nextInt(15000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
-        }
-        // 4位数 补偿2以内
-        if (tempPriceInt > 1000 && tempPriceInt <= 10000) {
-            temp = BigDecimal.valueOf(new Random().nextInt(20000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
-        }
-        // 5位数 补偿2.5以内
-        if (tempPriceInt > 10000 && tempPriceInt <= 100000) {
-            temp = BigDecimal.valueOf(new Random().nextInt(25000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
-        }
-
-        // 随机数
-        int random = new Random().nextInt(tempPrice);
-        int random2 = new Random().nextInt(2);
-        if (random2 == 1) {
-            result = beforNowPrice.add(BigDecimal.valueOf(random));
-        } else {
-            result = beforNowPrice.subtract(BigDecimal.valueOf(random));
-        }
-        if (random2 == 0) {
-            return result.add(temp);
-        } else {
-            return result.subtract(temp);
-        }
     }
 
 }
