@@ -11,10 +11,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-<<<<<<< HEAD
     #    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true?tinyInt1isBit=false
-=======
->>>>>>> master
     url: jdbc:mysql://192.168.1.9:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
     password: 123456

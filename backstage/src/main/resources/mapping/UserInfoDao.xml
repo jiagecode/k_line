@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.line.backstage.dao.mapper.UserInfoMapper">
- 
+
     <resultMap type="com.line.backstage.entity.UserInfo" id="UserInfoMap">
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="userNickName" column="USER_NICK_NAME" jdbcType="VARCHAR"/>
@@ -97,9 +97,9 @@
         </if>
         <if test="userNickName != null and userNickName != ''">
             and (u.USER_PHONE like concat('%', #{userNickName}, '%')
-                 or u.USER_NICK_NAME like concat('%', #{userNickName}, '%')
-                 or u.USER_REAL_NAME like concat('%', #{userNickName}, '%')
-                )
+            or u.USER_NICK_NAME like concat('%', #{userNickName}, '%')
+            or u.USER_REAL_NAME like concat('%', #{userNickName}, '%')
+            )
         </if>
         <if test=" queryDateFlag == 1 ">
             and u.USER_REGISTER_DATE <![CDATA[ <= ]]> #{endDate}
@@ -132,12 +132,12 @@
     <select id="queryAgentNameByAgentId" parameterType="java.lang.Integer" resultType="java.lang.String">
         select AGENT_NAME from t_user_info where USER_ID = #{agentId} AND DEL = 1 LIMIT 1
     </select>
-<<<<<<< HEAD
     <select id="queryListAll" resultType="com.line.backstage.vo.UserInfoVo">
         select
         <include refid="Join_Column_List_User"/>
         from t_user_info where USER_FORBID_FLAG=0 AND DEL_STATUS=0 AND DEL=1
-=======
+    </select>
+
     <update id="updateLastLoginDate" parameterType="java.lang.Integer">
         update  t_user_info set LAST_LOGIN_DATE = now() where USER_ID = #{userId}
     </update>
@@ -147,6 +147,5 @@
     </select>
     <select id="queryCommissionRate" parameterType="java.lang.Integer" resultType="java.lang.Double">
         select COMMISSION_RATE from t_user_info where USER_ID = #{userId}
->>>>>>> master
     </select>
 </mapper>
