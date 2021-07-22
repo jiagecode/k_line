@@ -18,6 +18,7 @@ import java.util.Map;
 public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
     /**
      * 多添加查询用户
+     *
      * @param vo
      * @return
      */
@@ -25,6 +26,7 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
 
     /**
      * 统计用户数
+     *
      * @param map
      * @return
      */
@@ -32,13 +34,13 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
 
     Integer queryUserIdForPhone(@Param("tel") String phone);
 
-    String queryAgentNameByAgentId(@Param("agentId")Integer agentId);
-<<<<<<< HEAD
+    String queryAgentNameByAgentId(@Param("agentId") Integer agentId);
 
     List<UserInfoVo> queryListAll();
-=======
-    Integer updateLastLoginDate(@Param("userId")Integer loginUserId);
-    Integer queryWinRate(@Param("userId")Integer loginUserId);
-    Double queryCommissionRate(@Param("userId")Integer loginUserId);
->>>>>>> master
+
+    Integer updateLastLoginDate(@Param("userId") Integer loginUserId);
+
+    Integer queryWinRate(@Param("userId") Integer loginUserId);
+
+    Double queryCommissionRate(@Param("userId") Integer loginUserId);
 }

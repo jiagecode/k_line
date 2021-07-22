@@ -21,11 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-<<<<<<< HEAD
-=======
-import javax.persistence.Transient;
 import java.math.BigDecimal;
->>>>>>> master
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +48,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * 默认佣金红利系数
      */
     private final double DEF_COMM = 0.5;
+
     /**
      * 保存数据
      *
@@ -113,22 +110,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserRefereeAble(1);
         userInfo.setDel(1);
         userInfo.setDiyFlag(0);
-<<<<<<< HEAD
-        if (userInfo.getAgentId() != null) {
-            userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
-        }
-        int newId = userInfoMapper.insert(userInfo);
-        if (newId == 1) {
-=======
         userInfo.setWinRate(50.0);
         userInfo.setCommissionRate(DEF_COMM);
         userInfo.setBonusRate(DEF_COMM);
-        if(userInfo.getAgentId() != null){
+        if (userInfo.getAgentId() != null) {
             userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
         }
-        int newId  = userInfoMapper.insertSelective(userInfo);
-        if(newId == 1){
->>>>>>> master
+        int newId = userInfoMapper.insertSelective(userInfo);
+        if (newId == 1) {
             newId = userInfoMapper.queryUserIdForPhone(tel);
             userInfo.setUserId(newId);
         }
@@ -149,7 +138,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (loginUserId != -1) {
             accountInfo.setEditUserId(loginUserId);
             accountInfo.setAddUserId(loginUserId);
-        }else {
+        } else {
             accountInfo.setEditUserId(newId);
             accountInfo.setAddUserId(newId);
         }
@@ -331,12 +320,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-<<<<<<< HEAD
     public List<UserInfoVo> queryListAll() {
         return userInfoMapper.queryListAll();
-=======
+    }
+
+    @Override
     public void updateLastLoginDate(Integer loginUserId) {
         userInfoMapper.updateLastLoginDate(loginUserId);
->>>>>>> master
+
     }
 }
