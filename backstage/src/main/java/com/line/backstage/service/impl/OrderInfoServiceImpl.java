@@ -2,6 +2,7 @@ package com.line.backstage.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.line.backstage.async.AsyncGenOrderMinAndMilsDataService;
 import com.line.backstage.dao.mapper.OrderInfoMapper;
 import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.AccountInfo;
@@ -9,6 +10,7 @@ import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.entity.OrderInfo;
 import com.line.backstage.entity.PositionInfo;
 import com.line.backstage.enums.DataEnum;
+import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.AccountInfoService;
 import com.line.backstage.service.AccountRecordService;
 import com.line.backstage.service.OrderInfoService;
@@ -46,6 +48,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private AccountRecordService accountRecordService;
     @Resource
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    private AsyncGenOrderMinAndMilsDataService dataService;
+    private static final String ORDER_KEY ="order:ids:";
     /**
      * 冻结标志
      */
@@ -196,6 +203,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         map.put("outDate",endDate);
         map.put("orderCycle",orderCycle);
         map.put("skuCode",orderInfo.getSkuCode());
+        //下单成功 记录失效时间
+        redisUtil.set(ORDER_KEY+orderId,1,orderCycle);
+        //掉推送方法
+        dataService.autoGenDataMain(map);
         return map;
     }
 
