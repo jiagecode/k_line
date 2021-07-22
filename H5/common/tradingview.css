@@ -1,0 +1,348 @@
+/* 弹出框内容css */
+.page-top-line {
+	margin: 0 auto;
+	margin-top: 20upx;
+	width: 100%;
+	height: 4upx;
+	background-color: #000000;
+}
+
+.page-top-dqsj {
+	height: 60upx;
+	text-align: left;
+	line-height: 60upx;
+	color: #9aa2b5;
+}
+
+.uni-row-page {
+	margin-top: 20upx;
+	margin-bottom: 20upx;
+	height: 180upx;
+}
+
+.uni-col-page {
+	height: 180upx;
+}
+
+.light-page-t {
+	height: 50upx;
+	line-height: 50upx;
+	font-size: 30upx;
+	text-align: center;
+	color: #9aa2b5;
+	background-color: #424448;
+}
+
+.light-page-c {
+	height: 80upx;
+	line-height: 80upx;
+	font-size: 26upx;
+	text-align: center;
+	color: #5586d3;
+	background-color: #424448;
+}
+
+.light-page-d {
+	height: 50upx;
+	line-height: 50upx;
+	font-size: 30upx;
+	font-weight: bold;
+	text-align: center;
+	color: #f96f47;
+	background-color: #424448;
+}
+
+.row-page-item {
+	padding-left: 8upx !important;
+	padding-right: 8upx !important;
+}
+
+.page-item-select {
+	height: 180upx;
+	border-radius: 4upx;
+	border: 4upx solid #5586d3;
+}
+
+.page-item-select .light-page-t {
+	height: 46upx;
+	line-height: 50upx;
+}
+
+.page-item-select .light-page-d {
+	height: 46upx;
+	line-height: 50upx;
+}
+
+
+.uni-row-page1 {
+	height: 80upx;
+}
+
+.uni-col-page1 {
+	height: 80upx;
+}
+
+.light-page1-t {
+	height: 60upx;
+	line-height: 60upx;
+	font-size: 26upx;
+	text-align: center;
+	color: #5586d3;
+	background-color: #434549;
+}
+
+.row-page1-item {
+	padding-top: 10upx !important;
+	padding-bottom: 10upx !important;
+	padding-left: 4upx !important;
+	padding-right: 4upx !important;
+}
+
+.page-amount-select {
+	height: 60upx;
+	border-radius: 6upx;
+	border: 4upx solid #5586d3;
+}
+
+.page-amount-select .light-page1-t {
+	height: 52upx;
+	line-height: 52upx;
+}
+
+.page-left-ye {
+	display: contents;
+	float: left;
+	width: 50%;
+	height: 50upx;
+	line-height: 50upx;
+	color: #9aa2b5;
+}
+
+.page-left-sxf {
+	float: right;
+	width: 50%;
+	height: 50upx;
+	line-height: 50upx;
+	color: #9aa2b5;
+}
+
+.page-c-line {
+	margin: 0 auto;
+	width: 100%;
+	height: 4upx;
+	background-color: #434347;
+}
+
+.uni-row-page2 {
+	height: 120upx;
+}
+
+.uni-col-page2 {
+	height: 60upx;
+}
+
+.light-page2-t {
+	height: 60upx;
+	line-height: 60upx;
+	font-weight: bold;
+	font-size: 26upx;
+	text-align: center;
+	color: #9aa2b5;
+}
+
+.light-page2-d {
+	height: 60upx;
+	line-height: 60upx;
+	font-size: 26upx;
+	text-align: center;
+	color: #4e4d52;
+}
+
+.row-page2-item {
+	padding-top: 10upx !important;
+	padding-bottom: 10upx !important;
+	padding-left: 10upx !important;
+	padding-right: 10upx !important;
+}
+
+.page-2-name {
+	font-size: 30upx;
+	color: #FFFFFF;
+}
+
+.page-2-fx {
+	font-size: 30upx;
+	color: #8c8b90;
+}
+
+.page-2-fx-red {
+	color: #f96f47;
+}
+
+.page-2-fx-green {
+	color: #00bf89;
+}
+
+.page-2-xj {
+	font-size: 30upx;
+	color: #8c8b90;
+}
+
+.page-2-xj-red {
+	color: #f96f47;
+}
+
+.page-2-xj-green {
+	color: #00bf89;
+}
+
+
+.page-2-je {
+	font-size: 30upx;
+	color: #5586d3;
+}
+
+.page-btn-submit {
+	background-color: #5586d3;
+	color: #FFFFFF;
+}
+
+.page-bottom-text {
+	display: block;
+	text-align: center;
+	height: 50upx;
+	line-height: 50upx;
+	font-size: 26upx;
+	color: #5586d3;
+}
+
+.page-left-yqsy {
+	width: 50%;
+	display: block;
+	float: left;
+	text-align: right;
+	padding-right: 10upx;
+}
+
+.page-left-bdje {
+	width: 50%;
+	display: block;
+	float: right;
+	text-align: left;
+	padding-left: 10upx;
+
+}
+
+/* 弹出框内容css */
+
+
+
+
+.uni-row-top {
+	height: 60px;
+}
+
+.uni-col-top {
+	height: 60px;
+}
+
+.light-top-t {
+	height: 30px;
+	line-height: 36px;
+	font-size: 17px;
+	text-align: center;
+	color: #555555;
+	background-color: #f8f8f8;
+}
+
+.light-top-d {
+	height: 30px;
+	line-height: 24px;
+	font-size: 15px;
+	text-align: center;
+	color: #f96f47;
+	background-color: #f8f8f8;
+}
+
+.topText {
+	height: 60px;
+	line-height: 60px;
+	font-size: 20px;
+	text-align: center;
+	color: #f96f47;
+	background-color: #f8f8f8;
+}
+
+.uni-row-bot {
+	height: 70px;
+}
+
+.uni-col-bot {
+	height: 70px;
+}
+
+.light-bot-t {
+	height: 30px;
+	line-height: 40px;
+	font-size: 30upx;
+	font-weight: bold;
+	text-align: center;
+	color: #4e4d52;
+	background-color: #e5e9f2;
+}
+
+.light-bot-d {
+	height: 70px;
+	line-height: 70px;
+	font-size: 35upx;
+	font-weight: bold;
+	text-align: center;
+	color: #4e4d52;
+	background-color: #e5e9f2;
+}
+
+.bot-cc {
+	color: #e5e9f2;
+	background-color: #4e4d52;
+}
+
+.bot-mz {
+	background-color: #f96f47;
+}
+
+.bot-md {
+	position: relative;
+	background-color: #00bf89;
+}
+
+.mini-btn {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border: 0px;
+	border-right: 1px;
+	border-radius: 0px;
+	overflow: inherit;
+}
+
+.mini-btn:after {
+	border-radius: 0px;
+	border-right: 1px;
+	border: 0px;
+	overflow: inherit;
+}
+
+/* 弹出层 */
+.uni-banner {
+	width: 70%;
+	position: fixed;
+	left: 15%;
+	margin-top: -400upx;
+	z-index: 99;
+}
+
+.uni-mask {
+	z-index: 1;
+	background: rgba(0, 0, 0, 0.6);
+}
