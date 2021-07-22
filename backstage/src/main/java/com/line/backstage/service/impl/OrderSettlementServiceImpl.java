@@ -5,6 +5,7 @@ import com.line.backstage.entity.*;
 import com.line.backstage.service.TaskOrderSettlementService;
 import com.line.backstage.utils.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,18 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         logger.info("结算订单条数为：{}", num);
     }
 
+    @Override
+    public void dealSettlementByOrderId(String orderIdStr) {
+        if(StringUtils.isNotEmpty(orderIdStr)){
+            Integer orderId = Integer.valueOf(orderIdStr);
+            OrderInfo orderInfo = orderInfoMapper.queryOneById(orderId);
+            if(orderInfo != null){
+                Integer todayNum = DateUtil.getTodayIntNum();
+                dealOneOrder(orderInfo,orderInfo.getSettlementDate(),todayNum);
+            }
+        }
+    }
+
     /**
      * 处理单条订单结算
      * @param orderInfo
@@ -89,19 +102,16 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         if(settlementDate == null){
             settlementDate = settlementTime;
         }
-        Integer winFlag = orderInfo.getWinFlag();
-        winFlag = winFlag == null ? 0 : winFlag;
+
         Integer userId = orderInfo.getUserId();
-        //投资方向 1-买涨 2-买亏
-        Integer investType = orderInfo.getInvestType();
-        //买入点位
-        Double inPoint = orderInfo.getInPoint();
         //投资金额
         Double investAmount = orderInfo.getInvestAmount();
         //获取卖出点位
-        double outPoint = getUserOutPoint(inPoint,userId,investType,winFlag);
+        double outPoint = orderInfo.getOutPoint();
+//        double outPoint = getUserOutPoint(inPoint,userId,investType,winFlag);
         //是否赢
-        boolean isWin = orderIsWin(outPoint,inPoint,investType,winFlag);
+        boolean isWin = 1 == orderInfo.getWinFlag() ;
+//        boolean isWin = orderIsWin(outPoint,inPoint,investType,winFlag);
         //结算金额
 //        double changeMoney = getUserEndMoney(isWin,userId,investAmount);
         double changeMoney = orderInfo.getExpectedReturn();
@@ -113,7 +123,6 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         //订单已完成
         orderInfo.setOrderStatus(2);
         orderInfo.setOrderCharge(0.0);
-        orderInfo.setOutPoint(outPoint);
         orderInfo.setResultMoney(changeMoney);
         orderInfo.setSubMoney(changeMoney - investAmount);
         orderInfoMapper.updateByPrimaryKey(orderInfo);

@@ -16,7 +16,7 @@ public class OrderTask {
     @Autowired
     private TaskOrderSettlementService settlementService;
 
-    @Scheduled(cron = "*/1 * * * * ?")
+   // @Scheduled(cron = "*/1 * * * * ?")
     public void dealOrderTask(){
         settlementService.dealOrderSettlement();
     }

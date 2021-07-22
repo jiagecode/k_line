@@ -117,6 +117,9 @@
                 <span v-else-if="item.prop==='commissionRate'">
                              {{scope.row.commissionRate}}
                             </span>
+                <span v-else-if="item.prop==='allMoney'">
+                             {{scope.row.allMoney}}
+                            </span>
                 <span v-else-if="item.prop==='agentName'">
                              {{scope.row.agentName}}
                             </span>
@@ -307,6 +310,9 @@ export default {
         {
           label: '佣金',
           prop: 'commissionRate'
+        },{
+          label: '总盈亏',
+          prop: 'allMoney'
         },
         {
           label: '归属代理商',

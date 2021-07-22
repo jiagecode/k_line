@@ -177,5 +177,5 @@ public class AccountInfo extends QueryRequest implements Serializable {
     /**
      * 自定义金额
      */
-    private BigDecimal diyMoney = BigDecimal.ZERO;
+    private BigDecimal diyMoney;
 }

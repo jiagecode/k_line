@@ -3,6 +3,7 @@ package com.line.backstage.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.line.backstage.dao.mapper.OrderInfoMapper;
+import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.entity.OrderInfo;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 订单信息(OrderInfo)表服务实现类
@@ -41,6 +44,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private AccountInfoService accountInfoService;
     @Autowired
     private AccountRecordService accountRecordService;
+    @Resource
+    private UserInfoMapper userInfoMapper;
     /**
      * 冻结标志
      */
@@ -69,21 +74,37 @@ public class OrderInfoServiceImpl implements OrderInfoService {
      * @return 是否成功
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public int insert(Integer loginUserId, OrderInfo orderInfo) {
+        Map<String,Object> map = insertForBuy(loginUserId,orderInfo);
+        if("1".equals(map.get("resultCode"))){
+            return 1;
+        }
+       return 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> insertForBuy(Integer loginUserId, OrderInfo orderInfo) {
+        Map<String,Object> map = new HashMap<>();
         // 查询用户信息
         AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
         if(accountInfo.getAccountStatus() == FORBID_INT){
             //用户账户被冻结
-            return -1;
+            map.put("resultCode","-1");
+            map.put("resultDesc","用户账户被冻结");
+            return map;
         }
         if(accountInfo.getMoneyStatus() == FORBID_INT){
             //用户资金被冻结
-            return -2 ;
+            map.put("resultCode","-2");
+            map.put("resultDesc","用户资金被冻结");
+            return map;
         }
         if(orderInfo.getOrderAmount() > accountInfo.getAccountMoney()){
             //用户资金不足
-            return -3;
+            map.put("resultCode","-3");
+            map.put("resultDesc","用户资金不足");
+            return map;
         }
         if(orderInfo.getInvestAmount() ==null){
             orderInfo.setInvestAmount(orderInfo.getOrderAmount());
@@ -91,7 +112,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         //设置当前时间为下单时间
         Date addDate = new Date();
         //购买时长 秒数
-        Integer orderCycle = orderInfo.getOrderCycle();
+        int orderCycle = orderInfo.getOrderCycle() == null ? 30 : orderInfo.getOrderCycle();
         //订单结算时间
         Date endDate = new Date(addDate.getTime()+orderCycle*1000);
         // 新增资金变动记录
@@ -148,12 +169,61 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setDiyId(0);
         //已下单
         orderInfo.setOrderStatus(1);
-
+        //查询用户赢率
+        Integer winRate = userInfoMapper.queryWinRate(loginUserId);
+        if(winRate == null){winRate =50;}
+        //生成一个随机数 0~1
+        double romRate = Math.random();
+        boolean isWin = winRate * 1.0 / 100 > romRate;
+        double inPoint = orderInfo.getInPoint();
+        int investType = null == orderInfo.getInvestType() ? 1 : orderInfo.getInvestType();
+        double outPoint = getEndPoint(isWin,inPoint,investType);
+        orderInfo.setOutPoint(outPoint);
+        orderInfo.setWinFlag(isWin?1:2);
         int result = orderInfoMapper.insertSelective(orderInfo);
-
-        accountRecord.setOrderId(orderInfo.getOrderId());
+        Integer orderId = orderInfo.getOrderId();
+        accountRecord.setOrderId(orderId);
         accountRecordService.insert(loginUserId, accountRecord);
-        return result;
+        map.put("resultCode","1");
+        map.put("resultDesc","下单成功！");
+        map.put("orderId",orderId);
+        map.put("userId",loginUserId);
+        map.put("isWin",isWin);
+        map.put("investType",investType);
+        map.put("inPoint",inPoint);
+        map.put("outPoint",outPoint);
+        map.put("inDate",addDate);
+        map.put("outDate",endDate);
+        map.put("orderCycle",orderCycle);
+        map.put("skuCode",orderInfo.getSkuCode());
+        return map;
+    }
+
+    /**
+     * 计算用户卖出点位
+     * @param isWin
+     * @param inPoint
+     * @param investType
+     * @return
+     */
+    private double getEndPoint(boolean isWin,double inPoint,int investType){
+        double rate = getOneRandom();
+        if( 1== investType){
+            /*买涨*/
+            return  isWin ? inPoint * (1 + rate) : inPoint * (1 - rate);
+        }else {
+            /*买亏*/
+            return  isWin ? inPoint * (1 - rate) : inPoint * (1 + rate);
+        }
+    }
+
+    private double getOneRandom(){
+        double romRate = Math.random();
+        if(romRate >0.5){romRate = romRate * 0.4 ;}
+        if(romRate > 0.005 && romRate < 0.3){
+            return romRate;
+        }
+        return getOneRandom();
     }
 
     /**
