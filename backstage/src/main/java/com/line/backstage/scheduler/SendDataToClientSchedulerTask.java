@@ -31,7 +31,7 @@ public class SendDataToClientSchedulerTask {
 
         // 判断在线用户数 没有不推送
         if (KLineDataServer.onlineCount.intValue() == 0) {
-            System.out.println("没有用户访问..不推送数据.." + minuteStamp);
+//            System.out.println("没有用户访问..不推送数据.." + minuteStamp);
             return;
         }
 
