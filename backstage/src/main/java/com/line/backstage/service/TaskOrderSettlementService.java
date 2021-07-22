@@ -11,4 +11,10 @@ public interface TaskOrderSettlementService {
      * 处理订单结算
      */
     void dealOrderSettlement();
+
+    /**
+     * 处理单个订单结算
+     * @param orderIdStr
+     */
+    void dealSettlementByOrderId(String orderIdStr);
 }

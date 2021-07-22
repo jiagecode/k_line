@@ -2,7 +2,9 @@ package com.line.backstage.service;
  
 import com.line.backstage.entity.OrderInfo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.Map;
+
 /**
  * 订单信息(OrderInfo)表服务实现类
  *
@@ -28,7 +30,14 @@ public interface OrderInfoService {
      * @return 是否成功
      */
     int insert(Integer loginUserId, OrderInfo orderInfo);
- 
+
+    /**
+     * 用户下单
+     * @param loginUserId
+     * @param orderInfo
+     * @return
+     */
+    Map<String,Object> insertForBuy(Integer loginUserId, OrderInfo orderInfo);
     /**
      * 通过主键删除数据
      *

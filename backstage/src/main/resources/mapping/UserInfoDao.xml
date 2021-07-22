@@ -62,6 +62,7 @@
         <result property="commissionRate" column="COMMISSION_RATE" jdbcType="NUMERIC"/>
         <result property="orderNum" column="ORDER_NUM" jdbcType="INTEGER"/>
         <result property="userMoney" column="ACCOUNT_MONEY" jdbcType="NUMERIC"/>
+        <result property="allMoney" column="ALL_MONEY" jdbcType="NUMERIC"/>
         <result property="winRate" column="WIN_RATE" jdbcType="NUMERIC"/>
         <result property="accountStatus" column="ACCOUNT_STATUS" jdbcType="INTEGER"/>
         <result property="moneyStatus" column="MONEY_STATUS" jdbcType="INTEGER"/>
@@ -77,7 +78,7 @@
         u.USER_ID,u.USER_NICK_NAME,u.USER_REAL_NAME,u.USER_GENDER,u.USER_PASSWORD,u.USER_HEAD_IMG,u.USER_PHONE,u.USER_REFEREE_ID,
         u.USER_TYPE,u.USER_LEVEL,u.USER_CARD_NO,u.USER_REGISTER_DATE,u.USER_FORBID_FLAG,u.USER_REFEREE_CODE,u.USER_REFEREE_ABLE,
         u.ADD_DATE,u.ADD_USER_ID,u.EDIT_DATE,u.EDIT_USER_ID,u.LAST_LOGIN_DATE,u.DEL_STATUS,u.DEL,u.AGENT_ID,u.AGENT_NAME,u.AGENT_TIME,
-        u.BONUS_RATE,u.COMMISSION_RATE,u.DIY_FLAG,u.DIY_USER_TYPE,u.DIY_USER_NAME,u.WIN_RATE,a.ACCOUNT_MONEY,a.ORDER_NUM,a.ACCOUNT_STATUS,a.MONEY_STATUS
+        u.BONUS_RATE,u.COMMISSION_RATE,u.DIY_FLAG,u.DIY_USER_TYPE,u.DIY_USER_NAME,u.WIN_RATE,a.ACCOUNT_MONEY,a.ALL_MONEY,a.ORDER_NUM,a.ACCOUNT_STATUS,a.MONEY_STATUS
     </sql>
     <select id="queryManUserVoList" parameterType="com.line.backstage.entity.sysentity.ManUserVo" resultMap="ManUserVoInfoMap">
         SELECT
