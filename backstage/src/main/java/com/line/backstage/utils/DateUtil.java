@@ -621,7 +621,52 @@ public class DateUtil {
     }
 
     /**
-     * 取得当前时间戳（精确到分钟）
+     * 取得昨天0点时间戳
+     *
+     * @return
+     */
+    public static String getYesterdayZeroStamp() {
+        return String.valueOf(Long.parseLong(DateUtil.getTodayZeroStamp()) - 86400);
+    }
+
+    /**
+     * 取得昨天此时时间戳
+     *
+     * @return
+     */
+    public static String getYesterdayStamp() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        return String.valueOf(calendar.getTime().getTime() / 1000);
+    }
+
+    /**
+     * 取得昨天此时时间戳 分钟
+     *
+     * @return
+     */
+    public static String getYesterdayMinuteStamp() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        long ss = calendar.getTime().getTime() / 1000;
+        long mm = ss - (ss % 60);
+        return String.valueOf(mm);
+    }
+
+    /**
+     * 取得今天0点时间戳
+     *
+     * @return
+     */
+    public static String getTodayZeroStamp() {
+        long nowTime = System.currentTimeMillis();
+        long todayStartTime = nowTime - ((nowTime + TimeZone.getDefault().getRawOffset()) % (24 * 60 * 60 * 1000L));
+
+        return String.valueOf((todayStartTime / 1000));
+    }
+
+    /**
+     * 取得当前时间戳（精确到分钟） error
      *
      * @return
      */
@@ -636,6 +681,15 @@ public class DateUtil {
      */
     public static String getFiveMinuteAfterStamp() {
         return String.valueOf((System.currentTimeMillis() + 300000) / 60000);
+    }
+
+    /**
+     * 取得2分钟后时间戳（精确到分钟）
+     *
+     * @return
+     */
+    public static String getTowMinuteAfterStamp() {
+        return String.valueOf((System.currentTimeMillis() + 120000) / 60000);
     }
 
     /**

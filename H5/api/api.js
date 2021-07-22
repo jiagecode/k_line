@@ -12,6 +12,9 @@ const urls = {
 	userRegister: "/userInfo/createUserInfo", // H5用户注册
 	bankCardInfoSave: "/bankCardInfo/save", // 新增银行卡
 	submitOrder: "/orderInfo/save", //提交订单
+	klineDay: "/kline/day/list", //8日线
+	klineMin: "/kline/min/list", //当日分钟线
+	klineMils: "/kline/mils/list", //历史秒线
 }
 
 module.exports = {
@@ -47,5 +50,14 @@ module.exports = {
 	},
 	submitOrder(data) {
 		return doRequest('POST', urls.submitOrder, data)
-	}
+	},
+	klineDay(data) {
+		return doRequest('POST', urls.klineDay, data)
+	},
+	klineMin(data) {
+		return doRequest('POST', urls.klineMin, data)
+	},
+	klineMils(data) {
+		return doRequest('POST', urls.klineMils, data)
+	},
 }

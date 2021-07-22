@@ -45,8 +45,20 @@
 				"enablePullDownRefresh":false
 			}
 		},
+		// {
+		//     "path" : "pages/kline/kline",
+		//     "style" :                                                                                    
+		//     {
+		// 		"navigationBarTitleText": "交易",
+		// 		"navigationBarTextStyle":"white",
+		// 		"navigationBarBackgroundColor": "#5586d3",
+		// 		// 开启下拉刷新
+		// 		"enablePullDownRefresh":false
+		//     }
+		    
+		// },
 		{
-		    "path" : "pages/kline/kline",
+		    "path" : "pages/kline/TradingView",
 		    "style" :                                                                                    
 		    {
 				"navigationBarTitleText": "交易",
@@ -178,6 +190,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/kline/TradingView",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	// 全局配置
 	"globalStyle": {
@@ -200,8 +221,14 @@
 				"selectedIconPath": "/static/tabbar/index-selected.png",
 				"text": "行情"
 			},
+			// {
+			// 	"pagePath": "pages/kline/kline",
+			// 	"iconPath": "/static/tabbar/kline.png",
+			// 	"selectedIconPath": "/static/tabbar/kline-selected.png",
+			// 	"text": "交易"
+			// },
 			{
-				"pagePath": "pages/kline/kline",
+				"pagePath": "pages/kline/TradingView",
 				"iconPath": "/static/tabbar/kline.png",
 				"selectedIconPath": "/static/tabbar/kline-selected.png",
 				"text": "交易"

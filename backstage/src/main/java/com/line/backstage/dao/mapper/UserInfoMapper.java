@@ -3,6 +3,7 @@ package com.line.backstage.dao.mapper;
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.entity.sysentity.ManUserVo;
+import com.line.backstage.vo.UserInfoVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -32,4 +33,6 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
     Integer queryUserIdForPhone(@Param("tel") String phone);
 
     String queryAgentNameByAgentId(@Param("agentId")Integer agentId);
+
+    List<UserInfoVo> queryListAll();
 }

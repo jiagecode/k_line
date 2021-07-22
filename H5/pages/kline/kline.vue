@@ -82,7 +82,7 @@
 					<view class="uni-col-bot bot-cc light-bot-d">
 						<!-- <image style="width: 40rpx; height: 40rpx;" src="/static/checkbox.png" /> -->
 						持仓
-						</view>
+					</view>
 				</div>
 			</uni-col>
 			<uni-col :span="8">
@@ -306,20 +306,21 @@
 	}
 
 	.page-item-select {
-		height:180upx;
+		height: 180upx;
 		border-radius: 4upx;
 		border: 4upx solid #5586d3;
 	}
-	
+
 	.page-item-select .light-page-t {
-		height:46upx;
+		height: 46upx;
 		line-height: 50upx;
 	}
+
 	.page-item-select .light-page-d {
-		height:46upx;
+		height: 46upx;
 		line-height: 50upx;
 	}
-	
+
 
 	.uni-row-page1 {
 		height: 80upx;
@@ -347,7 +348,7 @@
 
 	.page-amount-select {
 		height: 60upx;
-		border-radius:6upx;
+		border-radius: 6upx;
 		border: 4upx solid #5586d3;
 	}
 
@@ -988,10 +989,10 @@
 
 		methods: {
 			// 跳转持仓
-			ClickCc(){
+			ClickCc() {
 				uni.navigateTo({
-						url: '../transaction-records/transaction-now'
-					})
+					url: '../transaction-records/transaction-now'
+				})
 			},
 			// 选择项目
 			SelectBuyItem(item) {
@@ -1089,7 +1090,8 @@
 				};
 				// 校验当前价
 				console.log(this.OrderCoinPrice)
-				if(typeof this.OrderCoinPrice == "undefined" || this.OrderCoinPrice == null || this.OrderCoinPrice == 0 || this.OrderCoinPrice =="" ){
+				if (typeof this.OrderCoinPrice == "undefined" || this.OrderCoinPrice == null || this.OrderCoinPrice == 0 ||
+					this.OrderCoinPrice == "") {
 					return;
 				}
 				// 提交
@@ -1447,7 +1449,7 @@
 					// url: 'https://min-api.cryptocompare.com/data/v2/histominute?tryConversion=false&fsym=' + this.Name +
 					// 	'&tsym=USD&limit=1440&api_key=' + API_KEY,
 					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
-						'&tsym=USD&limit=180&api_key=' + API_KEY,
+						'&tsym=USD&limit=120&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};
@@ -1487,7 +1489,7 @@
 				console.log("查询日线全量");
 				uni.request({
 					url: 'https://min-api.cryptocompare.com/data/v2/histoday?fsym=' + this.Name +
-						'&tsym=USD&limit=30&api_key=' + API_KEY,
+						'&tsym=USD&limit=7&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};
@@ -1524,7 +1526,7 @@
 				console.log("查询分钟实时数据");
 				uni.request({
 					url: 'https://min-api.cryptocompare.com/data/v2/histominute?fsym=' + this.Name +
-						'&tsym=USD&limit=4&api_key=' + API_KEY,
+						'&tsym=USD&limit=2&api_key=' + API_KEY,
 					method: 'get',
 					success: (res) => {
 						var resultData = {};

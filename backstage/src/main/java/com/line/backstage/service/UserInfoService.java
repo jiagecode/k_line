@@ -2,7 +2,9 @@ package com.line.backstage.service;
 
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.utils.PageWrapper;
+import com.line.backstage.vo.UserInfoVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -94,4 +96,10 @@ public interface UserInfoService {
      * @return
      */
     Map getUserInfo(String userId);
+
+    /**
+     * 查询所有用户列表 用于后台数据推送
+     * @return
+     */
+    List<UserInfoVo> queryListAll();
 }

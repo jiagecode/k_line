@@ -14,14 +14,15 @@ import com.line.backstage.shiro.JwtUtil;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.ResultCode;
+import com.line.backstage.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,6 +62,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     /**
      * 创建新用户并创建账户
+     *
      * @param loginUserId
      * @param userInfo
      * @return
@@ -70,16 +72,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     public int addNewUser(Integer loginUserId, UserInfo userInfo) {
 
         String tel = userInfo.getUserPhone();
-        if(StringUtils.isEmpty(tel)){
+        if (StringUtils.isEmpty(tel)) {
             return ResultCode.TEL_NULL.getCode();
         }
-        if(userInfoMapper.queryUserIdForPhone(tel) != null ){
+        if (userInfoMapper.queryUserIdForPhone(tel) != null) {
             return ResultCode.TEL_EXIST.getCode();
         }
-        if(userInfo.getUserType() == null){
+        if (userInfo.getUserType() == null) {
             userInfo.setUserType(1);
         }
-        if(userInfo.getUserType() != 1 && userInfo.getUserType() != 2){
+        if (userInfo.getUserType() != 1 && userInfo.getUserType() != 2) {
             userInfo.setUserType(1);
         }
         Date date = new Date();
@@ -102,16 +104,16 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserRefereeAble(1);
         userInfo.setDel(1);
         userInfo.setDiyFlag(0);
-        if(userInfo.getAgentId() != null){
+        if (userInfo.getAgentId() != null) {
             userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
         }
-        int newId  = userInfoMapper.insert(userInfo);
-        if(newId == 1){
+        int newId = userInfoMapper.insert(userInfo);
+        if (newId == 1) {
             newId = userInfoMapper.queryUserIdForPhone(tel);
             userInfo.setUserId(newId);
         }
-       // System.out.println("创建用户得新id：" + newId);
-        if(2 == userInfo.getUserType()){
+        // System.out.println("创建用户得新id：" + newId);
+        if (2 == userInfo.getUserType()) {
             //用户为代理
             userInfo.setAgentId(newId);
             userInfo.setUserId(newId);
@@ -138,6 +140,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     /**
      * H5新增用户
      * 注册没有 userLoginId -1来区分
+     *
      * @param userInfo
      * @return
      */
@@ -185,25 +188,25 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public int update(Integer loginUserId, UserInfo userInfo) {
         UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getUserId());
-        if(u != null){
-            if(userInfo.getAgentId() != null){
+        if (u != null) {
+            if (userInfo.getAgentId() != null) {
                 userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
             }
             return userInfoMapper.updateByPrimaryKeySelective(userInfo);
         }
         // FIXME 待完善
-       return 0;
+        return 0;
     }
 
     @Override
     public int updateUserType(Integer loginUserId, UserInfo userInfo) {
         UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getUserId());
-        if(u != null){
+        if (u != null) {
             userInfo.setAgentId(u.getUserId());
             Date date = new Date();
             userInfo.setAgentTime(date);
             userInfo.setEditUserId(loginUserId);
-            userInfo.setAgentName(StringUtils.isEmpty(u.getUserNickName())?u.getUserRealName():u.getUserNickName());
+            userInfo.setAgentName(StringUtils.isEmpty(u.getUserNickName()) ? u.getUserRealName() : u.getUserNickName());
             userInfo.setEditDate(date);
             userInfo.setUserType(2);
             return userInfoMapper.updateByPrimaryKeySelective(userInfo);
@@ -287,5 +290,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 //        resMap.put("name", user.getNickname());
 //        resMap.put("avatar", user.getPhoto());
         return resMap;
+    }
+
+    @Override
+    public List<UserInfoVo> queryListAll() {
+        return userInfoMapper.queryListAll();
     }
 }

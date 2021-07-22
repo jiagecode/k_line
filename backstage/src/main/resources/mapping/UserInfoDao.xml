@@ -63,6 +63,12 @@
         <result property="userMoney" column="ACCOUNT_MONEY" jdbcType="NUMERIC"/>
     </resultMap>
 
+    <sql id="Join_Column_List_User">
+        USER_ID,USER_NICK_NAME,USER_REAL_NAME,USER_GENDER,USER_PASSWORD,USER_HEAD_IMG,USER_PHONE,USER_REFEREE_ID,
+        USER_TYPE,USER_LEVEL,USER_CARD_NO,USER_REGISTER_DATE,USER_FORBID_FLAG,USER_REFEREE_CODE,USER_REFEREE_ABLE,
+        ADD_DATE,ADD_USER_ID,EDIT_DATE,EDIT_USER_ID,LAST_LOGIN_DATE,DEL_STATUS,DEL,AGENT_ID,AGENT_NAME,AGENT_TIME,
+        BONUS_RATE,COMMISSION_RATE,DIY_FLAG,DIY_USER_TYPE,DIY_USER_NAME
+    </sql>
     <sql id="Join_Column_List">
         u.USER_ID,u.USER_NICK_NAME,u.USER_REAL_NAME,u.USER_GENDER,u.USER_PASSWORD,u.USER_HEAD_IMG,u.USER_PHONE,u.USER_REFEREE_ID,
         u.USER_TYPE,u.USER_LEVEL,u.USER_CARD_NO,u.USER_REGISTER_DATE,u.USER_FORBID_FLAG,u.USER_REFEREE_CODE,u.USER_REFEREE_ABLE,
@@ -118,5 +124,10 @@
     </select>
     <select id="queryAgentNameByAgentId" parameterType="java.lang.Integer" resultType="java.lang.String">
         select AGENT_NAME from t_user_info where USER_ID = #{agentId} AND DEL = 1 LIMIT 1
+    </select>
+    <select id="queryListAll" resultType="com.line.backstage.vo.UserInfoVo">
+        select
+        <include refid="Join_Column_List_User"/>
+        from t_user_info where USER_FORBID_FLAG=0 AND DEL_STATUS=0 AND DEL=1
     </select>
 </mapper>

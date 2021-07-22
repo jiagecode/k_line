@@ -7,36 +7,17 @@ import java.util.Date;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SkuInfoVo {
+public class SkuInfoOhlcvVo {
 
     /**
-     * 临时字段 判断是上下半分钟
+     * 时间戳
      */
-    private Integer timeTag;
-    /**
-     * 临时字段 用于排序的字段
-     */
-    private Integer orderNum;
-
-    /**
-     * 临时字段 所属时间分钟
-     */
-    private long timeStamp;
-
-    /**
-     * 商品ID
-     */
-    private Integer skuId;
+    private String timeStamp;
 
     /**
      * 商品代码
      */
     private String skuCode;
-
-    /**
-     * 商品名称
-     */
-    private String skuName;
 
     /**
      * 现价
@@ -59,8 +40,24 @@ public class SkuInfoVo {
     private Double openPrice;
 
     /**
-     * 修改时间
+     * volumefrom
      */
-    private Date editDate;
+    private Double volumeFrom;
+
+    /**
+     * volumeto
+     */
+    private Double volumeTo;
+
+    /**
+     * close
+     */
+    private Double close;
+
+    /**
+     * orderNum
+     */
+    private int orderNum;
+
 
 }
