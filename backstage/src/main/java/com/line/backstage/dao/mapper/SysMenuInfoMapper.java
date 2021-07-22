@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * 后台管理系统菜单表(SysMenuInfo)表数据库访问层
  *
- * @author Zy
- * @since 2021-07-01 11:35:35
+ * @author jack
+ * @since 2000-07-01 11:35:35
  */
 public interface SysMenuInfoMapper extends TkBaseMapper<SysMenuInfo> {
 
@@ -32,4 +32,10 @@ public interface SysMenuInfoMapper extends TkBaseMapper<SysMenuInfo> {
      * @return
      */
     int getChildCountByMenuId(@Param("parentIdsLike") String parentIdsLike);
+    /**
+     * 获取角色对应的菜单id
+     * @param roleId
+     * @return
+     */
+    List<Integer> findMenuIdsByRoleId(@Param("roleId") Integer roleId);
 }

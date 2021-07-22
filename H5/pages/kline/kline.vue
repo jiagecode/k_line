@@ -1,6 +1,6 @@
 <template>
 	<div class='divchart' style='background-color:#ffffff;'>
-		<uni-row class="uni-row-top">
+<!-- 		<uni-row class="uni-row-top">
 			<uni-col :span="9">
 				<view class="uni-col-top dark topText">
 					<div id="t_price">{{SocketMsg.PRICE}}</div>
@@ -24,8 +24,35 @@
 					<div id="t_highday">{{SocketMsg.HIGHDAY}}</div>
 				</view>
 			</uni-col>
-		</uni-row>
-
+		</uni-row> -->
+		<!-- top信息 -->
+		<view class="uni-row-top d-flex">
+			<!-- 实时价格 -->
+			<view id="t_price" class="d-flex flex-1 j-center a-center font-lgg">{{topValue.PRICE}}</view>
+			<!-- 当前行情 -->
+			<view class="flex-1">
+				<view class="d-flex flex-1">
+					<view class="flex-1 d-block">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最高</text>
+						<text id="t_highday" class="d-flex a-center j-center font" style="line-height: none;">{{topValue.LOWDAY}}</text>
+					</view>
+					<view class="flex-1 d-block">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">开盘</text>
+						<text id="t_openday" class="d-flex a-center j-center font">{{topValue.OPENDAY}}</text>
+					</view>
+				</view>
+				<view class="d-flex flex-1">
+					<view class="flex-1">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最低</text>
+						<view id="t_lowday" class="d-flex a-center j-center font">{{topValue.LOWDAY}}</view>
+					</view>
+					<view class="flex-1 d-flex a-center j-center" @tap="addSelect">
+						<!-- <text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">自选</text> -->
+						<image style="width: 65rpx; height: 65rpx;" src="/static/zxuan.png"><view class="d-flex flex-column"><text class="font-sm" style="line-height: 22rpx; margin-bottom: 6rpx;">自</text><text class="j-center font-sm" style="line-height: 22rpx;">选</text></view></image>
+					</view>
+				</view>
+			</view>
+		</view>
 		<!--  #ifdef  H5  -->
 		<div>
 			<div class='kline' id="kline" ref='kline'></div>
@@ -522,7 +549,7 @@
 	}
 
 	.uni-row-bot {
-		height: 70px;
+		height: 130rpx;
 	}
 
 	.uni-col-bot {
@@ -806,6 +833,7 @@
 		data() {
 			let data = {
 				// PairName:Bitcoin,Symbol:btc.BIT,Name:btc
+				id:'',
 				Symbol: 'btc.BIT',
 				Name: 'btc',
 				PairName: 'Bitcoin', //货币代码
@@ -853,7 +881,7 @@
 				OrderCoinPrice: null,
 				OrderExpectEarnings: 18.8,
 				OrderGuarantee: 0.00,
-
+				topValue:{} // top信息对象
 			};
 
 			return data;
@@ -861,6 +889,16 @@
 
 		onLoad(obj) {
 			var that = this;
+			var token = uni.getStorageSync('token');
+			// 用户信息
+			that.UserData = uni.getStorageSync('userInfo');
+			// 非法访问，请重新登录
+			if (token === null || token === undefined || token === '' || this.UserData === null) {
+				// 跳转页面
+				uni.reLaunch({
+					url: '../login/login'
+				});
+			}
 
 			// 订阅币种切换事件
 			uni.$on("ChangeSymbol", (rel) => {
@@ -873,16 +911,6 @@
 
 		onShow() {
 			var that = this;
-			// 用户信息
-			this.UserData = uni.getStorageSync('userInfo');
-			var token = uni.getStorageSync('token');
-			// 非法访问，请重新登录
-			if (token === null || token === undefined || token === '' || this.UserData === null) {
-				// 跳转页面
-				uni.reLaunch({
-					url: '../login/login'
-				});
-			}
 			// 系统信息
 			uni.getSystemInfo({
 				success: (res) => {
@@ -923,6 +951,11 @@
 					if (typeof msgData.PRICE != 'undefined') {
 						that.SocketMsg.PRICE = msgData.PRICE;
 						that.OrderCoinPrice = msgData.PRICE;
+						// XXX top信息赋值
+						that.topValue = msgData;
+						console.log("=================");
+						console.log(that.topValue);
+						console.log("=================");
 						document.getElementById("t_price").innerText = msgData.PRICE;
 						var xjItems = document.getElementsByClassName("page-2-xj");
 						if (xjItems.length > 0) {
@@ -988,6 +1021,30 @@
 		},
 
 		methods: {
+			addSelect() {
+				let data = {
+					"skuCode": this.id
+				}
+				https.saveSkuCusInfo(data).then((res) => {
+					console.log(res);
+					let msg = res === 1 ? '添加成功!' : res === -1 ? '添加失败!' : '取消成功!';
+					// 提示用户
+					this.vusui.msg(
+						msg, {
+							icon: 0,
+							shade: 0.6,
+						}, () => {
+							// 关闭当前弹窗
+							this.vusui.close('page');
+							// 重新获取用户信息 余额
+							// todo
+							// 跳转页面
+							// uni.navigateTo({
+							// 	url: '../transaction-records/transaction-now'
+							// })
+					});
+				});
+			},
 			// 跳转持仓
 			ClickCc() {
 				uni.navigateTo({
@@ -1395,6 +1452,8 @@
 			ChangeSymbol: function(item) {
 				var symbol = item.symbol;
 				var name = item.name;
+				// 虚拟币ID
+				this.id = item.id;
 				if (this.PairName == name) return;
 				this.PairName = name;
 				this.Symbol = symbol + '.BIT';

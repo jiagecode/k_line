@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.SysPowerMapper">
+ 
+    <resultMap type="com.line.backstage.entity.SysPower" id="SysPowerMap">
+        <result property="rmId" column="RM_ID" jdbcType="INTEGER"/>
+        <result property="roleId" column="ROLE_ID" jdbcType="INTEGER"/>
+        <result property="menuId" column="MENU_ID" jdbcType="INTEGER"/>
+    </resultMap>
+</mapper>

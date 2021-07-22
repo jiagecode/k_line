@@ -3,7 +3,7 @@ package com.line.backstage.annotation;
 import java.lang.annotation.*;
 
 /**
- * 在Controller方法上加入改注解会自动记录日志
+ * 自动记录日志
  *
  * @author pc
  */

@@ -15,16 +15,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.io.IOException;
 
 /**
- * 针对单个指定异常捕获，并且定义错误的返回体
+ * 定义错误的返回体
  *
- * @author BaoBao
+ * @author mmd
  */
 @Slf4j
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
     /**
-     * 捕捉shiro的异常
+     * 捕捉
+     * shiro的异常
      *
      * @param e
      * @return
@@ -69,7 +70,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * 全局实体属性验证异常处理
+     * 全局实体属性
      *
      * @param e
      * @return
@@ -82,7 +83,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * 空指针异常处理
+     * 空指针
      *
      * @param e
      * @return
@@ -96,7 +97,8 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * jackson取值异常处理
+     * jackson
+     * 取值异常处理
      *
      * @param e
      * @return
@@ -110,7 +112,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * 索引越界异常处理
+     * 异常处理
      *
      * @param e
      * @return
@@ -124,7 +126,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * 全局异常捕捉处理
+     * 全局异常
      */
     @ResponseBody
     @ExceptionHandler(Exception.class)

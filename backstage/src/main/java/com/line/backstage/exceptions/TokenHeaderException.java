@@ -3,7 +3,7 @@ package com.line.backstage.exceptions;
 import org.apache.shiro.authc.AuthenticationException;
 
 /**
- * 认证请求头缺失异常
+ * 认证请求头
  */
 public class TokenHeaderException extends AuthenticationException {
 

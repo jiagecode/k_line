@@ -11,8 +11,8 @@ import java.util.Map;
 /**
  * 后台管理系统用户表(SysUserInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:36:19
+ * @author jack
+ * @since 2000-07-01 11:36:19
  */
 public interface SysUserInfoService {
  
@@ -89,8 +89,9 @@ public interface SysUserInfoService {
     PageWrapper<ManBankVo> queryManBankVoForPage(Integer loginUserId, ManBankVo recordVo);
     PageWrapper<AccountInfo> queryAccountInfoForPage(Integer loginUserId, AccountInfo recordVo);
     ManMoneyVo queryManMoneyVo(Integer loginUserId, ManMoneyVo manMoneyVo);
-    Map<String,Object> queryHomePageData();
+    Map<String,Object> queryHomePageData(Integer agentId);
     List<Map<String, Object>>queryHomePageDataForDate(String dateStr);
+    Integer openOrForbidAccount(Integer loginUserId,AccountInfo accountInfo);
     /**
      * 系统管理员登录
      * @param sysUserInfo
@@ -104,4 +105,10 @@ public interface SysUserInfoService {
      * @return
      */
     Map getUserInfo(Integer userId);
+
+    /**
+     * 退出
+     * @return
+     */
+    String logout(Integer userId);
 }

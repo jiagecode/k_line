@@ -10,8 +10,8 @@ import java.util.Map;
 /**
  * 用户信息(UserInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-06-24 10:48:02
+ * @author jack
+ * @since 2000-06-24 10:48:02
  */
 public interface UserInfoService {
  
@@ -97,9 +97,13 @@ public interface UserInfoService {
      */
     Map getUserInfo(String userId);
 
+<<<<<<< HEAD
     /**
      * 查询所有用户列表 用于后台数据推送
      * @return
      */
     List<UserInfoVo> queryListAll();
+=======
+    void updateLastLoginDate(Integer loginUserId);
+>>>>>>> master
 }

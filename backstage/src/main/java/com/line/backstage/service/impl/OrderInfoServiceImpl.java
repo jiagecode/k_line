@@ -24,8 +24,8 @@ import java.util.Date;
 /**
  * 订单信息(OrderInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-06-29 14:53:18
+ * @author jack
+ * @since 2000-06-29 14:53:18
  */
 @Service("orderInfoService")
 public class OrderInfoServiceImpl implements OrderInfoService {
@@ -41,7 +41,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private AccountInfoService accountInfoService;
     @Autowired
     private AccountRecordService accountRecordService;
-
+    /**
+     * 冻结标志
+     */
+    private final int FORBID_INT = 1;
     /**
      * 保存数据
      *
@@ -70,25 +73,46 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     public int insert(Integer loginUserId, OrderInfo orderInfo) {
         // 查询用户信息
         AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
-
+        if(accountInfo.getAccountStatus() == FORBID_INT){
+            //用户账户被冻结
+            return -1;
+        }
+        if(accountInfo.getMoneyStatus() == FORBID_INT){
+            //用户资金被冻结
+            return -2 ;
+        }
+        if(orderInfo.getOrderAmount() > accountInfo.getAccountMoney()){
+            //用户资金不足
+            return -3;
+        }
+        if(orderInfo.getInvestAmount() ==null){
+            orderInfo.setInvestAmount(orderInfo.getOrderAmount());
+        }
+        //设置当前时间为下单时间
+        Date addDate = new Date();
+        //购买时长 秒数
+        Integer orderCycle = orderInfo.getOrderCycle();
+        //订单结算时间
+        Date endDate = new Date(addDate.getTime()+orderCycle*1000);
         // 新增资金变动记录
         AccountRecord accountRecord = new AccountRecord();
         accountRecord.setAccountId(accountInfo.getAccountId());
         accountRecord.setRecordType(3);
         accountRecord.setChangeMoney(orderInfo.getInvestAmount());
         accountRecord.setBeforeMoney(accountInfo.getAccountMoney());
-        accountRecord.setAddDate(new Date());
-        accountRecord.setEditDate(new Date());
+        accountRecord.setAddDate(addDate);
+        accountRecord.setEditDate(addDate);
         accountRecord.setServiceCharge(orderInfo.getOrderCharge());
-
+        accountRecord.setDiyId(0);
         // 修改账户余额
         accountInfo.setAccountMoney(BigDecimal.valueOf(accountInfo.getAccountMoney()).subtract(BigDecimal.valueOf(orderInfo.getInvestAmount())).doubleValue());
         accountInfo.setOrderNum(accountInfo.getOrderNum() + 1);
-
+        accountInfo.setEditUserId(loginUserId);
+        accountInfo.setEditDate(addDate);
         // 记录变动后的金额
         accountRecord.setAfterMoney(accountInfo.getAccountMoney());
 
-        accountInfoService.update(loginUserId, accountInfo);
+        accountInfoService.updateOfOrder(accountInfo);
 
         // 生成持仓数据
         PositionInfo positionInfo = new PositionInfo();
@@ -99,19 +123,32 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         positionInfo.setBeaginPrice(orderInfo.getSkuPrice());
         positionInfo.setNowPrice(orderInfo.getSkuPrice());
         positionInfo.setInvestAmount(orderInfo.getInvestAmount());
-        positionInfo.setBeginDate(new Date());
-        positionInfo.setAddDate(new Date());
-        positionInfo.setEditDate(new Date());
+        positionInfo.setBeginDate(addDate);
+        positionInfo.setAddDate(addDate);
+        positionInfo.setEditDate(addDate);
+        positionInfo.setEndDate(endDate);
         positionInfo.setAddUserId(loginUserId);
         positionInfo.setEditUserId(loginUserId);
-
+        positionInfo.setDiyId(0);
         // 新增持仓数据
         positionInfoService.insert(loginUserId, positionInfo);
 
         // 新增订单信息
         orderInfo.setAddUserId(loginUserId);
         orderInfo.setUserId(loginUserId);
+        orderInfo.setEditUserId(loginUserId);
         orderInfo.setPositionId(positionInfo.getPositionId());
+        if(orderInfo.getWinFlag() == null){
+            orderInfo.setWinFlag(0);
+        }
+        orderInfo.setAddDate(addDate);
+        orderInfo.setEditDate(addDate);
+        orderInfo.setSettlementDate(endDate);
+        orderInfo.setDel(1);
+        orderInfo.setDiyId(0);
+        //已下单
+        orderInfo.setOrderStatus(1);
+
         int result = orderInfoMapper.insertSelective(orderInfo);
 
         accountRecord.setOrderId(orderInfo.getOrderId());
@@ -144,8 +181,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public int update(Integer loginUserId, OrderInfo orderInfo) {
         OrderInfo o = orderInfoMapper.selectByPrimaryKey(orderInfo.getOrderId());
-        // FIXME 待完善
-        return orderInfoMapper.updateByPrimaryKeySelective(o);
+        if(o != null){
+            // FIXME 待完善
+            return orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+        }
+       return 0;
     }
 
     /**

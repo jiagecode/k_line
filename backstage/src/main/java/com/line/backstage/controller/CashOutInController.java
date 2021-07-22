@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 用户资金充值或提现记录(CashOutIn)表控制层
  *
- * @author Zy
- * @since 2021-07-01 11:34:38
+ * @author jack
+ * @since 2000-07-01 11:34:38
  */
 @Api(tags = "用户资金充值或提现记录(CashOutIn)") 
 @RestController
@@ -41,6 +41,27 @@ public class CashOutInController {
     @ApiOperation(value = "新增/修改", notes = "新增/修改用户资金充值或提现记录的一条数据")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户资金充值或提现记录对象", required = true) @RequestBody @Validated CashOutIn cashOutIn) {
             return ResponseHelper.success(cashOutInService.save(Integer.valueOf(loginUserId), cashOutIn));
+    }
+
+    /**
+     * 创建充值/提现记录
+     *
+     * @param loginUserId 用户ID
+     * @param cashOutIn 实例对象
+     * @return 是否成功
+     */
+    @PostMapping("insertForNew")
+    @ApiOperation(value = "新增", notes = "新增用户资金充值或提现记录的一条数据")
+    public ResponseModel insertForNew(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户资金充值或提现记录对象", required = true) @RequestBody @Validated CashOutIn cashOutIn) {
+        int re = cashOutInService.insertForNew(Integer.valueOf(loginUserId), cashOutIn) ;
+        if(re == -1){
+            return ResponseHelper.failedWith("参数错误");
+        }else if(re == -2){
+            return ResponseHelper.failedWith("账户被冻结 无法进行操作");
+        }else if(re == -3){
+            return ResponseHelper.failedWith("资金不足 无法提现");
+        }
+        return ResponseHelper.success(re);
     }
  
     /**

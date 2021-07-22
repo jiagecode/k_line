@@ -35,41 +35,45 @@
 import https from "../../api/api";
 
 export default {
-  data() {
-    return {
-      cardList: []
-    }
-  },
-  methods: {},
-  mounted: async function () {
-    var token = uni.getStorageSync('token');
-    // 非法访问，请重新登录
-    if (token === null || token === undefined || token === '') {
-      // 跳转页面
-      uni.reLaunch({
-        url: '../login/login'
-      });
-    }
-    var data = {};
-    //发起查询数据
-    https.myCardList(data).then((res) => {
-      if (res != null) {
-        this.cardList = res.list;
-        console.log("银行卡数据:" + res.list);
-      }
-    })
-  },
-  onShow() {
-    document.title = '币安秒合约';
-    //发起查询数据
-	var data = {};
-    https.myCardList(data).then((res) => {
-      if (res != null) {
-        this.cardList = res.list;
-        console.log("银行卡数据:" + res.list);
-      }
-    })
-  }
+	data() {
+		return {
+			cardList: []
+		}
+	},
+	methods: {
+		loadData(){
+			https.myCardList({}).then((res) => {
+				if (res != null) {
+					// 数据请求完成之后停止下拉刷新
+					uni.stopPullDownRefresh();
+					this.cardList = res.list;
+					console.log("银行卡数据:" + res.list);
+				}
+			})
+		}
+	},
+	onShow() {
+		document.title = '币安秒合约';
+		this.loadData();
+	},
+	onLoad() {
+		var token = uni.getStorageSync('token');
+		// 非法访问，请重新登录
+		if (token === null || token === undefined || token === '') {
+		  // 跳转页面
+		  uni.reLaunch({
+			url: '../login/login'
+		  });
+		}
+	},
+	// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		this.loadData();
+		uni.showToast({
+			title: '刷新成功！',
+			duration: 500,
+		})
+	}
 }
 </script>
 

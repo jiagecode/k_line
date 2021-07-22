@@ -25,8 +25,8 @@ import java.util.Map;
 /**
  * 菜单表(SysMenuInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-03 10:27:30
+ * @author jack
+ * @since 2000-07-03 10:27:30
  */
 @Service("sysMenuInfoService")
 public class SysMenuInfoServiceImpl implements SysMenuInfoService {

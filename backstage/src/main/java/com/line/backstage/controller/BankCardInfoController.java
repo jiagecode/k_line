@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 银行卡信息(BankCardInfo)表控制层
  *
- * @author Zy
- * @since 2021-06-24 10:49:55
+ * @author jack
+ * @since 2000-06-24 10:49:55
  */
 @Api(tags = "银行卡信息(BankCardInfo)") 
 @RestController
@@ -81,5 +81,16 @@ public class BankCardInfoController {
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "银行卡信息对象", required = true) @RequestBody BankCardInfo bankCardInfo) {
         return ResponseHelper.success(bankCardInfoService.list(Integer.valueOf(loginUserId), bankCardInfo));
     }
- 
+
+    /**
+     * 查询用户银行卡下拉框
+     * @param loginUserId
+     * @param accountId
+     * @return
+     */
+    @GetMapping("queryManOptionVoForBank")
+    @ApiOperation(value = "下拉框", notes = "查询用户银行卡")
+    public ResponseModel queryForOpt(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@RequestParam("accountId") Integer accountId){
+        return ResponseHelper.success(bankCardInfoService.queryManOptionVoForBank(Integer.valueOf(loginUserId),accountId));
+    }
 }

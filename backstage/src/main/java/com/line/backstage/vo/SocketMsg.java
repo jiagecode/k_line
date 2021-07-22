@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @author scxfsc
+ * @author jack
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -21,6 +21,11 @@ public class SocketMsg {
      * 用户id
      */
     private String msdToSid;
+
+    /**
+     * 用户名称
+     */
+    private String sidName;
 
     /**
      * 类容

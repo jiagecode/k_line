@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author scxfsc
+ * @author jack
  */
 @Data
 public class MenuRouteVo {

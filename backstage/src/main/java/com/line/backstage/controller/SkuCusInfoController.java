@@ -14,8 +14,8 @@ import org.springframework.validation.annotation.Validated;
 /**
  * 自选商品信息表(SkuCusInfo)表控制层
  *
- * @author Zy
- * @since 2021-07-02 18:09:07
+ * @author jack
+ * @since 2000-07-02 18:09:07
  */
 @Api(tags = "自选商品信息表(SkuCusInfo)") 
 @RestController

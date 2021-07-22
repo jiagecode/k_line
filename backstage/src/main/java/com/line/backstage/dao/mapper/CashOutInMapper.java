@@ -11,8 +11,8 @@ import java.util.Map;
 /**
  * 用户资金充值或提现记录(CashOutIn)表数据库访问层
  *
- * @author Zy
- * @since 2021-07-01 11:34:38
+ * @author jack
+ * @since 2000-07-01 11:34:38
  */
 public interface CashOutInMapper extends TkBaseMapper<CashOutIn> {
     List<CashOutIn> queryMyCashOutInList(@Param("accountId") Integer accountId, @Param("cashType")Integer cashType);

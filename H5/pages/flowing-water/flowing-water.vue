@@ -47,38 +47,47 @@
 import https from '../../api/api.js'
 
 export default {
-  data() {
-    return {
-      dataList: []
-    }
-  },
-  methods: {
-    getCashTypeDesc(cashType) {
-      // 变动类型 1-充值 2-提现 3-买入 4-卖出
-      return cashType < 2 ? "充值" : cashType == 2 ? "提现" : cashType == 3 ? "下单" : "结单";
-    },
-
-  },
-  mounted: async function () {
-    if (uni.getStorageSync('token') === null || uni.getStorageSync('token') === undefined || uni.getStorageSync('token') === '') {
-      // 跳转页面
-      uni.reLaunch({
-        url: '../login/login'
-      });
-    }
-    // uni.setStorageSync('token', "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJleHAiOjE2MjUyODg2MjV9.yl68t0BE9wW-J4CZTj3h9VHDNLve_UpIX01OBsfmjSY");
-    var data = {};
-    //发起查询数据
-    https.queryFlowingWater(data).then((res) => {
-      if (res != null) {
-        this.dataList = res.list;
-        // console.log("流水数据:"+res.list);
-      }
-    })
-  },
-  onShow() {
-    document.title = '币安秒合约';
-  },
+	data() {
+		return {
+			dataList: []
+		}
+	},
+	methods: {
+		getCashTypeDesc(cashType) {
+			// 变动类型 1-充值 2-提现 3-买入 4-卖出
+			return cashType < 2 ? "充值" : cashType == 2 ? "提现" : cashType == 3 ? "下单" : "结单";
+		},
+		loadData(){
+			//发起查询数据
+			https.queryFlowingWater({}).then((res) => {
+				if (res != null) {
+					this.dataList = res.list;
+					// 数据请求完成之后停止下拉刷新
+					uni.stopPullDownRefresh();
+				}
+			})
+		}
+	},
+	onShow() {
+		document.title = '币安秒合约';
+		this.loadData();
+	},
+	// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+	onPullDownRefresh() {
+		this.loadData();
+		uni.showToast({
+			title: '刷新成功！',
+			duration: 500,
+		})
+	},
+	onLoad() {
+		if (uni.getStorageSync('token') === null || uni.getStorageSync('token') === undefined || uni.getStorageSync('token') === '') {
+			// 跳转页面
+			uni.reLaunch({
+				url: '../login/login'
+			});
+		}
+	}
 }
 </script>
 

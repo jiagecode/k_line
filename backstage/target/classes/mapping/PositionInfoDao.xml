@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.PositionInfoMapper">
+ 
+    <resultMap type="com.line.backstage.entity.PositionInfo" id="PositionInfoMap">
+        <result property="positionId" column="POSITION_ID" jdbcType="INTEGER"/>
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+        <result property="positionStatus" column="POSITION_STATUS" jdbcType="OTHER"/>
+        <result property="skuName" column="SKU_NAME" jdbcType="VARCHAR"/>
+        <result property="investType" column="INVEST_TYPE" jdbcType="OTHER"/>
+        <result property="beaginPrice" column="BEAGIN_PRICE" jdbcType="NUMERIC"/>
+        <result property="nowPrice" column="NOW_PRICE" jdbcType="NUMERIC"/>
+        <result property="endPrice" column="END_PRICE" jdbcType="NUMERIC"/>
+        <result property="investAmount" column="INVEST_AMOUNT" jdbcType="NUMERIC"/>
+        <result property="beginDate" column="BEGIN_DATE" jdbcType="TIMESTAMP"/>
+        <result property="endDate" column="END_DATE" jdbcType="TIMESTAMP"/>
+        <result property="incomeAmount" column="INCOME_AMOUNT" jdbcType="NUMERIC"/>
+        <result property="incomeFlage" column="INCOME_FLAGE" jdbcType="OTHER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="endAmout" column="END_AMOUT" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="OTHER"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <update id="updateForDiy" parameterType="java.lang.Integer" >
+        update t_position_info set DEL = #{del} ,EDIT_USER_ID = #{sysUserId},EDIT_DATE = now()
+        WHERE USER_ID = #{userId} AND DIY_ID = #{diyId}
+    </update>
+
+</mapper>

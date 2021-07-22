@@ -1,13 +1,16 @@
 package com.line.backstage.service;
  
 import com.line.backstage.entity.BankCardInfo;
+import com.line.backstage.entity.sysentity.ManOptionVo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.List;
+
 /**
  * 银行卡信息(BankCardInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-06-24 10:49:55
+ * @author jack
+ * @since 2000-06-24 10:49:55
  */
 public interface BankCardInfoService {
  
@@ -63,4 +66,6 @@ public interface BankCardInfoService {
      * @return 对象列表
      */
     PageWrapper<BankCardInfo> list(Integer loginUserId, BankCardInfo bankCardInfo);
+
+    List<ManOptionVo> queryManOptionVoForBank(Integer loginUserId,Integer userId);
 }

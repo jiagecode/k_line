@@ -18,7 +18,8 @@ import java.util.Random;
 
 /**
  * websocket连接后端服务
- * @author scxfsc
+ *
+ * @author jack
  */
 @Slf4j
 @Component
@@ -38,16 +39,45 @@ public class WebSocketServer {
     private static final String USER_TYPE = "sys";
 
     /**
+     * 用户类型-区分消息
+     */
+    private static final String SERVICE_LIST = "serviceList";
+
+    /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("userType") String userType) {
-        if (Objects.equals(USER_TYPE, userType)){
+        if (Objects.equals(USER_TYPE, userType)) {
             sysSocketMap.put(sid, session);
         } else {
             userSocketMap.put(sid, session);
+            sendMessageInfo(sysSocketMap, session);
         }
         log.info("有[{}]新客户端加入进来[{}]，sysMap大小为【{}】，userMap大小为【{}】", userType, sid, sysSocketMap.size(), userSocketMap.size());
+    }
+
+    /**
+     * 给用户推荐当前在线客服列表
+     * @param userSocketMap
+     * @param session
+     */
+    private void sendMessageInfo(Map<String, Session> userSocketMap, Session session) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SocketMsg socketMsg = new SocketMsg();
+        socketMsg.setMsdToSid(null);
+        socketMsg.setMsdToUserType(SERVICE_LIST);
+        socketMsg.setCreateDate(new Date());
+        try {
+            String str = "";
+            for (String s : userSocketMap.keySet()) {
+                str += s + "|";
+            }
+            socketMsg.setContent(str);
+            sendMessage(objectMapper.writeValueAsString(socketMsg), session);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -56,7 +86,7 @@ public class WebSocketServer {
     @OnClose
     public void onClose(@PathParam("sid") String sid, @PathParam("userType") String userType) {
         // 从Map中删除
-        if (Objects.equals(USER_TYPE, userType)){
+        if (Objects.equals(USER_TYPE, userType)) {
             sysSocketMap.remove(sid);
         } else {
             userSocketMap.remove(sid);
@@ -94,15 +124,16 @@ public class WebSocketServer {
                         socketMsg.setMsdToSid(null);
                         socketMsg.setMsdToUserType(USER_TYPE);
                         socketMsg.setCreateDate(new Date());
-                        sendMessage(objectMapper.writeValueAsString(socketMsg) , session);
+                        sendMessage(objectMapper.writeValueAsString(socketMsg), session);
                         return;
                     } catch (IOException e) {
                         log.error("话术【当前在线客服繁忙，请稍后再试】异常，【{}】", e.getMessage());
                         return;
                     }
                 }
+            } else {
+                sendToUser(sid, userType, socketMsg);
             }
-            sendToUser(sid, userType, socketMsg);
         } catch (JsonProcessingException e) {
             log.error("websocket消息对象转换异常【{}】", e.getMessage());
         }
@@ -134,7 +165,7 @@ public class WebSocketServer {
     public boolean sendToUser(String sid, String userType, SocketMsg socketMsg) {
         log.info("用户类型[{}]推送消息[{}]到客户端[{}]", socketMsg.getMsdToUserType(), socketMsg.getContent(), socketMsg.getMsdToSid());
         Session session = null;
-        if (Objects.equals(USER_TYPE, socketMsg.getMsdToUserType())){
+        if (Objects.equals(USER_TYPE, socketMsg.getMsdToUserType())) {
             session = sysSocketMap.get(socketMsg.getMsdToSid());
         } else {
             session = userSocketMap.get(socketMsg.getMsdToSid());
@@ -162,15 +193,14 @@ public class WebSocketServer {
      *
      * @param socketMsg
      * @param sid
-     * @return
-    public boolean sendObjectMsgToUser(SocketMsg socketMsg, String sid) {
-        String message = null;
-        try {
-            message = new ObjectMapper().writeValueAsString(socketMsg);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return sendToUser(message, sid);
+     * @return public boolean sendObjectMsgToUser(SocketMsg socketMsg, String sid) {
+    String message = null;
+    try {
+    message = new ObjectMapper().writeValueAsString(socketMsg);
+    } catch (JsonProcessingException e) {
+    e.printStackTrace();
+    }
+    return sendToUser(message, sid);
     }
      */
 

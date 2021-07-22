@@ -12,8 +12,8 @@ import java.util.Map;
 /**
  * 用户信息(UserInfo)表数据库访问层
  *
- * @author Zy
- * @since 2021-06-23 21:25:42
+ * @author jack
+ * @since 2000-06-23 21:25:42
  */
 public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
     /**
@@ -33,6 +33,12 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
     Integer queryUserIdForPhone(@Param("tel") String phone);
 
     String queryAgentNameByAgentId(@Param("agentId")Integer agentId);
+<<<<<<< HEAD
 
     List<UserInfoVo> queryListAll();
+=======
+    Integer updateLastLoginDate(@Param("userId")Integer loginUserId);
+    Integer queryWinRate(@Param("userId")Integer loginUserId);
+    Double queryCommissionRate(@Param("userId")Integer loginUserId);
+>>>>>>> master
 }

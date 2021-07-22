@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 /**
- * userId注解
+ * 注解
  * @author pc
  */
 @Configuration

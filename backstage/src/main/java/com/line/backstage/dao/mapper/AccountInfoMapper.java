@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * 用户账户(AccountInfo)表数据库访问层
  *
- * @author Zy
- * @since 2021-07-01 11:34:17
+ * @author jack
+ * @since 2000-07-01 11:34:17
  */
 public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
     /**
@@ -28,10 +28,11 @@ public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
 
     ManMoneyVo queryManMoneyVo(ManMoneyVo manMoneyVo);
 
-    Double sumAllUserMoney();
+    Double sumAllUserMoney(@Param("agentId") Integer agentId);
 
-    Double sumAllUserProfitAndLoss();
+    Double sumAllUserProfitAndLoss(@Param("agentId") Integer agentId);
 
+    int updateForCashOut(AccountInfo accountInfo);
     /**
      * 根据用户id查询 AccountInfo
      *

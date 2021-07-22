@@ -118,23 +118,20 @@
                 <span v-if="item.prop==='outPoint'">
                              {{ scope.row.outPoint }}
                 </span>
-                <span v-if="item.prop==='investAmount'">
-                             {{ scope.row.investAmount }}
-                </span>
-                <span v-if="item.prop==='resultMoney'">
-                             {{ scope.row.resultMoney }}
-                </span>
                 <span v-if="item.prop==='userMoney'">
                              {{ scope.row.userMoney }}
                 </span>
-                <span v-if="item.prop==='todayMoney'">
-                             {{ scope.row.todayMoney }}
-                </span>
-                <span v-if="item.prop==='allMoney'">
-                             {{ scope.row.allMoney }}
+                <span v-if="item.prop==='subMoney'">
+                             {{ scope.row.subMoney }}
                 </span>
                 <span v-if="item.prop==='afterMoney'">
                              {{ scope.row.afterMoney }}
+                </span>
+                <span v-if="item.prop==='todayMoney'">
+                             {{ showTodayMoneyDesc(scope.row.todayMoney) }}
+                </span>
+                <span v-if="item.prop==='allMoney'">
+                             {{ scope.row.allMoney }}
                 </span>
                 <span v-if="item.prop==='agentName'">
                              {{ scope.row.agentName }}
@@ -283,13 +280,13 @@ export default {
           prop: 'outPoint'
         }, {
           label: '委托余额',
-          prop: 'investAmount'
+          prop: 'userMoney'
         }, {
           label: '实际盈亏',
-          prop: 'resultMoney'
+          prop: 'subMoney'
         }, {
           label: '买后余额',
-          prop: 'userMoney'
+          prop: 'afterMoney'
         }, {
           label: '当日盈亏',
           prop: 'todayMoney'
@@ -308,6 +305,9 @@ export default {
     this.queryOrderDataList()
   },
   methods: {
+    showTodayMoneyDesc(todayMoney){
+      return (todayMoney ==null || todayMoney ==undefined) ? 0 :todayMoney;
+    },
     //详情
     showDetail(index,row){
       this.orderDetail = row;
@@ -357,7 +357,7 @@ export default {
         userType: this.region1,
         queryDataFlag: this.region2,
         investType: this.region3,
-        orderStatus: this.region3,
+        orderStatus: this.region4,
         pageNum: this.currentPage
       }
       orderVoList(data).then(res => {

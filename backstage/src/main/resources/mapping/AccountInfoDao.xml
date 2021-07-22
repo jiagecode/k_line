@@ -7,6 +7,7 @@
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
         <result property="accountMoney" column="ACCOUNT_MONEY" jdbcType="NUMERIC"/>
         <result property="accountStatus" column="ACCOUNT_STATUS" jdbcType="INTEGER"/>
+        <result property="moneyStatus" column="MONEY_STATUS" jdbcType="INTEGER"/>
         <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
         <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
         <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
@@ -36,7 +37,7 @@
         a.ACCOUNT_ID,a.USER_ID,a.ACCOUNT_MONEY,a.ACCOUNT_STATUS,a.ADD_DATE,a.EDIT_DATE,a.ADD_USER_ID,a.EDIT_USER_ID,
         a.DEL,a.ORDER_NUM,a.ALL_MONEY,a.ALL_IN_MONEY,a.ALL_IN_NUM,a.HAND_IN_MONEY,a.ALL_OUT_MONEY,a.ALL_OUT_NUM,
         a.ALL_COMMISSION,a.ALL_BONUS,a.REALLY_MONEY,a.REALLY_IN_MONEY,a.ALL_FEE,a.REMARKS,u.AGENT_NAME,a.DIY_MONEY,
-        u.USER_REAL_NAME,co.ALL_CHECK_MONEY
+        a.MONEY_STATUS,u.USER_REAL_NAME,co.ALL_CHECK_MONEY
     </sql>
     <select id="queryMyAccountIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select ACCOUNT_ID from  t_account_info where  DEL = 1 and USER_ID = #{userId}
@@ -44,11 +45,23 @@
     <select id="queryMyMoneyByUserId" parameterType="java.lang.Integer" resultType="java.lang.Double">
         select ACCOUNT_MONEY from  t_account_info where  DEL = 1 and USER_ID = #{userId}
     </select>
-    <select id="sumAllUserMoney" resultType="java.lang.Double">
-        select sum(ACCOUNT_MONEY) from  t_account_info where  DEL = 1
+    <select id="sumAllUserMoney" resultType="java.lang.Double" parameterType="java.lang.Integer">
+        select sum(a.ACCOUNT_MONEY)
+        from  t_account_info a
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        where  a.DEL = 1
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
+        </if>
     </select>
-    <select id="sumAllUserProfitAndLoss" resultType="java.lang.Double">
-        select sum(ALL_MONEY) from  t_account_info where  DEL = 1
+    <select id="sumAllUserProfitAndLoss" resultType="java.lang.Double" parameterType="java.lang.Integer">
+        select sum(a.ALL_MONEY)
+        from  t_account_info a
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        where  a.DEL = 1
+        <if test=" agentId != -1 ">
+            and u.AGENT_ID = #{agentId} and u.USER_ID <![CDATA[ <> ]]>#{agentId}
+        </if>
     </select>
     <select id="queryForPage" parameterType="com.line.backstage.entity.AccountInfo" resultMap="AccountInfoMap">
         select <include refid="account_info_sql"/>
@@ -101,5 +114,18 @@
     <select id="queryByUserId" parameterType="java.lang.Integer" resultType="com.line.backstage.entity.AccountInfo">
         SELECT * FROM t_account_info WHERE USER_ID = #{userId}
     </select>
+
+    <update id="updateForCashOut" parameterType="com.line.backstage.entity.AccountInfo">
+        update t_account_info  set
+        ACCOUNT_MONEY = ACCOUNT_MONEY + #{accountMoney},
+        ALL_IN_MONEY = ALL_IN_MONEY + #{allInMoney},
+        ALL_OUT_MONEY = ALL_OUT_MONEY + #{allOutMoney},
+        ALL_IN_NUM = ALL_IN_NUM + #{allInNum},
+        ALL_OUT_NUM = ALL_OUT_NUM + #{allOutNum},
+        REALLY_IN_MONEY = REALLY_IN_MONEY + #{reallyInMoney},
+        ALL_FEE = ALL_FEE +#{allFee},
+        EDIT_USER_ID = #{editUserId} ,EDIT_DATE = now()
+        where ACCOUNT_ID = #{accountId}
+    </update>
 
 </mapper>

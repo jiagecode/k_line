@@ -30,4 +30,7 @@
         WHERE USER_ID = #{userId} AND DIY_ID = #{diyId}
     </update>
 
+    <select id="queryOne" parameterType="java.lang.Integer" resultMap="PositionInfoMap">
+        select * from  t_position_info where POSITION_ID = #{posId}
+    </select>
 </mapper>

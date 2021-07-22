@@ -66,4 +66,8 @@
             and b.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
     </select>
+
+    <select id="queryUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select USER_ID from t_account_info where ACCOUNT_ID = #{accountId} and del = 1
+    </select>
 </mapper>

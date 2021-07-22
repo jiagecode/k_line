@@ -26,34 +26,38 @@
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
           </div>
         </div>
-
-        <div class="app-box-changeBox">
+        <div class="app-box-changeBox" style="margin: -25px 0 -10px 0;">
+          <!--入金总额-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">入金总额：</div>
-            <span>{{moneyDataAll.allInMoney}}</span>
+            <div class="app-box-input-txt" style="width: 80px;">入金总额：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{moneyDataAll.allInMoney}}</div>
           </div>
+          <!--出金总额-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">出金总额：</div>
-            <span>{{moneyDataAll.allOutMoney}}</span>
+            <div class="app-box-input-txt" style="width: 80px;">出金总额：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{moneyDataAll.allOutMoney}}</div>
           </div>
+          <!--佣金总额-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">佣金总额：</div>
-            <span>{{moneyDataAll.allCommission}}</span>
+            <div class="app-box-input-txt" style="width: 80px;">佣金总额：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{moneyDataAll.allCommission}}</div>
           </div>
+          <!--当日盈亏-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">红利总额：</div>
-            <span>{{moneyDataAll.allBonus}}</span>
+            <div class="app-box-input-txt" style="width: 80px;">当日盈亏：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{moneyDataAll.todayMoney}}</div>
           </div>
+          <!--出金总额-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">当日盈亏：</div>
-            <span>{{moneyDataAll.todayMoney}}</span>
+            <div class="app-box-input-txt" style="width: 80px;">出金总额：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{moneyDataAll.allOutMoney}}</div>
           </div>
+          <!--历史盈亏-->
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">历史盈亏：</div>
-            <span>{{moneyDataAll.allMoney}}</span>
+            <div class="app-box-input-txt" style="width: 80px;">历史盈亏：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 85px;">{{moneyDataAll.allMoney}}</div>
           </div>
         </div>
-
         <div class="app-tab-box">
           <el-table
             :data="moneyDataList.list"
@@ -67,14 +71,60 @@
             :tree-props="{children: 'children'}">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :min-width="columnWidth(item.prop)"
               :prop="item.prop"
               :label="item.label">
               <template slot-scope="scope">
                 <span v-if="item.prop==='userRealName'">
                              {{ scope.row.userRealName }}
                 </span>
+                <span v-if="item.prop==='agentName'">
+                             {{ scope.row.agentName }}
+                </span>
+                <span v-if="item.prop==='allInMoney'">
+                             {{ scope.row.allInMoney }}
+                </span>
+                <span v-if="item.prop==='allInNum'">
+                             {{ scope.row.allInNum }}
+                </span>
+                <span v-if="item.prop==='handInMoney'">
+                             {{ scope.row.handInMoney }}
+                </span>
+                <span v-if="item.prop==='allOutMoney'">
+                             {{ scope.row.allOutMoney }}
+                </span>
+                <span v-if="item.prop==='allOutNum'">
+                             {{ scope.row.allOutNum }}
+                </span>
+                <span v-if="item.prop==='allCheckMoney'">
+                   {{ showTodayMoneyDesc(scope.row.allCheckMoney) }}
+                </span>
+                <span v-if="item.prop==='allCommission'">
+                             {{ scope.row.allCommission }}
+                </span>
+                <span v-if="item.prop==='allBonus'">
+                             {{ scope.row.allBonus }}
+                </span>
+                <span v-if="item.prop==='accountMoney'">
+                             {{ scope.row.accountMoney }}
+                </span>
+                <span v-if="item.prop==='reallyMoney'">
+                             {{ scope.row.reallyMoney }}
+                </span>
+                <span v-if="item.prop==='reallyInMoney'">
+                             {{ scope.row.reallyInMoney }}
+                </span>
+                <span v-if="item.prop==='todayMoney'">
+                             {{ showTodayMoneyDesc(scope.row.todayMoney) }}
+                </span>
+                <span v-if="item.prop==='allMoney'">
+                             {{ scope.row.allMoney }}
+                </span>
+                <span v-if="item.prop==='allFee'">
+                             {{ scope.row.allFee }}
+                </span>
                 <!-- 正常的其他列 -->
-                <span v-else>{{ scope.row[item.prop] }}</span>
+<!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
               </template>
             </el-table-column>
           </el-table>
@@ -173,6 +223,22 @@ export default {
     this.queryTotal()
   },
   methods: {
+    showTodayMoneyDesc(todayMoney){
+      return (todayMoney ==null || todayMoney ==undefined) ? 0 :todayMoney;
+    },
+    // 动态设置宽度
+    columnWidth(item) {
+      let widthStr = ''
+      // if(item)
+      switch (item) {
+        case 'allCheckMoney':
+          widthStr = '100'
+          break
+        default:
+          widthStr = '80'
+      }
+      return widthStr
+    },
     //复制
     handleCopy(e) {
       this.copy(e)

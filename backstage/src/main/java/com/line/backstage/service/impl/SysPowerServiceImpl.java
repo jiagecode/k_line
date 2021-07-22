@@ -6,15 +6,18 @@ import com.line.backstage.dao.mapper.SysPowerMapper;
 import com.line.backstage.entity.SysPower;
 import com.line.backstage.service.SysPowerService;
 import com.line.backstage.utils.PageWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
- 
+import java.util.Map;
+
 /**
  * 角色菜单表  (SysPower)表服务实现类
  *
- * @author Zy
- * @since 2021-07-03 10:24:46
+ * @author jack
+ * @since 2000-07-03 10:24:46
  */
 @Service("sysPowerService")
 public class SysPowerServiceImpl implements SysPowerService {
@@ -88,7 +91,28 @@ public class SysPowerServiceImpl implements SysPowerService {
     public SysPower queryById(Integer rmId){
 		return sysPowerMapper.selectByPrimaryKey(rmId);
 	}
- 
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int saveForAuth(Integer loginUserId,Map<String, String> map) {
+        String roleIdStr = map.get("roleId");
+        String menuIdStr = map.get("menuIdStr");
+        if(StringUtils.isNotEmpty(roleIdStr) && StringUtils.isNotEmpty(menuIdStr)){
+            String ms [] = menuIdStr.split(",");
+            Integer roldId = Integer.parseInt(roleIdStr);
+            sysPowerMapper.deleteForAuth(roldId);
+            for (String s:ms){
+                Integer mid = Integer.parseInt(s);
+                SysPower power = new SysPower();
+                power.setRoleId(roldId);
+                power.setMenuId(mid);
+                sysPowerMapper.insertSelective(power);
+            }
+            return ms.length;
+        }
+        return 0;
+    }
+
     /**
      * 查询多条数据
      *

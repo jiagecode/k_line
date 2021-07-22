@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
- * 日志方面
+ * 日志
  *
  * @author pc
  */

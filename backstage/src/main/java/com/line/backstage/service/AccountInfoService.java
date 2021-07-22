@@ -6,8 +6,8 @@ import com.line.backstage.utils.PageWrapper;
 /**
  * 用户账户(AccountInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:34:17
+ * @author jack
+ * @since 2000-07-01 11:34:17
  */
 public interface AccountInfoService {
  
@@ -46,7 +46,8 @@ public interface AccountInfoService {
      * @return 是否成功
      */
     int update(Integer loginUserId, AccountInfo accountInfo);
- 
+
+    int updateOfOrder( AccountInfo accountInfo);
     /**
      * 通过ID查询单条数据
      *

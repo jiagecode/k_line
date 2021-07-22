@@ -15,6 +15,7 @@ const urls = {
 	klineDay: "/kline/day/list", //8日线
 	klineMin: "/kline/min/list", //当日分钟线
 	klineMils: "/kline/mils/list", //历史秒线
+	saveSkuCusInfo:"/skuCusInfo/save", //添加自选
 }
 
 module.exports = {
@@ -60,4 +61,7 @@ module.exports = {
 	klineMils(data) {
 		return doRequest('POST', urls.klineMils, data)
 	},
+	saveSkuCusInfo(data) {
+		return doRequest('POST', urls.saveSkuCusInfo, data)
+	}
 }

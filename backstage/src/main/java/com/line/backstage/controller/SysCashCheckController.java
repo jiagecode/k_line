@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 后台管理系统提现审核记录表(SysCashCheck)表控制层
  *
- * @author Zy
- * @since 2021-07-01 11:35:16
+ * @author jack
+ * @since 2000-07-01 11:35:16
  */
 @Api(tags = "后台管理系统提现审核记录表(SysCashCheck)") 
 @RestController

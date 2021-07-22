@@ -21,6 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+<<<<<<< HEAD
+=======
+import javax.persistence.Transient;
+import java.math.BigDecimal;
+>>>>>>> master
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +34,8 @@ import java.util.Set;
 /**
  * 用户信息(UserInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-06-24 10:48:03
+ * @author jack
+ * @since 2000-06-24 10:48:03
  */
 @Slf4j
 @Service("userInfoService")
@@ -43,7 +48,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private AccountInfoMapper accountInfoMapper;
-
+    /**
+     * 默认佣金红利系数
+     */
+    private final double DEF_COMM = 0.5;
     /**
      * 保存数据
      *
@@ -80,6 +88,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         if (userInfo.getUserType() == null) {
             userInfo.setUserType(1);
+            userInfo.setDiyUserType(1);
         }
         if (userInfo.getUserType() != 1 && userInfo.getUserType() != 2) {
             userInfo.setUserType(1);
@@ -104,11 +113,22 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUserRefereeAble(1);
         userInfo.setDel(1);
         userInfo.setDiyFlag(0);
+<<<<<<< HEAD
         if (userInfo.getAgentId() != null) {
             userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
         }
         int newId = userInfoMapper.insert(userInfo);
         if (newId == 1) {
+=======
+        userInfo.setWinRate(50.0);
+        userInfo.setCommissionRate(DEF_COMM);
+        userInfo.setBonusRate(DEF_COMM);
+        if(userInfo.getAgentId() != null){
+            userInfo.setAgentName(userInfoMapper.queryAgentNameByAgentId(userInfo.getAgentId()));
+        }
+        int newId  = userInfoMapper.insertSelective(userInfo);
+        if(newId == 1){
+>>>>>>> master
             newId = userInfoMapper.queryUserIdForPhone(tel);
             userInfo.setUserId(newId);
         }
@@ -129,10 +149,27 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (loginUserId != -1) {
             accountInfo.setEditUserId(loginUserId);
             accountInfo.setAddUserId(loginUserId);
+        }else {
+            accountInfo.setEditUserId(newId);
+            accountInfo.setAddUserId(newId);
         }
         accountInfo.setOrderNum(0);
         accountInfo.setAccountMoney(0.0);
         accountInfo.setAccountStatus(0);
+        accountInfo.setMoneyStatus(0);
+        accountInfo.setAllInMoney(0.0);
+        accountInfo.setAllMoney(0.0);
+        accountInfo.setReallyInMoney(0.0);
+        accountInfo.setDiyMoney(BigDecimal.ZERO);
+        accountInfo.setHandInMoney(0.0);
+        accountInfo.setAllOutNum(0);
+        accountInfo.setAllInNum(0);
+        accountInfo.setAllCommission(0.0);
+        accountInfo.setAllBonus(0.0);
+        accountInfo.setAllOutMoney(0.0);
+        accountInfo.setReallyMoney(0.0);
+        accountInfo.setAllFee(0.0);
+        accountInfo.setRemarks("用户注册 创建资金账户");
         int r = accountInfoMapper.insert(accountInfo);
         return loginUserId == -1 ? -1 : r;
     }
@@ -146,6 +183,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public String createUserInfo(UserInfo userInfo) {
+        userInfo.setUserNickName(userInfo.getUserRealName());
         int result = addNewUser(-1, userInfo);
         return result == -1 ? JwtUtil.sign(String.valueOf(userInfo.getUserId()), userInfo.getUserPassword()) : result + "";
     }
@@ -293,7 +331,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
+<<<<<<< HEAD
     public List<UserInfoVo> queryListAll() {
         return userInfoMapper.queryListAll();
+=======
+    public void updateLastLoginDate(Integer loginUserId) {
+        userInfoMapper.updateLastLoginDate(loginUserId);
+>>>>>>> master
     }
 }

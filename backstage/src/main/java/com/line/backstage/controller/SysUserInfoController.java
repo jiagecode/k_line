@@ -14,6 +14,7 @@ import com.line.backstage.vo.ResponseModel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.LockedAccountException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ import java.util.Objects;
 /**
  * 后台管理系统用户表(SysUserInfo)表控制层
  *
- * @author Zy
- * @since 2021-07-01 11:36:19
+ * @author jack
+ * @since 2000-07-01 11:36:19
  */
 @Api(tags = "后台管理系统用户表(SysUserInfo)") 
 @RestController
@@ -146,6 +147,18 @@ public class SysUserInfoController {
     public ResponseModel queryBankVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManBankVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManBankVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
+
+    /**
+     * 封禁或解封用户账户
+     * @param ManageUserId
+     * @param accountInfo
+     * @return
+     */
+    @PostMapping("openOrForbidAccount")
+    @ApiOperation(value = "列表", notes = "封禁或解封用户账户")
+    public ResponseModel openOrForbidAccount(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody AccountInfo accountInfo) {
+        return ResponseHelper.success(sysUserInfoService.openOrForbidAccount(Integer.valueOf(ManageUserId),accountInfo));
+    }
     /**
      * 管理端-资金报表
      * @param ManageUserId
@@ -242,6 +255,21 @@ public class SysUserInfoController {
     }
 
     /**
+     * 查询代理商统计数据
+     * @param loginUserId
+     * @param agentId
+     * @return
+     */
+    @GetMapping("queryAgentData")
+    @ApiOperation(value = "代理商统计数据", notes = "根据token的用户id}")
+    public ResponseModel queryHomeDataForAgent(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId,@RequestParam String agentId){
+        if(StringUtils.isEmpty(agentId)){
+            agentId = "-1";
+        }
+        return ResponseHelper.success(sysUserInfoService.queryHomePageData(Integer.valueOf(agentId)));
+    }
+
+    /**
      * logout
      *
      * @return 实例对象
@@ -249,7 +277,6 @@ public class SysUserInfoController {
     @GetMapping("logout")
     @ApiOperation(value = "查询单条数据", notes = "根据token的用户id}")
     public ResponseModel logout(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
-        return ResponseHelper.success("success");
+        return ResponseHelper.success(sysUserInfoService.logout(Integer.valueOf(loginUserId)));
     }
- 
 }

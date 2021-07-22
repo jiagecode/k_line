@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.SysRoleInfoMapper">
+ 
+    <resultMap type="com.line.backstage.entity.SysRoleInfo" id="SysRoleInfoMap">
+        <result property="roleId" column="ROLE_ID" jdbcType="INTEGER"/>
+        <result property="roleName" column="ROLE_NAME" jdbcType="VARCHAR"/>
+        <result property="roleEnglishName" column="ROLE_ENGLISH_NAME" jdbcType="VARCHAR"/>
+        <result property="roleType" column="ROLE_TYPE" jdbcType="INTEGER"/>
+        <result property="locked" column="LOCKED" jdbcType="INTEGER"/>
+        <result property="universal" column="UNIVERSAL" jdbcType="VARCHAR"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="addTime" column="ADD_TIME" jdbcType="TIMESTAMP"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="editTime" column="EDIT_TIME" jdbcType="TIMESTAMP"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+    </resultMap>
+</mapper>

@@ -4,20 +4,20 @@
       <div class="app-box-tab">
         <div class="app-box-title">客户列表</div>
         <div class="app-box-changeBox">
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(1)">所有用户</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(2)">所有客户</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(3)">所有代理商</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(4)">今日客户</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="queryForBut(5)">今日代理商</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(1)">添加客户+</el-button>
-          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(2)">添加代理+</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(1)">所有用户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(2)">所有客户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(3)">所有代理商</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(4)">今日客户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" @click="queryForBut(5)">今日代理商</el-button>
+          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(1)">添加客户</el-button>
+          <el-button type="primary" class="app-marginR add-btn" icon="el-icon-circle-plus-outline" @click="openDia(2)">添加代理</el-button>
 
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">用户ID：</div>
-            <el-input placeholder="请输入商户ID" v-model="input1"></el-input>
+            <div class="app-box-input-txt" style="width: 55px;">用户ID：</div>
+            <div style="width: 150px;"><el-input placeholder="请输入用户ID" v-model="input1"></el-input></div>
           </div>
           <div class="app-box-input app-marginR">
-            <div class="app-box-input-txt">用户：</div>
+            <div class="app-box-input-txt" style="width: 40px;">用户：</div>
             <el-input placeholder="请输入昵称/姓名/手机号" v-model="input2"></el-input>
           </div>
           <div class="app-btn-box">
@@ -34,6 +34,7 @@
                   style="width: 100%">
             <el-table-column
                     v-for="(item,index) in tabHead"
+                    :min-width="columnWidth(item.prop)"
                     :key="index"
                     :prop="item.prop"
                     :label="item.label">
@@ -48,10 +49,10 @@
                 <span v-else-if="item.prop==='userRealName'">
                              {{scope.row.userRealName}}
                             </span>
-                <span v-else-if="item.prop==='userRegisterDate'" style="width:150px; ">
+                <span v-else-if="item.prop==='userRegisterDate'">
                              {{scope.row.userRegisterDate}}
                             </span>
-                <span v-else-if="item.prop==='lastLoginDate'" style="width: 150px;">
+                <span v-else-if="item.prop==='lastLoginDate'">
                              {{scope.row.lastLoginDate}}
                             </span>
                 <span v-else-if="item.prop==='orderNum'">
@@ -82,17 +83,25 @@
             </el-table-column>
             <el-table-column
                     label="操作"
-                    width="300">
-              <template slot-scope="scope">
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2"
-                           @click="changeMoney(scope.$index, scope.row)">资金管理
-                </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
-                           @click="signUpForUser(scope.$index, scope.row)">签约
-                </el-button>
-              </template>
+                    width="250">
+                <template slot-scope="scope">
+                  <div style="display: flex; justify-content: flex-start;">
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                               @click="changeMoney(scope.$index, scope.row)">资金
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                               @click="changeWinRate(scope.$index, scope.row)">胜率
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2"
+                               @click="changeForbid(scope.$index, scope.row)">账户
+                    </el-button>
+                    <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.userType === 1"
+                               @click="signUpForUser(scope.$index, scope.row)">签约
+                    </el-button>
+                  </div>
+                </template>
             </el-table-column>
           </el-table>
           <div class="pageBox">
@@ -165,7 +174,6 @@
     </el-dialog>
 
     <!--修改金额-->
-
     <el-dialog :visible.sync="dialogFormVisibleChange" :close-on-click-modal="false"
                :before-close="ai_dialog_closeChange">
             <span slot="title" class="dialog-footer">
@@ -181,10 +189,10 @@
           </el-form-item>
           <el-form-item label="调整类型：" prop="leixing">
             <el-select v-model="changeForm.leixing"  placeholder="请选择类型" @change="moneyChangeLx">
-              <el-option label="手动入金" value="0"></el-option>
+<!--              <el-option label="手动入金" value="0"></el-option>-->
               <el-option label="系统加款" value="1"></el-option>
               <el-option label="系统扣款" value="2"></el-option>
-              <el-option label="提现扣款" value="3"></el-option>
+<!--              <el-option label="提现扣款" value="3"></el-option>-->
             </el-select>
           </el-form-item>
           <el-form-item label="调后余额：" prop="moeny">
@@ -200,12 +208,80 @@
         </el-form>
       </div>
     </el-dialog>
-
+    <!--封禁或解封账号-->
+    <el-dialog :visible.sync="forbidFormVisible" :close-on-click-modal="false"
+               :before-close="ai_dialog_closeChange">
+            <span slot="title" class="dialog-footer">
+                <span>封禁或解封账号</span>
+            </span>
+      <div class="payNameDiaBox">
+        <el-form ref="changeForm" :model="forbidForm" label-width="130px" :rules="rules">
+          <el-form-item label="用户姓名：" prop="username">
+            <el-input v-model="forbidForm.userRealName" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="账户金额：" prop="userMoney">
+            <el-input v-model="forbidForm.userMoney" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="账户状态：" prop="accountStatus">
+            <el-select v-model="forbidForm.accountStatus" >
+              <el-option label="封禁" value="1"></el-option>
+              <el-option label="解封" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="资金状态：" prop="moneyStatus">
+            <el-select v-model="forbidForm.moneyStatus"  placeholder="请选择">
+              <el-option label="封禁" value="1"></el-option>
+              <el-option label="解封" value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="备注：" prop="remarks">
+            <el-input v-model="forbidForm.remarks"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="payNameBnt1" @click="resetFormForbid('forbidForm')">取消</el-button>
+            <el-button class="payNameBnt2" @click="submitFormForbid('changeForm')">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
+    <!--修改胜率-->
+    <el-dialog :visible.sync="dialogFormVisibleWin" :close-on-click-modal="false"
+               :before-close="ai_dialog_closeChange">
+            <span slot="title" class="dialog-footer">
+                <span>调整胜率</span>
+            </span>
+      <div class="payNameDiaBox">
+        <el-form ref="changeForm" :model="winForm" label-width="130px" :rules="rules">
+          <el-form-item label="用户编号：" prop="userId">
+            <el-input v-model="winForm.userId" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户姓名：" prop="userRealName" v-if="!bjShow">
+            <el-input v-model="winForm.userRealName"  disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户昵称：" prop="userNickName">
+            <el-input v-model="winForm.userNickName"  disabled></el-input>
+          </el-form-item>
+          <el-form-item label="当前胜率(%)：" prop="moeny">
+            <el-input v-model="winForm.beforeWin" type="number" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="胜率调为(%)：" prop="winRate">
+            <el-input-number v-model="winForm.winRate" type="number" :max="100" :min="0" ></el-input-number>
+          </el-form-item>
+          <el-form-item label="调整备注：" prop="remarks">
+            <el-input v-model="winForm.remarks"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="payNameBnt1" @click="resetFormChange('changeForm')">取消</el-button>
+            <el-button class="payNameBnt2" @click="submitForm('changeForm')">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType,openOrForbid } from '@/api/adminUser'
 
 export default {
     name: 'index',
@@ -213,6 +289,8 @@ export default {
         return {
             bjShow: false,
             dialogFormVisible: false,
+            dialogFormVisibleWin: false,
+            forbidFormVisible: false,
             currentPage: 1,
             input1: '',
             input2: '',
@@ -230,10 +308,10 @@ export default {
                     label: '客户姓名',
                     prop: 'userRealName'
                 },
-                {
-                    label: '创建日期',
-                    prop: 'userRegisterDate'
-                },
+                // {
+                //     label: '创建日期',
+                //     prop: 'userRegisterDate'
+                // },
                 {
                     label: '最后登录',
                     prop: 'lastLoginDate'
@@ -258,6 +336,10 @@ export default {
                     label: '佣金',
                     prop: 'commissionRate'
                 },
+              {
+                    label: '胜率(%)',
+                    prop: 'winRate'
+                },
                 {
                     label: '归属代理商',
                     prop: 'agentName'
@@ -266,6 +348,7 @@ export default {
             form: {
                 userRealName: '',
                 userNickName: '',
+                lastLoginDate:'',
                 tel: '',
                 userAgentId:'',
                 userPassword1: '',
@@ -277,6 +360,14 @@ export default {
                 userId: '',
                 userPhone: '',
                 userType: 1
+            },
+            forbidForm:{
+              userRealName:'',
+              userId:'',
+              userMoney:'',
+              moneyStatus:'',
+              accountStatus:'',
+              remarks:''
             },
             text: '',
             dialogFormVisibleTel: false,
@@ -316,6 +407,14 @@ export default {
             userInfoVoList: '',
             //  修改金额
             dialogFormVisibleChange: false,
+            winForm:{
+              userId:'',
+              winRate:'',
+              remarks:'',
+              userRealName: '',
+              userNickName: '',
+              beforeWin: '',
+            },
             changeForm: {
                 userId:'',
                 moeny: '',
@@ -333,7 +432,48 @@ export default {
         this.queryOptData1Met()
     },
     methods: {
-
+      // 动态设置宽度
+      columnWidth(item) {
+        let widthStr = ''
+        // if(item)
+        switch (item) {
+          case 'userId':
+            widthStr = '50'
+            break
+          case 'userNickName':
+            widthStr = '150'
+            break
+          // case 'userRegisterDate':
+          //   widthStr = '155'
+          //   break
+          case 'lastLoginDate':
+            widthStr = '140'
+            break
+          case 'orderNum':
+            widthStr = '60'
+            break
+          case 'bonusRate':
+            widthStr = '60'
+            break
+          case 'commissionRate':
+            widthStr = '60'
+            break
+          case 'winRate':
+            widthStr = '60'
+            break
+          default:
+            widthStr = '80'
+        }
+        return widthStr
+      },
+      changeForbid(index, row){
+        this.forbidForm.accountStatus = row.accountStatus,
+        this.forbidForm.moneyStatus = row.moneyStatus,
+        this.forbidForm.userId = row.userId,
+        this.forbidForm.userRealName = row.userRealName,
+        this.forbidForm.userMoney = row.userMoney,
+        this.forbidFormVisible = true;
+      },
       signUpForUser(index, row) {
        // console.log(row)
         this.$confirm('此操作将签约用户为代理商, 是否继续?', '提示', {
@@ -380,6 +520,16 @@ export default {
         }
         this.changeForm.afterMoney = this.changeForm.beforeMoney - m;
       },
+      //调整胜率
+      changeWinRate(index, row){
+        this.winForm.userId = row.userId,
+          this.winForm.remarks = row.remarks,
+          this.winForm.beforeWin = row.winRate,
+          this.winForm.winRate = row.winRate,
+          this.winForm.userRealName = row.userRealName,
+          this.winForm.userNickName = row.userNickName,
+          this.dialogFormVisibleWin = true;
+      },
         //修改余额
         changeMoney (index, row) {
             this.dialogFormVisibleChange = true
@@ -414,9 +564,40 @@ export default {
                 }
             })
         },
-        resetFormChange () {
+         submitFormForbid(formName) {
+        this.$confirm('此操作将严重影响用户下单、提现和资金结算, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          var  data = this.forbidForm;
+          openOrForbid(data).then(res=>{
+            if (res.code == 10000) {
+              this.$message.success(res.message)
+              this.forbidFormVisible = false
+              this.$refs[`forbidForm`].resetFields()
+              this.queryListForUserVo()
+            } else {
+              this.$message.error(res.message)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+        },
+        resetFormChange (formName) {
+            this.dialogFormVisibleWin = false;
             this.dialogFormVisibleChange = false
             this.$refs[`changeForm`].resetFields()
+            this.$refs[`winForm`].resetFields()
+        },
+      resetFormForbid (formName) {
+            this.forbidFormVisible = false;
+            this.$refs[`forbidForm`].resetFields()
         },
         ai_dialog_closeChange () {
             this.dialogFormVisibleChange = false
@@ -585,19 +766,27 @@ export default {
                         this.$message.error('两次密码不一致')
                         return false
                     }
-                    console.log(this.form)
-                    var data = {
-                        userId:this.form.userId,
-                        userNickName: this.form.userNickName,
-                        userRealName: this.form.userRealName,
-                        userPhone: this.form.userPhone,
-                        userPassword: this.form.userPassword1,
-                        userType: this.form.userType,
+                   // console.log(this.form)
+                  var data;
+                  if(formName === "form"){
+                    data = {
+                      userId:this.form.userId,
+                      userNickName: this.form.userNickName,
+                      userRealName: this.form.userRealName,
+                      userPhone: this.form.userPhone,
+                      userPassword: this.form.userPassword1,
+                      userType: this.form.userType,
                       commissionRate: this.form.commission,
                       bonusRate: this.form.bonus,
                       remarks: this.form.txt,
                       agentId:this.form.userAgentId
                     }
+                  }else {
+                    data = {
+                      userId:this.winForm.userId,
+                      winRate: this.winForm.winRate,
+                    }
+                  }
                     addUser(data).then(res => {
                         console.log(res)
                         if (res.code == 10000) {

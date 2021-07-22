@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 伪装Mapper
- * @author scxfsc
+ * @author jack
  */
 @Mapper
 public interface NoWarnMapper {

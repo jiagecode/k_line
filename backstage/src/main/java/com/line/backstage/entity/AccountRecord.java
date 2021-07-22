@@ -16,8 +16,8 @@ import javax.persistence.GenerationType;
 /**
  * 用户资金账户变动记录(AccountRecord)实体类
  *
- * @author Zy
- * @since 2021-06-29 14:46:07
+ * @author jack
+ * @since 2000-06-29 14:46:07
  */
 @Data
 @Table(name = "t_account_record")
@@ -112,5 +112,5 @@ public class AccountRecord extends QueryRequest implements Serializable {
     @ApiModelProperty("数据状态")
     private Integer del;
     private String remarks;
-    private Integer diyId = 0;
+    private Integer diyId ;
 }

@@ -16,8 +16,8 @@ import javax.annotation.Resource;
 /**
  * 订单信息(OrderInfo)表控制层
  *
- * @author Zy
- * @since 2021-06-29 14:53:19
+ * @author jack
+ * @since 2000-06-29 14:53:19
  */
 @Api(tags = "订单信息(OrderInfo)") 
 @RestController
@@ -40,7 +40,15 @@ public class OrderInfoController {
     @PostMapping("save")
     @ApiOperation(value = "新增/修改", notes = "新增/修改订单信息的一条数据")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单信息对象", required = true) @RequestBody @Validated OrderInfo orderInfo) {
-            return ResponseHelper.success(orderInfoService.save(Integer.valueOf(loginUserId), orderInfo));
+        int result = orderInfoService.save(Integer.valueOf(loginUserId), orderInfo);
+        if(-1 == result){
+            return ResponseHelper.failedWith("账户被冻结 无法下单");
+        }else if(-2 == result){
+            return ResponseHelper.failedWith("资金被冻结 无法下单");
+        }else if(-3 == result){
+            return ResponseHelper.failedWith("余额不足 无法下单");
+        }
+        return ResponseHelper.success(result);
     }
  
     /**

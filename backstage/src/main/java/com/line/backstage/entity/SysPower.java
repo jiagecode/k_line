@@ -14,8 +14,8 @@ import java.io.Serializable;
 /**
  * 角色菜单表  (SysPower)实体类
  *
- * @author Zy
- * @since 2021-07-03 11:21:56
+ * @author jack
+ * @since 2000-07-03 11:21:56
  */
 @Data
 @Table(name = "t_sys_power")

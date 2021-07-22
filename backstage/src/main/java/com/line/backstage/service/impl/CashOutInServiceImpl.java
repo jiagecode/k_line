@@ -1,11 +1,15 @@
 package com.line.backstage.service.impl;
 
 import com.line.backstage.dao.mapper.AccountInfoMapper;
+import com.line.backstage.dao.mapper.AccountRecordMapper;
+import com.line.backstage.entity.AccountInfo;
+import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.entity.CashOutIn;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.dao.mapper.CashOutInMapper;
 import com.line.backstage.service.CashOutInService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,8 +22,8 @@ import javax.annotation.Resource;
 /**
  * 用户资金充值或提现记录(CashOutIn)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:34:38
+ * @author jack
+ * @since 2000-07-01 11:34:38
  */
 @Service("cashOutInService")
 public class CashOutInServiceImpl implements CashOutInService {
@@ -32,7 +36,12 @@ public class CashOutInServiceImpl implements CashOutInService {
 
     @Resource
     private AccountInfoMapper accountInfoMapper;
-
+    @Resource
+    private AccountRecordMapper accountRecordMapper;
+    /**
+     * 手续费率1%
+     */
+    private final double FEE_RATE = 0.01;
     /**
      * 保存数据
      *
@@ -60,6 +69,119 @@ public class CashOutInServiceImpl implements CashOutInService {
     public int insert(Integer loginUserId, CashOutIn cashOutIn) {
         cashOutIn.setAddUserId(loginUserId);
         return cashOutInMapper.insertSelective(cashOutIn);
+    }
+
+    @Override
+    public int insertForNew(Integer loginUserId, CashOutIn cashOutIn) {
+       if(cashOutIn.getAccountId() == null || cashOutIn.getCashType() == null){
+           //参数错误
+           return  -1;
+       }
+        Integer accId = cashOutIn.getAccountId();
+        Integer cashType = cashOutIn.getCashType();
+        Double money = cashOutIn.getCashMoney();
+        AccountInfo account = new AccountInfo();
+        account.setAccountId(accId);
+        account = accountInfoMapper.selectByPrimaryKey(account);
+        if(account.getAccountStatus() == 1 || account.getMoneyStatus() == 1){
+            //账户被冻结
+            return  -2;
+        }
+        Double accMoney = account.getAccountMoney();
+        if(cashType == 1 && money > accMoney){
+            //资金不足
+            return -3 ;
+        }
+        Double fee = FEE_RATE * money;
+        Double arrive = money - fee;
+        Date date = new Date();
+        cashOutIn.setCheckStatus(1);
+        cashOutIn.setAddDate(date);
+        cashOutIn.setEditDate(date);
+        cashOutIn.setAddUserId(loginUserId);
+        cashOutIn.setEditUserId(loginUserId);
+        cashOutIn.setDel(1);
+        cashOutIn.setDiyId(0);
+        if(cashType == 1){
+            cashOutIn.setArriveMoney(arrive);
+            cashOutIn.setCashFee(fee);
+        }else {
+            cashOutIn.setArriveMoney(money);
+            cashOutIn.setCashFee(0.0);
+        }
+        if(StringUtils.isEmpty(cashOutIn.getRemarks())){
+            cashOutIn.setRemarks("用户"+(cashType == 1? "提现":"充值")+money);
+        }
+        if(cashOutIn.getExchangeRate() == null){
+            cashOutIn.setExchangeRate(1.0);
+        }
+        int num =  cashOutInMapper.insertSelective(cashOutIn);
+        if(cashType == 1){
+            dealForCashOut(account,money,cashOutIn.getCashId(),cashType,loginUserId,date,fee);
+        }
+        return num ;
+    }
+
+
+    private void dealForCashOut(AccountInfo account,Double money,Integer cashId,Integer cashType,Integer loginUserId,Date date,Double fee){
+        AccountInfo info = new AccountInfo();
+        info.setAccountId(account.getAccountId());
+        info.setEditUserId(loginUserId);
+        Double before = account.getAccountMoney();
+        Double after ;
+        if(cashType ==1){
+            info.setAccountMoney(0 - money );
+            info.setAllOutNum(1);
+            info.setAllInNum(0);
+            info.setAllInMoney(0.0);
+            info.setAllOutMoney(money);
+            info.setReallyInMoney(0 - money);
+            info.setAllFee(fee);
+            after = before -money;
+        }else if(cashType ==2){
+            info.setAccountMoney(money );
+            info.setAllOutNum(0);
+            info.setAllInNum(1);
+            info.setAllInMoney(money);
+            info.setAllOutMoney(0.0);
+            info.setReallyInMoney(money);
+            info.setAllFee(0.0);
+            after = before + money;
+        }else {
+            return;
+        }
+        accountInfoMapper.updateForCashOut(info);
+        addOneRecord(account.getAccountId(),money,cashType,before,after,date,account.getUserId(),cashId,fee);
+    }
+
+    /**
+     * 记录资金变动
+     * @param accId
+     * @param changeMoney
+     * @param cashType
+     * @param before
+     * @param after
+     * @param date
+     * @param uid
+     * @param cashId
+     */
+    private void  addOneRecord(int accId,Double changeMoney,Integer cashType,Double before ,Double after,Date date,Integer uid,Integer cashId,Double fee){
+        AccountRecord record = new AccountRecord();
+        record.setAccountId(accId);
+        record.setRecordType(cashType == 1? 2 :1);
+        record.setBeforeMoney(before);
+        record.setAfterMoney(after);
+        record.setChangeMoney(changeMoney);
+        record.setAddDate(date);
+        record.setEditDate(date);
+        record.setAddUserId(uid);
+        record.setEditUserId(uid);
+        record.setCashId(cashId);
+        record.setDel(1);
+        record.setCommissionMoney(0.0);
+        record.setServiceCharge(fee);
+        record.setRemarks("用户"+(cashType == 1? "提现":"充值")+changeMoney);
+        accountRecordMapper.insertSelective(record);
     }
 
     /**

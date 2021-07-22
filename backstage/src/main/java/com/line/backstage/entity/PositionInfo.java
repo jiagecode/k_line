@@ -16,8 +16,8 @@ import javax.persistence.GenerationType;
 /**
  * 用户持仓信息(PositionInfo)实体类
  *
- * @author Zy
- * @since 2021-07-01 11:34:50
+ * @author jack
+ * @since 2000-07-01 11:34:50
  */
 @Data
 @Table(name = "t_position_info")
@@ -141,5 +141,5 @@ public class PositionInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
-    private Integer diyId = 0;
+    private Integer diyId;
 }

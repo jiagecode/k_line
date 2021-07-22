@@ -19,6 +19,12 @@
 					<view>客服：</view>
 					<view style="width: 80%; color: #0078f8;">{{item.msg}}</view>
 				</view>
+				<view class="font-mdd" v-if="item.type === 'serviceList' && isShow" style="margin-top: 20rpx;">
+					<view>请选择在线客服：</view>
+					<block v-for="(i, index) in item.msg">
+						<view class="d-flex a-center" style="width: 80%; color: #0078f8;" @tap="selectService(i)">（小姐姐）{{i.name}}</view>
+					</block>
+				</view>
 			</scroll-view>
 		</view>
 		<view class="d-flex a-center" style="height: 8%; margin-top: -3%;">
@@ -29,115 +35,156 @@
 </template>
 
 <script>
-	var app = getApp()
 	export default {
-		data() {
-			return {
+		data(){
+			return{
 				msg:"",
-				socketOpen: false,
-				socketMsgQueue:[],
 				msgList:[],
-				socketMsg:{}
+				serviceList:[],
+				isShow:true,
+				socketTask: null,
+				// 确保websocket是打开状态
+				is_open_socket: false
 			}
 		},
-		async mounted() {
-			console.log(this.socketOpen);
-			this.socketOpen = true;
-			this.wsInit();
-		},
-		methods: {
-			// 连接websocket服务器
-			wsInit(){
-				
+    onLoad() {
+			
+		var token = uni.getStorageSync('token');
+		// 非法访问，请重新登录
+		if (token === null || token === undefined || token === '') {
+		  // 跳转页面
+		  uni.reLaunch({
+			url: '../login/login'
+		  });
+		}
+		
+        // 进入这个页面的时候创建websocket连接【整个页面随时使用】
+        this.connectSocketInit();
+    },
+    onShow() {
+      document.title = '币安秒合约';
+    },
+		methods:{
+            // 进入这个页面的时候创建websocket连接【整个页面随时使用】
+            connectSocketInit() {
 				var _this = this;
-				if (!_this.socketOpen) return
-				// 销毁ws
-				// this.wsDestroy()
-			
-				// 根据用户ID创建websocket连接
-				var user = uni.getStorageSync('userInfo');
-				console.log(user.userId)
-				uni.connectSocket({
-					url: 'ws://192.168.1.9:1686/study/websocket/' + user.userId +'/user',
-					success:((res)=>{
-						console.log(res);
-					})
-				});
-			
-				uni.onSocketOpen((res)=> {
-				  console.log('WebSocket连接已打开！');
-				  _this.socketOpen = true;
-				});
+				let userInfo = uni.getStorageSync('userInfo');
+                // 创建一个this.socketTask对象【发送、接收、关闭socket都由这个对象操作】
+                this.socketTask = uni.connectSocket({
+                    // 【非常重要】必须确保你的服务器是成功的,如果是手机测试千万别使用ws://127.0.0.1:9099【特别容易犯的错误】
+					url: 'ws://192.168.1.9:1686/study/websocket/' + userInfo.userId + ',' + userInfo.userRealName +'/user',
+                    success(data) {
+                        console.log("websocket连接成功");
+                    },
+                });
+ 
+                // 消息的发送和接收必须在正常连接打开中,才能发送或接收【否则会失败】
+                this.socketTask.onOpen((res) => {
+                    console.log("WebSocket连接正常打开中...！");
+                    this.is_open_socket = true;
+                    // 注：只有连接正常打开中 ，才能正常成功发送消息
+                    // this.socketTask.send({
+                    //     data: "uni-app发送一条消息",
+                    //     async success() {
+                    //         console.log("消息发送成功");
+                    //     },
+                    // });
+                })
 				
-				uni.onSocketError(function (res) {
-				  console.log('WebSocket连接打开失败，请检查！');
-				});
-				
-				uni.onSocketMessage(function (res) {
-				  var str = res.data; 
-				  console.log('收到服务器内容：' + str);
-				  // 字符串转json对象
-				  var jsonStr = str.replace(" ", ""); 
-				  if (typeof jsonStr != 'object') { 
-					  jsonStr = jsonStr.replace(/\ufeff/g, "");//重点 
-					  var jj = JSON.parse(jsonStr); 
-					  res.data = jj; 
-				  }
-				  let a = {"userType": "user", "sid": null, "content": "当前在线客服繁忙，请稍后再试"};
-				  console.log(a.content)
-				  _this.socketMsg = '{"msdToUserType":"sys","msdToSid":"' +  res.data.msdToSid + '","content":"' + res.data.content + '"}';
-				  _this.msgList.push({"type" : "server", "msg" : res.data.content});
-				  
-				  // 处理消息盒子
-				  if(_this.msgList.length > 6){
-					  _this.msgList.shift()
-				  }
-				});
+				// 注：只有连接正常打开中 ，才能正常收到消息
+				this.socketTask.onMessage((res) => {
+					console.log("收到服务器内容：" + res.data);
+					var str = res.data; 
+					// 字符串转json对象
+					var jsonStr = str.replace(" ", ""); 
+					if (typeof jsonStr != 'object') {
+						jsonStr = jsonStr.replace(/\ufeff/g, "");//重点 
+						var jj = JSON.parse(jsonStr); 
+						res.data = jj; 
+					}
+					let a = {"userType": "user", "sid": null, "content": "当前在线客服繁忙，请稍后再试"};
+					// 发送给客户端
+					_this.socketMsg = '{"msdToUserType":"sys","msdToSid":"' +  res.data.msdToSid + '","content":"' + res.data.content + '"}';
+					// H5消息对象
+					if(res.data.msdToUserType === 'serviceList'){
+						// serviceList赋值
+						for(let sn of res.data.content.split("|")){
+							if(sn !== '' && sn.includes(",")){
+								let serviceInfo = sn.split(",");
+								_this.serviceList.push({id:serviceInfo[0], name:serviceInfo[1]});
+							}
+						}
+						_this.msgList.push({"type" : "serviceList", "msg" : _this.serviceList});
 					
-			},
-			
-			send(){
-			  if (this.socketOpen) {
-				  
-				let sid = this.socketMsg.msdToSid !== undefined ? this.socketMsg.msdToSid : null;
-				let socketMsg = '{"msdToUserType":"sys","msdToSid":' + sid + ',"content":"' + this.msg + '"}';
-				console.log(socketMsg)
-				uni.sendSocketMessage({
-				  data: socketMsg
-				});
-			  } else {
-				this.socketMsgQueue.push(this.msg);
-			  }
-			  this.msgList.push({"type" : "user", "msg" : this.msg});
-			  this.msg = '';
-			  
-			  // 处理消息盒子
-			  if(this.msgList.length > 6){
-				  this.msgList.shift()
-			  }
-			},
-			
-			colse(){
-				uni.onSocketClose(function (res) {
-				  console.log('WebSocket 已关闭！');
-				});
+					} else {
+						_this.msgList.push({"type" : "server", "msg" : res.data.content});
+					}
+
+					// 处理消息盒子
+					if(this.msgList.length > 6){
+						this.msgList.shift()
+					}
+				})
+				
+                // 这里仅是事件监听【如果socket关闭了会执行】
+                this.socketTask.onClose(() => {
+                    console.log("已经被关闭了")
+                })
+            },
+            // 关闭websocket【离开这个页面的时候执行关闭】
+            closeSocket() {
+                this.socketTask.close({
+                    success(res) {
+                        this.is_open_socket = false;
+                        console.log("关闭成功", res)
+                    },
+                    fail(err) {
+                        console.log("关闭失败", err)
+                    }
+                })
+            },
+            send() {
+                if (this.is_open_socket) {
+					if(this.serviceId === undefined){
+						uni.showToast({
+							title: '请先选择客服',
+							duration: 1000,
+							icon:'error'
+						})
+						return;
+					}
+					let socketMsg = '{"msdToUserType":"sys","msdToSid":"' + this.serviceId + '","content":"' + this.msg + '"}';
+                    // websocket的服务器的原理是:发送一次消息,同时返回一组数据【否则服务器会进去死循环崩溃】
+                    this.socketTask.send({
+                        data: socketMsg,
+                        async success() {
+                            console.log("消息发送成功");
+                        },
+                    })
+				
+					this.msgList.push({"type" : "user", "msg" : this.msg});
+
+					// 处理消息盒子
+					if(this.msgList.length > 6){
+						this.msgList.shift()
+					}
+					this.msg = '';
+                }
+            },
+			/**
+			 * 选择客服
+			 */
+			selectService(e){
+				console.log(e);
+				uni.showToast({
+					title: '选择客服：' + e.name,
+					duration: 1000,
+				})
+				this.serviceId = e.id + ',' + e.name
+				this.isShow = !this.isShow;
+				uni.setStorageSync('serviceId', this.serviceId);
+				this.msgList.push({"type" : "server", "msg" : e.name + '很高兴为您服务！'});
 			}
-		},
-		onLoad() {
-			
-			var token = uni.getStorageSync('token');
-			console.log(token)
-			// 非法访问，请重新登录
-			if (token === null || token === undefined || token === '') {
-			  // 跳转页面
-			  uni.reLaunch({
-				url: '../login/login'
-			  });
-			}
-		},
-		onShow() {
-			var _this = this;
-			document.title = '币安秒合约';
 		}
 	}
 </script>

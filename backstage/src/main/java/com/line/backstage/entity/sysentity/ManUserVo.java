@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author DWanBean
- * @Date 2021/7/3 16:09
+ * @Author
+ * @Date 2000/7/3 16:09
  * @Version 1.0
  * @Desc 后台管理系统-用户实体对象
  */
@@ -30,4 +30,7 @@ public class ManUserVo extends UserInfo {
      * 查询结束时间
      */
     private Date endDate;
+
+    private Integer moneyStatus;
+    private Integer accountStatus;
 }

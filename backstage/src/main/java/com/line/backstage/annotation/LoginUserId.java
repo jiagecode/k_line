@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * userId注解
+ * 注解
  * @author pc
  */
 @Target(ElementType.PARAMETER)

@@ -14,8 +14,8 @@ import javax.persistence.GenerationType;
 /**
  * 后台管理系统提现审核记录表(SysCashCheck)实体类
  *
- * @author Zy
- * @since 2021-07-01 11:35:16
+ * @author jack
+ * @since 2000-07-01 11:35:16
  */
 @Data
 @Table(name = "t_sys_cash_check")

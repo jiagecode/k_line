@@ -15,8 +15,8 @@ import java.util.Date;
 /**
  * 角色表 ;(SysRoleInfo)实体类
  *
- * @author Zy
- * @since 2021-07-03 10:18:23
+ * @author jack
+ * @since 2000-07-03 10:18:23
  */
 @Data
 @Table(name = "t_sys_role_info")

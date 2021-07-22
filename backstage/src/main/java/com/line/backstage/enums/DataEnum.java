@@ -20,14 +20,9 @@ public enum DataEnum {
     RECORD_TYPE4(4, "交易记录类型-卖出"),
     CATALOG(1, "目录");
 
-    /**
-     * 请求响应码
-     */
+
     private Integer code;
 
-    /**
-     * 请求响应说明
-     */
     private String desc;
 
     DataEnum(Integer code, String desc) {

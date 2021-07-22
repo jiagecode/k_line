@@ -11,8 +11,8 @@ import java.util.Date;
 /**
  * 用户信息(UserInfo)实体类
  *
- * @author Zy
- * @since 2021-07-01 18:51:52
+ * @author jack
+ * @since 2000-07-01 18:51:52
  */
 @Data
 @Table(name = "t_user_info")
@@ -163,11 +163,11 @@ public class UserInfo extends QueryRequest implements Serializable {
      * 是否为DIY用户 默认0 不是
      */
     @ApiModelProperty("是否为DIY用户")
-    private Integer diyFlag = 0;
+    private Integer diyFlag;
     /**
      * DIY用户类型 默认未1 普通用户
      */
-    private Integer diyUserType = 1;
+    private Integer diyUserType;
     /**
      * 备注
      */
@@ -201,4 +201,8 @@ public class UserInfo extends QueryRequest implements Serializable {
     @Transient
     private Double userMoney;
     private String diyUserName;
+    /**
+     * 胜率
+     */
+    private Double winRate;
 }

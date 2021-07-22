@@ -40,6 +40,14 @@ export function pingCangDataVo(data) {
     data:data
   })
 }
+//封禁或解封用户账户
+export function openOrForbid(data) {
+  return request({
+    url: '/sysUserInfo/openOrForbidAccount',
+    method: 'post',
+    data:data
+  })
+}
 //查询银行卡
 export function queryBankVoData(data) {
   return request({
@@ -85,6 +93,13 @@ export function queryOptData1() {
   return request({
     url: '/sysDiy/optionList1',
     method: 'get',
+  })
+}
+export function queryAgentData1(params) {
+  return request({
+    url: '/sysUserInfo/queryAgentData',
+    method: 'get',
+    params
   })
 }
 //资金报表汇总

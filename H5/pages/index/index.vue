@@ -161,9 +161,8 @@ export default {
       });
     },
     out() {
-
       // 销毁token
-      uni.setStorageSync('token', null)
+      uni.removeStorageSync('token');
       uni.navigateTo({
         url: '../login/login'
       });

@@ -7,4 +7,8 @@
         <result property="roleId" column="ROLE_ID" jdbcType="INTEGER"/>
         <result property="menuId" column="MENU_ID" jdbcType="INTEGER"/>
     </resultMap>
+
+    <delete id="deleteForAuth" parameterType="java.lang.Integer">
+        delete from  t_sys_power where ROLE_ID = #{roleId}
+    </delete>
 </mapper>

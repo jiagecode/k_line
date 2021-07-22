@@ -63,7 +63,7 @@ export default {
       getInfo().then(res=>{
         console.log(res)
         if(res.code==10000){
-          this.accountName = res.data.account;
+          this.accountName = res.data.name;
         }else {
           this.$message.error(res.message)
         }

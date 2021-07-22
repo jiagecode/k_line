@@ -16,8 +16,8 @@ import javax.persistence.GenerationType;
 /**
  * 用户资金充值或提现记录(CashOutIn)实体类
  *
- * @author Zy
- * @since 2021-07-01 11:34:38
+ * @author jack
+ * @since 2000-07-01 11:34:38
  */
 @Data
 @Table(name = "t_cash_out_in")
@@ -51,6 +51,16 @@ public class CashOutIn extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("金额")
     private Double cashMoney;
+    /**
+     * 到账金额
+     */
+    @ApiModelProperty("到账金额")
+    private Double arriveMoney;
+    /**
+     * 手续费
+     */
+    @ApiModelProperty("手续费")
+    private Double cashFee;
 
     /**
      * 审核状态 0-无需审核 1-待审核 2-审核中 3-审核通过 4-审核拒绝
@@ -59,7 +69,7 @@ public class CashOutIn extends QueryRequest implements Serializable {
     private Integer checkStatus;
 
     /**
-     * 审核时间
+     * 审核时间到账
      */
     @ApiModelProperty("审核时间")
     private Date checkDate;
@@ -116,5 +126,5 @@ public class CashOutIn extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("备注")
     private String remarks;
-    private Integer diyId = 0;
+    private Integer diyId ;
 }

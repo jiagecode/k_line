@@ -9,7 +9,7 @@ import java.util.TimeZone;
 
 /**
  * @Description: 日期工具类
- * @Author dengWanBean
+ * @Author mmd
  * @Date 2019/9/9 11:13
  */
 public class DateUtil {

@@ -15,8 +15,8 @@ import javax.annotation.Resource;
 /**
  * 用户账户(AccountInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:34:17
+ * @author jack
+ * @since 2000-07-01 11:34:17
  */
 @Service("accountInfoService")
 public class AccountInfoServiceImpl implements AccountInfoService {
@@ -84,7 +84,12 @@ public class AccountInfoServiceImpl implements AccountInfoService {
 		// FIXME 待完善
         return accountInfoMapper.updateByPrimaryKeySelective(a);
 	}
- 
+
+    @Override
+    public int updateOfOrder(AccountInfo accountInfo) {
+        return accountInfoMapper.updateByPrimaryKeySelective(accountInfo);
+    }
+
     /**
      * 通过ID查询单条数据
      *

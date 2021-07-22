@@ -32,14 +32,8 @@
         from
             t_sys_menu_info
         where
-                menu_id in (
-                select
-                    menu_id
-                from
-                    t_sys_power
-                where
-                    role_id = #{roleid})
-        order by tree_sort
+              DEL = 1
+        order by TREE_SORT
     </select>
     <select id="queryRoleIdByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select SYS_ROLE_ID FROM t_sys_user_info WHERE DEL = 1 AND SYS_USER_ID = #{userId}
@@ -77,5 +71,14 @@
             t_sys_menu_info
         WHERE
             DEL = 1 AND   PARENT_IDS LIKE CONCAT('%', #{parentIdsLike}, '%')
+    </select>
+    <!-- 查找角色对应的菜单id -->
+    <select id="findMenuIdsByRoleId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select
+            MENU_ID
+        from
+            t_sys_power
+        where
+            ROLE_ID = #{roleId}
     </select>
 </mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.CashOutInMapper">
+ 
+    <resultMap type="com.line.backstage.entity.CashOutIn" id="CashOutInMap">
+        <result property="cashId" column="CASH_ID" jdbcType="INTEGER"/>
+        <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
+        <result property="cashType" column="CASH_TYPE" jdbcType="INTEGER"/>
+        <result property="cashMoney" column="CASH_MONEY" jdbcType="NUMERIC"/>
+        <result property="checkStatus" column="CHECK_STATUS" jdbcType="INTEGER"/>
+        <result property="checkDate" column="CHECK_DATE" jdbcType="TIMESTAMP"/>
+        <result property="checkManUserId" column="CHECK_MAN_USER_ID" jdbcType="INTEGER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="bankCardId" column="BANK_CARD_ID" jdbcType="INTEGER"/>
+        <result property="exchangeRate" column="EXCHANGE_RATE" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap type="com.line.backstage.entity.sysentity.ManCashVo" id="CashOutInMapManMap">
+        <result property="cashId" column="CASH_ID" jdbcType="INTEGER"/>
+        <result property="accountId" column="ACCOUNT_ID" jdbcType="INTEGER"/>
+        <result property="cashType" column="CASH_TYPE" jdbcType="INTEGER"/>
+        <result property="cashMoney" column="CASH_MONEY" jdbcType="NUMERIC"/>
+        <result property="checkStatus" column="CHECK_STATUS" jdbcType="INTEGER"/>
+        <result property="checkDate" column="CHECK_DATE" jdbcType="TIMESTAMP"/>
+        <result property="checkManUserId" column="CHECK_MAN_USER_ID" jdbcType="INTEGER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="bankCardId" column="BANK_CARD_ID" jdbcType="INTEGER"/>
+        <result property="exchangeRate" column="EXCHANGE_RATE" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
+        <result property="userMoney" column="ACCOUNT_MONEY" jdbcType="NUMERIC"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="queryMyCashOutInList" parameterType="java.lang.Integer" resultMap="CashOutInMap">
+        select CASH_ID,ACCOUNT_ID,CASH_TYPE,CASH_MONEY,CHECK_STATUS,CHECK_DATE,CHECK_MAN_USER_ID,
+               ADD_DATE,EDIT_DATE,BANK_CARD_ID,EXCHANGE_RATE,ADD_USER_ID,EDIT_USER_ID,DEL,DIY_ID
+        from t_cash_out_in
+        where DEL = 1 and ACCOUNT_ID = #{accountId} and CASH_TYPE =#{cashType}
+    </select>
+    <select id="sumAllCash" parameterType="java.util.Map" resultType="java.lang.Double">
+        select sum(CASH_MONEY)  from t_cash_out_in where DEL = 1
+        <if test=" cashType != null ">
+            and CASH_TYPE = #{cashType}
+        </if>
+        <if test=" beginDate != null ">
+            and ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
+    <sql id="cashOutIn_Column_List">
+        c.CASH_ID,c.ACCOUNT_ID,c.CASH_TYPE,c.CASH_MONEY,c.CHECK_STATUS,c.CHECK_DATE,c.CHECK_MAN_USER_ID,
+        c.ADD_DATE,c.EDIT_DATE,c.BANK_CARD_ID,c.EXCHANGE_RATE,c.ADD_USER_ID,c.EDIT_USER_ID,c.DEL,c.REMARKS,
+        a.ACCOUNT_MONEY,u.USER_REAL_NAME,c.DIY_ID
+    </sql>
+    <select id="queryManCashVoList" parameterType="com.line.backstage.entity.sysentity.ManCashVo" resultMap="CashOutInMapManMap">
+        select <include refid="cashOutIn_Column_List"/>
+        from t_cash_out_in c
+        left join t_account_info a on c.ACCOUNT_ID = a.ACCOUNT_ID
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        where c.DEL = #{del}
+        <if test="cashType != null ">
+            and c.CASH_TYPE = #{cashType}
+        </if>
+        <if test="accountId != null ">
+            and c.ACCOUNT_ID = #{accountId}
+        </if>
+        <if test="checkStatus != null ">
+            and c.CHECK_STATUS = #{checkStatus}
+        </if>
+        <if test="userRealName != null and userRealName != ''">
+            and (u.USER_PHONE like concat('%', #{userRealName}, '%')
+            or u.USER_NICK_NAME like concat('%', #{userRealName}, '%')
+            or u.USER_REAL_NAME like concat('%', #{userRealName}, '%')
+            )
+        </if>
+        <if test=" beginDate != null ">
+            and c.ADD_DATE <![CDATA[ >= ]]> #{beginDate}
+        </if>
+        <if test=" endDate != null ">
+            and c.ADD_DATE <![CDATA[ <= ]]> #{endDate}
+        </if>
+    </select>
+
+    <update id="updateForDiy" parameterType="java.lang.Integer" >
+        update t_cash_out_in set DEL = #{del} ,EDIT_USER_ID = #{sysUserId},EDIT_DATE = now()
+        WHERE  DIY_ID = #{diyId}
+    </update>
+</mapper>

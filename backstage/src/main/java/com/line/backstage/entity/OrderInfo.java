@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * 订单信息(OrderInfo)实体类
  *
- * @author Zy
- * @since 2021-06-29 14:53:16
+ * @author jack
+ * @since 2000-06-29 14:53:16
  */
 @Data
 @Table(name = "t_order_info")
@@ -92,6 +92,11 @@ public class OrderInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("创建时间")
     private Date addDate;
+    /**
+     * 结算时间
+     */
+    @ApiModelProperty("结算时间")
+    private Date settlementDate;
 
     /**
      * 修改时间
@@ -146,7 +151,8 @@ public class OrderInfo extends QueryRequest implements Serializable {
      */
     @ApiModelProperty("数据状态")
     private Integer del;
-    private Integer diyId = 0;
+    private Integer winFlag;
+    private Integer diyId ;
     private Double inPoint;
     private Double outPoint;
     private Double integral;

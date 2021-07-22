@@ -3,7 +3,7 @@ import request from '@/utils/request'
 //角色列表
 export function listPeople(data) {
   return request({
-    url: '/role/list',
+    url: '/sysRoleInfo/list',
     method: 'post',
     data:data
   })
@@ -11,7 +11,7 @@ export function listPeople(data) {
 //角色新增
 export function addPeople(data) {
   return request({
-    url: '/role/insert',
+    url: '/sysRoleInfo/save',
     method: 'post',
     data:data
   })
@@ -19,7 +19,7 @@ export function addPeople(data) {
 //角色删除
 export function removePeople(data) {
   return request({
-    url: '/role/del',
+    url: '/sysRoleInfo/delete',
     method: 'post',
     data:data
   })
@@ -27,7 +27,15 @@ export function removePeople(data) {
 //获取角色授权
 export function getpeopleSq(data) {
   return request({
-    url: '/role/authorize',
+    url: '/sysMenuInfo/queryList',
+    method: 'post',
+    data
+  })
+}
+//获取角色授权
+export function queryUserAuthorize(data) {
+  return request({
+    url: '/sysRoleInfo/authorize',
     method: 'post',
     data
   })
@@ -35,7 +43,7 @@ export function getpeopleSq(data) {
 //给角色授权
 export function sqtoPeople(data) {
   return request({
-    url: '/roleMenu/saveRoleMenu',
+    url: '/sysPower/saveForAuth',
     method: 'post',
     data
   })

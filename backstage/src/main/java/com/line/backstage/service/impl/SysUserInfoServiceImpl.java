@@ -13,11 +13,9 @@ import com.line.backstage.entity.sysentity.*;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.service.SysUserInfoService;
 import com.line.backstage.utils.DateUtil;
-import com.line.backstage.utils.DateUtils;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.MenuRouteVo;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,8 @@ import java.util.*;
 /**
  * 后台管理系统用户表(SysUserInfo)表服务实现类
  *
- * @author Zy
- * @since 2021-07-01 11:36:19
+ * @author jack
+ * @since 2000-07-01 11:36:19
  */
 @Slf4j
 @Service("sysUserInfoService")
@@ -281,18 +279,24 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         return vo;
     }
 
+
+
     @Override
-    public Map<String, Object> queryHomePageData() {
+    public Map<String, Object> queryHomePageData(Integer agentId) {
+        if(agentId == null){
+            agentId = -1;
+        }
         Map<String, Object> map = new HashMap<>();
+        map.put("agentId",agentId);
         //用户总数
         Integer allUserNum = userInfoMapper.countUserNum(map);
         //用户总余额
-        Double userAllMoney = accountInfoMapper.sumAllUserMoney();
+        Double userAllMoney = accountInfoMapper.sumAllUserMoney(agentId);
         if(userAllMoney == null){
             userAllMoney = 0.0;
         }
         //用户总盈亏
-        Double profitAndLoss = accountInfoMapper.sumAllUserProfitAndLoss();
+        Double profitAndLoss = accountInfoMapper.sumAllUserProfitAndLoss(agentId);
         if(profitAndLoss == null){
             profitAndLoss = 0.0;
         }
@@ -341,6 +345,25 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     }
 
     @Override
+    public Integer openOrForbidAccount(Integer loginUserId, AccountInfo accountInfo) {
+       Integer userId = accountInfo.getUserId();
+       if(userId != null){
+           AccountInfo account = accountInfoMapper.queryByUserId(userId);
+           if(account != null){
+               account.setAccountStatus(accountInfo.getAccountStatus());
+               account.setMoneyStatus(accountInfo.getMoneyStatus());
+               account.setEditDate(new Date());
+               account.setEditUserId(loginUserId);
+               if(StringUtils.isNotEmpty(accountInfo.getRemarks())){
+                   account.setRemarks(accountInfo.getRemarks());
+               }
+               return accountInfoMapper.updateByPrimaryKey(account);
+           }
+       }
+        return 0;
+    }
+
+    @Override
     public SysUserInfo login(SysUserInfo sysUserInfo) {
 
         // XXX 加密密码
@@ -380,6 +403,15 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         resMap.put("menus", routes);
         resMap.put("name", user.getSysUserName());
         return resMap;
+    }
+
+    /**
+     * 退出登录
+     * @return
+     */
+    @Override
+    public String logout(Integer userId) {
+        return "" + userId;
     }
 
     /**
