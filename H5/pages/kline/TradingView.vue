@@ -1,6 +1,6 @@
 <template>
 	<div class='divchart' style='background-color:#ffffff;'>
-		<uni-row class="uni-row-top">
+<!-- 		<uni-row class="uni-row-top">
 			<uni-col :span="9">
 				<view class="uni-col-top dark topText">
 					<div id="t_price">{{SocketMsg.PRICE}}</div>
@@ -24,38 +24,56 @@
 					<div id="t_highday">{{SocketMsg.HIGHDAY}}</div>
 				</view>
 			</uni-col>
-		</uni-row>
-
-		<div id="lightweight">
-			<!-- <view id="go-to-realtime-button" class="go-to-realtime-button"></view> -->
-		</div>
-
+		</uni-row> -->
+		
+		<!-- top信息 -->
+		<view class="uni-row-top d-flex">
+			<!-- 实时价格 -->
+			<view id="t_price" class="d-flex flex-1 j-center a-center font-lgg">{{SocketMsg.PRICE}}</view>
+			<!-- 当前行情 -->
+			<view class="flex-1">
+				<view class="d-flex flex-1">
+					<view class="flex-1 d-block">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最高</text>
+						<text id="t_highday" class="d-flex a-center j-center font" style="line-height: none;">{{SocketMsg.LOWDAY}}</text>
+					</view>
+					<view class="flex-1 d-block">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">开盘</text>
+						<text id="t_openday" class="d-flex a-center j-center font">{{SocketMsg.OPENDAY}}</text>
+					</view>
+				</view>
+				<view class="d-flex flex-1">
+					<view class="flex-1">
+						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最低</text>
+						<view id="t_lowday" class="d-flex a-center j-center font">{{SocketMsg.LOWDAY}}</view>
+					</view>
+					<view class="flex-1 d-flex a-center j-center" @tap="addSelect">
+						<!-- <text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">自选</text> -->
+						<image style="width: 65rpx; height: 65rpx;" src="/static/zxuan.png"><view class="d-flex flex-column"><text class="font-sm" style="line-height: 22rpx; margin-bottom: 6rpx;">自</text><text class="j-center font-sm" style="line-height: 22rpx;">选</text></view></image>
+					</view>
+				</view>
+			</view>
+		</view>
 		<uni-row>
-			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-1m" type="default" size="mini" style="background-color: #dedede;"
-					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_MINUTE_ID)">1M</button>
+			<uni-col :span="6">
+				<button class="mini-btn btn-period period-Line" type="default" size="mini"
+					style="background-color: #dedede;" @click="ChangeKLinePeriod('Line')">实时</button>
 			</uni-col>
-			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-15m" type="default" size="mini"
-					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_15MINUTE_ID)">15M</button>
+			<uni-col :span="6">
+				<button class="mini-btn btn-period period-Min" type="default" size="mini"
+					@click="ChangeKLinePeriod('Min')">分钟</button>
 			</uni-col>
-			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-30m" type="default" size="mini"
-					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_30MINUTE_ID)">30M</button>
+			<uni-col :span="6">
+				<button class="mini-btn btn-period period-1H" type="default" size="mini"
+					@click="ChangeKLinePeriod('1H')">小时</button>
 			</uni-col>
-			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-1h" type="default" size="mini"
-					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_60MINUTE_ID)">1H</button>
-			</uni-col>
-			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-1d" type="default" size="mini"
-					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_DAY_ID)">日线</button>
-			</uni-col>
-			<uni-col :span="4">
-				<button class="mini-btn btn-period btn-1w" type="default" size="mini"
-					@click="ChangeKLinePeriod(KLINE_PERIOD_ID.KLINE_WEEK_ID)">周线</button>
+			<uni-col :span="6">
+				<button class="mini-btn btn-period period-1D" type="default" size="mini"
+					@click="ChangeKLinePeriod('1D')">日线</button>
 			</uni-col>
 		</uni-row>
+		
+		<div id="lightweight"></div>
 
 		<!-- 		<div class="button-sp-area">
 				<button class="mini-btn" type="default" size="mini" @click="ChangeKLineIndex(0,'EMPTY')">主图空指标</button>
@@ -258,23 +276,38 @@
 	export default {
 		data() {
 			return {
+				// 商品代码
+				coinCode:'BTC',
 				sysInfo: {},
+				areaSeries: null,
+				chart: null,
 				ChartWidth: 350,
 				ChartHeight: 500,
+				// 面积图数据 600
 				lineData: [],
+				// 分钟数据 60
+				minData: [],
+				// 小时数据 24
+				hourData: [],
+				// 天数据 30
+				dayData: [],
+				// 标记
+				activityPeriod: '',
 				currentBar: {
 					open: null,
 					high: null,
 					low: null,
 					close: null,
-					time: {
-						day: 29,
-						month: 5,
-						year: 2019
-					},
+					time: null,
+				},
+				areaCurrentBar: {
+					value: null,
+					time: null,
 				},
 				// socket连接对象
-				ccStreamer: null,
+				// ccStreamer: null,
+				// socket连接状态
+				SocketStatus: false,
 				// socket 的数据
 				SocketMsg: {
 					PRICE: null,
@@ -296,42 +329,8 @@
 				OrderGuarantee: 0.00,
 			}
 		},
+		created() {},
 		onLoad() {
-			// 查询分钟线数据 1小时60条
-			https.klineMin({
-				coinCode: "BTC"
-			}).then((res) => {
-				// console.log(res);
-				// candlestickSeries.setData(this.lineData);
-			});
-			// 查询历史秒线数据 1小时3600条
-			https.klineMils({
-				coinCode: "BTC"
-			}).then((res) => {
-				if (null == res || typeof res == "undefined" || res.length == 0) {
-					// 提示用户
-					uni.showToast({
-						title: '查询历史数据出错.',
-						duration: 1000,
-					})
-				}
-				for (var i = 0; i < res.length; i++) {
-					var item = JSON.parse(res[i]);
-					this.lineData.push({
-						open: item.openPrice,
-						high: item.maxPrice,
-						low: item.minPrice,
-						close: item.close,
-						time: parseInt(item.timeStamp),
-					});
-				}
-				candlestickSeries.setData(this.lineData);
-				// console.log(this.lineData);
-			});
-
-
-		},
-		onShow() {
 			// 用户信息
 			this.UserData = uni.getStorageSync('userInfo');
 			var token = uni.getStorageSync('token');
@@ -349,16 +348,89 @@
 					this.sysInfo = res;
 				}
 			});
+			
+			// 订阅币种切换事件
+			uni.$on("ChangeSymbol", (rel) => {
+				// 清空
+				uni.closeSocket();
+				this.dayData = [];
+				this.hourData = [];
+				this.minData = [];
+				this.areaSeries = null;
+				this.chart = null;
+				
+				this.coinCode = new String(rel.symbol).toUpperCase();
+				
+				// 重新加载
+				
+			})
+
+		},
+		onShow() {
+			uni.closeSocket();
+			this.dayData = [];
+			this.hourData = [];
+			this.minData = [];
+			this.areaSeries = null;
+			this.chart = null;
+			
+			// 查询日线数据
+			https.klineDay({
+				coinCode: this.coinCode
+			}).then((res) => {
+				for (var i = 0; i < res.length; i++) {
+					var item = JSON.parse(res[i]);
+					this.dayData.push({
+						open: item.openPrice,
+						high: item.maxPrice,
+						low: item.minPrice,
+						close: item.close,
+						time: parseFloat(item.timeStamp),
+					});
+				}
+			});
+			// 查询小时线数据 
+			https.klineHour({
+				coinCode: this.coinCode
+			}).then((res) => {
+				for (var i = 0; i < res.length; i++) {
+					var item = JSON.parse(res[i]);
+					this.hourData.push({
+						open: item.openPrice,
+						high: item.maxPrice,
+						low: item.minPrice,
+						close: item.close,
+						time: parseFloat(item.timeStamp),
+					});
+				}
+			});
+
+			// 查询分钟线数据 1小时60条
+			https.klineMin({
+				coinCode: this.coinCode
+			}).then((res) => {
+				for (var i = 0; i < res.length; i++) {
+					var item = JSON.parse(res[i]);
+					this.minData.push({
+						open: item.openPrice,
+						high: item.maxPrice,
+						low: item.minPrice,
+						close: item.close,
+						time: parseFloat(item.timeStamp),
+					});
+				}
+			});
+
 			// 重新计算页面元素高度
 			var width = this.sysInfo.windowWidth;
 			var height = this.sysInfo.windowHeight;
 			this.ChartWidth = width;
-			this.ChartHeight = height - 200;
+			this.ChartHeight = height - 156;
 
 			this.$nextTick(() => {
 				var container = document.getElementById("lightweight");
 				container.style.position = 'relative';
-				chart = createChart(
+				this.chart = createChart(
 					container, {
 						width: this.ChartWidth,
 						height: this.ChartHeight,
@@ -367,7 +439,7 @@
 								top: 0.2,
 								bottom: 0.2,
 							},
-							borderVisible: false,
+							borderVisible: true,
 						},
 						timeScale: {
 							rightOffset: 2,
@@ -376,14 +448,183 @@
 						crosshair: {
 							mode: 0,
 						},
-						// localization: {
-						// 	dateFormat: "yyyy/MM/dd",
-						// },
+						localization: {
+							locale: 'zh-cn',
+							dateFormat: 'yyyy-MM-dd',
+						},
+						layout: {
+							backgroundColor: '#FFFFFF',
+							lineColor: '#2B2B43',
+							textColor: '#191919',
+						},
+						watermark: {
+							color: 'rgba(0, 0, 0, 0)',
+						},
+						grid: {
+							vertLines: {
+								visible: false,
+							},
+							horzLines: {
+								color: '#f0f3fa',
+							},
+						},
+						priceScale: {
+							position: "right",
+							mode: 0,
+							borderVisible: true,
+						}
 					}
 				);
-				chart.timeScale().scrollToPosition(-20, false);
 
+				// 获取数据然后初始化图表
+				this.queryMilsData();
+			});
+		},
+		onHide() {
+			uni.closeSocket();
+			this.SocketStatus = false;
+			this.ClearChart();
+		},
+
+		onUnload() {
+			uni.closeSocket();
+			this.SocketStatus = false;
+			// this.ClearChart();
+		},
+		methods: {
+			// 切换图表的操作
+			ChangeKLinePeriod(period) {
+				// 标记
+				this.activityPeriod = period;
+
+				// 关闭socket连接
+				// uni.closeSocket();
+				// 按钮选中样式
+				var periodList = document.getElementsByClassName("btn-period");
+				for (var i = 0; i < periodList.length; i++) {
+					periodList[i].style.backgroundColor = "#f8f8f8";
+				}
+				document.getElementsByClassName("period-" + period)[0].style.backgroundColor = "#dedede";
+
+				// 删除当前图表
+				if (this.areaSeries) {
+					this.chart.removeSeries(this.areaSeries);
+					this.areaSeries = null;
+				}
+				// 新增选中图表
+				if (period === "Line") {
+					this.areaSeries = this.chart.addAreaSeries();
+
+				} else {
+					this.areaSeries = this.chart.addCandlestickSeries();
+
+				}
+				// 设置样式
+				this.areaSeries.applyOptions({
+					topColor: 'rgba(33, 150, 243, 0.56)',
+					bottomColor: 'rgba(33, 150, 243, 0.04)',
+					lineColor: 'rgba(33, 150, 243, 1)',
+					lineWidth: 1,
+					priceFormat: {
+						type: "custom",
+						precision: 4,
+						minMove: 0.0001,
+						formatter: function(value) {
+							return MathUtil.getFloat(value, 4);
+						}
+					}
+				});
+
+				if (period === "Line") {
+					// 自定义时间刻度
+					this.chart.applyOptions({
+						timeScale: {
+							borderVisible: true,
+							visible: true,
+							timeVisible: true,
+							secondsVisible: true,
+							tickMarkFormatter: (time, tickMarkType, locale) => {
+								return moment(new Date(time * 1000)).format("HH:mm:ss");
+							},
+						}
+					});
+					this.areaSeries.setData(this.lineData);
+					if(!this.SocketStatus){
+						// 开启socket获取数据
+						this.initSocketData();
+						this.SocketStatus = true;
+					}
+				}
+				if (period === "Min") {
+					// 自定义时间刻度
+					this.chart.applyOptions({
+						timeScale: {
+							borderVisible: true,
+							visible: true,
+							timeVisible: true,
+							secondsVisible: true,
+							tickMarkFormatter: (time, tickMarkType, locale) => {
+								return moment(new Date(time * 1000)).format("HH:mm");
+							},
+						}
+					});
+					this.areaSeries.setData(this.minData);
+				}
+				if (period === "1H") {
+					// 自定义时间刻度
+					this.chart.applyOptions({
+						timeScale: {
+							borderVisible: true,
+							visible: true,
+							timeVisible: true,
+							secondsVisible: true,
+							tickMarkFormatter: (time, tickMarkType, locale) => {
+								return moment(new Date(time * 1000)).format("HH");
+							},
+						}
+					});
+					this.areaSeries.setData(this.hourData);
+				}
+				if (period === "1D") {
+					// 自定义时间刻度
+					this.chart.applyOptions({
+						timeScale: {
+							borderVisible: true,
+							visible: true,
+							timeVisible: true,
+							secondsVisible: true,
+							tickMarkFormatter: (time, tickMarkType, locale) => {
+								return moment(new Date(time * 1000)).format("MM-DD");
+							},
+						}
+					});
+					
+					this.areaSeries.setData(this.dayData);
+				}
+
+				// 触发事件 显示回到最新按钮
+				this.chart.timeScale().scrollToPosition(-20, false);
 				// 回到最新按钮
+				this.createRealTimeButton();
+				// 回到最新数据
+				this.chart.timeScale().scrollToRealTime();
+			},
+			ClearChart() {
+				// 删除当前图表
+				// if (this.areaSeries) {
+				// 	this.chart.removeSeries(this.areaSeries);
+				// 	this.areaSeries = null;
+				// }
+				var divKLine = document.getElementById('lightweight');
+				if (null == divKLine || typeof divKLine == "undefined") {
+					return;
+				}
+				while (divKLine.hasChildNodes()) {
+					divKLine.removeChild(divKLine.lastChild);
+				}
+			},
+			// 创建回到最新按钮
+			createRealTimeButton() {
 				var button = document.createElement('div');
 				button.className = 'go-to-realtime-button';
 				button.style.left = (this.ChartWidth - 27 - 60) + 'px';
@@ -391,9 +632,9 @@
 				button.style.color = '#4c525e';
 				button.innerHTML =
 					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="14" height="14"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6.5 1.5l5 5.5-5 5.5M3 4l2.5 3L3 10"></path></svg>';
-				container.appendChild(button);
+				document.getElementById("lightweight").appendChild(button);
 
-				var timeScale = chart.timeScale();
+				var timeScale = this.chart.timeScale();
 				timeScale.subscribeVisibleTimeRangeChange(function() {
 					var buttonVisible = timeScale.scrollPosition() < 0;
 					button.style.display = buttonVisible ? 'block' : 'none';
@@ -413,77 +654,38 @@
 					button.style.background = 'rgba(250, 250, 250, 0.6)';
 					button.style.color = '#4c525e';
 				});
+			},
+			// 查询实时数据 秒
+			queryMilsData() {
 
-				// 自定义颜色
-				candlestickSeries = chart.addCandlestickSeries({
-					// upColor: "#6495ED",
-					// downColor: "#FF6347",
-					// borderVisible: false,
-					// wickVisible: true,
-					// borderColor: "#000000",
-					// wickColor: "#000000",
-					// borderUpColor: "#4682B4",
-					// borderDownColor: "#A52A2A",
-					// wickUpColor: "#4682B4",
-					// wickDownColor: "#A52A2A",
-				});
-
-				// 价格刻度
-				chart.applyOptions({
-					priceScale: {
-						position: "right",
-						mode: 0,
+				// 查询历史秒线数据 1小时3600条
+				https.klineMils({
+					coinCode: this.coinCode
+				}).then((res) => {
+					if (null == res || typeof res == "undefined" || res.length == 0) {
+						// 提示用户
+						uni.showToast({
+							title: '查询历史数据出错.',
+							duration: 1000,
+						})
 					}
-				});
-				// 时间刻度
-				chart.applyOptions({
-					timeScale: {
-						borderVisible: true,
-						visible: true,
-						timeVisible: true,
-						secondsVisible: true
+					for (var i = 0; i < res.length; i++) {
+						var item = JSON.parse(res[i]);
+						this.lineData.push({
+							value: item.nowPrice,
+							time: parseFloat(item.timeStamp),
+						});
 					}
+
+					// 获取完数据再初始化图表
+					this.ChangeKLinePeriod('Line');
 				});
-				// 十字线
-				chart.applyOptions({
-					crosshair: {
-						vertLine: {
-							style: 1,
-							visible: true,
-							labelVisible: true
-						},
-						horzLine: {
-							style: 1,
-							visible: true,
-							labelVisible: true
-						},
-						mode: 1
-					}
-				});
-
-
-				// 设置数据
-				candlestickSeries.setData(this.lineData);
-
-				// 开启socket获取数据
-				this.initSocketData();
-
-			});
-		},
-		onHide() {
-			uni.closeSocket();
-			this.ClearChart();
-		},
-
-		onUnload() {
-			uni.closeSocket();
-			this.ClearChart();
-		},
-		methods: {
+			},
+			// socket
 			initSocketData() {
 				var that = this;
 				uni.connectSocket({
-					url: 'ws://192.168.1.7:1902/study/websocket/current/s/BTC/' + that.UserData.userId
+					url: 'ws://192.168.66.104:1686/study/websocket/current/s/'+this.coinCode+'/' + that.UserData.userId
 				});
 				uni.onSocketOpen(function(res) {
 					console.log('WebSocket连接已打开！');
@@ -500,26 +702,32 @@
 					// {"timeStamp":"1626749353","skuCode":"BTC","nowPrice":30322.4816,"minPrice":30314.33,"maxPrice":30336.53,
 					// "openPrice":30320.46,"volumeFrom":34.9,"volumeTo":1058050.46,"close":30327.87,"orderNum":13}
 					var msgData = {
-						PRICE: msg.nowPrice,
-						OPENDAY: msg.openPrice,
-						LOWDAY: msg.minPrice,
-						HIGHDAY: msg.maxPrice,
+						PRICE: MathUtil.getFloat(msg.nowPrice, 4),
+						OPENDAY: MathUtil.getFloat(msg.openPrice, 2),
+						LOWDAY: MathUtil.getFloat(msg.minPrice, 2),
+						HIGHDAY: MathUtil.getFloat(msg.maxPrice, 2),
 					};
 					that.SocketMsg = msgData;
 
 					// 更新数据
-					var currentBar = {
-						open: msg.openPrice,
-						high: msg.maxPrice,
-						low: msg.minPrice,
-						close: msg.close,
-						time: parseInt(msg.timeStamp),
-						// time: msg.timeStamp,
-						// time: moment.unix(parseInt(msg.timeStamp)).format('YYYY-MM-DD'),
-					};
-					candlestickSeries.update(currentBar);
+					// var currentBar = {
+					// 	open: msg.openPrice,
+					// 	high: msg.maxPrice,
+					// 	low: msg.minPrice,
+					// 	close: msg.close,
+					// 	time: parseInt(msg.timeStamp),
+					// 	// time: msg.timeStamp,
+					// 	// time: moment.unix(parseInt(msg.timeStamp)).format('YYYY-MM-DD'),
+					// };
+					if (that.areaSeries && that.activityPeriod === 'Line') {
+						var areaCurrentBar = {
+							time: parseFloat(msg.timeStamp),
+							value: MathUtil.getFloat(msg.nowPrice, 4),
+						};
+						that.areaSeries.update(areaCurrentBar);
+					}
 					// 现价
-					that.OrderCoinPrice = msg.nowPrice;
+					that.OrderCoinPrice = MathUtil.getFloat(msg.nowPrice, 4);
 
 					// 判断涨跌
 					var price = document.getElementById('t_price');
@@ -537,31 +745,30 @@
 					console.log('WebSocket 已关闭！');
 				});
 			},
-			ClearChart() {
-				// console.log("清除图表");
-				var divKLine = document.getElementById('lightweight');
-				if (null == divKLine || typeof divKLine == "undefined") {
-					return;
+			addSelect() {
+				let data = {
+					"skuCode": this.coinCode
 				}
-				while (divKLine.hasChildNodes()) {
-					divKLine.removeChild(divKLine.lastChild);
-				}
+				https.saveSkuCusInfo(data).then((res) => {
+					console.log(res);
+					let msg = res === 1 ? '添加成功!' : res === -1 ? '添加失败!' : '取消成功!';
+					// 提示用户
+					this.vusui.msg(
+						msg, {
+							icon: 0,
+							shade: 0.6,
+						}, () => {
+							// 关闭当前弹窗
+							this.vusui.close('page');
+							// 重新获取用户信息 余额
+							// todo
+							// 跳转页面
+							// uni.navigateTo({
+							// 	url: '../transaction-records/transaction-now'
+							// })
+					});
+				});
 			},
-			mergeTickToBar(price) {
-				if (currentBar.open === null) {
-					currentBar.open = price;
-					currentBar.high = price;
-					currentBar.low = price;
-					currentBar.close = price;
-				} else {
-					currentBar.close = price;
-					currentBar.high = Math.max(currentBar.high, price);
-					currentBar.low = Math.min(currentBar.low, price);
-				}
-				candleSeries.update(currentBar);
-			},
-
-
 			// 跳转持仓
 			ClickCc() {
 				uni.navigateTo({
@@ -690,7 +897,6 @@
 				https.submitOrder(data).then((res) => {
 					// orderloading.close();
 					console.clear();
-					console.log(res);
 					if (res != null) {
 						// 提示用户
 						this.vusui.msg(

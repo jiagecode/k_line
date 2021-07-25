@@ -35,6 +35,15 @@ public class KLineInfoController {
     }
 
     /**
+     * 查询小时线数据
+     */
+    @PostMapping("/hour/list")
+    @ApiOperation(value = "小时线数据列表", notes = "查询小时线数据列表")
+    public ResponseModel hourList(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "商品代码", required = true) @RequestBody String coinCode) {
+        return ResponseHelper.success(kLineDataService.hourList(Integer.valueOf(loginUserId), JsonUtils.toJsonNode(coinCode).get("coinCode").asText("")));
+    }
+
+    /**
      * 查询分钟线数据
      */
     @PostMapping("/min/list")
@@ -44,7 +53,7 @@ public class KLineInfoController {
     }
 
     /**
-     * 查询分钟线数据
+     * 查询秒线数据
      */
     @PostMapping("/mils/list")
     @ApiOperation(value = "历史秒线数据列表", notes = "查询历史秒线数据列表")

@@ -11,10 +11,10 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true?tinyInt1isBit=false
-    url: jdbc:mysql://192.168.1.9:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true
+#    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true?tinyInt1isBit=false
+    url: jdbc:mysql://127.0.0.1:3306/k_line?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
-    password: 123456
+    password: ggSmd+233y
     max-idle: 10
     max-wait: 10000
     min-idle: 5
@@ -27,7 +27,7 @@ spring:
   #redis
   redis:
     #redis机器ip
-    hostname: 192.168.1.7
+    hostname: 127.0.0.1
     #redis端口
     port: 6379
     #redis密码

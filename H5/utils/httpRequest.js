@@ -1,7 +1,8 @@
 
 // 请求跟地址
 // const baseUrl = 'h5'
-const baseUrl = 'http://192.168.1.9:1686/study'
+const baseUrl = 'http://192.168.66.104:1686/study'
+// const baseUrl = 'http://192.168.1.7:1686/study'
 
 /*
 	method: get post
