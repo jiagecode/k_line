@@ -64,10 +64,9 @@
 				})
             },
 			toKline(item){
-				console.clear("toKline");
 				uni.$emit("ChangeSymbol",item);
 				uni.switchTab({
-				    url: '../kline/kline'
+				    url: '../kline/TradingView'
 				});
 			},
 			// 处理数据

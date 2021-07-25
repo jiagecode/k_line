@@ -685,7 +685,7 @@
 			initSocketData() {
 				var that = this;
 				uni.connectSocket({
-					url: 'ws://192.168.66.104:1686/study/websocket/current/s/'+this.coinCode+'/' + that.UserData.userId
+					url: https.getBaseSocketUrl()+'/websocket/current/s/'+this.coinCode+'/' + that.UserData.userId
 				});
 				uni.onSocketOpen(function(res) {
 					console.log('WebSocket连接已打开！');

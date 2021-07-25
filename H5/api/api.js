@@ -12,13 +12,18 @@ const urls = {
 	userRegister: "/userInfo/createUserInfo", // H5用户注册
 	bankCardInfoSave: "/bankCardInfo/save", // 新增银行卡
 	submitOrder: "/orderInfo/save", //提交订单
-	klineDay: "/kline/day/list", //8日线
+	klineDay: "/kline/day/list", //日线
+	klineHour: "/kline/hour/list", //小时线
 	klineMin: "/kline/min/list", //当日分钟线
 	klineMils: "/kline/mils/list", //历史秒线
 	saveSkuCusInfo:"/skuCusInfo/save", //添加自选
 }
 
 module.exports = {
+	// 返回socket基本地址
+	getBaseSocketUrl(){
+		return 'ws://192.168.66.104:1686/study';
+	},
 	userLogin(data) {
 		return doRequest('POST', urls.userLogin, data)
 	},
@@ -54,6 +59,9 @@ module.exports = {
 	},
 	klineDay(data) {
 		return doRequest('POST', urls.klineDay, data)
+	},
+	klineHour(data) {
+		return doRequest('POST', urls.klineHour, data)
 	},
 	klineMin(data) {
 		return doRequest('POST', urls.klineMin, data)
