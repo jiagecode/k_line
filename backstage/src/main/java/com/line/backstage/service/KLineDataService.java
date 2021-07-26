@@ -14,6 +14,13 @@ public interface KLineDataService {
     List<Object> dayList(Integer loginUserId, String code);
 
     /**
+     * 查询小时数据
+     *
+     * @return 对象列表
+     */
+    List<Object> hourList(Integer loginUserId, String code);
+
+    /**
      * 查询分钟线数据
      *
      * @return 对象列表

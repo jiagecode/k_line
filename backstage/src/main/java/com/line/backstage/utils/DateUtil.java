@@ -665,6 +665,19 @@ public class DateUtil {
     }
 
     /**
+     * 取得昨天此时时间戳 小时
+     *
+     * @return
+     */
+    public static String getYesterdayHourStamp() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        long ss = calendar.getTime().getTime() / 1000;
+        long hh = ss - (ss % 3600);
+        return String.valueOf(hh);
+    }
+
+    /**
      * 取得今天0点时间戳
      *
      * @return

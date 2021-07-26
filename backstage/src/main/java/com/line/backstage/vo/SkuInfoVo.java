@@ -3,11 +3,12 @@ package com.line.backstage.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SkuInfoVo {
+public class SkuInfoVo implements Serializable {
 
     /**
      * 临时字段 判断是上下半分钟
