@@ -52,11 +52,12 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private RedisUtil redisUtil;
     @Autowired
     private AsyncGenOrderMinAndMilsDataService dataService;
-    private static final String ORDER_KEY ="order:ids:";
+    private static final String ORDER_KEY = "order:ids:";
     /**
      * 冻结标志
      */
     private final int FORBID_INT = 1;
+
     /**
      * 保存数据
      *
@@ -82,38 +83,38 @@ public class OrderInfoServiceImpl implements OrderInfoService {
      */
     @Override
     public int insert(Integer loginUserId, OrderInfo orderInfo) {
-        Map<String,Object> map = insertForBuy(loginUserId,orderInfo);
-        if("1".equals(map.get("resultCode"))){
+        Map<String, Object> map = insertForBuy(loginUserId, orderInfo);
+        if ("1".equals(map.get("resultCode"))) {
             return 1;
         }
-       return 0;
+        return 0;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> insertForBuy(Integer loginUserId, OrderInfo orderInfo) {
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         // 查询用户信息
         AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
-        if(accountInfo.getAccountStatus() == FORBID_INT){
+        if (accountInfo.getAccountStatus() == FORBID_INT) {
             //用户账户被冻结
-            map.put("resultCode","-1");
-            map.put("resultDesc","用户账户被冻结");
+            map.put("resultCode", "-1");
+            map.put("resultDesc", "用户账户被冻结");
             return map;
         }
-        if(accountInfo.getMoneyStatus() == FORBID_INT){
+        if (accountInfo.getMoneyStatus() == FORBID_INT) {
             //用户资金被冻结
-            map.put("resultCode","-2");
-            map.put("resultDesc","用户资金被冻结");
+            map.put("resultCode", "-2");
+            map.put("resultDesc", "用户资金被冻结");
             return map;
         }
-        if(orderInfo.getOrderAmount() > accountInfo.getAccountMoney()){
+        if (orderInfo.getOrderAmount() > accountInfo.getAccountMoney()) {
             //用户资金不足
-            map.put("resultCode","-3");
-            map.put("resultDesc","用户资金不足");
+            map.put("resultCode", "-3");
+            map.put("resultDesc", "用户资金不足");
             return map;
         }
-        if(orderInfo.getInvestAmount() ==null){
+        if (orderInfo.getInvestAmount() == null) {
             orderInfo.setInvestAmount(orderInfo.getOrderAmount());
         }
         //设置当前时间为下单时间
@@ -121,7 +122,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         //购买时长 秒数
         int orderCycle = orderInfo.getOrderCycle() == null ? 30 : orderInfo.getOrderCycle();
         //订单结算时间
-        Date endDate = new Date(addDate.getTime()+orderCycle*1000);
+        Date endDate = new Date(addDate.getTime() + orderCycle * 1000);
         // 新增资金变动记录
         AccountRecord accountRecord = new AccountRecord();
         accountRecord.setAccountId(accountInfo.getAccountId());
@@ -166,7 +167,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setUserId(loginUserId);
         orderInfo.setEditUserId(loginUserId);
         orderInfo.setPositionId(positionInfo.getPositionId());
-        if(orderInfo.getWinFlag() == null){
+        if (orderInfo.getWinFlag() == null) {
             orderInfo.setWinFlag(0);
         }
         orderInfo.setAddDate(addDate);
@@ -178,33 +179,35 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         orderInfo.setOrderStatus(1);
         //查询用户赢率
         Integer winRate = userInfoMapper.queryWinRate(loginUserId);
-        if(winRate == null){winRate =50;}
+        if (winRate == null) {
+            winRate = 50;
+        }
         //生成一个随机数 0~1
         double romRate = Math.random();
         boolean isWin = winRate * 1.0 / 100 > romRate;
         double inPoint = orderInfo.getInPoint();
         int investType = null == orderInfo.getInvestType() ? 1 : orderInfo.getInvestType();
-        double outPoint = getEndPoint(isWin,inPoint,investType);
+        double outPoint = getEndPoint(isWin, inPoint, investType);
         orderInfo.setOutPoint(outPoint);
-        orderInfo.setWinFlag(isWin?1:2);
+        orderInfo.setWinFlag(isWin ? 1 : 2);
         int result = orderInfoMapper.insertSelective(orderInfo);
         Integer orderId = orderInfo.getOrderId();
         accountRecord.setOrderId(orderId);
         accountRecordService.insert(loginUserId, accountRecord);
-        map.put("resultCode","1");
-        map.put("resultDesc","下单成功！");
-        map.put("orderId",orderId);
-        map.put("userId",loginUserId);
-        map.put("isWin",isWin);
-        map.put("investType",investType);
-        map.put("inPoint",inPoint);
-        map.put("outPoint",outPoint);
-        map.put("inDate",addDate);
-        map.put("outDate",endDate);
-        map.put("orderCycle",orderCycle);
-        map.put("skuCode",orderInfo.getSkuCode());
+        map.put("resultCode", "1");
+        map.put("resultDesc", "下单成功！");
+        map.put("orderId", orderId);
+        map.put("userId", loginUserId);
+        map.put("isWin", isWin);
+        map.put("investType", investType);
+        map.put("inPoint", inPoint);
+        map.put("outPoint", outPoint);
+        map.put("inDate", addDate);
+        map.put("outDate", endDate);
+        map.put("orderCycle", orderCycle);
+        map.put("skuCode", orderInfo.getSkuCode());
         //下单成功 记录失效时间
-        redisUtil.set(ORDER_KEY+orderId,1,orderCycle);
+        redisUtil.set(ORDER_KEY + orderId, 1, orderCycle);
         //掉推送方法
         dataService.autoGenDataMain(map);
         return map;
@@ -212,26 +215,29 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     /**
      * 计算用户卖出点位
+     *
      * @param isWin
      * @param inPoint
      * @param investType
      * @return
      */
-    private double getEndPoint(boolean isWin,double inPoint,int investType){
+    private double getEndPoint(boolean isWin, double inPoint, int investType) {
         double rate = getOneRandom();
-        if( 1== investType){
+        if (1 == investType) {
             /*买涨*/
-            return  isWin ? inPoint * (1 + rate) : inPoint * (1 - rate);
-        }else {
+            return isWin ? inPoint * (1 + rate) : inPoint * (1 - rate);
+        } else {
             /*买亏*/
-            return  isWin ? inPoint * (1 - rate) : inPoint * (1 + rate);
+            return isWin ? inPoint * (1 - rate) : inPoint * (1 + rate);
         }
     }
 
-    private double getOneRandom(){
+    private double getOneRandom() {
         double romRate = Math.random();
-        if(romRate >0.5){romRate = romRate * 0.4 ;}
-        if(romRate > 0.005 && romRate < 0.3){
+        if (romRate > 0.5) {
+            romRate = romRate * 0.4;
+        }
+        if (romRate > 0.005 && romRate < 0.3) {
             return romRate;
         }
         return getOneRandom();
@@ -262,11 +268,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public int update(Integer loginUserId, OrderInfo orderInfo) {
         OrderInfo o = orderInfoMapper.selectByPrimaryKey(orderInfo.getOrderId());
-        if(o != null){
+        if (o != null) {
             // FIXME 待完善
             return orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
         }
-       return 0;
+        return 0;
     }
 
     /**
