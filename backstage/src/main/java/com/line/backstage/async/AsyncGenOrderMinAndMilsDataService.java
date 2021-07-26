@@ -6,6 +6,7 @@ import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.JsonUtils;
 import com.line.backstage.utils.StrUtils;
 import com.line.backstage.vo.SkuInfoOhlcvVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Random;
 
+@Slf4j
 @Service
 public class AsyncGenOrderMinAndMilsDataService {
 
@@ -52,29 +54,34 @@ public class AsyncGenOrderMinAndMilsDataService {
      * 生成秒数据
      */
     private void genMilsData(String userId, String isWin, String investType, String inPoint, String outPoint, String inDate, String outDate, String orderCycle, String skuCode) {
+        log.info("预设：{}", isWin);
+        log.info("投资方向：{}", investType);
+
         // 获取开始时间 取当前分钟的起始时间
-        long startTime = Long.parseLong(inDate) + 1;
+        long startTime = Long.parseLong(inDate) - 86400;
         // 结束时间
-        long endTime = startTime + Long.parseLong(orderCycle) - 1;
+        long endTime = startTime + Long.parseLong(orderCycle);
 
         // 获取当天的基础数据
         JsonNode maindata = JsonUtils.toJsonNode(StrUtils.objToStr(redisUtil.get(skuCode + "_dd_" + DateUtil.getYesterdayEightStamp())));
 
-        // 根据isWin(1t2f)和investType(1up2down)判断生成方向
+        // 根据isWin(true/false)和investType(1up2down)判断生成方向
         boolean isGenUp = true;
         if (investType.equals("1")) {
-            if ("1".equals(isWin)) {
+            if ("true".equals(isWin)) {
                 isGenUp = true;
             } else if ("2".equals(isWin)) {
                 isGenUp = false;
             }
         } else if (investType.equals("2")) {
-            if ("1".equals(isWin)) {
+            if ("true".equals(isWin)) {
                 isGenUp = false;
             } else if ("2".equals(isWin)) {
                 isGenUp = true;
             }
         }
+
+        log.info("趋势：{}", isGenUp ? "涨" : "跌");
 
         // 上次生成的单价，第一次时获取上一秒的数据获取单价
         JsonNode beforTimeData = null;
@@ -84,7 +91,10 @@ public class AsyncGenOrderMinAndMilsDataService {
             if (ObjectUtils.isEmpty(data)) {
                 continue;
             }
-            beforTimeData = JsonUtils.toJsonNode(JsonUtils.toJsonString(data));
+            beforTimeData = JsonUtils.toJsonNode(StrUtils.objToStr(data));
+            if (!ObjectUtils.isEmpty(beforTimeData)) {
+                break;
+            }
         }
         if (ObjectUtils.isEmpty(beforTimeData)) {
             throw new RuntimeException("生成用户数据时查询出错！");

@@ -2,8 +2,9 @@ package com.line.backstage.redis;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.line.backstage.utils.JsonUtils;
+import com.line.backstage.utils.SpringUtils;
+import com.line.backstage.utils.StrUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,6 @@ import java.io.IOException;
 @Component
 public class SubscribeListener implements MessageListener {
 
-    @Autowired
     private RedisUtil redisUtil;
 
     private String sid;
@@ -52,18 +52,22 @@ public class SubscribeListener implements MessageListener {
         if (null == session || !session.isOpen()) {
             return;
         }
+        if (null == this.redisUtil) {
+            this.redisUtil = SpringUtils.getBean(RedisUtil.class);
+        }
         try {
             // 接受到推送时查询用户是否有消息，有的话优先用户消息
             String msg = new String(message.getBody());
-            JsonNode msgNode = JsonUtils.toJsonNode(msg);
+            JsonNode msgNode = JsonUtils.toJsonNode(msg.substring(1, msg.length() - 1).replace("\\\"", "'"));
             String temp = null;
             if (msgNode.hasNonNull("timeStamp")) {
-                temp = JsonUtils.toJsonString(redisUtil.get(sid + "_" + code + "_ss_" + msgNode.get("timeStamp").asText("")));
+                temp = StrUtils.objToStr(redisUtil.get(sid + "_" + code + "_ss_" + msgNode.get("timeStamp").asText("")));
             }
             if (!ObjectUtils.isEmpty(temp)) {
                 msgNode = JsonUtils.toJsonNode(temp);
+                System.out.println("send" + temp);
             }
-            session.getBasicRemote().sendText(msgNode.asText(""));
+            session.getBasicRemote().sendText(msgNode.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

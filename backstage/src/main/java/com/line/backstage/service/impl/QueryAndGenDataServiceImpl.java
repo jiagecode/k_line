@@ -20,7 +20,7 @@ import java.util.*;
 @Service
 public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
 
-    private String API_KEY = "2f5295de0ff822eb314074bbbed58c54154a0cf14a1cc9623b5b577046197d9f";
+    private String API_KEY = "b55818528ec171d67d5aeee0f0ecb624a3a37e06e5491e9cd9bbb7af92ed8a37";
     private String URL = "https://min-api.cryptocompare.com/data/v2/histoday";
     private String URL2 = "https://min-api.cryptocompare.com/data/v2/histominute";
     private String URL3 = "https://min-api.cryptocompare.com/data/v2/histohour";

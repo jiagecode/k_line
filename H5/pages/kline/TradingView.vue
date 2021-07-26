@@ -278,13 +278,24 @@
 			return {
 				// 商品代码
 				coinCode:'BTC',
+				// 商品名称
+				coinName:'Bitcoin',
 				sysInfo: {},
+				// 秒、分、小时、日线，对象
 				areaSeries: null,
+				// 交易量对象
+				volumeSeries: null,
 				chart: null,
 				ChartWidth: 350,
 				ChartHeight: 500,
+				// 图表小数位数
+				decimalDigits: 2,
 				// 面积图数据 600
 				lineData: [],
+				// 交易量 600
+				volumeData: [],
+				// 交易量历史数据
+				lastVolume: 0,
 				// 分钟数据 60
 				minData: [],
 				// 小时数据 24
@@ -357,9 +368,11 @@
 				this.hourData = [];
 				this.minData = [];
 				this.areaSeries = null;
+				this.volumeSeries = null;
 				this.chart = null;
 				
 				this.coinCode = new String(rel.symbol).toUpperCase();
+				this.coinName = new String(rel.name);
 				
 				// 重新加载
 				
@@ -372,6 +385,7 @@
 			this.hourData = [];
 			this.minData = [];
 			this.areaSeries = null;
+			this.volumeSeries = null;
 			this.chart = null;
 			
 			// 查询日线数据
@@ -511,10 +525,27 @@
 					this.chart.removeSeries(this.areaSeries);
 					this.areaSeries = null;
 				}
+				// 删除当前图表
+				if (this.volumeSeries) {
+					this.chart.removeSeries(this.volumeSeries);
+					this.volumeSeries = null;
+				}
 				// 新增选中图表
 				if (period === "Line") {
+					// 面积图
 					this.areaSeries = this.chart.addAreaSeries();
-
+					// 交易量图
+					this.volumeSeries = this.chart.addHistogramSeries({
+						color: '#26a69a',
+						priceFormat: {
+							type: 'volume',
+						},
+						priceScaleId: '',
+						scaleMargins: {
+							top: 0.8,
+							bottom: 0,
+						},
+					});
 				} else {
 					this.areaSeries = this.chart.addCandlestickSeries();
 
@@ -528,9 +559,9 @@
 					priceFormat: {
 						type: "custom",
 						precision: 4,
-						minMove: 0.0001,
+						minMove: 0.2,
 						formatter: function(value) {
-							return MathUtil.getFloat(value, 4);
+							return MathUtil.getFloat(value, 2);
 						}
 					}
 				});
@@ -545,10 +576,12 @@
 							secondsVisible: true,
 							tickMarkFormatter: (time, tickMarkType, locale) => {
 								return moment(new Date(time * 1000)).format("HH:mm:ss");
+								// return '';
 							},
 						}
 					});
 					this.areaSeries.setData(this.lineData);
+					this.volumeSeries.setData(this.volumeData);
 					if(!this.SocketStatus){
 						// 开启socket获取数据
 						this.initSocketData();
@@ -610,11 +643,6 @@
 				this.chart.timeScale().scrollToRealTime();
 			},
 			ClearChart() {
-				// 删除当前图表
-				// if (this.areaSeries) {
-				// 	this.chart.removeSeries(this.areaSeries);
-				// 	this.areaSeries = null;
-				// }
 				var divKLine = document.getElementById('lightweight');
 				if (null == divKLine || typeof divKLine == "undefined") {
 					return;
@@ -675,6 +703,14 @@
 							value: item.nowPrice,
 							time: parseFloat(item.timeStamp),
 						});
+						// 判断当次交易量涨跌
+						var nowVolume = MathUtil.getFloat(item.volumeFrom, 4);
+						this.volumeData.push({
+							time: parseFloat(item.timeStamp),
+							value: nowVolume,
+							color: (nowVolume - this.lastVolume) >= 0 ? 'rgba(255,82,82, 0.8)':'rgba(0, 150, 136, 0.8)',
+						});
+						this.lastVolume = nowVolume;
 					}
 
 					// 获取完数据再初始化图表
@@ -724,7 +760,18 @@
 							time: parseFloat(msg.timeStamp),
 							value: MathUtil.getFloat(msg.nowPrice, 4),
 						};
+						// 判断当次交易量涨跌
+						var nowVolume = MathUtil.getFloat(msg.volumeFrom, 4);
+						var volumeItem = {
+							time: parseFloat(msg.timeStamp),
+							value: nowVolume,
+							color: (nowVolume - that.lastVolume) >= 0 ? 'rgba(255,82,82, 0.8)':'rgba(0, 150, 136, 0.8)',
+						};
+						that.lastVolume = nowVolume;
+						// 更新面积图
 						that.areaSeries.update(areaCurrentBar);
+						// 更新交易量
+						that.volumeSeries.update(volumeItem);
 					}
 					// 现价
 					that.OrderCoinPrice = MathUtil.getFloat(msg.nowPrice, 4);
@@ -880,8 +927,8 @@
 					"orderType": 1,
 					"orderStatus": 0,
 					"skuId": this.OrderItem,
-					"skuCode": this.Name,
-					"skuName": this.PairName,
+					"skuCode": this.coinCode,
+					"skuName": this.coinName,
 					"skuQty": 1,
 					"skuPrice": this.OrderAmount,
 					"orderAmount": this.OrderAmount,
@@ -898,21 +945,29 @@
 					// orderloading.close();
 					console.clear();
 					if (res != null) {
-						// 提示用户
-						this.vusui.msg(
-							'下单成功!', {
-								icon: 0,
-								shade: 0.6,
-							}, () => {
-								// 关闭当前弹窗
-								this.vusui.close('page');
-								// 重新获取用户信息 余额
-								// todo
-								// 跳转页面
-								uni.navigateTo({
-									url: '../transaction-records/transaction-now'
-								})
-							});
+						if(res.resultCode === "-1" || res.resultCode === "-2" || res.resultCode === "-3" || res.resultCode === "-4"){
+							this.vusui.msg(res.resultDesc, { icon: 2, shade: 0.6, }, () => { });
+						}else if(res.resultCode === "1"){
+							// 提示用户
+							this.vusui.msg(
+								'下单成功!', {
+									icon: 0,
+									shade: 0.6,
+								}, () => {
+									// 关闭当前弹窗
+									this.vusui.close('page');
+									// 重新获取用户信息 余额
+									// todo
+									// 跳转页面
+									uni.navigateTo({
+										url: '../transaction-records/transaction-now'
+									})
+								});
+						}else{
+							this.vusui.msg("下单失败,未知错误!", { icon: 2, shade: 0.6, }, () => { });
+						}
+						
+						
 					}
 				});
 			},

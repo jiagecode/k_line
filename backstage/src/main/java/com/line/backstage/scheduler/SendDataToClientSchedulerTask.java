@@ -39,7 +39,7 @@ public class SendDataToClientSchedulerTask {
         List<SkuInfoVo> skuList = JsonUtils.toList(coinObjList, SkuInfoVo.class);
         for (SkuInfoVo skuInfoVo : skuList) {
             // 查询并推送数据
-            redisTemplate.convertAndSend(skuInfoVo.getSkuCode(), StrUtils.objToStr(redisUtil.get(skuInfoVo.getSkuCode() + "_ss_" + minuteStamp)));
+            redisTemplate.convertAndSend(skuInfoVo.getSkuCode(), redisUtil.get(skuInfoVo.getSkuCode() + "_ss_" + minuteStamp));
         }
     }
 

@@ -80,10 +80,18 @@ public class KLineDataServiceImpl implements KLineDataService {
         long startStamp = nowStamp - 3600;
 
         List<Object> result = new ArrayList<>();
+        StringBuilder sbUserKey = new StringBuilder();
         StringBuilder sbKey = new StringBuilder();
         for (long i = startStamp; i <= nowStamp; i += 60) {
+            sbUserKey.append(loginUserId).append("_").append(code).append("_mm_").append(i);
             sbKey.append(code).append("_mm_").append(i);
-            result.add(redisUtil.get(sbKey.toString()));
+            // 查询用户数据
+            if(redisUtil.hasKey(sbUserKey.toString())){
+                result.add(redisUtil.get(sbUserKey.toString()));
+            }else if(redisUtil.hasKey(sbKey.toString())){
+                result.add(redisUtil.get(sbKey.toString()));
+            }
+            sbUserKey.delete(0, sbUserKey.length());
             sbKey.delete(0, sbKey.length());
         }
 
@@ -105,10 +113,20 @@ public class KLineDataServiceImpl implements KLineDataService {
         long startStamp = nowStamp - 600;
 
         List<Object> result = new ArrayList<>();
+        StringBuilder sbUserKey = new StringBuilder();
         StringBuilder sbKey = new StringBuilder();
         for (long i = startStamp; i <= nowStamp; i++) {
+            sbUserKey.append(loginUserId).append("_").append(code).append("_ss_").append(i);
             sbKey.append(code).append("_ss_").append(i);
-            result.add(redisUtil.get(sbKey.toString()));
+            // 查询用户数据
+            if(redisUtil.hasKey(sbUserKey.toString())){
+                result.add(redisUtil.get(sbUserKey.toString()));
+                System.out.println("用户数据：");
+                System.out.println(redisUtil.get(sbUserKey.toString()));
+            }else if(redisUtil.hasKey(sbKey.toString())){
+                result.add(redisUtil.get(sbKey.toString()));
+            }
+            sbUserKey.delete(0, sbUserKey.length());
             sbKey.delete(0, sbKey.length());
         }
 
