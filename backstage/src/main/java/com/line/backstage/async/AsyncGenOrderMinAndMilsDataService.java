@@ -53,7 +53,7 @@ public class AsyncGenOrderMinAndMilsDataService {
      */
     private void genMilsData(String userId, String isWin, String investType, String inPoint, String outPoint, String inDate, String outDate, String orderCycle, String skuCode) {
         // 获取开始时间 取当前分钟的起始时间
-        long startTime = Long.parseLong(inDate) / 1000 + 1;
+        long startTime = Long.parseLong(inDate) + 1;
         // 结束时间
         long endTime = startTime + Long.parseLong(orderCycle) - 1;
 
