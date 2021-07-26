@@ -86,7 +86,7 @@
             </el-table-column>
             <el-table-column
                     label="操作"
-                    width="250">
+                    width="300">
                 <template slot-scope="scope">
                   <div style="display: flex; justify-content: flex-start;">
                     <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
