@@ -15,6 +15,7 @@ import com.line.backstage.service.AccountInfoService;
 import com.line.backstage.service.AccountRecordService;
 import com.line.backstage.service.OrderInfoService;
 import com.line.backstage.service.PositionInfoService;
+import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.PageWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -202,8 +203,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         map.put("investType", investType);
         map.put("inPoint", inPoint);
         map.put("outPoint", outPoint);
-        map.put("inDate", addDate);
-        map.put("outDate", endDate);
+        map.put("inDate", DateUtil.dateToTimeStamp(addDate));
+        map.put("outDate", DateUtil.dateToTimeStamp(endDate));
         map.put("orderCycle", orderCycle);
         map.put("skuCode", orderInfo.getSkuCode());
         //下单成功 记录失效时间

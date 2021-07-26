@@ -689,6 +689,15 @@ public class DateUtil {
     }
 
     /**
+     * date转时间戳 秒
+     *
+     * @return
+     */
+    public static String dateToTimeStamp(Date date) {
+        return String.valueOf((date.getTime() / 1000));
+    }
+
+    /**
      * 取得当前时间戳（精确到分钟） error
      *
      * @return
