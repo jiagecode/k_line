@@ -25,5 +25,6 @@ public interface OrderInfoMapper extends TkBaseMapper<OrderInfo> {
     List<ManOrderVo> queryManOrderVoForPage(ManOrderVo manOrderVo);
     OrderInfo queryOneById(@Param("orderId")Integer orderId);
     Integer countTodayOrderNum(Map map);
+    Integer notEndOrderNum(@Param("userId")Integer loginUserId);
     Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
 }

@@ -155,4 +155,8 @@
         and SETTLEMENT_DATE <![CDATA[ <= ]]> #{settlementDate}
         limit 100
     </select>
+
+    <select id="notEndOrderNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(1) from t_position_info where  USER_ID = #{userId} and POSITION_STATUS = 1
+    </select>
 </mapper>

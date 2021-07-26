@@ -115,6 +115,13 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             map.put("resultDesc", "用户资金不足");
             return map;
         }
+        Integer notEnd = orderInfoMapper.notEndOrderNum(loginUserId);
+        if(notEnd !=null && notEnd >0){
+            //用户资金不足
+            map.put("resultCode", "-4");
+            map.put("resultDesc", "您有订单未结算,暂时无法下单!");
+            return map;
+        }
         if (orderInfo.getInvestAmount() == null) {
             orderInfo.setInvestAmount(orderInfo.getOrderAmount());
         }
