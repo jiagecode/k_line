@@ -17,12 +17,22 @@ const urls = {
 	klineMin: "/kline/min/list", //当日分钟线
 	klineMils: "/kline/mils/list", //历史秒线
 	saveSkuCusInfo:"/skuCusInfo/save", //添加自选
+	cryptocompareKey:"b55818528ec171d67d5aeee0f0ecb624a3a37e06e5491e9cd9bbb7af92ed8a37" // 行情页API-KEY
+	
 }
 
 module.exports = {
 	// 返回socket基本地址
 	getBaseSocketUrl(){
 		return 'ws://192.168.66.104:1686/study';
+	},
+	// 返回行情页url
+	getCryptocompareApiUrl(){
+		return 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD&api_key=' + urls.cryptocompareKey;
+	},
+	// 返回自选url
+	getOneCryptocompareApiUrl(data){
+		return 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + data + '&tsyms=USD&api_key=' + urls.cryptocompareKey;
 	},
 	userLogin(data) {
 		return doRequest('POST', urls.userLogin, data)

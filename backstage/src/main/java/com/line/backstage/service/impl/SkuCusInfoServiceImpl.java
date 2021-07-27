@@ -139,7 +139,7 @@ public class SkuCusInfoServiceImpl implements SkuCusInfoService {
     @Override
     public String queryMyCusCode(Integer loginUserId) {
         List<String> list =  skuCusInfoMapper.queryMyCusCode(loginUserId);
-        String result = StringUtils.join(list,"%2C");
+        String result = StringUtils.join(list,",");
         return result;
     }
 }
