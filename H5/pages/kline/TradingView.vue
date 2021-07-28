@@ -27,12 +27,12 @@
 		</uni-row> -->
 		
 		<!-- top信息 -->
-		<view class="uni-row-top d-flex">
+		<view class="uni-row-top d-flex" style="height: 130rpx;">
 			<!-- 实时价格 -->
 			<view id="t_price" class="d-flex flex-1 j-center a-center font-lgg">{{SocketMsg.PRICE}}</view>
 			<!-- 当前行情 -->
 			<view class="flex-1">
-				<view class="d-flex flex-1">
+				<view class="d-flex flex-1" style="margin-top: 4rpx;">
 					<view class="flex-1 d-block">
 						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最高</text>
 						<text id="t_highday" class="d-flex a-center j-center font" style="line-height: none;">{{SocketMsg.LOWDAY}}</text>
@@ -279,7 +279,7 @@
 				// 商品代码
 				coinCode:'BTC',
 				// 商品名称
-				coinName:'Bitcoin',
+				coinName:'BTC',
 				sysInfo: {},
 				// 秒、分、小时、日线，对象
 				areaSeries: null,
@@ -398,6 +398,11 @@
 
 		},
 		onShow() {
+			uni.setNavigationBarTitle({
+				title: this.coinName + '/USD'
+			});
+			document.title = '币安秒合约';
+			
 			uni.closeSocket();
 			this.dayData = [];
 			this.hourData = [];
@@ -465,6 +470,7 @@
 			var height = this.sysInfo.windowHeight;
 			this.ChartWidth = width;
 			this.ChartHeight = height - 156;
+			// this.ChartHeight = height - 160;
 
 			this.$nextTick(() => {
 				// 行情传值

@@ -82,13 +82,13 @@ public class AsyncGenMinDataService {
 //        1、根据格式
         double value = vf * CON;
         double rom = Math.random();
-        if(value > 100.0 && value <1000.0 ){
+        if (value > 100.0 && value < 1000.0) {
             rom = rom * 100;
-        }else if(value < 100.0){
+        } else if (value < 100.0) {
             rom = rom * 210;
         }
 //        2、范围
-        return value * (1+rom);
+        return value * (1 + rom);
     }
 
     /**
