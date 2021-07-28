@@ -56,9 +56,14 @@ public class AsyncGenMinDataService {
                 Long timeStamp = Long.parseLong(beforOne.getTimeStamp()) + j;
                 temp = new SkuInfoOhlcvVo();
                 temp.setOrderNum(j);
+                double f = getFrom(vf);
+                double p = price.doubleValue();
+                if(p < f){
+                    p = f + (f-p)*CON*100;
+                }
                 temp.setTimeStamp(String.valueOf(timeStamp));
                 temp.setSkuCode(beforOne.getSkuCode());
-                temp.setNowPrice(price.doubleValue());
+                temp.setNowPrice(p);
 
                 temp.setOpenPrice(maindata.get("openPrice").asDouble());
                 temp.setClose(maindata.get("close").asDouble());
@@ -66,7 +71,8 @@ public class AsyncGenMinDataService {
                 temp.setMinPrice(maindata.get("minPrice").asDouble());
                 temp.setVolumeTo(maindata.get("volumeTo").asDouble());
 //                temp.setVolumeFrom(maindata.get("volumeFrom").asDouble());
-                temp.setVolumeFrom(getFrom(vf));
+
+                temp.setVolumeFrom(f);
                 redisUtil.set(beforOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), 0);
             }
         }
