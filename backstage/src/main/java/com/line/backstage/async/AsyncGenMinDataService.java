@@ -19,7 +19,7 @@ public class AsyncGenMinDataService {
 
     @Autowired
     private RedisUtil redisUtil;
-
+    private final double CON = 0.00001157;
     @Async
     public void autoGenDataMain(List<SkuInfoOhlcvVo> listOhlcv, String skuCode) {
         // 获取当天的基础数据
@@ -30,6 +30,10 @@ public class AsyncGenMinDataService {
         SkuInfoOhlcvVo temp;
         // 临时字段
         BigDecimal price;
+        Double vf = maindata.get("volumeFrom").asDouble();
+        if(vf == null){
+            vf = 86400000.0;
+        }
         for (int i = 1; i < listOhlcv.size(); i++) {
             System.out.println("coin: " + listOhlcv.get(0).getSkuCode() + " All:" + listOhlcv.size() + " Now:" + i);
             SkuInfoOhlcvVo beforOne = listOhlcv.get(i - 1);
@@ -61,10 +65,24 @@ public class AsyncGenMinDataService {
                 temp.setMaxPrice(maindata.get("maxPrice").asDouble());
                 temp.setMinPrice(maindata.get("minPrice").asDouble());
                 temp.setVolumeTo(maindata.get("volumeTo").asDouble());
-                temp.setVolumeFrom(maindata.get("volumeFrom").asDouble());
+//                temp.setVolumeFrom(maindata.get("volumeFrom").asDouble());
+                temp.setVolumeFrom(getFrom(vf));
                 redisUtil.set(beforOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), 0);
             }
         }
+    }
+
+    private Double getFrom(double vf) {
+//        1、根据格式
+        double value = vf * CON;
+        double rom = Math.random();
+        if(value > 100.0 && value <1000.0 ){
+            rom = rom * 100;
+        }else if(value < 100.0){
+            rom = rom * 210;
+        }
+//        2、范围
+        return value * (1+rom);
     }
 
     /**
