@@ -362,6 +362,28 @@
 			
 			// 订阅币种切换事件
 			uni.$on("ChangeSymbol", (rel) => {
+				// console.log(rel);
+				// 1、FIXME接收
+				// 2、数据保存到
+				if(rel.DISPLAY === undefined){
+					this.SocketMsg = {
+						PRICE : rel.info.PRICE.replace('$ ', '').replace(',', ''),
+						LOWDAY : rel.info.HIGH24HOUR.replace('$ ', '').replace(',', ''),
+						OPENDAY : rel.info.OPEN24HOUR.replace('$ ', '').replace(',', ''),
+						LOWDAY : rel.info.LOW24HOUR.replace('$ ', '').replace(',', '')
+					} 
+					this.coinCode = new String(rel.name).toUpperCase();
+					this.coinName = new String(rel.name);
+				} else {
+					this.SocketMsg = {
+						PRICE : rel.DISPLAY.USD.PRICE.replace('$ ', '').replace(',', ''),
+						LOWDAY : rel.DISPLAY.USD.HIGH24HOUR.replace('$ ', '').replace(',', ''),
+						OPENDAY : rel.DISPLAY.USD.OPEN24HOUR.replace('$ ', '').replace(',', ''),
+						LOWDAY : rel.DISPLAY.USD.LOW24HOUR.replace('$ ', '').replace(',', '')
+					}
+					this.coinCode = new String(rel.CoinInfo.Name).toUpperCase();
+					this.coinName = new String(rel.CoinInfo.Name);
+				}
 				// 清空
 				uni.closeSocket();
 				this.dayData = [];
@@ -370,10 +392,6 @@
 				this.areaSeries = null;
 				this.volumeSeries = null;
 				this.chart = null;
-				
-				this.coinCode = new String(rel.symbol).toUpperCase();
-				this.coinName = new String(rel.name);
-				
 				// 重新加载
 				
 			})
@@ -394,6 +412,8 @@
 			}).then((res) => {
 				for (var i = 0; i < res.length; i++) {
 					var item = JSON.parse(res[i]);
+					if(item === null)
+						break;
 					this.dayData.push({
 						open: item.openPrice,
 						high: item.maxPrice,
@@ -407,8 +427,11 @@
 			https.klineHour({
 				coinCode: this.coinCode
 			}).then((res) => {
+				// console.log(res);
 				for (var i = 0; i < res.length; i++) {
 					var item = JSON.parse(res[i]);
+					if(item === null)
+						break;
 					this.hourData.push({
 						open: item.openPrice,
 						high: item.maxPrice,
@@ -425,6 +448,8 @@
 			}).then((res) => {
 				for (var i = 0; i < res.length; i++) {
 					var item = JSON.parse(res[i]);
+					if(item === null)
+						break;
 					this.minData.push({
 						open: item.openPrice,
 						high: item.maxPrice,
@@ -442,6 +467,7 @@
 			this.ChartHeight = height - 156;
 
 			this.$nextTick(() => {
+				// 行情传值
 				var container = document.getElementById("lightweight");
 				container.style.position = 'relative';
 				this.chart = createChart(
@@ -699,6 +725,8 @@
 					}
 					for (var i = 0; i < res.length; i++) {
 						var item = JSON.parse(res[i]);
+						if(item === null)
+							break;
 						this.lineData.push({
 							value: item.nowPrice,
 							time: parseFloat(item.timeStamp),

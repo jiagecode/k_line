@@ -68,7 +68,7 @@
             },
 			toKline(item){
 				console.log(item);
-				uni.$emit("ChangeSymbol",item);
+				uni.$emit("ChangeSymbol", item);
 				uni.switchTab({
 				    url: '../kline/TradingView'
 				});
