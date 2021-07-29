@@ -115,4 +115,9 @@
         insert into t_order_expand (EXP_ID,ORDER_ID,USER_ID,TODAY_NUM,EXP_MONEY,ADD_DATE,EDIT_DATE,DEL)
         values (#{expId},#{orderId},#{userId},#{todayNum},#{expMoney},#{addDate},#{editDate},#{del})
     </insert>
+    <select id="queryH5Page" parameterType="java.lang.Integer" resultMap="AccountRecordMap">
+        select * from t_account_record
+        where ACCOUNT_ID = #{accId} and DEL = 1
+        order by RECORD_ID desc
+    </select>
 </mapper>

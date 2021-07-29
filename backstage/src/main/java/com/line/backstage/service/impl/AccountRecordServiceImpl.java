@@ -109,10 +109,10 @@ public class AccountRecordServiceImpl implements AccountRecordService {
     @Override
     public PageWrapper<AccountRecord> list(Integer loginUserId, AccountRecord accountRecord) {
         PageHelper.startPage(accountRecord.getPageNum(), accountRecord.getPageSize());
-        accountRecord.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+      //  accountRecord.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         Integer accountId = accountInfoMapper.queryMyAccountIdByUserId(loginUserId);
-        accountRecord.setAccountId(accountId);
-        PageInfo<AccountRecord> page = new PageInfo<>(accountRecordMapper.select(accountRecord));
+       // accountRecord.setAccountId(accountId);
+        PageInfo<AccountRecord> page = new PageInfo<>(accountRecordMapper.queryH5Page(accountId));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

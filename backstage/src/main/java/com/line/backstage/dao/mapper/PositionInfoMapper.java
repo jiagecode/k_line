@@ -15,7 +15,7 @@ import java.util.List;
 public interface PositionInfoMapper extends TkBaseMapper<PositionInfo> {
     PositionInfo queryOne(@Param("posId") Integer posId);
 
-    List<PositionInfo> selectForPage(@Param("userId") Integer userId, @Param("del") Integer del);
+    List<PositionInfo> selectForPage(@Param("userId") Integer userId, @Param("del") Integer del,@Param("pst")Integer pst);
 
     Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
 }

@@ -115,7 +115,8 @@ public class PositionInfoServiceImpl implements PositionInfoService {
         PageHelper.startPage(positionInfo.getPageNum(), positionInfo.getPageSize());
         positionInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         positionInfo.setUserId(loginUserId);
-        PageInfo<PositionInfo> page = new PageInfo<>(positionInfoMapper.selectForPage(loginUserId,DataEnum.FLAG_STATUS_INVALID.getCode()));
+        Integer pst = positionInfo.getPositionStatus() == null ? 2:positionInfo.getPositionStatus();
+        PageInfo<PositionInfo> page = new PageInfo<>(positionInfoMapper.selectForPage(loginUserId,DataEnum.FLAG_STATUS_INVALID.getCode(),pst));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

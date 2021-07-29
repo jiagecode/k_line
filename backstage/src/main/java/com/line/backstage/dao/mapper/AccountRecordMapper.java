@@ -19,6 +19,7 @@ public interface AccountRecordMapper extends TkBaseMapper<AccountRecord> {
 
     Integer InsertOneExp(OrderRecordExp exp);
     List<ManRecordVo> queryManRecordVoForPage(ManRecordVo recordVo);
+    List<AccountRecord> queryH5Page(@Param("accId") Integer accId);
     Map<String,Object> sumAllMoneyRecord(Map map);
     Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
 }
