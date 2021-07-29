@@ -119,6 +119,7 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
             params.put("fsym", sku.getSkuCode());
             params.put("tsym", "USD");
             params.put("limit", "1440");
+//            params.put("limit", "3");
             params.put("toTs", stamp);
             params.put("api_key", API_KEY);
             // 查询数据

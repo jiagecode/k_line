@@ -110,7 +110,7 @@ public class KLineDataServiceImpl implements KLineDataService {
         // 结束时间 当前
         long nowStamp = Long.parseLong(DateUtil.getYesterdayStamp());
         // 开始时间
-        long startStamp = nowStamp - 600;
+        long startStamp = nowStamp - 1800;
 
         List<Object> result = new ArrayList<>();
         StringBuilder sbUserKey = new StringBuilder();

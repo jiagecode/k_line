@@ -20,7 +20,7 @@
 					<view style="width: 80%; color: #0078f8;">{{item.msg}}</view>
 				</view>
 				<view class="font-mdd" v-if="item.type === 'serviceList' && isShow" style="margin-top: 20rpx;">
-					<view>请选择在线客服：</view>
+					<view>{{serviceList.length > 0 ? '请选择在线客服：' : '当前客服繁忙，请稍后再试'}}</view>
 					<block v-for="(i, index) in item.msg">
 						<view class="d-flex a-center" style="width: 80%; color: #0078f8;" @tap="selectService(i)">（小姐姐）{{i.name}}</view>
 					</block>
@@ -28,13 +28,14 @@
 			</scroll-view>
 		</view>
 		<view class="d-flex a-center" style="height: 8%; margin-top: -3%;">
-			<uni-easyinput type="text" :inputBorder="false" placeholder="请写下你的问题" v-model="msg" />
+			<uni-easyinput type="textarea" autoHeight clearable :inputBorder="false" placeholder="请写下你的问题" v-model="msg" />
 			<button class="d-flex j-center a-center font-md" style="width: 18%; background-color: #5586d3; color: #FFFFFF;" @tap="send">发送</button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import https from '../../api/api.js'
 	export default {
 		data(){
 			return{
@@ -72,7 +73,7 @@
                 // 创建一个this.socketTask对象【发送、接收、关闭socket都由这个对象操作】
                 this.socketTask = uni.connectSocket({
                     // 【非常重要】必须确保你的服务器是成功的,如果是手机测试千万别使用ws://127.0.0.1:9099【特别容易犯的错误】
-					url: 'ws://192.168.1.9:1686/study/websocket/' + userInfo.userId + ',' + userInfo.userRealName +'/user',
+					url: https.getBaseSocketUrl() + '/websocket/' + userInfo.userId + ',' + userInfo.userRealName + '/user',
                     success(data) {
                         console.log("websocket连接成功");
                     },
