@@ -33,4 +33,9 @@
     <select id="queryOne" parameterType="java.lang.Integer" resultMap="PositionInfoMap">
         select * from  t_position_info where POSITION_ID = #{posId}
     </select>
+    <select id="selectForPage" parameterType="java.lang.Integer" resultMap="PositionInfoMap">
+        select * from  t_position_info
+        WHERE USER_ID = #{userId} and DEL = #{del}
+        order by POSITION_ID desc
+    </select>
 </mapper>

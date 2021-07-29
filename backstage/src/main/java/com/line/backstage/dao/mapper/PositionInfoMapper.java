@@ -4,6 +4,8 @@ import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.PositionInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 用户持仓信息(PositionInfo)表数据库访问层
  *
@@ -12,5 +14,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface PositionInfoMapper extends TkBaseMapper<PositionInfo> {
     PositionInfo queryOne(@Param("posId") Integer posId);
-    Integer updateForDiy(@Param("diyId") Integer diyId,@Param("userId") Integer userId,@Param("del") Integer del,@Param("sysUserId")Integer sysUserId);
+
+    List<PositionInfo> selectForPage(@Param("userId") Integer userId, @Param("del") Integer del);
+
+    Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
 }
