@@ -205,6 +205,11 @@ export const constantRoutes = [
         name: 'pingCang',
         component: () => import('@/views/orderMan/pingCang'),
         meta: { title: '平仓日志' }
+      },  {
+        path: 'positionVo',
+        name: 'posiVo',
+        component: () => import('@/views/orderMan/positionVo'),
+        meta: { title: '用户持仓' }
       },
     ]
   },
