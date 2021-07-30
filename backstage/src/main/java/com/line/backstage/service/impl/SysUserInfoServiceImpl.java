@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -283,8 +284,14 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
 
     @Override
     public Map<String, Object> queryHomePageData(Integer agentId) {
+       //代理业绩
+        BigDecimal score ;
         if(agentId == null){
             agentId = -1;
+            score = BigDecimal.ZERO;
+        }else {
+            score = cashOutInMapper.queryAgentScore(agentId);
+            if(score == null){score = BigDecimal.ZERO;}
         }
         Map<String, Object> map = new HashMap<>();
         map.put("agentId",agentId);
@@ -335,6 +342,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         result.put("todayOrderNum",todayOrderNum);
         result.put("cashIn",cashIn);
         result.put("cashOut",cashOut);
+        result.put("score",score);
         result.put("todayAgentNum",todayAgentNum);
         return result;
     }

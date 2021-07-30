@@ -12,6 +12,7 @@ import com.line.backstage.service.CashOutInService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.github.pagehelper.PageHelper;
@@ -92,6 +93,8 @@ public class CashOutInServiceImpl implements CashOutInService {
             //资金不足
             return -3 ;
         }
+        BigDecimal inCash ;
+        BigDecimal outCash ;
         Double fee = FEE_RATE * money;
         Double arrive = money - fee;
         Date date = new Date();
@@ -105,9 +108,13 @@ public class CashOutInServiceImpl implements CashOutInService {
         if(cashType == 1){
             cashOutIn.setArriveMoney(arrive);
             cashOutIn.setCashFee(fee);
+            inCash = BigDecimal.ZERO;
+            outCash = new BigDecimal(money);
         }else {
             cashOutIn.setArriveMoney(money);
             cashOutIn.setCashFee(0.0);
+            inCash = new BigDecimal(money);
+            outCash = BigDecimal.ZERO;
         }
         if(StringUtils.isEmpty(cashOutIn.getRemarks())){
             cashOutIn.setRemarks("用户"+(cashType == 1? "提现":"充值")+money);
@@ -118,6 +125,11 @@ public class CashOutInServiceImpl implements CashOutInService {
         int num =  cashOutInMapper.insertSelective(cashOutIn);
         if(cashType == 1){
             dealForCashOut(account,money,cashOutIn.getCashId(),cashType,loginUserId,date,fee);
+        }
+        Integer agentId = accountInfoMapper.queryAgentIdByAccId(accId);
+        if(agentId != null && agentId != 0){
+            //处理代理业绩
+            cashOutInMapper.updateAgentScore(agentId,inCash,outCash);
         }
         return num ;
     }

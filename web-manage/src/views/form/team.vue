@@ -66,6 +66,10 @@
             <div class="app-box-input-txt" style="width: 80px;">今日提现：</div>
             <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.cashOut}}</div>
           </div>
+          <div class="app-box-input app-marginR" style="width: 225px;">
+            <div class="app-box-input-txt" style="width: 80px;">累计业绩：</div>
+            <div style="color: #5C3882; font-weight: bold; height: 28px; line-height: 28px; width: 60px;">{{homeData.score}}</div>
+          </div>
           <!--今日手续费-->
           <div class="app-box-input app-marginR" style="width: 225px;">
             <div class="app-box-input-txt" style="width: 80px;">今日手续费：</div>

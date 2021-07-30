@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.line.backstage.dao.mapper.AccountInfoMapper;
+import com.line.backstage.dao.mapper.CashOutInMapper;
 import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.UserInfo;
@@ -44,6 +45,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private AccountInfoMapper accountInfoMapper;
+    @Resource
+    private CashOutInMapper cashOutInMapper;
     /**
      * 默认佣金红利系数
      */
@@ -227,16 +230,23 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public int updateUserType(Integer loginUserId, UserInfo userInfo) {
-        UserInfo u = userInfoMapper.selectByPrimaryKey(userInfo.getUserId());
+        Integer uid = userInfo.getUserId();
+        UserInfo u = userInfoMapper.selectByPrimaryKey(uid);
         if (u != null) {
-            userInfo.setAgentId(u.getUserId());
+            userInfo.setAgentId(uid);
             Date date = new Date();
             userInfo.setAgentTime(date);
             userInfo.setEditUserId(loginUserId);
             userInfo.setAgentName(StringUtils.isEmpty(u.getUserNickName()) ? u.getUserRealName() : u.getUserNickName());
             userInfo.setEditDate(date);
             userInfo.setUserType(2);
-            return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+           int  num =  userInfoMapper.updateByPrimaryKeySelective(userInfo);
+           try {
+               //创建代理业绩记录
+               cashOutInMapper.insertOneAgentScore(uid,loginUserId);
+           }catch (Exception e){
+           }
+           return num;
         }
         return 0;
     }
@@ -249,6 +259,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public UserInfo queryById(Integer userId) {
+        System.out.println("查询用户信息---》");
         UserInfo dto = userInfoMapper.selectByPrimaryKey(userId);
         if (dto != null) {
 //            UserInfo info = new UserInfo();

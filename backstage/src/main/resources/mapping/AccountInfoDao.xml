@@ -128,4 +128,10 @@
         where ACCOUNT_ID = #{accountId}
     </update>
 
+    <select id="queryAgentIdByAccId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select u.AGENT_ID
+        FROM t_account_info a
+        left join t_user_info u on a.USER_ID = u.USER_ID
+        where a.ACCOUNT_ID = #{accId} limit 1
+    </select>
 </mapper>

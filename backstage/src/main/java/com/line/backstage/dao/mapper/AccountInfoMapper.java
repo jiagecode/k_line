@@ -39,4 +39,11 @@ public interface AccountInfoMapper extends TkBaseMapper<AccountInfo> {
      * @return
      */
     AccountInfo queryByUserId(@Param("userId") Integer userId);
+
+    /**
+     * 根据变动账户查询用户对应的代理
+     * @param accId
+     * @return
+     */
+    Integer queryAgentIdByAccId(@Param("accId") Integer accId);
 }

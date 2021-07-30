@@ -108,4 +108,20 @@
         update t_cash_out_in set DEL = #{del} ,EDIT_USER_ID = #{sysUserId},EDIT_DATE = now()
         WHERE  DIY_ID = #{diyId}
     </update>
+    <insert id="insertOneAgentScore" parameterType="java.lang.Integer">
+        INSERT into t_agent_score(AGENT_ID,IN_CASH,OUT_CASH,ADD_DATE,EDIT_DATE,ADD_USER_ID,EDIT_USER_ID,DEL)
+        values (#{agentId},0,0,now(),now(),#{userId},#{userId},1)
+    </insert>
+
+    <update id="updateAgentScore">
+        update t_agent_score
+        set IN_CASH = IN_CASH + #{inCash},
+            OUT_CASH = OUT_CASH + #{outCash},
+            EDIT_DATE = now()
+        where AGENT_ID = #{agentId}
+    </update>
+
+    <select id="queryAgentScore" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+        select IN_CASH - OUT_CASH from t_agent_score  where AGENT_ID = #{agentId}
+    </select>
 </mapper>
