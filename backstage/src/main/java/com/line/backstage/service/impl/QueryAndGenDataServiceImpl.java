@@ -1,6 +1,7 @@
 package com.line.backstage.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.line.backstage.async.AsyncGenMinDataService;
 import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.QueryAndGenDataService;
@@ -10,6 +11,7 @@ import com.line.backstage.utils.JsonUtils;
 import com.line.backstage.utils.StrUtils;
 import com.line.backstage.vo.SkuInfoOhlcvVo;
 import com.line.backstage.vo.SkuInfoVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
 
@@ -34,8 +37,9 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
     public void queryAndGen() {
         // 时间戳
         String stamp = DateUtil.getTodayZeroStamp();
+        log.info("windows时间戳【1627574400】，centos时间戳【{}】", stamp);
         if (redisUtil.setIsMember("toTs", stamp)) {
-            System.out.println("时间戳：" + stamp + " 已处理...");
+            log.info("时间戳：【{}】已处理...", stamp);
             return;
         }
         // 记录正在处理的查询时间戳
@@ -68,7 +72,8 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
         for (SkuInfoVo sku : skuList) {
             params.put("fsym", sku.getSkuCode());
             params.put("tsym", "USD");
-            params.put("limit", "30");
+            // 30 * 6 = 180
+            params.put("limit", "180");
             params.put("toTs", DateUtil.getTodayZeroStamp());
             params.put("api_key", API_KEY);
             // 查询数据
@@ -93,7 +98,8 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
         for (SkuInfoVo sku : skuList) {
             params.put("fsym", sku.getSkuCode());
             params.put("tsym", "USD");
-            params.put("limit", "24");
+            // 24 * 6 = 144
+            params.put("limit", "144");
             params.put("toTs", DateUtil.getYesterdayHourStamp());
             params.put("api_key", API_KEY);
             // 查询数据
@@ -144,6 +150,7 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
      * @return
      */
     private List<SkuInfoOhlcvVo> getSkuInfoList(String code, String data) {
+//        log.info("币种分钟线数据【{}】", data);
         if (StringUtils.isEmpty(data)) {
             throw new RuntimeException("数据不存在");
         }

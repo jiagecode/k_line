@@ -27,7 +27,7 @@ public class KLineDataServiceImpl implements KLineDataService {
         // 开始时间
         long nowStamp = Long.parseLong(DateUtil.getYesterdayEightStamp());
         // 开始时间
-        long startStamp = Long.parseLong(DateUtil.getYesterdayEightStamp()) - (86400 * 24);
+        long startStamp = Long.parseLong(DateUtil.getYesterdayEightStamp()) - (86400 * 180);
 
         List<Object> result = new ArrayList<>();
         StringBuilder sbKey = new StringBuilder();
@@ -51,7 +51,7 @@ public class KLineDataServiceImpl implements KLineDataService {
         // 结束时间 当前
         long nowStamp = Long.parseLong(DateUtil.getYesterdayHourStamp());
         // 开始时间
-        long startStamp = nowStamp - (3600 * 24);
+        long startStamp = nowStamp - (3600 * 144);
 
         List<Object> result = new ArrayList<>();
         StringBuilder sbKey = new StringBuilder();
@@ -77,7 +77,7 @@ public class KLineDataServiceImpl implements KLineDataService {
         // 结束时间 当前
         long nowStamp = Long.parseLong(DateUtil.getYesterdayMinuteStamp());
         // 开始时间
-        long startStamp = nowStamp - 3600;
+        long startStamp = nowStamp - 21600;
 
         List<Object> result = new ArrayList<>();
         StringBuilder sbUserKey = new StringBuilder();
