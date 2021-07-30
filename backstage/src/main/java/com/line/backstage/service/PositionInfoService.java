@@ -1,8 +1,11 @@
 package com.line.backstage.service;
  
 import com.line.backstage.entity.PositionInfo;
+import com.line.backstage.entity.sysentity.ManPosiVo;
 import com.line.backstage.utils.PageWrapper;
- 
+
+import java.util.List;
+
 /**
  * 用户持仓信息(PositionInfo)表服务实现类
  *
@@ -54,7 +57,8 @@ public interface PositionInfoService {
      * @return 实例对象
      */
     PositionInfo queryById(Integer positionId);
- 
+
+    PageWrapper<ManPosiVo>  queryManPosiVo(Integer loginUserId,ManPosiVo vo);
     /**
      * 查询多条数据
      *

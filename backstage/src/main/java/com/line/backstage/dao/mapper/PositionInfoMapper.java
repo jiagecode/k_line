@@ -2,6 +2,7 @@ package com.line.backstage.dao.mapper;
  
 import com.line.backstage.bases.TkBaseMapper;
 import com.line.backstage.entity.PositionInfo;
+import com.line.backstage.entity.sysentity.ManPosiVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,5 +18,11 @@ public interface PositionInfoMapper extends TkBaseMapper<PositionInfo> {
 
     List<PositionInfo> selectForPage(@Param("userId") Integer userId, @Param("del") Integer del,@Param("pst")Integer pst);
 
+    /**
+     * 查询持仓
+     * @param vo
+     * @return
+     */
+    List<ManPosiVo> queryManPosiVo(ManPosiVo vo);
     Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
 }

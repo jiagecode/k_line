@@ -1,6 +1,7 @@
 package com.line.backstage.service.impl;
 
 import com.line.backstage.entity.PositionInfo;
+import com.line.backstage.entity.sysentity.ManPosiVo;
 import com.line.backstage.enums.DataEnum;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.dao.mapper.PositionInfoMapper;
@@ -8,6 +9,7 @@ import com.line.backstage.service.PositionInfoService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -101,6 +103,14 @@ public class PositionInfoServiceImpl implements PositionInfoService {
     @Override
     public PositionInfo queryById(Integer positionId) {
         return positionInfoMapper.selectByPrimaryKey(positionId);
+    }
+
+    @Override
+    public PageWrapper<ManPosiVo>  queryManPosiVo(Integer loginUserId, ManPosiVo vo) {
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
+        PageInfo<ManPosiVo> page = new PageInfo<>(positionInfoMapper.queryManPosiVo(vo));
+        PageHelper.clearPage();
+        return new PageWrapper<>(page);
     }
 
     /**

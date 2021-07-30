@@ -136,6 +136,14 @@ export function changeUser(data) {
     data:data
   })
 }
+//查询持仓
+export function pullPosList(data) {
+  return request({
+    url: '/positionInfo/pullList',
+    method: 'post',
+    data:data
+  })
+}
 //更新用户类型
 export function changeUserType(data) {
   return request({

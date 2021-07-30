@@ -24,7 +24,37 @@
         <result property="del" column="DEL" jdbcType="OTHER"/>
         <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
     </resultMap>
+    <resultMap type="com.line.backstage.entity.sysentity.ManPosiVo" id="PositionInfoVo">
+        <result property="positionId" column="POSITION_ID" jdbcType="INTEGER"/>
+        <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
+        <result property="positionStatus" column="POSITION_STATUS" jdbcType="INTEGER"/>
+        <result property="skuName" column="SKU_NAME" jdbcType="VARCHAR"/>
+        <result property="investType" column="INVEST_TYPE" jdbcType="INTEGER"/>
+        <result property="beaginPrice" column="BEAGIN_PRICE" jdbcType="NUMERIC"/>
+        <result property="nowPrice" column="NOW_PRICE" jdbcType="NUMERIC"/>
+        <result property="endPrice" column="END_PRICE" jdbcType="NUMERIC"/>
+        <result property="investAmount" column="INVEST_AMOUNT" jdbcType="NUMERIC"/>
+        <result property="beginDate" column="BEGIN_DATE" jdbcType="TIMESTAMP"/>
+        <result property="endDate" column="END_DATE" jdbcType="TIMESTAMP"/>
+        <result property="incomeAmount" column="INCOME_AMOUNT" jdbcType="NUMERIC"/>
+        <result property="incomeFlage" column="INCOME_FLAGE" jdbcType="INTEGER"/>
+        <result property="addDate" column="ADD_DATE" jdbcType="TIMESTAMP"/>
+        <result property="editDate" column="EDIT_DATE" jdbcType="TIMESTAMP"/>
+        <result property="endAmout" column="END_AMOUT" jdbcType="NUMERIC"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+        <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
 
+        <result property="userRealName" column="USER_REAL_NAME" jdbcType="VARCHAR"/>
+        <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
+        <result property="orderId" column="ORDER_ID" jdbcType="INTEGER"/>
+        <result property="winFlag" column="WIN_FLAG" jdbcType="INTEGER"/>
+        <result property="agentId" column="AGENT_ID" jdbcType="INTEGER"/>
+        <result property="orderCycle" column="ORDER_CYCLE" jdbcType="INTEGER"/>
+        <result property="expectedReturn" column="EXPECTED_RETURN" jdbcType="NUMERIC"/>
+        <result property="settlementDate" column="SETTLEMENT_DATE" jdbcType="TIMESTAMP"/>
+    </resultMap>
     <update id="updateForDiy" parameterType="java.lang.Integer" >
         update t_position_info set DEL = #{del} ,EDIT_USER_ID = #{sysUserId},EDIT_DATE = now()
         WHERE USER_ID = #{userId} AND DIY_ID = #{diyId}
@@ -37,5 +67,28 @@
         select * from  t_position_info
         WHERE USER_ID = #{userId} and DEL = #{del} and POSITION_STATUS = #{pst}
         order by POSITION_ID desc
+    </select>
+
+    <select id="queryManPosiVo" parameterType="com.line.backstage.entity.sysentity.ManPosiVo" resultMap="PositionInfoVo">
+        SELECT p.POSITION_ID,p.USER_ID,p.POSITION_STATUS,p.SKU_NAME,p.INVEST_TYPE,p.BEAGIN_PRICE,p.NOW_PRICE,p.END_PRICE,
+               p.INVEST_AMOUNT,p.BEGIN_DATE,p.END_DATE,p.INCOME_AMOUNT,p.INCOME_FLAGE,p.EDIT_DATE,p.END_AMOUT,p.ADD_USER_ID,
+               p.EDIT_USER_ID,p.DEL,o.ORDER_ID,o.ORDER_CYCLE,o.SETTLEMENT_DATE,o.EXPECTED_RETURN,o.WIN_FLAG,u.USER_REAL_NAME,u.AGENT_ID,u.AGENT_NAME
+        FROM t_position_info p
+                 LEFT join t_order_info o on p.POSITION_ID = o.POSITION_ID
+                 LEFT join t_user_info u on p.USER_ID = u.user_id
+        WHERE p.POSITION_STATUS = 1 and p.DEL =1 and o.ORDER_STATUS = 1
+        <if test=" agentId != null ">
+            and u.AGENT_ID =  #{agentId}
+        </if>
+        <if test=" userId != null ">
+            and p.USER_ID =  #{userId}
+        </if>
+          <if test=" orderCycle != null ">
+            and o.ORDER_CYCLE =  #{orderCycle}
+        </if>
+        <if test=" userId != null ">
+            and o.ORDER_ID =  #{orderId}
+        </if>
+        order by p.POSITION_ID desc
     </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.line.backstage.controller;
 
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.PositionInfo;
+import com.line.backstage.entity.sysentity.ManPosiVo;
 import com.line.backstage.service.PositionInfoService;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
@@ -79,6 +80,12 @@ public class PositionInfoController {
     @ApiOperation(value = "列表", notes = "查询用户持仓信息的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户持仓信息对象", required = true) @RequestBody PositionInfo positionInfo) {
         return ResponseHelper.success(positionInfoService.list(Integer.valueOf(loginUserId), positionInfo));
+    }
+
+    @PostMapping("pullList")
+    @ApiOperation(value = "列表", notes = "持仓信息的多条数据")
+    public ResponseModel pullList(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户持仓", required = true) @RequestBody ManPosiVo positionInfo) {
+        return ResponseHelper.success(positionInfoService.queryManPosiVo(Integer.valueOf(loginUserId), positionInfo));
     }
  
 }
