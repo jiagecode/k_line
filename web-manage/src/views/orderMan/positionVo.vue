@@ -3,6 +3,42 @@
     <div class="app-box">
       <div class="app-box-tab">
         <div class="app-box-title">用户持仓</div>
+        <div class="app-box-changeBox" style="margin-top: -8px;">
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt">代理商：</div>
+            <el-select v-model="form.userAgentId"  placeholder="请选择代理">
+              <el-option
+                v-for="item in agentOpt"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt" style="width: 55px;">用户ID：</div>
+            <div style="width: 150px;"><el-input placeholder="请输入用户ID" v-model="input1"></el-input></div>
+          </div>
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt" style="width: 40px;">用户：</div>
+            <el-input placeholder="请输入姓名" v-model="input3"></el-input>
+          </div>
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt" style="width: 55px;">订单：</div>
+            <div style="width: 150px;"><el-input placeholder="请输入订单号" v-model="input2"></el-input></div>
+          </div>
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt" style="width: 55px;">输赢：</div>
+            <el-select v-model="region2" placeholder="选择输赢">
+              <el-option label="未知" value="0"></el-option>
+              <el-option label="赢" value="1"></el-option>
+              <el-option label="输" value="2"></el-option>
+            </el-select>
+          </div>
+          <div class="app-btn-box" style="margin-right: 15px;">
+            <el-button type="primary" icon="el-icon-search" @click="seeOther">查找</el-button>
+            <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
+          </div>
+        </div>
         <div class="app-tab-box">
           <el-table
             :data="recordDataList.list"
@@ -102,7 +138,7 @@
 </template>
 
 <script>
-import {pullPosList, editWinFlag} from '@/api/adminUser'
+import {pullPosList, editWinFlag, queryOptData1} from '@/api/adminUser'
 
 export default {
   name: 'posiVo',
@@ -111,8 +147,10 @@ export default {
       value1: '',
       value2: '',
       currentPage: 1,
+      input1: undefined,
       input2: undefined,
-      region: '',
+      input3: undefined,
+      region: undefined,
       region2: undefined,
       tabHead: [
         {
@@ -159,14 +197,52 @@ export default {
           prop: 'winFlag'
         }
       ],
+      agentOpt:[],
+      form:{userAgentId:''},
       recordDataList: ''
     }
   },
   created() {
     this.queryRecordDataList()
+    this.queryOptData1Met();
   },
   methods: {
 
+    seeOther(){
+      var data={
+        agentId :this.form.userAgentId,
+        userId :this.input1,
+        userRealName:this.input2,
+        orderId :this.input3,
+        winFlag:this.region2,
+        pageNum: this.currentPage
+      }
+      pullPosList(data).then(res => {
+        if (res.code == 10000) {
+          this.recordDataList = res.data
+        } else {
+          this.$message.error(res.message)
+        }
+
+      })
+    },
+    seeAll(){
+      this.form.userAgentId =undefined,
+        this.input1 =undefined,
+        this.input2 =undefined,
+        this.input3 =undefined,
+        this.region2 =undefined,
+        this.queryRecordDataList();
+    },
+    queryOptData1Met(){
+      queryOptData1().then(res =>{
+        if (res.code == 10000) {
+          this.agentOpt = res.data;
+        }else {
+          this.$message.error(res.message)
+        }
+      })
+    },
     changeWin(winFlag, orderId) {
       // console.log(row)
       this.$confirm('此操作改变此订单输赢结果, 是否继续?', '提示', {

@@ -83,11 +83,17 @@
         <if test=" userId != null ">
             and p.USER_ID =  #{userId}
         </if>
+        <if test="userRealName != null and userRealName != ''">
+            and u.USER_REAL_NAME like concat('%', #{userRealName}, '%')
+        </if>
           <if test=" orderCycle != null ">
             and o.ORDER_CYCLE =  #{orderCycle}
         </if>
-        <if test=" userId != null ">
+        <if test=" orderId != null ">
             and o.ORDER_ID =  #{orderId}
+        </if>
+        <if test=" winFlag != null ">
+            and o.WIN_FLAG =  #{winFlag}
         </if>
         order by p.POSITION_ID desc
     </select>
