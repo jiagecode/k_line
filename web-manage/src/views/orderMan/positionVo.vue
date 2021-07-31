@@ -64,6 +64,20 @@
 <!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
               </template>
             </el-table-column>
+            <el-table-column
+              label="操作"
+              width="300">
+              <template slot-scope="scope">
+                <div style="display: flex; justify-content: flex-start;">
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 1"
+                             @click="changeWin(1, scope.row.orderId)">控赢
+                  </el-button>
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 2"
+                             @click="changeWin(2, scope.row.orderId)">控输
+                  </el-button>
+                </div>
+              </template>
+            </el-table-column>
           </el-table>
           <div class="pageBox">
             <div class="block">
@@ -88,7 +102,7 @@
 </template>
 
 <script>
-import {pullPosList} from '@/api/adminUser'
+import {pullPosList, editWinFlag} from '@/api/adminUser'
 
 export default {
   name: 'posiVo',
@@ -153,6 +167,35 @@ export default {
   },
   methods: {
 
+    changeWin(winFlag, orderId) {
+      // console.log(row)
+      this.$confirm('此操作改变此订单输赢结果, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        var data={winFlag:winFlag,
+        orderId:orderId}
+        editWinFlag(data).then(res=>{
+          if (res.code == 10000) {
+            var re = res.data;
+            if(re ==1){
+              this.$message.info('调整成功');
+            }else if(re == -2){
+              this.$message.error('订单已结算无法调整');
+            }
+          }else {
+            this.$message.error('调整失败')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     showDesc(type,val){
       if(type == 1){
         return val == 1? "买涨":"买跌";

@@ -143,6 +143,13 @@ export function pullPosList(data) {
     method: 'post',
     data:data
   })
+}//查询持仓
+export function editWinFlag(data) {
+  return request({
+    url: '/orderInfo/editForWin',
+    method: 'post',
+    data:data
+  })
 }
 //更新用户类型
 export function changeUserType(data) {

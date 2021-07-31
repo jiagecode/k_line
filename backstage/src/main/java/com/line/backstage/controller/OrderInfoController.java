@@ -45,6 +45,12 @@ public class OrderInfoController {
         Map<String,Object> map = orderInfoService.insertForBuy(Integer.valueOf(loginUserId), orderInfo);
         return ResponseHelper.success(map);
     }
+
+    @PostMapping("editForWin")
+    @ApiOperation(value = "调整输赢", notes = "新增/修改订单信息的一条数据")
+    public ResponseModel editForWin(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单信息对象", required = true) @RequestBody @Validated OrderInfo orderInfo) {
+     return ResponseHelper.success(orderInfoService.editForWin(Integer.valueOf(loginUserId),orderInfo));
+    }
  
     /**
      * 通过主键删除数据

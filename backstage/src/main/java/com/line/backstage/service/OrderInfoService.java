@@ -21,7 +21,15 @@ public interface OrderInfoService {
      * @return 是否成功
      */
     int save(Integer loginUserId, OrderInfo orderInfo);
- 
+
+    /**
+     * 后台管控胜率
+     * @param loginUserId
+     * @param orderInfo
+     * @return
+     */
+    int editForWin(Integer loginUserId, OrderInfo orderInfo);
+
     /**
      * 新增数据
      *

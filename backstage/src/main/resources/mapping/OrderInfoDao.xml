@@ -86,7 +86,10 @@
         left join t_account_info a on u.USER_ID = a.USER_ID
         where o.ORDER_ID = #{orderId}
     </select>
-
+    <update id="updateForWin" parameterType="com.line.backstage.entity.OrderInfo">
+        update t_order_info set WIN_FLAG = #{winFlag} ,OUT_POINT = #{outPoint}
+        where ORDER_ID = #{orderId} and DEL = 1 AND ORDER_STATUS = 1
+    </update>
     <select id="queryManOrderVoForPage" parameterType="com.line.backstage.entity.sysentity.ManOrderVo" resultMap="ManOrderVoInfoMap">
         select <include refid="orderInfo_Column_List"/>
         from (SELECT * FROM t_account_record WHERE del = 1 and RECORD_TYPE >2 ) re
