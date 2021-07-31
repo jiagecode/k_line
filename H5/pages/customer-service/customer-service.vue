@@ -11,11 +11,15 @@
 				<text style="width: 83.4%; margin-left: 2.6%; font-weight: bold;" space="emsp">特别提示：平台将不定期更换卡号，请仔细核对充值的银行卡号，如因客户转账银行错误导致无法充值平台概不负责。</text>
 			</view>
 			<scroll-view v-for="(item,index) in msgList" :key="index">
-				<view class="d-flex j-end font-mdd" v-show="item.type === 'user'" style="margin-top: 20rpx;">
-					<view class="d-flex j-end" style="width: 80%;">{{item.msg}}</view>
+				<view class="d-flex j-end font-mdd" v-if="item.type === 'user' && item.msgType === 'text'" style="margin-top: 20rpx;">
+					<view v-if="item.msgType === 'text'" class="d-flex j-end" style="width: 80%;">{{item.msg}}</view>
 					<view>：我</view>
 				</view>
-				<view class="d-flex font-mdd" v-show="item.type === 'server'" style="margin-top: 20rpx;">
+				<view class="d-flex j-end" v-if="item.type === 'user' && item.msgType === 'img'" style="margin-top: 20rpx;">
+					<view class="d-flex a-end" style="width: 80%; background-color: #f4f4f4;" @tap="showImg(item.msg)"><image class="v-img" :src="item.msg" mode="aspectFit" /></view>
+					<view>：我</view>
+				</view>
+				<view class="d-flex font-mdd" v-if="item.type === 'server'" style="margin-top: 20rpx;">
 					<view>客服：</view>
 					<view style="width: 80%; color: #0078f8;">{{item.msg}}</view>
 				</view>
@@ -29,19 +33,27 @@
 		</view>
 		<view class="d-flex a-center" style="height: 8%; margin-top: -3%;">
 			<uni-easyinput type="textarea" autoHeight clearable :inputBorder="false" placeholder="请写下你的问题" v-model="msg" />
-			<button class="d-flex j-center a-center font-md" style="width: 18%; background-color: #5586d3; color: #FFFFFF;" @tap="send">发送</button>
+			<button v-show="msg === ''" class="d-flex j-center a-center font-md" style="background-color: #5586d3; color: #FFFFFF;" @tap="selectImage">+</button>
+			<button v-show="msg !== ''" class="d-flex j-center a-center font-md" style="width: 18%; background-color: #5586d3; color: #FFFFFF;" @tap="send">发送</button>
 		</view>
 	</view>
 </template>
 
 <script>
 	import https from '../../api/api.js'
+	import robbyImageUpload from '@/components/robby-image-upload/robby-image-upload.vue'
+
 	export default {
+	    components: {robbyImageUpload},
 		data(){
 			return{
-				msg:"",
+				imageList:[],
+				msg:'',
+				imageData:[],
 				msgList:[],
 				serviceList:[],
+				moveImagePath: '',
+				showMoveImage:true,
 				isShow:true,
 				socketTask: null,
 				// 确保websocket是打开状态
@@ -163,7 +175,7 @@
                         },
                     })
 				
-					this.msgList.push({"type" : "user", "msg" : this.msg});
+					this.msgList.push({"type" : "user", "msgType" : "text", "msg" : this.msg});
 
 					// 处理消息盒子
 					if(this.msgList.length > 6){
@@ -185,11 +197,62 @@
 				this.isShow = !this.isShow;
 				uni.setStorageSync('serviceId', this.serviceId);
 				this.msgList.push({"type" : "server", "msg" : e.name + '很高兴为您服务！'});
+			},
+			
+			/**
+			 * 选择图片
+			 */
+			selectImage(){
+				let _this = this;
+                if (_this.is_open_socket) {
+					if(_this.serviceId === undefined){
+						uni.showToast({
+							title: '请先选择客服',
+							duration: 1000,
+							icon:'error'
+						})
+						return;
+					}
+					uni.chooseImage({
+						count: 1, //默认9
+						sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+						sourceType: ['album'], // 从相册选择
+						success: function (res) {
+							_this.msgList.push({"type" : "user", "msgType" : "img", "msg" : res.tempFilePaths[0]});
+						}
+					})
+					
+					// 获取图片大小
+					// console.log(document.getElementsByClassName("v-img"));
+					// document.getElementById("t_highday")
+				}
+			},
+			/**
+			 * 预览图片
+			 */
+			showImg(url){
+				// 预览图片
+				uni.previewImage({
+					urls: [url],
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							console.log('预览图片成功');
+						},
+						fail: function(err) {
+							console.log(err.errMsg);
+						}
+					}
+				});
 			}
 		}
 	}
 </script>
 
 <style>
+	
+	.moveImage{
+		position: absolute;
+	}
 
 </style>

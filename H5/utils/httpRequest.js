@@ -1,8 +1,7 @@
 
 // 请求跟地址
 // const baseUrl = 'h5'
-const baseUrl = 'http://192.168.66.104:1686/study'
-// const baseUrl = 'http://192.168.1.7:1686/study'
+const baseUrl = 'http://192.168.1.9:1686/study'
 
 /*
 	method: get post
@@ -11,11 +10,8 @@ const baseUrl = 'http://192.168.66.104:1686/study'
 */
 const doRequest = (method, url, data) => {
 	
-    uni.showLoading({title: '加载中', mask: true});
+    // uni.showLoading({title: '加载中', mask: true});
     return new Promise((resolve, reject) => {
-		
-		// 验证token
-        // console.log("验证token:" + uni.getStorageSync('token'));
 		
         uni.request({
             url: baseUrl + url,
@@ -26,7 +22,7 @@ const doRequest = (method, url, data) => {
                 Authorization: uni.getStorageSync('token')
             },
             success:(res)=> {
-				uni.hideLoading();
+				// uni.hideLoading();
                 if (res.data.code === 10000) {
 					// resolve调用即可传递到调用方使用 then
 					// 或者 async+await 同步方式进行处理逻辑
@@ -40,7 +36,7 @@ const doRequest = (method, url, data) => {
 				}
             },
             fail:(err)=> {
-                uni.hideLoading();
+                // uni.hideLoading();
                // reject调用即可传递到调用方使用 catch
 			   // 或者async+await同步方式进行处理逻辑
 				reject(res);

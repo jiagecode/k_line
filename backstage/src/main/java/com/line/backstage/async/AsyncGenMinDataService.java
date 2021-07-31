@@ -42,11 +42,11 @@ public class AsyncGenMinDataService {
             tempPriceNowPrice = afterNowPrice.subtract(beforeNowPrice).setScale(5, BigDecimal.ROUND_HALF_UP);
 
             Random random = new Random();
-            int s;
             // 每秒
             for (int j = 1; j <= 60; j++) {
                 // 权重比2 看涨
-                s = random.nextInt(3);
+                int s = random.nextInt(3);
+                int r = random.nextInt(15);
                 BigDecimal divide = tempPriceNowPrice.divide(BigDecimal.valueOf(60 - j + 1), 5, BigDecimal.ROUND_HALF_UP);
                 if (tempPriceNowPrice.compareTo(BigDecimal.ZERO) < 0) {
                     if (s == 2 || s == 0) {
@@ -77,8 +77,8 @@ public class AsyncGenMinDataService {
 
                 double volumeFrom = mainDate.get("volumeFrom").asDouble();
                 BigDecimal big_from = BigDecimal.valueOf(volumeFrom);
-                BigDecimal decimal_60 = BigDecimal.valueOf(s + 1);
-                BigDecimal vf = s > 1 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.multiply(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
+                BigDecimal decimal_60 = BigDecimal.valueOf(r + 1);
+                BigDecimal vf = r > 5 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.subtract(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
                 temp.setVolumeFrom(vf.doubleValue());
                 redisUtil.set(beforeOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), 0);
             }
@@ -88,44 +88,50 @@ public class AsyncGenMinDataService {
 
     public static void main(String[] args) {
 
-        System.out.println(BigDecimal.valueOf(2).divide(BigDecimal.valueOf(10)));
+//        System.out.println(BigDecimal.valueOf(2).divide(BigDecimal.valueOf(10)));
         BigDecimal beforeNowPrice = BigDecimal.valueOf(15909);
         BigDecimal afterNowPrice = BigDecimal.valueOf(15929);
+        BigDecimal big_from = BigDecimal.valueOf(34.14);
         BigDecimal tempPriceNowPrice = afterNowPrice.subtract(beforeNowPrice).setScale(5, BigDecimal.ROUND_HALF_UP);
 
         Random random = new Random();
         // 每秒
         int x = 0;
         int y = 0;
-//        for (int j = 1; j <= 60; j++) {
-//            // 权重比2 看涨
-//            int s = random.nextInt(3);
-//            BigDecimal divide = tempPriceNowPrice.divide(BigDecimal.valueOf(60 - j + 1), 5, BigDecimal.ROUND_HALF_UP);
-//            if (tempPriceNowPrice.compareTo(BigDecimal.ZERO) < 0) {
+        for (int j = 1; j <= 60; j++) {
+            // 权重比2 看涨
+            int r = random.nextInt(10);
+            int s = random.nextInt(3);
+            BigDecimal divide = tempPriceNowPrice.divide(BigDecimal.valueOf(60 - j + 1), 5, BigDecimal.ROUND_HALF_UP);
+            if (tempPriceNowPrice.compareTo(BigDecimal.ZERO) < 0) {
 //                System.out.println("目标金额小于变动金额");
-//                if (s == 2 || s == 0) {
-//                    y+=1;
-//                    beforeNowPrice = beforeNowPrice.add(divide);
-//                } else {
-//                    x+=1;
-//                    beforeNowPrice = beforeNowPrice.subtract(divide);
-//                }
-//            } else {
+                if (s == 2 || s == 0) {
+                    y+=1;
+                    beforeNowPrice = beforeNowPrice.add(divide);
+                } else {
+                    x+=1;
+                    beforeNowPrice = beforeNowPrice.subtract(divide);
+                }
+            } else {
 //                System.out.println("目标金额大于变动金额");
-//                if (s == 2 || s == 0) {
-//                    x+=1;
-//                    beforeNowPrice = beforeNowPrice.add(divide);
-//                } else {
-//                    y+=1;
-//                    beforeNowPrice = beforeNowPrice.subtract(divide);
-//                }
-//            }
-//            tempPriceNowPrice = afterNowPrice.subtract(beforeNowPrice).setScale(5, BigDecimal.ROUND_HALF_UP);
-////            System.out.println("第秒" + j + "-目标金额" + afterNowPrice + "；变动金额" + beforeNowPrice + "；差值" + tempPriceNowPrice);
+                if (s == 2 || s == 0) {
+                    x+=1;
+                    beforeNowPrice = beforeNowPrice.add(divide);
+                } else {
+                    y+=1;
+                    beforeNowPrice = beforeNowPrice.subtract(divide);
+                }
+            }
+            tempPriceNowPrice = afterNowPrice.subtract(beforeNowPrice).setScale(5, BigDecimal.ROUND_HALF_UP);
+//            System.out.println("第秒" + j + "-目标金额" + afterNowPrice + "；变动金额" + beforeNowPrice + "；差值" + tempPriceNowPrice);
 //            System.out.println("第秒" + j + "-目标金额" + afterNowPrice + " " + beforeNowPrice + " " + tempPriceNowPrice);
-//        }
-        System.err.println(" " + afterNowPrice + " " + beforeNowPrice + " " + tempPriceNowPrice);
-        System.err.println(" 变动金额加了" + x + "变动金额减了 " + y);
+            BigDecimal decimal_60 = BigDecimal.valueOf(r + 1);
+            BigDecimal vf = r > 5 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.subtract(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
+            System.out.println("s为：" + r + "用60为：" + big_from + " / " + decimal_60 + " 结果为：" + vf);
+//            System.err.println("成交量" + vf);
+        }
+//        System.err.println(" " + afterNowPrice + " " + beforeNowPrice + " " + tempPriceNowPrice);
+//        System.err.println(" 变动金额加了" + x + "变动金额减了 " + y);
     }
 
 }

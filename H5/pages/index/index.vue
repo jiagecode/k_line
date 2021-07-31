@@ -106,7 +106,7 @@
 </template>
 
 <script>
-//import https from "../../api/api";
+	import https from '../../api/api.js'
 
 export default {
   data() {
@@ -118,18 +118,25 @@ export default {
   },
   onLoad() {
     var token = uni.getStorageSync('token');
-    var uData = uni.getStorageSync('userInfo');
     // 非法访问，请重新登录
-    if (token === null || token === undefined || token === '' || uData === null) {
+    if (token === null || token === undefined || token === '') {
       // 跳转页面
       uni.reLaunch({
         url: '../login/login'
       });
     }
-    this.userData = uData;
-    //console.log("缓存的用户信息:"+uData);
   },
   methods: {
+	loadData(){
+		// 请求用户信息
+		https.getUserInfo().then((res)=> {
+			// 数据请求完成之后停止下拉刷新
+			uni.stopPullDownRefresh();
+			this.userData = res;
+			// 缓存用户信息
+			uni.setStorageSync('userInfo', res);
+		});
+	},
     showUserHeadImg(headImg) {
       if (headImg === null || headImg === '' || headImg === undefined) {
         return this.defaultHedImg;
@@ -170,7 +177,16 @@ export default {
   },
   onShow() {
     document.title = '币安秒合约';
-  }
+	this.loadData();
+  },
+// 监听下拉刷新动作的执行方法，每次手动下拉刷新都会执行一次
+onPullDownRefresh() {
+	this.loadData();
+	uni.showToast({
+		title: '刷新成功！',
+		duration: 500
+	})
+}
 }
 </script>
 

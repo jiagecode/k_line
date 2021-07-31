@@ -42,7 +42,7 @@
 				"navigationBarTextStyle":"white",
 				"navigationBarBackgroundColor": "#5586d3",
 				// 开启下拉刷新
-				"enablePullDownRefresh":false
+				"enablePullDownRefresh":true
 			}
 		},
 		// {
