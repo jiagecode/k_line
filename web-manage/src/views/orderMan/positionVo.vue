@@ -213,7 +213,7 @@ export default {
     }
   },
   created() {
-    this.queryRecordDataList()
+    this.queryRecordDataList();
     this.queryOptData1Met();
   },
   methods: {
