@@ -86,7 +86,7 @@
         <if test="userRealName != null and userRealName != ''">
             and u.USER_REAL_NAME like concat('%', #{userRealName}, '%')
         </if>
-          <if test=" orderCycle != null ">
+        <if test=" orderCycle != null and orderCycle != 0 ">
             and o.ORDER_CYCLE =  #{orderCycle}
         </if>
         <if test=" orderId != null ">

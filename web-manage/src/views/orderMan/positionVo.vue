@@ -34,6 +34,15 @@
               <el-option label="输" value="2"></el-option>
             </el-select>
           </div>
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt" style="width: 55px;">周期：</div>
+            <el-select v-model="region3" placeholder="选择订单周期">
+              <el-option label="全部" value="0"></el-option>
+              <el-option label="30秒" value="30"></el-option>
+              <el-option label="60秒" value="60"></el-option>
+              <el-option label="180秒" value="180"></el-option>
+            </el-select>
+          </div>
           <div class="app-btn-box" style="margin-right: 15px;">
             <el-button type="primary" icon="el-icon-search" @click="seeOther">查找</el-button>
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
@@ -79,7 +88,7 @@
                 <span v-if="item.prop==='beaginPrice'">
                              {{ scope.row.beaginPrice }}
                 </span>
-                <span v-if="item.prop==='beginDate'">
+                <span v-if="item.prop==='beginDate'" >
                              {{ scope.row.beginDate }}
                 </span>
                 <span v-if="item.prop==='orderCycle'">
@@ -102,7 +111,7 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="300">
+              width="200">
               <template slot-scope="scope">
                 <div style="display: flex; justify-content: flex-start;">
                   <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 1"
@@ -152,6 +161,7 @@ export default {
       input3: undefined,
       region: undefined,
       region2: undefined,
+      region3: undefined,
       tabHead: [
         {
           label: '持仓编号',
@@ -215,6 +225,7 @@ export default {
         userRealName:this.input2,
         orderId :this.input3,
         winFlag:this.region2,
+        orderCycle:this.region3,
         pageNum: this.currentPage
       }
       pullPosList(data).then(res => {
@@ -232,6 +243,7 @@ export default {
         this.input2 =undefined,
         this.input3 =undefined,
         this.region2 =undefined,
+        this.region3 =undefined,
         this.queryRecordDataList();
     },
     queryOptData1Met(){
@@ -289,7 +301,7 @@ export default {
         pageNum: this.currentPage
       }
       pullPosList(data).then(res => {
-        console.log(res)
+       // console.log(res)
         if (res.code == 10000) {
           this.recordDataList = res.data
         } else {
