@@ -117,7 +117,7 @@
 					}
 					let a = {"userType": "user", "sid": null, "content": "当前在线客服繁忙，请稍后再试"};
 					// 发送给客户端
-					_this.socketMsg = '{"msdToUserType":"sys","msdToSid":"' +  res.data.msdToSid + '","content":"' + res.data.content + '"}';
+					_this.socketMsg = '{"msdToUserType":"sys", "msgType":"text", "msdToSid":"' +  res.data.msdToSid + '","content":"' + res.data.content + '"}';
 					// H5消息对象
 					if(res.data.msdToUserType === 'serviceList'){
 						// serviceList赋值
@@ -166,7 +166,7 @@
 						})
 						return;
 					}
-					let socketMsg = '{"msdToUserType":"sys","msdToSid":"' + this.serviceId + '","content":"' + this.msg + '"}';
+					let socketMsg = '{"msdToUserType":"sys", "msgType":"text","msdToSid":"' + this.serviceId + '","content":"' + this.msg + '"}';
                     // websocket的服务器的原理是:发送一次消息,同时返回一组数据【否则服务器会进去死循环崩溃】
                     this.socketTask.send({
                         data: socketMsg,
@@ -228,48 +228,37 @@
 							// 新增消息
 							_this.msgList.push({"type" : "user", "msgType" : "img", "msg" : filePaths});
 							
+							console.log(filePaths);
 							// 上传图片
 							uni.uploadFile({
 								url : https.getUploadFileUrl(),
 								header: {
 									Authorization: uni.getStorageSync('token')
 								},
-								formData: {
-									'user': 'test'
-								},
 								fileType : 'image',
 								filePath : filePaths, 
-								name : keyName,
+								name : 'file',
 								success: function(res){
-									console.log('success');
-									console.log(res);
-									// if(res.statusCode === 200){
-									// 	if(_self.isDestroyed){
-									// 		return
-									// 	}
-										
-									// 	completeImages ++
-										
-									// 	if(_self.showUploadProgress){
-									// 		uni.showToast({
-									// 			title: '上传进度：' + completeImages + '/' + imagePathArr.length,
-									// 			icon: 'none',
-									// 			mask: false,
-									// 			duration: 500
-									// 		});
-									// 	}
-									// 	console.log('success to upload image: ' + res.data)
-									// 	resolve(res.data)
-									// }else{
-									// 	console.log('fail to upload image:'+res.data)
-									// 	reject('fail to upload image:' + remoteUrlIndex)
-									// }
+									
+									var str = res.data;
+									// 字符串转json对象
+									var jsonStr = str.replace(" ", ""); 
+									if (typeof jsonStr != 'object') {
+										jsonStr = jsonStr.replace(/\ufeff/g, "");//重点 
+										var jj = JSON.parse(jsonStr); 
+										res.data = jj; 
+									}
+									
+									let socketMsg = '{"msdToUserType":"sys", "msgType":"img", "msdToSid":"' + _this.serviceId + '","content":"' + res.data.data + '"}';
+									_this.socketTask.send({
+									    data: socketMsg,
+									    async success() {
+									        console.log("消息发送成功");
+									    },
+									})
 								},
 								fail: function(res){
-									console.log('fail');
 									console.log(res);
-									// console.log('fail to upload image:'+res)
-									// reject('fail to upload image:' + remoteUrlIndex)
 								}
 							})
 						}

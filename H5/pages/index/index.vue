@@ -59,13 +59,13 @@
 		</view>
 	</navigator>
 	
-	<!-- 商务合作 -->
+	<!-- 商务合作
 	<navigator url="../cooperation/cooperation" hover-class="none" style="border-bottom: solid #d8d8d8 1rpx;">
       <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">
 			<image style="width: 50rpx; height: 50rpx;" src="/static/hz.png"/>
 			<text style="margin-left: 20rpx;">商务合作</text>
 		</view>
-	</navigator>
+	</navigator> -->
       <!-- 下载App 
     <view style="border-bottom: solid #d8d8d8 1rpx;" @click="kf()">
       <view class="d-flex a-center" style="margin-left: 40rpx; height: 100rpx;">

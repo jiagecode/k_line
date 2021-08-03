@@ -73,7 +73,10 @@
                 <div class="d-flex a-center" style="margin-top: 20px;" v-show="item.type === 'user'">
                   <img class="kf-img" style="width: 30px; height: 30px;"
                        :src="require('@/assets/im_client_avatar.png')"/>
-                  <div style="width: 80%; height:auto; margin-left: 20px;">
+                  <div v-show="item.msgType === 'img'" style="width: 80%; height:auto; margin-left: 20px;">
+                    <img src="item.msg"/>
+                  </div>
+                  <div v-show="item.msgType === 'text'" style="width: 80%; height:auto; margin-left: 20px;">
                     {{ item.msg }}
                   </div>
                 </div>
@@ -238,9 +241,8 @@ export default {
      * 初始化ws
      */
     wsInit() {
-      // const wsuri = 'ws://10.229.36.158:7777/websocket/badao'
-      // console.log(store.getters.account);
-      const wsUrl = 'ws://192.168.1.9:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
+      // const wsUrl = 'ws://192.168.1.9:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
+      const wsUrl = 'ws://108.160.143.167:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
       this.ws = wsUrl
       if (!this.wsIsRun) return
       // 销毁ws
@@ -277,7 +279,7 @@ export default {
       let str = e.data
       let jsonStr = str.replace(" ", "");
       if (typeof jsonStr != 'object') {
-        jsonStr = jsonStr.replace(/\ufeff/g, "");//重点
+        jsonStr = jsonStr.replace(/\ufeff/g, ""); // 重点
         let jj = JSON.parse(jsonStr);
         str = jj;
       }
@@ -294,7 +296,7 @@ export default {
           userId : info[0],
           userName : info[1],
           msgSize : 1,
-          userListMsg:[{'type': 'user', 'msg': str.content, 'createDate': null}],
+          userListMsg:[{'type': 'user', "msgType": str.msgType, 'msg': str.content, 'createDate': null}],
           isShow:true,
           createDate:new Date(str.createDate).toLocaleString()
         })
@@ -307,7 +309,7 @@ export default {
             // 消息数自增
             u.msgSize = u.msgSize + 1;
             // 新消息追加
-            u.userListMsg.push({'type': 'user', 'msg': str.content, 'createDate': null});
+            u.userListMsg.push({'type': 'user', "msgType": str.msgType, 'msg': str.content, 'createDate': null});
             // 更新最新消息时间
             u.createDate = new Date(str.createDate).toLocaleString()
             // 显示消息数
@@ -326,7 +328,7 @@ export default {
             userId : info[0],
             userName : info[1],
             msgSize : 1,
-            userListMsg:[{'type': 'user', 'msg': str.content, 'createDate': null}],
+            userListMsg:[{'type': 'user', "msgType": str.msgType, 'msg': str.content, 'createDate': null}],
             isShow:true,
             createDate:new Date(str.createDate).toLocaleString()
           }

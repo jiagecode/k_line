@@ -5,7 +5,11 @@ spring:
     include: dev
   freemarker:
     cache: false
-
+# MultipartFile文件上传最小值和最大值
+  servlet:
+    multipart:
+      max-file-size: 4MB
+      max-request-size: 32MB
 swagger:
   enable: true
 

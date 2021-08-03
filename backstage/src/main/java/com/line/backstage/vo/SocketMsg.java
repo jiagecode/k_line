@@ -28,6 +28,11 @@ public class SocketMsg {
     private String sidName;
 
     /**
+     * msgType
+     */
+    private String msgType;
+
+    /**
      * 类容
      */
     private String content;

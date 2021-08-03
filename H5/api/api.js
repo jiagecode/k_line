@@ -18,14 +18,18 @@ const urls = {
 	klineMin: "/kline/min/list", //当日分钟线
 	klineMils: "/kline/mils/list", //历史秒线
 	saveSkuCusInfo:"/skuCusInfo/save", //添加自选
-	cryptocompareKey:"b55818528ec171d67d5aeee0f0ecb624a3a37e06e5491e9cd9bbb7af92ed8a37" // 行情页API-KEY
-	
+	cryptocompareKey:"b55818528ec171d67d5aeee0f0ecb624a3a37e06e5491e9cd9bbb7af92ed8a37", // 行情页API-KEY
+	uploadFiles:"" 
 }
 
 module.exports = {
 	// 返回socket基本地址
 	getBaseSocketUrl(){
-		return 'ws://192.168.66.104:1686/study';
+		return 'ws://192.168.1.9:1686/study';
+	},
+	// 上传文件
+	getUploadFileUrl() {
+		return 'http://192.168.1.9:1686/study/upload';
 	},
 	// 返回行情页url
 	getCryptocompareApiUrl(){
