@@ -10,23 +10,24 @@ import com.line.backstage.dao.mapper.UserInfoMapper;
 import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.enums.DataEnum;
+import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
+import com.line.backstage.utils.JsonUtils;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.utils.PasswordHelper;
 import com.line.backstage.vo.ResultCode;
 import com.line.backstage.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用户信息(UserInfo)表服务实现类
@@ -47,6 +48,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     private AccountInfoMapper accountInfoMapper;
     @Resource
     private CashOutInMapper cashOutInMapper;
+    @Autowired
+    private RedisUtil redisUtil;
     /**
      * 默认佣金红利系数
      */
@@ -61,11 +64,23 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public int save(Integer loginUserId, UserInfo userInfo) {
+        int result;
         if (userInfo.getUserId() == null) {
-            return insert(loginUserId, userInfo);
+            result = insert(loginUserId, userInfo);
+            // 新增的用户设置redis订阅通道
+
         } else {
-            return update(loginUserId, userInfo);
+            result = update(loginUserId, userInfo);
         }
+        // 新增或者修改后刷新redis缓存
+        List<UserInfoVo> userInfos = this.queryListAll();
+        userInfos.remove(Collections.singletonList(null));
+        if (CollectionUtils.isEmpty(userInfos)) {
+            throw new RuntimeException("获取用户列表失败！");
+        }
+        String userInfoList = JsonUtils.toJsonString(userInfos);
+        redisUtil.set("UserInfoList", userInfoList, 0);
+        return result;
     }
 
     /**
@@ -240,13 +255,13 @@ public class UserInfoServiceImpl implements UserInfoService {
             userInfo.setAgentName(StringUtils.isEmpty(u.getUserNickName()) ? u.getUserRealName() : u.getUserNickName());
             userInfo.setEditDate(date);
             userInfo.setUserType(2);
-           int  num =  userInfoMapper.updateByPrimaryKeySelective(userInfo);
-           try {
-               //创建代理业绩记录
-               cashOutInMapper.insertOneAgentScore(uid,loginUserId);
-           }catch (Exception e){
-           }
-           return num;
+            int num = userInfoMapper.updateByPrimaryKeySelective(userInfo);
+            try {
+                //创建代理业绩记录
+                cashOutInMapper.insertOneAgentScore(uid, loginUserId);
+            } catch (Exception e) {
+            }
+            return num;
         }
         return 0;
     }
