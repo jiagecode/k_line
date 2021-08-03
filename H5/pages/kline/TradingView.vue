@@ -181,7 +181,7 @@
 						</uni-col>
 					</uni-row>
 					<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;" @tap="SelectBuyAccount(inPrice)">
-						<view>￥</view><uni-easyinput @blur="SelectBuyAccount(inPrice)" @focus="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false" placeholder="自定义" v-model="inPrice" />
+						<view>￥</view><uni-easyinput @blur="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false" placeholder="其它金额" v-model="inPrice" />
 					</view>
 				</view>
 				<view>
@@ -408,7 +408,7 @@
 			document.title = '币安秒合约';
 			
 			// 初始化自定义值
-			this.inPrice = 0;
+			this.inPrice = undefined;
 			
 			uni.closeSocket();
 			this.dayData = [];
@@ -926,6 +926,9 @@
 						break;
 				}
 
+				if(account === undefined){
+					return;
+				}
 				// 触发预期收益计算
 				this.countYqsy();
 			},

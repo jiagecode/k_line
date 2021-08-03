@@ -29,25 +29,24 @@
       </navigator>
     </view>
       <!-- 用户提现   -->
-    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
-      <view class="d-flex a-center"
-            style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
-        <text>提现金额：</text>
-        <uni-easyinput type="number" v-model="cashMoney" @blur="changeMoney"/>
-      </view>
+    <view v-if="cardList.length > 0" style="padding: 10px; margin-top: 10rpx; border: solid #ececec 5rpx; border-radius: 15rpx;">
+        <view class="d-flex a-center j-center">
+			<text class="font-md" style="font-weight: bold;">提现金额：</text>
+			<uni-easyinput type="number" style="color: #5586d3;" placeholder="金额" v-model="cashMoney" @blur="changeMoney"/>
+		</view>
+		<view style="margin-top: 20rpx; color: #e45a71;">
+			<text>单次提现金额至少￥ 100</text>
+		</view>
+		<view class="d-flex"style="margin-top: 15rpx;">
+			<text class="font-sm" style="color: rgb(178, 178, 178);">账户余额:<text style="margin-left: 12rpx; color: #5586d3;">{{accMoney}}</text></text><br/>
+			<text class="font-sm" style="margin-left: 30rpx; color: rgb(178, 178, 178);">手续费:<span style="margin-left: 12rpx; color: #5586d3">1%</span></text><br/>
+			<text class="font-sm" style="margin-left: 30rpx; color: rgb(178, 178, 178);">实际到账:<span style="margin-left: 12rpx; color: #5586d3">{{arriveMoney}}</span></text>
+		</view>
+		<view style="margin-top: 15rpx;">
+			<button style="background-color: #5586d3; color: #FFFFFF; " @click="addCashOut()">立即提现</button>
+		</view>
      </view>
-    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
-      <view class="d-flex a-center"
-            style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
-        <text>账户余额:<span>{{accMoney}}</span></text><br/>
-        <text>手续费:<span style="color: goldenrod">1%</span></text><br/>
-        <text>实际到账:<span style="color: goldenrod">{{arriveMoney}}</span></text>
-      </view>
-   </view>
 
-    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
-      <button style="margin-top: 50rpx; width: 45%; background-color: #5586d3; color: #FFFFFF;" @click="addCashOut()">确认出金</button>
-    </view>
   </view>
 </template>
 
@@ -57,7 +56,7 @@ import MathUtil from '@/utils/MathUtil.js'
 export default {
 	data() {
 		return {
-		  cashMoney:0,
+		  cashMoney: undefined,
       accMoney:undefined,
       arriveMoney:undefined,
 			cardList: []

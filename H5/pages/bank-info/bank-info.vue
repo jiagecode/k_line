@@ -17,16 +17,16 @@
 			</view>
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>卡类型：</text>
-				<uni-easyinput type="text" :inputBorder="false" placeholder="储蓄卡/信用卡" v-model="bankInfo.bankName" />
+				<uni-easyinput type="text" :inputBorder="false" placeholder="所属银行" v-model="bankInfo.bankName" />
 			</view>
-			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
+<!-- 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>手机号：</text>
 				<uni-easyinput type="number" :inputBorder="false" placeholder="手机号" v-model="bankInfo.cardPhone" />
 			</view>
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>身份证：</text>
 				<uni-easyinput type="idcard" :inputBorder="false" placeholder="身份证号" v-model="bankInfo.cardOwnerNo" />
-			</view>
+			</view> -->
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>省份：</text>
 				<uni-easyinput type="text" :inputBorder="false" placeholder="省份" v-model="bankInfo.province" />
@@ -90,16 +90,16 @@
 					viledError = true;
 					restMsg = "输入持卡人！";
 				} else
-				if (typeof this.bankInfo.cardPhone == "undefined" || this.bankInfo.cardPhone == "" || this.bankInfo.cardNo
-					.length < 11) {
-					viledError = true;
-					restMsg = "输入手机号！";
-				} else
-				if (typeof this.bankInfo.cardOwnerNo == "undefined" || this.bankInfo.cardOwnerNo == "" || this.bankInfo
-					.cardNo.cardOwnerNo < 15) {
-					viledError = true;
-					restMsg = "输入身份证号！";
-				} else
+				// if (typeof this.bankInfo.cardPhone == "undefined" || this.bankInfo.cardPhone == "" || this.bankInfo.cardNo
+				// 	.length < 11) {
+				// 	viledError = true;
+				// 	restMsg = "输入手机号！";
+				// } else
+				// if (typeof this.bankInfo.cardOwnerNo == "undefined" || this.bankInfo.cardOwnerNo == "" || this.bankInfo
+				// 	.cardNo.cardOwnerNo < 15) {
+				// 	viledError = true;
+				// 	restMsg = "输入身份证号！";
+				// } else
 				if (typeof this.bankInfo.province == "undefined" || this.bankInfo.bankName == "") {
 					viledError = true;
 					restMsg = "输入省份！";
