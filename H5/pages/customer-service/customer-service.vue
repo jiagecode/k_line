@@ -204,6 +204,8 @@
 			 */
 			selectImage(){
 				let _this = this;
+				let filePaths;
+				let keyName;
                 if (_this.is_open_socket) {
 					if(_this.serviceId === undefined){
 						uni.showToast({
@@ -218,13 +220,65 @@
 						sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
 						sourceType: ['album'], // 从相册选择
 						success: function (res) {
-							_this.msgList.push({"type" : "user", "msgType" : "img", "msg" : res.tempFilePaths[0]});
+							
+							// 取出待用名字
+							filePaths = res.tempFilePaths[0];
+							keyName = res.tempFiles[0].name;
+							
+							// 新增消息
+							_this.msgList.push({"type" : "user", "msgType" : "img", "msg" : filePaths});
+							
+							// 上传图片
+							uni.uploadFile({
+								url : https.getUploadFileUrl(),
+								header: {
+									Authorization: uni.getStorageSync('token')
+								},
+								formData: {
+									'user': 'test'
+								},
+								fileType : 'image',
+								filePath : filePaths, 
+								name : keyName,
+								success: function(res){
+									console.log('success');
+									console.log(res);
+									// if(res.statusCode === 200){
+									// 	if(_self.isDestroyed){
+									// 		return
+									// 	}
+										
+									// 	completeImages ++
+										
+									// 	if(_self.showUploadProgress){
+									// 		uni.showToast({
+									// 			title: '上传进度：' + completeImages + '/' + imagePathArr.length,
+									// 			icon: 'none',
+									// 			mask: false,
+									// 			duration: 500
+									// 		});
+									// 	}
+									// 	console.log('success to upload image: ' + res.data)
+									// 	resolve(res.data)
+									// }else{
+									// 	console.log('fail to upload image:'+res.data)
+									// 	reject('fail to upload image:' + remoteUrlIndex)
+									// }
+								},
+								fail: function(res){
+									console.log('fail');
+									console.log(res);
+									// console.log('fail to upload image:'+res)
+									// reject('fail to upload image:' + remoteUrlIndex)
+								}
+							})
 						}
 					})
 					
 					// 获取图片大小
 					// console.log(document.getElementsByClassName("v-img"));
 					// document.getElementById("t_highday")
+					
 				}
 			},
 			/**
@@ -250,9 +304,4 @@
 </script>
 
 <style>
-	
-	.moveImage{
-		position: absolute;
-	}
-
 </style>

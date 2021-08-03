@@ -180,6 +180,9 @@
 							</div>
 						</uni-col>
 					</uni-row>
+					<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;" @tap="SelectBuyAccount(inPrice)">
+						<view>￥</view><uni-easyinput @blur="SelectBuyAccount(inPrice)" @focus="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false" placeholder="自定义" v-model="inPrice" />
+					</view>
 				</view>
 				<view>
 					<p class="page-top-dqsj"></p>
@@ -276,6 +279,7 @@
 	export default {
 		data() {
 			return {
+				inPrice:0,
 				// 商品代码
 				coinCode:'BTC',
 				// 商品名称
@@ -402,6 +406,9 @@
 				title: this.coinName + '/USD'
 			});
 			document.title = '币安秒合约';
+			
+			// 初始化自定义值
+			this.inPrice = 0;
 			
 			uni.closeSocket();
 			this.dayData = [];
@@ -915,6 +922,7 @@
 						break;
 					default:
 						//没有选中
+						document.getElementsByClassName("page-amount-7")[0].classList.add("page-amount-select");
 						break;
 				}
 
