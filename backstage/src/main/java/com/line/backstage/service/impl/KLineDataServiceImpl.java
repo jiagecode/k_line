@@ -121,8 +121,6 @@ public class KLineDataServiceImpl implements KLineDataService {
             // 查询用户数据
             if(redisUtil.hasKey(sbUserKey.toString())){
                 result.add(redisUtil.get(sbUserKey.toString()));
-                System.out.println("用户数据：");
-                System.out.println(redisUtil.get(sbUserKey.toString()));
             }else if(redisUtil.hasKey(sbKey.toString())){
                 result.add(redisUtil.get(sbKey.toString()));
             }

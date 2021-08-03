@@ -103,11 +103,11 @@
 						if (percent >= 100) {
 							that.positionList = [];
 							// 1.5秒后跳转，留出处理时间
-							setTimeout(() => {
-								uni.redirectTo({
-									url: '../transaction-records/transaction-records'
-								});
-							}, 1500);
+							// setTimeout(() => {
+							// 	uni.redirectTo({
+							// 		url: '../transaction-records/transaction-records'
+							// 	});
+							// }, 1500);
 						}
 					}
 				}, 1000);

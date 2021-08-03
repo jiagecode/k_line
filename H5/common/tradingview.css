@@ -346,3 +346,35 @@
 	z-index: 1;
 	background: rgba(0, 0, 0, 0.6);
 }
+
+/* page2 */
+.layer-timer-title {
+	line-height: 1;
+	padding: 18px 18px 0;
+	font-size: 18px;
+	font-weight: 700;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #5586d3;
+}
+.page2-t-line{
+	margin-top: 20upx;
+	margin-bottom: 20upx;
+	width: 100%;
+	height: 4upx;
+	background-color: #434347;
+}
+.page2-c-line{
+	margin-top: 20upx;
+	margin-bottom: 10upx;
+	width: 100%;
+	height: 4upx;
+	background-color: #434347;
+}
+.page2-col-info{
+	padding-top: 20upx;
+	padding-bottom: 20upx;
+	text-align: center;
+}

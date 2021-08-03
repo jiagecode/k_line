@@ -19,7 +19,6 @@ const urls = {
 	klineMils: "/kline/mils/list", //历史秒线
 	saveSkuCusInfo:"/skuCusInfo/save", //添加自选
 	cryptocompareKey:"b55818528ec171d67d5aeee0f0ecb624a3a37e06e5491e9cd9bbb7af92ed8a37", // 行情页API-KEY
-	uploadFiles:"" 
 }
 
 module.exports = {

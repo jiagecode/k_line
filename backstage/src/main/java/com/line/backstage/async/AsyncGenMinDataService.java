@@ -1,6 +1,7 @@
 package com.line.backstage.async;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.line.backstage.config.RedisConfig;
 import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.JsonUtils;
@@ -80,7 +81,7 @@ public class AsyncGenMinDataService {
                 BigDecimal decimal_60 = BigDecimal.valueOf(r + 1);
                 BigDecimal vf = r > 5 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.subtract(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
                 temp.setVolumeFrom(vf.doubleValue());
-                redisUtil.set(beforeOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), 0);
+                redisUtil.set(beforeOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), RedisConfig.OVERDUE);
             }
         }
         log.info("coin_SIZE: 【{}】", listOhlcv.size());

@@ -1,6 +1,6 @@
 <template>
 	<div class='divchart' style='background-color:#ffffff;'>
-<!-- 		<uni-row class="uni-row-top">
+		<!-- 		<uni-row class="uni-row-top">
 			<uni-col :span="9">
 				<view class="uni-col-top dark topText">
 					<div id="t_price">{{SocketMsg.PRICE}}</div>
@@ -25,7 +25,7 @@
 				</view>
 			</uni-col>
 		</uni-row> -->
-		
+
 		<!-- top信息 -->
 		<view class="uni-row-top d-flex" style="height: 130rpx;">
 			<!-- 实时价格 -->
@@ -35,7 +35,8 @@
 				<view class="d-flex flex-1" style="margin-top: 4rpx;">
 					<view class="flex-1 d-block">
 						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">最高</text>
-						<text id="t_highday" class="d-flex a-center j-center font" style="line-height: none;">{{SocketMsg.LOWDAY}}</text>
+						<text id="t_highday" class="d-flex a-center j-center font"
+							style="line-height: none;">{{SocketMsg.LOWDAY}}</text>
 					</view>
 					<view class="flex-1 d-block">
 						<text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">开盘</text>
@@ -49,7 +50,11 @@
 					</view>
 					<view class="flex-1 d-flex a-center j-center" @tap="addSelect">
 						<!-- <text class="d-flex a-center j-center font-sm" style="line-height: 22rpx;">自选</text> -->
-						<image style="width: 65rpx; height: 65rpx;" src="/static/zxuan.png"><view class="d-flex flex-column"><text class="font-sm" style="line-height: 22rpx; margin-bottom: 6rpx;">自</text><text class="j-center font-sm" style="line-height: 22rpx;">选</text></view></image>
+						<image style="width: 65rpx; height: 65rpx;" src="/static/zxuan.png">
+							<view class="d-flex flex-column"><text class="font-sm"
+									style="line-height: 22rpx; margin-bottom: 6rpx;">自</text><text
+									class="j-center font-sm" style="line-height: 22rpx;">选</text></view>
+						</image>
 					</view>
 				</view>
 			</view>
@@ -72,7 +77,7 @@
 					@click="ChangeKLinePeriod('1D')">日线</button>
 			</uni-col>
 		</uni-row>
-		
+
 		<div id="lightweight"></div>
 
 		<!-- 		<div class="button-sp-area">
@@ -113,141 +118,194 @@
 			<!--slot(插槽)-->
 			<view slot="page">
 				<!--在这里写入页面层的html内容-->
-				<view>
-					<div class="page-top-line"></div>
-				</view>
-				<view>
-					<p class="page-top-dqsj">到期时间</p>
-				</view>
-				<view>
-					<uni-row class="uni-row-page">
-						<uni-col :span="8" class="row-page-item">
-							<div @click="SelectBuyItem(1)" class="page-item page-item-1 page-item-select">
-								<view class="uni-col-page light-page-t">结算时间</view>
-								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">30</b>秒</view>
-								<view class="uni-col-page light-page-d">收益 88%</view>
-							</div>
+				<!-- 内容1 订单 start -->
+				<view v-if="layerOrder">
+					<view class="vus-layer-title">订单确认</view>
+					<view>
+						<div class="page-top-line"></div>
+					</view>
+					<view>
+						<p class="page-top-dqsj">到期时间</p>
+					</view>
+					<view>
+						<uni-row class="uni-row-page">
+							<uni-col :span="8" class="row-page-item">
+								<div @click="SelectBuyItem(1)" class="page-item page-item-1 page-item-select">
+									<view class="uni-col-page light-page-t">结算时间</view>
+									<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">30</b>秒</view>
+									<view class="uni-col-page light-page-d">收益 88%</view>
+								</div>
+							</uni-col>
+							<uni-col :span="8" class="row-page-item">
+								<div @click="SelectBuyItem(2)" class="page-item page-item-2">
+									<view class="uni-col-page light-page-t">结算时间</view>
+									<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">60</b>秒</view>
+									<view class="uni-col-page light-page-d">收益 90%</view>
+								</div>
+							</uni-col>
+							<uni-col :span="8" class="row-page-item">
+								<div @click="SelectBuyItem(3)" class="page-item page-item-3">
+									<view class="uni-col-page light-page-t">结算时间</view>
+									<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">180</b>秒</view>
+									<view class="uni-col-page light-page-d">收益 92%</view>
+								</div>
+							</uni-col>
+						</uni-row>
+					</view>
+					<view>
+						<p class="page-top-dqsj">投资金额</p>
+					</view>
+					<view>
+						<uni-row class="uni-row-page1">
+							<uni-col :span="4" class="row-page1-item">
+								<div @click="SelectBuyAccount(10)" class="page-amount page-amount-1 page-amount-select">
+									<view class="uni-col-page1 light-page1-t">¥10</view>
+								</div>
+							</uni-col>
+							<uni-col :span="4" class="row-page1-item">
+								<div @click="SelectBuyAccount(50)" class="page-amount page-amount-2">
+									<view class="uni-col-page1 light-page1-t">¥50</view>
+								</div>
+							</uni-col>
+							<uni-col :span="4" class="row-page1-item">
+								<div @click="SelectBuyAccount(100)" class="page-amount page-amount-3">
+									<view class="uni-col-page1 light-page1-t">¥100</view>
+								</div>
+							</uni-col>
+							<uni-col :span="4" class="row-page1-item">
+								<div @click="SelectBuyAccount(500)" class="page-amount page-amount-4">
+									<view class="uni-col-page1 light-page1-t">¥500</view>
+								</div>
+							</uni-col>
+							<uni-col :span="4" class="row-page1-item">
+								<div @click="SelectBuyAccount(1000)" class="page-amount page-amount-5">
+									<view class="uni-col-page1 light-page1-t">¥1000</view>
+								</div>
+							</uni-col>
+							<uni-col :span="4" class="row-page1-item">
+								<div @click="SelectBuyAccount(5000)" class="page-amount page-amount-6">
+									<view class="uni-col-page1 page1-md light-page1-t">¥5000</view>
+								</div>
+							</uni-col>
+						</uni-row>
+						<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;"
+							@tap="SelectBuyAccount(inPrice)">
+							<view>￥</view>
+							<uni-easyinput @blur="SelectBuyAccount(inPrice)" @focus="SelectBuyAccount(inPrice)"
+								class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false"
+								placeholder="自定义" v-model="inPrice" />
+						</view>
+					</view>
+					<view>
+						<p class="page-top-dqsj"></p>
+					</view>
+					<uni-row class="">
+						<uni-col :span="12" class="row-page1-item">
+							<view class="page-left-ye">余额: ¥{{UserData.userMoney}} </view>
 						</uni-col>
-						<uni-col :span="8" class="row-page-item">
-							<div @click="SelectBuyItem(2)" class="page-item page-item-2">
-								<view class="uni-col-page light-page-t">结算时间</view>
-								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">60</b>秒</view>
-								<view class="uni-col-page light-page-d">收益 90%</view>
-							</div>
-						</uni-col>
-						<uni-col :span="8" class="row-page-item">
-							<div @click="SelectBuyItem(3)" class="page-item page-item-3">
-								<view class="uni-col-page light-page-t">结算时间</view>
-								<view class="uni-col-page light-page-c"><b style="font-size: 50upx;">180</b>秒</view>
-								<view class="uni-col-page light-page-d">收益 92%</view>
-							</div>
+						<uni-col :span="12" class="row-page1-item">
+							<view class="page-left-sxf">手续费: 0% </view>
 						</uni-col>
 					</uni-row>
-				</view>
-				<view>
-					<p class="page-top-dqsj">投资金额</p>
-				</view>
-				<view>
-					<uni-row class="uni-row-page1">
-						<uni-col :span="4" class="row-page1-item">
-							<div @click="SelectBuyAccount(10)" class="page-amount page-amount-1 page-amount-select">
-								<view class="uni-col-page1 light-page1-t">¥10</view>
-							</div>
-						</uni-col>
-						<uni-col :span="4" class="row-page1-item">
-							<div @click="SelectBuyAccount(50)" class="page-amount page-amount-2">
-								<view class="uni-col-page1 light-page1-t">¥50</view>
-							</div>
-						</uni-col>
-						<uni-col :span="4" class="row-page1-item">
-							<div @click="SelectBuyAccount(100)" class="page-amount page-amount-3">
-								<view class="uni-col-page1 light-page1-t">¥100</view>
-							</div>
-						</uni-col>
-						<uni-col :span="4" class="row-page1-item">
-							<div @click="SelectBuyAccount(500)" class="page-amount page-amount-4">
-								<view class="uni-col-page1 light-page1-t">¥500</view>
-							</div>
-						</uni-col>
-						<uni-col :span="4" class="row-page1-item">
-							<div @click="SelectBuyAccount(1000)" class="page-amount page-amount-5">
-								<view class="uni-col-page1 light-page1-t">¥1000</view>
-							</div>
-						</uni-col>
-						<uni-col :span="4" class="row-page1-item">
-							<div @click="SelectBuyAccount(5000)" class="page-amount page-amount-6">
-								<view class="uni-col-page1 page1-md light-page1-t">¥5000</view>
-							</div>
+					<view>
+						<div class="page-c-line"></div>
+					</view>
+					<view>
+						<uni-row class="uni-row-page2">
+							<uni-col :span="6" class="row-page2-item">
+								<div>
+									<view class="uni-col-page2 light-page2-t">名称</view>
+									<view class="uni-col-page2 light-page2-d page-2-name">{{OrderCoin}}</view>
+								</div>
+							</uni-col>
+							<uni-col :span="6" class="row-page2-item">
+								<div>
+									<view class="uni-col-page2 light-page2-t">方向</view>
+									<view class="uni-col-page2 light-page2-d page-2-fx"
+										:class="(OrderDirection == 1)?'page-2-fx-red':'page-2-fx-green'">
+										{{OrderDirectionName}}
+									</view>
+								</div>
+							</uni-col>
+							<uni-col :span="6" class="row-page2-item">
+								<div>
+									<view class="uni-col-page2 light-page2-t">现价</view>
+									<view class="uni-col-page2 light-page2-d page-2-xj"
+										:class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'">
+										{{OrderCoinPrice}}
+									</view>
+								</div>
+							</uni-col>
+							<uni-col :span="6" class="row-page2-item">
+								<div>
+									<view class="uni-col-page2 light-page2-t">金额</view>
+									<view class="uni-col-page2 light-page2-d page-2-je">¥{{OrderAmount}}</view>
+								</div>
+							</uni-col>
+						</uni-row>
+					</view>
+					<view>
+						<p class="page-top-dqsj"></p>
+					</view>
+					<view>
+						<button class="page-btn-submit" type="default" size="default" @click="SubmitBuy()">确认下单</button>
+					</view>
+					<uni-row>
+						<uni-col :span="24">
+							<view class="page-bottom-text">
+								<div class="page-left-yqsy">预期收益:¥{{OrderExpectEarnings}}</div>
+								<div class="page-left-bdje">保底金额:¥{{OrderGuarantee}}</div>
+							</view>
 						</uni-col>
 					</uni-row>
-					<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;" @tap="SelectBuyAccount(inPrice)">
-						<view>￥</view><uni-easyinput @blur="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false" placeholder="其它金额" v-model="inPrice" />
+					<view>
+						<p class="page-top-dqsj"></p>
 					</view>
 				</view>
-				<view>
-					<p class="page-top-dqsj"></p>
-				</view>
-				<uni-row class="">
-					<uni-col :span="12" class="row-page1-item">
-						<view class="page-left-ye">余额: ¥{{UserData.userMoney}} </view>
-					</uni-col>
-					<uni-col :span="12" class="row-page1-item">
-						<view class="page-left-sxf">手续费: 0% </view>
-					</uni-col>
-				</uni-row>
-				<view>
-					<div class="page-c-line"></div>
-				</view>
-				<view>
-					<uni-row class="uni-row-page2">
-						<uni-col :span="6" class="row-page2-item">
-							<div>
-								<view class="uni-col-page2 light-page2-t">名称</view>
-								<view class="uni-col-page2 light-page2-d page-2-name">{{OrderCoin}}</view>
-							</div>
+				<!-- 内容1 订单 end -->
+
+				<!-- 内容2 倒计时 start -->
+				<view v-if="layerTimer">
+					<view class="layer-timer-title">{{OrderCoin}}</view>
+					<view>
+						<div class="page2-t-line"></div>
+					</view>
+					<view>
+						<!-- <CircleTimer1 :percentage="50"></CircleTimer1> -->
+						<view style="display: block; width: 100%;height: 80upx;font-size: 70upx;font-weight: bold;line-height: 80upx;color: #5586d3;text-align: center;margin-top: 10upx;margin-bottom: 30upx;">{{sec}}</view>
+						<view :class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'" style="width: 100%;display: block;text-align: center;font-size: 12upx;line-height: 40upx;">{{OrderCoinPrice}}</view>
+					</view>
+					<view>
+						<div class="page2-c-line"></div>
+					</view>
+					<uni-row style="height: 120upx;">
+						<uni-col :span="6">
+							<view class="page2-col-info" style="color: #f96f47;" v-if="this.OrderDirection == 1">买涨
+							</view>
+							<view class="page2-col-info" style="color: #00bf89;" v-if="this.OrderDirection == 2">买跌
+							</view>
 						</uni-col>
-						<uni-col :span="6" class="row-page2-item">
-							<div>
-								<view class="uni-col-page2 light-page2-t">方向</view>
-								<view class="uni-col-page2 light-page2-d page-2-fx"
-									:class="(OrderDirection == 1)?'page-2-fx-red':'page-2-fx-green'">
-									{{OrderDirectionName}}
-								</view>
-							</div>
+						<uni-col :span="6">
+							<view class="page2-col-info" style="color: #9aa2b5;">¥{{OrderAmount}}</view>
 						</uni-col>
-						<uni-col :span="6" class="row-page2-item">
-							<div>
-								<view class="uni-col-page2 light-page2-t">现价</view>
-								<view class="uni-col-page2 light-page2-d page-2-xj"
-									:class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'">{{OrderCoinPrice}}
-								</view>
-							</div>
+						<uni-col :span="6">
+							<view class="page2-col-info"
+								:class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'">{{submitCoinPrice}}
+							</view>
 						</uni-col>
-						<uni-col :span="6" class="row-page2-item">
-							<div>
-								<view class="uni-col-page2 light-page2-t">金额</view>
-								<view class="uni-col-page2 light-page2-d page-2-je">¥{{OrderAmount}}</view>
-							</div>
+						<uni-col :span="6">
+							<view class="page2-col-info" :class="(isWin == 1)?'page-2-xj-red':'page-2-xj-green'">
+								¥{{getIsWin(submitCoinPrice, OrderCoinPrice)}}
+							</view>
 						</uni-col>
 					</uni-row>
+					<view>
+						<button class="page-btn-submit" style="margin-bottom: 40upx;" type="default" size="default"
+							@click="GoONBuy()">继续下单</button>
+					</view>
 				</view>
-				<view>
-					<p class="page-top-dqsj"></p>
-				</view>
-				<view>
-					<button class="page-btn-submit" type="default" size="default" @click="SubmitBuy()">确认下单</button>
-				</view>
-				<uni-row>
-					<uni-col :span="24">
-						<view class="page-bottom-text">
-							<div class="page-left-yqsy">预期收益:¥{{OrderExpectEarnings}}</div>
-							<div class="page-left-bdje">保底金额:¥{{OrderGuarantee}}</div>
-						</view>
-					</uni-col>
-				</uni-row>
-				<view>
-					<p class="page-top-dqsj"></p>
-				</view>
+				<!-- 内容2 倒计时 end -->
+
 			</view>
 		</vus-layer>
 		<!-- 弹出层 -->
@@ -270,6 +328,8 @@
 	import moment from 'moment'
 	import MathUtil from '@/utils/MathUtil.js'
 	import https from '../../api/api.js'
+	import circleTimer from './circle-timer.vue';
+	import circleTimer1 from './circle-timer1.vue';
 
 	// 图表对象
 	var chart = null;
@@ -279,11 +339,18 @@
 	export default {
 		data() {
 			return {
-				inPrice:0,
+				// 弹出层显示设置
+				layerOrder: true,
+				layerTimer: false,
+				// layerOver: false,
+				// 当前倒计时秒
+				sec: 0,
+
+				inPrice: 0,
 				// 商品代码
-				coinCode:'BTC',
+				coinCode: 'BTC',
 				// 商品名称
-				coinName:'BTC',
+				coinName: 'BTC',
 				sysInfo: {},
 				// 秒、分、小时、日线，对象
 				areaSeries: null,
@@ -332,6 +399,8 @@
 				},
 				// 用户数据
 				UserData: null,
+				// 提交价
+				submitCoinPrice: 0,
 				// 订单数据
 				OrderDirection: 1,
 				OrderDirectionName: "买涨",
@@ -342,7 +411,13 @@
 				OrderCoinPrice: null,
 				OrderExpectEarnings: 18.8,
 				OrderGuarantee: 0.00,
+				// 预测输赢
+				isWin: true,
 			}
+		},
+		components: {
+			'CircleTimer': circleTimer,
+			'CircleTimer1': circleTimer1,
 		},
 		created() {},
 		onLoad() {
@@ -363,27 +438,27 @@
 					this.sysInfo = res;
 				}
 			});
-			
+
 			// 订阅币种切换事件
 			uni.$on("ChangeSymbol", (rel) => {
 				// console.log(rel);
 				// 1、FIXME接收
 				// 2、数据保存到
-				if(rel.DISPLAY === undefined){
+				if (rel.DISPLAY === undefined) {
 					this.SocketMsg = {
-						PRICE : rel.info.PRICE.replace('$ ', '').replace(',', ''),
-						LOWDAY : rel.info.HIGH24HOUR.replace('$ ', '').replace(',', ''),
-						OPENDAY : rel.info.OPEN24HOUR.replace('$ ', '').replace(',', ''),
-						LOWDAY : rel.info.LOW24HOUR.replace('$ ', '').replace(',', '')
-					} 
+						PRICE: rel.info.PRICE.replace('$ ', '').replace(',', ''),
+						LOWDAY: rel.info.HIGH24HOUR.replace('$ ', '').replace(',', ''),
+						OPENDAY: rel.info.OPEN24HOUR.replace('$ ', '').replace(',', ''),
+						LOWDAY: rel.info.LOW24HOUR.replace('$ ', '').replace(',', '')
+					}
 					this.coinCode = new String(rel.name).toUpperCase();
 					this.coinName = new String(rel.name);
 				} else {
 					this.SocketMsg = {
-						PRICE : rel.DISPLAY.USD.PRICE.replace('$ ', '').replace(',', ''),
-						LOWDAY : rel.DISPLAY.USD.HIGH24HOUR.replace('$ ', '').replace(',', ''),
-						OPENDAY : rel.DISPLAY.USD.OPEN24HOUR.replace('$ ', '').replace(',', ''),
-						LOWDAY : rel.DISPLAY.USD.LOW24HOUR.replace('$ ', '').replace(',', '')
+						PRICE: rel.DISPLAY.USD.PRICE.replace('$ ', '').replace(',', ''),
+						LOWDAY: rel.DISPLAY.USD.HIGH24HOUR.replace('$ ', '').replace(',', ''),
+						OPENDAY: rel.DISPLAY.USD.OPEN24HOUR.replace('$ ', '').replace(',', ''),
+						LOWDAY: rel.DISPLAY.USD.LOW24HOUR.replace('$ ', '').replace(',', '')
 					}
 					this.coinCode = new String(rel.CoinInfo.Name).toUpperCase();
 					this.coinName = new String(rel.CoinInfo.Name);
@@ -397,7 +472,7 @@
 				this.volumeSeries = null;
 				this.chart = null;
 				// 重新加载
-				
+
 			})
 
 		},
@@ -406,10 +481,10 @@
 				title: this.coinName + '/USD'
 			});
 			document.title = '币安秒合约';
-			
+
 			// 初始化自定义值
 			this.inPrice = undefined;
-			
+
 			uni.closeSocket();
 			this.dayData = [];
 			this.hourData = [];
@@ -417,14 +492,14 @@
 			this.areaSeries = null;
 			this.volumeSeries = null;
 			this.chart = null;
-			
+
 			// 查询日线数据
 			https.klineDay({
 				coinCode: this.coinCode
 			}).then((res) => {
 				for (var i = 0; i < res.length; i++) {
 					var item = JSON.parse(res[i]);
-					if(item === null)
+					if (item === null)
 						break;
 					this.dayData.push({
 						open: item.openPrice,
@@ -442,7 +517,7 @@
 				// console.log(res);
 				for (var i = 0; i < res.length; i++) {
 					var item = JSON.parse(res[i]);
-					if(item === null)
+					if (item === null)
 						break;
 					this.hourData.push({
 						open: item.openPrice,
@@ -460,7 +535,7 @@
 			}).then((res) => {
 				for (var i = 0; i < res.length; i++) {
 					var item = JSON.parse(res[i]);
-					if(item === null)
+					if (item === null)
 						break;
 					this.minData.push({
 						open: item.openPrice,
@@ -621,7 +696,7 @@
 					});
 					this.areaSeries.setData(this.lineData);
 					this.volumeSeries.setData(this.volumeData);
-					if(!this.SocketStatus){
+					if (!this.SocketStatus) {
 						// 开启socket获取数据
 						this.initSocketData();
 						this.SocketStatus = true;
@@ -670,7 +745,7 @@
 							},
 						}
 					});
-					
+
 					this.areaSeries.setData(this.dayData);
 				}
 
@@ -738,7 +813,7 @@
 					}
 					for (var i = 0; i < res.length; i++) {
 						var item = JSON.parse(res[i]);
-						if(item === null)
+						if (item === null)
 							break;
 						this.lineData.push({
 							value: item.nowPrice,
@@ -749,7 +824,8 @@
 						this.volumeData.push({
 							time: parseFloat(item.timeStamp),
 							value: nowVolume,
-							color: (nowVolume - this.lastVolume) >= 0 ? 'rgba(255,82,82, 0.8)':'rgba(0, 150, 136, 0.8)',
+							color: (nowVolume - this.lastVolume) >= 0 ? 'rgba(255,82,82, 0.8)' :
+								'rgba(0, 150, 136, 0.8)',
 						});
 						this.lastVolume = nowVolume;
 					}
@@ -762,7 +838,8 @@
 			initSocketData() {
 				var that = this;
 				uni.connectSocket({
-					url: https.getBaseSocketUrl()+'/websocket/current/s/'+this.coinCode+'/' + that.UserData.userId
+					url: https.getBaseSocketUrl() + '/websocket/current/s/' + this.coinCode + '/' + that.UserData
+						.userId
 				});
 				uni.onSocketOpen(function(res) {
 					console.log('WebSocket连接已打开！');
@@ -806,7 +883,8 @@
 						var volumeItem = {
 							time: parseFloat(msg.timeStamp),
 							value: nowVolume,
-							color: (nowVolume - that.lastVolume) >= 0 ? 'rgba(255,82,82, 0.8)':'rgba(0, 150, 136, 0.8)',
+							color: (nowVolume - that.lastVolume) >= 0 ? 'rgba(255,82,82, 0.8)' :
+								'rgba(0, 150, 136, 0.8)',
 						};
 						that.lastVolume = nowVolume;
 						// 更新面积图
@@ -854,7 +932,7 @@
 							// uni.navigateTo({
 							// 	url: '../transaction-records/transaction-now'
 							// })
-					});
+						});
 				});
 			},
 			// 跳转持仓
@@ -949,6 +1027,8 @@
 			},
 			// 下单
 			SubmitBuy() {
+				this.submitCoinPrice = this.OrderCoinPrice;
+
 				// 校验
 				if (this.UserData.userMoney < this.OrderAmount) {
 					// 图标 0 成功, 1 警告, 2 错误, 3 信息, 4 疑问, 5 斜杠
@@ -961,10 +1041,23 @@
 						});
 					return;
 				};
+				// 校验投资金额
+				if (this.OrderAmount == 0) {
+					// 图标 0 成功, 1 警告, 2 错误, 3 信息, 4 疑问, 5 斜杠
+					this.vusui.msg(
+						'请选择或输入投资金额!', {
+							icon: 2,
+							shade: 0.6,
+						}, () => {
+							// console.log("回调");
+						});
+					return;
+				};
 				// 校验当前价
-				console.log(this.OrderCoinPrice)
-				if (typeof this.OrderCoinPrice == "undefined" || this.OrderCoinPrice == null || this.OrderCoinPrice == 0 ||
-					this.OrderCoinPrice == "") {
+				console.log(this.submitCoinPrice)
+				if (typeof this.submitCoinPrice == "undefined" || this.submitCoinPrice == null || this.submitCoinPrice ==
+					0 ||
+					this.submitCoinPrice == "") {
 					return;
 				}
 				// 提交
@@ -975,7 +1068,7 @@
 					"skuCode": this.coinCode,
 					"skuName": this.coinName,
 					"skuQty": 1,
-					"skuPrice": this.OrderCoinPrice,
+					"skuPrice": this.submitCoinPrice,
 					"orderAmount": this.OrderAmount,
 					"orderCharge": 0,
 					"orderCycle": this.OrderCycle,
@@ -983,36 +1076,45 @@
 					"investType": this.OrderDirection,
 					"expectedReturn": this.OrderExpectEarnings,
 					"guaranteedAmount": this.OrderGuarantee,
-					"inPoint": this.OrderCoinPrice,
+					"inPoint": this.submitCoinPrice,
 				};
 
 				https.submitOrder(data).then((res) => {
 					// orderloading.close();
 					console.clear();
 					if (res != null) {
-						if(res.resultCode === "-1" || res.resultCode === "-2" || res.resultCode === "-3" || res.resultCode === "-4"){
-							this.vusui.msg(res.resultDesc, { icon: 2, shade: 0.6, }, () => { });
-						}else if(res.resultCode === "1"){
+						if (res.resultCode === "-1" || res.resultCode === "-2" || res.resultCode === "-3" || res
+							.resultCode === "-4") {
+							this.vusui.msg(res.resultDesc, {
+								icon: 2,
+								shade: 0.6,
+							}, () => {});
+						} else if (res.resultCode === "1") {
 							// 提示用户
-							this.vusui.msg(
-								'下单成功!', {
-									icon: 0,
-									shade: 0.6,
-								}, () => {
-									// 关闭当前弹窗
-									this.vusui.close('page');
-									// 重新获取用户信息 余额
-									// todo
-									// 跳转页面
-									uni.navigateTo({
-										url: '../transaction-records/transaction-now'
-									})
-								});
-						}else{
-							this.vusui.msg("下单失败,未知错误!", { icon: 2, shade: 0.6, }, () => { });
+							// this.vusui.msg(
+							// 	'下单成功!', {
+							// 		icon: 0,
+							// 		shade: 0.6,
+							// 	}, () => {
+							// 		// 关闭当前弹窗
+							// 		// this.vusui.close('page');
+							// 		// 重新获取用户信息 余额
+							// 		// todo
+							// 		// 跳转页面
+							// 		// uni.navigateTo({
+							// 		// 	url: '../transaction-records/transaction-now'
+							// 		// })
+							// 	});
+							// 下单后显示倒计时
+							this.openTimerLayer();
+						} else {
+							this.vusui.msg("下单失败,未知错误!", {
+								icon: 2,
+								shade: 0.6,
+							}, () => {});
 						}
-						
-						
+
+
 					}
 				});
 			},
@@ -1028,10 +1130,76 @@
 					this.OrderDirectionName = "买跌";
 				}
 				// slot(插槽) 模式
-				this.vusui.page({
-					title: '订单确认'
-				});
+				this.vusui.page({});
 			},
-		}
+			// 切换到倒计时
+			openTimerLayer() {
+				// 修改可视层
+				this.layerOrder = false;
+				this.layerTimer = true;
+				this.sec = this.OrderCycle;
+				// 开始倒计时
+				var interval = setInterval(() => {
+					let diff = '1';
+					this.sec -= diff;
+					if (this.sec <= 0) {
+						// 关闭倒计时
+						clearInterval(interval)
+						// 结算
+						this.layerOrder = true;
+						this.layerTimer = false;
+					}
+				}, 1000)
+			},
+			// 继续购买
+			GoONBuy() {
+				// 修改可视层
+				this.layerOrder = true;
+				this.layerTimer = false;
+			},
+			// 预测输赢
+			getIsWin(submitPrice, nowPrice) {
+				// 输赢
+				if (this.OrderDirection == 1) {
+					if (parseFloat(nowPrice) > parseFloat(submitPrice)) {
+						this.isWin = true;
+					} else {
+						this.isWin = false;
+					}
+				}
+				if (this.OrderDirection == 2) {
+					if (parseFloat(nowPrice) < parseFloat(submitPrice)) {
+						this.isWin = true;
+					} else {
+						this.isWin = false;
+					}
+				}
+				// console.log(this.isWin ? "赢" : "输");
+				if (!this.isWin) {
+					return "-" + this.OrderAmount;
+				}
+
+				// 收益率
+				var rat = 0.88;
+				if (this.OrderItem == 1) {
+					rat = 0.88;
+				}
+				if (this.OrderItem == 2) {
+					rat = 0.9;
+				}
+				if (this.OrderItem == 3) {
+					rat = 0.92;
+				}
+				// 收益金额 = 投资额 + (投资额 * 收益率);
+				return "+" + MathUtil.add(this.OrderAmount, MathUtil.mul(this.OrderAmount, rat));
+			},
+			// 倒计时结束事件
+			endHandle() {
+				console.log('结束事件')
+				//重新执行
+				this.$refs.countDown.refresh()
+			}
+		},
+
 	}
 </script>

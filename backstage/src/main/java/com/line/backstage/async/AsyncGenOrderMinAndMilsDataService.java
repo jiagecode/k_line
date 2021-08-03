@@ -1,6 +1,7 @@
 package com.line.backstage.async;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.line.backstage.config.RedisConfig;
 import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.JsonUtils;
@@ -144,10 +145,10 @@ public class AsyncGenOrderMinAndMilsDataService {
             long tempTime = i % 60;
             if (tempTime == 0) {
                 // 整数分钟，需要同时生成一条分钟数据
-                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), 0);
+                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), RedisConfig.OVERDUE);
             }
 
-            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), 0);
+            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), RedisConfig.OVERDUE);
             orderNum++;
         }
 
