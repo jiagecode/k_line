@@ -33,14 +33,19 @@
       <view class="d-flex a-center"
             style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
         <text>提现金额：</text>
-        <uni-easyinput type="number" v-model="cashMoney" :inputBorder="false" @change="changeMoney"/>
+        <uni-easyinput type="number" v-model="cashMoney" @blur="changeMoney"/>
       </view>
+     </view>
+    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
       <view class="d-flex a-center"
             style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
-        <text>账户余额:<span>{{accMoney}}</span></text>
-        <text>手续费:<span style="color: goldenrod">1%</span></text>
+        <text>账户余额:<span>{{accMoney}}</span></text><br/>
+        <text>手续费:<span style="color: goldenrod">1%</span></text><br/>
         <text>实际到账:<span style="color: goldenrod">{{arriveMoney}}</span></text>
       </view>
+   </view>
+
+    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
       <button style="margin-top: 50rpx; width: 45%; background-color: #5586d3; color: #FFFFFF;" @click="addCashOut()">确认出金</button>
     </view>
   </view>
@@ -48,7 +53,7 @@
 
 <script>
 import https from "../../api/api";
-
+import MathUtil from '@/utils/MathUtil.js'
 export default {
 	data() {
 		return {
@@ -60,11 +65,12 @@ export default {
 	},
 	methods: {
     changeMoney(){
+      console.log("00000change---")
       if(this.cashMoney != undefined && this.cashMoney != null){
         if(this.cashMoney > this.accMoney){
           this.cashMoney = this.accMoney;
         }
-        this.arriveMoney = this.cashMoney * 0.99 ;
+        this.arriveMoney = MathUtil.mul(this.cashMoney, 0.99) ;
       }
     },
     addCashOut(){
@@ -72,10 +78,16 @@ export default {
         if(this.cashMoney > this.accMoney){
           this.cashMoney = this.accMoney;
         }
-        if(this.cashMoney > 0){
+        if(this.cashMoney < 100){
+          uni.showToast({
+            title: '提现金额不能低于100！',
+            duration: 1000,
+          })
+          return;
+        }
           var data = {
             cashType : 1,
-            cashMoney : this.cashMoney,
+            cashMoney : this.cashMoney
           }
           https.addCash(data).then((res)=>{
             if(res != null ){
@@ -92,12 +104,6 @@ export default {
               }
             }
           })
-        }else {
-          uni.showToast({
-            title: '余额不足！',
-            duration: 1000,
-          })
-        }
       }
     },
 
