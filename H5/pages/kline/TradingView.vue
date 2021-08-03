@@ -852,7 +852,7 @@
 			},
 			// 跳转持仓
 			ClickCc() {
-				uni.navigateTo({
+				uni.redirectTo({
 					url: '../transaction-records/transaction-now'
 				})
 			},
@@ -964,7 +964,7 @@
 					"skuCode": this.coinCode,
 					"skuName": this.coinName,
 					"skuQty": 1,
-					"skuPrice": this.OrderAmount,
+					"skuPrice": this.OrderCoinPrice,
 					"orderAmount": this.OrderAmount,
 					"orderCharge": 0,
 					"orderCycle": this.OrderCycle,

@@ -83,7 +83,9 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
             // 缓存
             for (SkuInfoOhlcvVo ohlcv : list) {
                 redisUtil.set(ohlcv.getSkuCode() + "_dd_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), 0);
+                log.info("Day:{} Price: {}" ,ohlcv.getTimeStamp(), ohlcv.getOpenPrice());
             }
+            log.info("Day数据：{} 条" ,list.size());
             params.clear();
         }
     }

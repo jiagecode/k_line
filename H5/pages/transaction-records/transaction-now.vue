@@ -3,19 +3,28 @@
 	<view style="padding: 20rpx;">
 		<block v-for="(item, index) in positionList" :key="item.positionId">
 			<uni-row class="uni-row-bot" style="height: 120rpx;">
-				<uni-col :span="10">
-					<view style="height: 60rpx; line-height:60rpx;">{{ item.skuName }}</view>
-					<view style="height: 60rpx; line-height:60rpx;">{{item.beaginPrice}}</view>
+				<uni-col :span="8" style="text-align: left;">
+					<view style="height: 40rpx; line-height:40rpx;">{{ item.skuName }}</view>
+					<view style="height: 40rpx; line-height:40rpx;">{{ fixedPrice(item.beaginPrice)}}</view>
+					<view style="height: 40rpx; line-height:40rpx; color: #999999;" class="font-sm">{{ item.addDate }} </view>
 				</uni-col>
-				<uni-col :span="14">
-					<view style="height: 60rpx; text-align: right;">{{ showUpOrDown(item.investType, item.investAmount)}}</view>
-					<view style="height: 60rpx; line-height:60rpx; font-size:25rpx; color: #999999; text-align: right;">{{ item.addDate }}</view>
+				<uni-col :span="8" style="text-align: center;">
+					<view style="height: 40rpx; line-height:40rpx;">&nbsp;</view>
+					<view style="height: 40rpx; line-height:40rpx;">
+						{{ showUpOrDown(item.investType, item.investAmount)}}
+					</view>
+					<view style="height: 40rpx; line-height:40rpx;">&nbsp;</view>
+				</uni-col>
+				<uni-col :span="8" style="text-align: right;">
+					<view style="height: 40rpx; line-height:40rpx;">&nbsp;</view>
+					<view style="height: 40rpx; line-height:40rpx;">&nbsp;</view>
+					<view style="height: 40rpx; line-height:40rpx; color: #999999;" class="font-sm">{{ item.endDate }}</view>
 				</uni-col>
 			</uni-row>
 			<uni-row class="uni-row-bot" style="height: 30rpx; border-bottom: solid #ececec 2rpx;">
 				<uni-col :span="24">
-					<ai-progress style="float: left;height: 30rpx; width: 100%;" :noData="true"
-						:percentage="percentage" inBgColor="#5586d3" bgColor="#ff5252">
+					<ai-progress style="float: left;height: 30rpx; width: 100%;" :noData="true" :percentage="percentage"
+						inBgColor="#5586d3" bgColor="#ff5252">
 					</ai-progress>
 				</uni-col>
 			</uni-row>
@@ -53,6 +62,11 @@
 			});
 		},
 		methods: {
+			// 价格处理
+			fixedPrice(price){
+				return MathUtil.toFixed(price, 4);
+			},
+			
 			autoPercentage() {
 				var that = this;
 				var interval = setInterval(function() {
@@ -60,7 +74,6 @@
 					if (that.positionList.length > 0) {
 						// 只处理第一条 
 						var positionData = that.positionList[0];
-						// for (var i=0;i<that.positionList.length;i++) { 
 						var startDate = positionData.beginDate;
 						var endDate = positionData.endDate;
 						if (startDate == null || startDate == "" || typeof startDate == "undefined") {
@@ -89,10 +102,13 @@
 						// 100% 时 刷新
 						if (percent >= 100) {
 							that.positionList = [];
-							uni.navigateBack();
-							console.log("刷新");
+							// 1.5秒后跳转，留出处理时间
+							setTimeout(() => {
+								uni.redirectTo({
+									url: '../transaction-records/transaction-records'
+								});
+							}, 1500);
 						}
-						// }
 					}
 				}, 1000);
 			},
