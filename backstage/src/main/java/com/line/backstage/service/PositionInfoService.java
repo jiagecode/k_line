@@ -66,5 +66,5 @@ public interface PositionInfoService {
      * @param positionInfo 查询条数
      * @return 对象列表
      */
-    PageWrapper<PositionInfo> list(Integer loginUserId, PositionInfo positionInfo);
+    PageWrapper<ManPosiVo> list(Integer loginUserId, PositionInfo positionInfo);
 }

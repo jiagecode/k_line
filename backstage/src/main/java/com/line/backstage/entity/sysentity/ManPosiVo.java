@@ -23,4 +23,5 @@ public class ManPosiVo extends PositionInfo {
     private Date settlementDate;
     private Integer orderCycle;
     private Double expectedReturn;
+    private Integer winFlag;
 }

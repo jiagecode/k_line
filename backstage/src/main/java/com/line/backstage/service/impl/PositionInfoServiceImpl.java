@@ -121,12 +121,12 @@ public class PositionInfoServiceImpl implements PositionInfoService {
      * @return 对象列表
      */
     @Override
-    public PageWrapper<PositionInfo> list(Integer loginUserId, PositionInfo positionInfo) {
+    public PageWrapper<ManPosiVo> list(Integer loginUserId, PositionInfo positionInfo) {
         PageHelper.startPage(positionInfo.getPageNum(), positionInfo.getPageSize());
         positionInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         positionInfo.setUserId(loginUserId);
         Integer pst = positionInfo.getPositionStatus() == null ? 2:positionInfo.getPositionStatus();
-        PageInfo<PositionInfo> page = new PageInfo<>(positionInfoMapper.selectForPage(loginUserId,DataEnum.FLAG_STATUS_INVALID.getCode(),pst));
+        PageInfo<ManPosiVo> page = new PageInfo<>(positionInfoMapper.selectForPage(loginUserId,DataEnum.FLAG_STATUS_INVALID.getCode(),pst));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }

@@ -23,7 +23,6 @@
         <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
         <result property="del" column="DEL" jdbcType="OTHER"/>
         <result property="diyId" column="DIY_ID" jdbcType="INTEGER"/>
-        <result property="winFlag" column="WIN_FLAG" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap type="com.line.backstage.entity.sysentity.ManPosiVo" id="PositionInfoVo">
         <result property="positionId" column="POSITION_ID" jdbcType="INTEGER"/>

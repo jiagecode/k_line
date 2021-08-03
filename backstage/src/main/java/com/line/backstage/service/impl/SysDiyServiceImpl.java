@@ -453,7 +453,7 @@ public class SysDiyServiceImpl implements SysDiyService {
             //持仓信息
             Integer posId = insertPositionInfo(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,winFlag,minMoney,endMoney,orderMoney);
             //订单信息
-            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId);
+            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId,winFlag);
             //资金记录
             createAccountRecord(accId,amount.doubleValue(),accBefore.doubleValue(),accAfter.doubleValue(),null,diyId,endDate,sysUserId,orderId,3);
             beginDete = new Date(endDate.getTime()+6000);
@@ -482,7 +482,7 @@ public class SysDiyServiceImpl implements SysDiyService {
      */
     private Integer insertOrder(Date beginDete,Integer sysUserId,Date endDate,Integer diyUserId,
                                 Integer diyId,String skuName,Integer investType,Integer orderCycle,BigDecimal amount,
-                                BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId){
+                                BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId,boolean win){
         OrderInfo info = new OrderInfo();
         info.setPositionId(posId);
         info.setOrderType(1);
@@ -507,6 +507,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         info.setOrderCharge(0.0);
         //预生成 未入库
         info.setDel(-1);
+        info.setWinFlag(win?1:2);
         return orderInfoMapper.insert(info);
     }
 

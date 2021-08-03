@@ -7,12 +7,8 @@ import java.io.Serializable;
 
 import io.swagger.annotations.*;
 import lombok.Data;
-import org.springframework.data.annotation.Transient;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 
 /**
  * 用户持仓信息(PositionInfo)实体类
@@ -143,6 +139,4 @@ public class PositionInfo extends QueryRequest implements Serializable {
     @ApiModelProperty("数据状态")
     private Integer del;
     private Integer diyId;
-    @Transient
-    private Integer winFlag;
 }
