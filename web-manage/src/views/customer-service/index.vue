@@ -74,7 +74,7 @@
                   <img class="kf-img" style="width: 30px; height: 30px;"
                        :src="require('@/assets/im_client_avatar.png')"/>
                   <div v-show="item.msgType === 'img'" style="width: 80%; height:auto; margin-left: 20px;">
-                    <img src="item.msg"/>
+                    <img :src="item.msg"/>
                   </div>
                   <div v-show="item.msgType === 'text'" style="width: 80%; height:auto; margin-left: 20px;">
                     {{ item.msg }}
@@ -241,8 +241,8 @@ export default {
      * 初始化ws
      */
     wsInit() {
-      // const wsUrl = 'ws://192.168.1.9:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
-      const wsUrl = 'ws://108.160.143.167:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
+      const wsUrl = 'ws://192.168.1.9:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
+      // const wsUrl = 'ws://108.160.143.167:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys';
       this.ws = wsUrl
       if (!this.wsIsRun) return
       // 销毁ws

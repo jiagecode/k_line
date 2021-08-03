@@ -8,7 +8,8 @@
 		<view style="width: 84%;">
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">
 				<text>卡号：</text>
-				<uni-easyinput type="number" :inputBorder="false" placeholder="卡号" v-model="bankInfo.cardNo"
+				<!-- 禁止复制和粘贴 -->
+				<uni-easyinput type="number" :inputBorder="false" oncopy="return false" onpaste="return false" placeholder="卡号" v-model="bankInfo.cardNo"
 					@input="bindPickerChange" />
 			</view>
 			<view class="d-flex a-center" style="height: 110rpx; border-top: #c9c7bf solid 1rpx;">

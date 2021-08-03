@@ -7,6 +7,7 @@ import com.line.backstage.vo.ResponseModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +38,14 @@ public class FileUpload {
         if (file.isEmpty()) {
             return ResponseHelper.failedWith(DataEnum.FLAG_STATUS_VALID.getDesc());
         }
+        // 获取文件名
+        String oldName = file.getOriginalFilename();
+        // 生产uuid名称+扩展名
+        String newName =  loginUserId + "-" + UUID.randomUUID() + oldName.substring(oldName.lastIndexOf("."));
         // 根据时间生成保存文件
         String format = new SimpleDateFormat("/yyyy/MM/dd/").format(new Date());
-        String realPath = req.getServletContext().getRealPath("/upload") + format;
+        String pathUrl = "/img/" + loginUserId + format;
+        String realPath = new ApplicationHome(this.getClass()).getSource().getParentFile().toString() + "/bian/web-manage" + pathUrl;
         // 生成文件路劲
         File folder = new File(realPath);
         // 校验文件夹路径是否存在
@@ -47,11 +53,10 @@ public class FileUpload {
             // 不存在 新增路径
             folder.mkdirs();
         }
-        // 获取文件名
-        String oldName = file.getOriginalFilename();
-        // 生产uuid名称+扩展名
-        String newName =  loginUserId + "-" + UUID.randomUUID() + oldName.substring(oldName.lastIndexOf("."));
         try {
+//            ApplicationHome h = new ApplicationHome(this.getClass());
+//            File jarF = h.getSource();
+//            System.out.println(jarF.getParentFile().toString());
             // 保存文件
             log.info("用户ID【{}】保存文件路径【{}】文件名为【{}】", loginUserId, folder, newName);
             file.transferTo(new File(folder, newName));
@@ -59,8 +64,6 @@ public class FileUpload {
             log.error(e.getMessage());
             return ResponseHelper.failedWith(DataEnum.FLAG_STATUS_VALID.getDesc());
         }
-        // 封装文件路径
-        String url = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/upload" + format + newName;
-        return ResponseHelper.success(url);
+        return ResponseHelper.success(pathUrl + newName);
     }
 }

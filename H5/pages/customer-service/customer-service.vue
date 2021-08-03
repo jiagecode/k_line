@@ -124,7 +124,9 @@
 						for(let sn of res.data.content.split("|")){
 							if(sn !== '' && sn.includes(",")){
 								let serviceInfo = sn.split(",");
-								_this.serviceList.push({id:serviceInfo[0], name:serviceInfo[1]});
+								let toE = {id:serviceInfo[0], name:serviceInfo[1]}
+								_this.serviceList.push(toE);
+								_this.selectService(toE)
 							}
 						}
 						_this.msgList.push({"type" : "serviceList", "msg" : _this.serviceList});
@@ -189,10 +191,10 @@
 			 */
 			selectService(e){
 				console.log(e);
-				uni.showToast({
-					title: '选择客服：' + e.name,
-					duration: 1000,
-				})
+				// uni.showToast({
+				// 	title: '选择客服：' + e.name,
+				// 	duration: 1000,
+				// })
 				this.serviceId = e.id + ',' + e.name
 				this.isShow = !this.isShow;
 				uni.setStorageSync('serviceId', this.serviceId);

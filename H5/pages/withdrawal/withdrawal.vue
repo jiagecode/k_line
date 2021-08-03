@@ -14,7 +14,7 @@
 							<view class="font-sm" style="color: #eddcd6;">储蓄卡</view>
 					  </view>
 				  </view>
-				  <view class="font-big" style="margin: 0 0 0 14%; color: #FFFFFF;">{{ item.cardNo }}</view>
+				  <view class="font-lgg" style="margin-left: 60rpx; color: #FFFFFF;">{{ item.cardNo }}</view>
 				</view>
 			</view>
 			<!-- 银行卡间隙 -->
@@ -22,7 +22,7 @@
 		</block>
 	</div>
 	<!-- 添加银行卡 -->
-    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
+    <view class="d-flex a-center j-center" v-if="cardList.length === 0" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
       <navigator url="../bank-info/bank-info" hover-class="none">
         <image style="margin-left: 40rpx; width: 50rpx; height: 50rpx;" src="/static/tj.png"></image>
         <view style="color: #888888;">添加银行卡</view>

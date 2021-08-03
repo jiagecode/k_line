@@ -144,10 +144,17 @@ export default {
       return headImg;
     },
     cz() {
-      console.log("跳转充值页面");
-      uni.navigateTo({
-        url: '../recharge/recharge'
-      });
+		// 提示用户
+		uni.showToast({
+			title: '暂未开放',
+			duration: 1000,
+			icon: 'none'
+		})
+		
+		console.log("跳转充值页面");
+		// uni.navigateTo({
+		// 	url: '../recharge/recharge'
+		// })
     },
     tx() {
       console.log("跳转提现页面");

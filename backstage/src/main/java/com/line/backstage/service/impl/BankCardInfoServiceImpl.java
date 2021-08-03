@@ -120,11 +120,11 @@ public class BankCardInfoServiceImpl implements BankCardInfoService {
         bankCardInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         bankCardInfo.setUserId(loginUserId);
         List<BankCardInfo> bankCardInfoLists = bankCardInfoMapper.select(bankCardInfo);
-        for (BankCardInfo b : bankCardInfoLists) {
-            // 隐藏卡号
-            b.setCardNo(".... .... .... " + b.getCardNo().substring(13));
-
-        }
+//        for (BankCardInfo b : bankCardInfoLists) {
+//            // 隐藏卡号
+//            b.setCardNo(".... .... .... " + b.getCardNo().substring(13));
+//
+//        }
         PageInfo<BankCardInfo> page = new PageInfo<>(bankCardInfoLists);
         PageHelper.clearPage();
         return new PageWrapper<>(page);
