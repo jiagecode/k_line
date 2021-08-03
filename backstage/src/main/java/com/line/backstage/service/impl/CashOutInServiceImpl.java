@@ -74,7 +74,10 @@ public class CashOutInServiceImpl implements CashOutInService {
 
     @Override
     public int insertForNew(Integer loginUserId, CashOutIn cashOutIn) {
-       if(cashOutIn.getAccountId() == null || cashOutIn.getCashType() == null){
+        if(cashOutIn.getAccountId() == null){
+            cashOutIn.setAccountId(accountInfoMapper.queryMyAccountIdByUserId(loginUserId));
+        }
+       if( cashOutIn.getCashType() == null){
            //参数错误
            return  -1;
        }
