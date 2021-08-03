@@ -23,36 +23,9 @@
 				</uni-col>
 			</uni-row>
 			<view style="border-bottom: solid #ececec 2rpx; margin-bottom: 20rpx;"></view>
-			<!--  		<uni-row class="uni-row-bot" style="height: 30rpx; border-bottom: solid #ececec 2rpx;">
-  			<uni-col :span="24">
-  				<ai-progress style="float: left;height: 30rpx; width: 100%;" :noData="true" :percentage="percentage"
-  					inBgColor="#5586d3" bgColor="#ff5252">
-  				</ai-progress>
-  			</uni-col>
-  		</uni-row> -->
 		</block>
 	</view>
 
-
-	<!--  <view style="padding: 0 4% 0 4%;">		
-    <block v-for="(item, index) in positionList" :key="item.positionId">
-      <view class="d-flex a-center" style="height: 200rpx; border-bottom: solid #ececec 2rpx;">
-        <view style="width: 300rpx;">
-          <view class="font-mdd">{{ item.skuName }}</view>
-          <view class="font-md">{{ item.beaginPrice }}-{{ item.endPrice }}</view>
-          <view class="font-sm" style="color: #999999;">{{ item.addDate }}</view>
-        </view>
-        <view class="font-md" style="width: 285rpx;">
-          {{ showUpOrDown(item.investType, item.investAmount) }}
-        </view>
-        <view style="width: 300rpx;">
-          <view class="font-md" v-show="item.investType == '1'" style="color: red;">+ {{ item.incomeAmount }}</view>
-          <view class="font-md" v-show="item.investType == '2'" style="color: #09BB07;">- {{ item.incomeAmount }}</view>
-          <view class="font-sm" style="color: #999999;">{{ item.addDate }}</view>
-        </view>
-      </view>
-    </block>
-  </view> -->
 </template>
 
 <script>
