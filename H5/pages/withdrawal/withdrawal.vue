@@ -65,7 +65,6 @@ export default {
 	},
 	methods: {
     changeMoney(){
-      console.log("00000change---")
       if(this.cashMoney != undefined && this.cashMoney != null){
         if(this.cashMoney > this.accMoney){
           this.cashMoney = this.accMoney;
