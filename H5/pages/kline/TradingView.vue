@@ -188,12 +188,8 @@
 								</div>
 							</uni-col>
 						</uni-row>
-						<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;"
-							@tap="SelectBuyAccount(inPrice)">
-							<view>￥</view>
-							<uni-easyinput @blur="SelectBuyAccount(inPrice)" @focus="SelectBuyAccount(inPrice)"
-								class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false"
-								placeholder="自定义" v-model="inPrice" />
+						<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;" @tap="SelectBuyAccount(inPrice)">
+              <view>￥</view><uni-easyinput @blur="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false" placeholder="其它金额" v-model="inPrice" />
 						</view>
 					</view>
 					<view>
@@ -345,8 +341,7 @@
 				// layerOver: false,
 				// 当前倒计时秒
 				sec: 0,
-
-				inPrice: 0,
+				inPrice: undefined,
 				// 商品代码
 				coinCode: 'BTC',
 				// 商品名称
@@ -937,7 +932,7 @@
 			},
 			// 跳转持仓
 			ClickCc() {
-				uni.redirectTo({
+				uni.navigateTo({
 					url: '../transaction-records/transaction-now'
 				})
 			},
