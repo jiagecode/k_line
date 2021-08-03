@@ -48,9 +48,9 @@ public class SysUserInfoController {
      * @param sysUserInfo 实例对象
      * @return 是否成功
      */
-    @PostMapping("save")
+    @PostMapping("saveSys")
     @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统用户表的一条数据")
-    public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统用户表对象", required = true) @RequestBody @Validated SysUserInfo sysUserInfo) {
+    public ResponseModel saveSys(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统用户表对象", required = true) @RequestBody @Validated SysUserInfo sysUserInfo) {
             return ResponseHelper.success(sysUserInfoService.save(Integer.valueOf(loginUserId), sysUserInfo));
     }
  
@@ -86,7 +86,7 @@ public class SysUserInfoController {
      * @param sysUserInfo 查询条数
      * @return 对象列表
      */
-    @PostMapping("list")
+    @PostMapping("sysList")
     @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "后台管理系统用户表对象", required = true) @RequestBody SysUserInfo sysUserInfo) {
         return ResponseHelper.success(sysUserInfoService.list(Integer.valueOf(ManageUserId), sysUserInfo));

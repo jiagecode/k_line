@@ -95,6 +95,13 @@ export function queryOptData1() {
     method: 'get',
   })
 }
+//查询角色下拉框
+export function queryOptData2() {
+  return request({
+    url: '/sysDiy/optionList2',
+    method: 'get',
+  })
+}
 export function queryAgentData1(params) {
   return request({
     url: '/sysUserInfo/queryAgentData',
@@ -106,6 +113,21 @@ export function queryAgentData1(params) {
 export function moneyTableAll(data) {
   return request({
     url: '/sysUserInfo/moneyTableTotal',
+    method: 'post',
+    data:data
+  })
+}
+//查询管理员列表
+export function querySysUserList(data){
+  return request({
+    url: '/sysUserInfo/sysList',
+    method: 'post',
+    data:data
+  })
+}
+export function saveSysUser(data){
+  return request({
+    url: '/sysUserInfo/saveSys',
     method: 'post',
     data:data
   })

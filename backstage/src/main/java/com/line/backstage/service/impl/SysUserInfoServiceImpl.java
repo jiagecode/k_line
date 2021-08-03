@@ -64,11 +64,28 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      */
     @Override
     public int save(Integer loginUserId, SysUserInfo sysUserInfo) {
+        if(sysUserInfo.getDel() ==null){
+            sysUserInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        }
+        sysUserInfo.setEditDate(new Date());
+        sysUserInfo.setEditUserId(loginUserId);
         if(sysUserInfo.getSysUserId() == null){
-            return insert(loginUserId, sysUserInfo);
+            sysUserInfo.setAddUserId(loginUserId);
+            sysUserInfo.setAddDate(new Date());
+            int num =  insert(loginUserId, sysUserInfo);
+            if(num == 1){
+                String encryptPwd = PasswordHelper.encryptPassword(sysUserInfo.getSysUserCode(), sysUserInfo.getSysUserPassword());
+                sysUserInfo.setSysUserPassword(encryptPwd);
+                return sysUserInfoMapper.updateByPrimaryKeySelective(sysUserInfo);
+            }
         } else {
+            if(StringUtils.isNotEmpty(sysUserInfo.getSysUserPassword2())){
+                String encryptPwd = PasswordHelper.encryptPassword(sysUserInfo.getSysUserCode(), sysUserInfo.getSysUserPassword2());
+                sysUserInfo.setSysUserPassword(encryptPwd);
+            }
             return update(loginUserId,sysUserInfo);
         }
+        return 0;
     }
  
     /**
@@ -80,7 +97,6 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      */
     @Override
     public int insert(Integer loginUserId, SysUserInfo sysUserInfo) {
-        sysUserInfo.setAddUserId(loginUserId);
         return sysUserInfoMapper.insertSelective(sysUserInfo);
     }
  
@@ -108,9 +124,7 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
      */
     @Override
     public int update(Integer loginUserId, SysUserInfo sysUserInfo){
-		SysUserInfo s = sysUserInfoMapper.selectByPrimaryKey(sysUserInfo.getSysUserId());
-		// FIXME 待完善
-        return sysUserInfoMapper.updateByPrimaryKeySelective(s);
+        return sysUserInfoMapper.updateByPrimaryKeySelective(sysUserInfo);
 	}
  
     /**
@@ -134,8 +148,16 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     @Override
     public PageWrapper<SysUserInfo> list(Integer loginUserId, SysUserInfo sysUserInfo) {
         PageHelper.startPage(sysUserInfo.getPageNum(), sysUserInfo.getPageSize());
-        sysUserInfo.setDel(DataEnum.FLAG_STATUS_VALID.getCode());
-        PageInfo<SysUserInfo> page = new PageInfo<>(sysUserInfoMapper.select(sysUserInfo));
+        sysUserInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
+        List<SysUserInfo> list = sysUserInfoMapper.select(sysUserInfo);
+        if(list!=null && list.size()>0){
+            for (SysUserInfo s : list){
+                if(s.getSysRoleId() !=null){
+                    s.setRoleName(sysUserInfoMapper.queryRoleName(s.getSysRoleId()));
+                }
+            }
+        }
+        PageInfo<SysUserInfo> page = new PageInfo<>(list);
         PageHelper.clearPage();
         return new PageWrapper<>(page);
     }
