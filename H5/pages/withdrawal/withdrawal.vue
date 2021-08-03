@@ -84,6 +84,7 @@ export default {
           })
           return;
         }
+        this.accMoney = MathUtil.sub(this.accMoney,this.cashMoney);
           var data = {
             cashType : 1,
             cashMoney : this.cashMoney
