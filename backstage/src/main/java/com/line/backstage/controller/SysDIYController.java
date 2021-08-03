@@ -81,6 +81,11 @@ public class SysDIYController {
     public ResponseModel queryOptionList1(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId){
         return ResponseHelper.success(sysDiyService.queryOptionsForAgent(Integer.valueOf(loginUserId)));
     }
+    @GetMapping("optionList2")
+    @ApiOperation(value = "查询后台角色下拉列表", notes = "根据token的用户id}")
+    public ResponseModel queryOptionList2(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId){
+        return ResponseHelper.success(sysDiyService.queryOptionsForRole(Integer.valueOf(loginUserId)));
+    }
 
     @PostMapping("changeInfo")
     @ApiOperation(value = "修改操作用户信息", notes = "修改操作用户信息")

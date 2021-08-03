@@ -1,5 +1,6 @@
 package com.line.backstage.redis;
 
+import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -565,5 +566,15 @@ public class RedisUtil {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    /**
+     * 消息反序列化
+     *
+     * @param message
+     * @return
+     */
+    public String msgDeserialize(Message message) {
+        return redisTemplate.getValueSerializer().deserialize(message.getBody()).toString();
     }
 }

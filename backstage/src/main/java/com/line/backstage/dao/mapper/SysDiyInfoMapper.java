@@ -18,4 +18,5 @@ public interface SysDiyInfoMapper extends TkBaseMapper<SysDiyInfo> {
     List<SysDiyInfo> selectAsList(SysDiyInfo sysDiyInfo);
     List<Map<String, Object>> querySkuDataList();
     List<ManOptionVo> queryOptionsForAgent();
+    List<ManOptionVo> queryOptionsForSysRole();
 }

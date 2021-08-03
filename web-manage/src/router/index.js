@@ -248,6 +248,11 @@ export const constantRoutes = [
         name: 'menus',
         component: () => import('@/views/role/menu'),
         meta: { title: '角色管理' }
+      }, {
+        path: 'sysuser',
+        name: 'sysuser',
+        component: () => import('@/views/role/sysuser'),
+        meta: { title: '系统用户' }
       },
       {
         path: 'bank',

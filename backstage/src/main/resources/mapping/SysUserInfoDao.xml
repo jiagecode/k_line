@@ -17,6 +17,9 @@
         <result property="del" column="DEL" jdbcType="OTHER"/>
     </resultMap>
 
+    <select id="queryRoleName" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT  ROLE_NAME  FROM t_sys_role_info where DEL = 1 and ROLE_ID =#{rid}
+    </select>
     <select id="queryHomeDate" parameterType="java.lang.String" resultType="java.util.Map">
         SELECT t1.date_str,-- 日期
                IFNULL(t2.merchantNumber, 0) AS merchantNumber,-- 用户户数量

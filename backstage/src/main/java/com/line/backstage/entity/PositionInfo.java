@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import io.swagger.annotations.*;
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -142,4 +143,6 @@ public class PositionInfo extends QueryRequest implements Serializable {
     @ApiModelProperty("数据状态")
     private Integer del;
     private Integer diyId;
+    @Transient
+    private Integer winFlag;
 }

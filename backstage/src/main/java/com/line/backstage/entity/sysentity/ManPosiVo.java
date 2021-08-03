@@ -18,7 +18,6 @@ public class ManPosiVo extends PositionInfo {
      */
     private String userRealName;
     private Integer orderId;
-    private Integer winFlag;
     private Integer agentId;
     private String agentName;
     private Date settlementDate;

@@ -11,8 +11,12 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
@@ -33,18 +37,23 @@ public class KLineDataServer {
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的
      */
-    public static AtomicInteger onlineCount = new AtomicInteger(0);
+    private static AtomicInteger onlineCount = new AtomicInteger(0);
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的webSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
      */
-    private static CopyOnWriteArraySet<KLineDataServer> webSocketSet = new CopyOnWriteArraySet<KLineDataServer>();
+    public static CopyOnWriteArraySet<KLineDataServer> webSocketSet = new CopyOnWriteArraySet<KLineDataServer>();
+
+    /**
+     * 货品列表，不重复的
+     */
+    public static CopyOnWriteArrayList<String> codeList = new CopyOnWriteArrayList<>();
 
     /**
      * 与某个客户端的连接会话，需要通过它来给客户端发送数据
      */
     private Session session;
 
-    private SubscribeListener subscribeListener;
+    public SubscribeListener subscribeListener;
 
     /**
      * 连接建立成功调用的方法
@@ -56,10 +65,13 @@ public class KLineDataServer {
         this.session = session;
         webSocketSet.add(this);
         addOnlineCount();
-        System.out.println("连接加入！当前在线 " + getOnlineCount());
         subscribeListener = new SubscribeListener();
         subscribeListener.setSession(session, sid, coinCode);
-        //设置订阅topic
+        // 新增到货品列表
+        codeList.addIfAbsent(coinCode);
+        System.out.println("当前code列表: " + codeList.toString());
+        System.out.println("连接加入！当前在线 " + getOnlineCount());
+        // 设置订阅topic
         redisMessageListenerContainer.addMessageListener(subscribeListener, new ChannelTopic(coinCode));
     }
 
@@ -71,6 +83,16 @@ public class KLineDataServer {
         webSocketSet.remove(this);
         subOnlineCount();
         redisMessageListenerContainer.removeMessageListener(subscribeListener);
+
+        // 前面已经remove了，这里重新统计已有的list，移除不再需要的code
+        List<String> nowCodeList = getNowCodeList();
+        codeList.stream().forEach(item->{
+            // 移除不再本次统计结果中的code
+            if(!nowCodeList.contains(item)){
+                codeList.remove(item);
+            }
+        });
+        System.out.println("当前code列表: " + codeList.toString());
         System.out.println("连接关闭！当前在线 " + getOnlineCount());
     }
 
@@ -126,6 +148,14 @@ public class KLineDataServer {
 
     public void subOnlineCount() {
         KLineDataServer.onlineCount.getAndDecrement();
+    }
+
+    private List<String> getNowCodeList() {
+        List<String> list = new ArrayList<>();
+        KLineDataServer.webSocketSet.forEach(item -> {
+            list.add(item.subscribeListener.getCode());
+        });
+        return list.stream().distinct().collect(Collectors.toList());
     }
 
 }

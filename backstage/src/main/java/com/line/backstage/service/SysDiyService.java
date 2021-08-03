@@ -84,6 +84,7 @@ public interface SysDiyService {
      * @return
      */
     List<ManOptionVo> queryOptionsForAgent(Integer loginUserId);
+    List<ManOptionVo> queryOptionsForRole(Integer loginUserId);
 
     OrderInfo queryDetailForOrder(Integer loginUserId,Integer orderId);
 }

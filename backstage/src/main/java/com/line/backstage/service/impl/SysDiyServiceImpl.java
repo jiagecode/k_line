@@ -371,6 +371,11 @@ public class SysDiyServiceImpl implements SysDiyService {
     }
 
     @Override
+    public List<ManOptionVo> queryOptionsForRole(Integer loginUserId) {
+        return sysDiyInfoMapper.queryOptionsForSysRole();
+    }
+
+    @Override
     public OrderInfo queryDetailForOrder(Integer loginUserId,Integer orderId) {
 
         OrderInfo o = orderInfoMapper.queryOneById(orderId);

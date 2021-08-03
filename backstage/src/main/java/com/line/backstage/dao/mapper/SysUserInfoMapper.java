@@ -21,4 +21,5 @@ public interface SysUserInfoMapper extends TkBaseMapper<SysUserInfo> {
      * @return
      */
     List<Map<String, Object>> queryHomeDate(@Param("endTime") String dateStr);
+    String queryRoleName(@Param("rid") Integer roleId);
 }

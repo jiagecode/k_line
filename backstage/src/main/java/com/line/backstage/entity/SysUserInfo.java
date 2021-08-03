@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
  
@@ -44,7 +41,14 @@ public class SysUserInfo extends QueryRequest implements Serializable {
     */            
     @ApiModelProperty("登录密码")
     private String sysUserPassword;
-    
+    /**
+     * 新密码
+     */
+    @Transient
+    private String sysUserPassword2;
+    @Transient
+    private String roleName;
+
     /**
     * 用户名
     */            

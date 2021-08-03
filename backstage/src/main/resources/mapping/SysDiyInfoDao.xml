@@ -64,4 +64,8 @@
         SELECT distinct AGENT_NAME `label` ,AGENT_ID  as `value`  FROM t_user_info where DEL = 1 and USER_TYPE = 2
     </select>
 
+    <select id="queryOptionsForSysRole" resultType="com.line.backstage.entity.sysentity.ManOptionVo">
+        SELECT distinct ROLE_NAME `label` ,ROLE_ID  as `value`  FROM t_sys_role_info where DEL = 1
+    </select>
+
 </mapper>

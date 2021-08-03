@@ -28,6 +28,21 @@
         <view style="color: #888888;">添加银行卡</view>
       </navigator>
     </view>
+      <!-- 用户提现   -->
+    <view class="d-flex a-center j-center" style="background-color: #eeeeee; border: dashed #ececec 5rpx; border-radius: 15rpx; height: 150rpx;">
+      <view class="d-flex a-center"
+            style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
+        <text>提现金额：</text>
+        <uni-easyinput type="number" v-model="cashMoney" :inputBorder="false" @change="changeMoney"/>
+      </view>
+      <view class="d-flex a-center"
+            style="height: 110rpx; border-top: #c9c7bf solid 1rpx; border-bottom: #c9c7bf solid 1rpx;">
+        <text>账户余额:<span>{{accMoney}}</span></text>
+        <text>手续费:<span style="color: goldenrod">1%</span></text>
+        <text>实际到账:<span style="color: goldenrod">{{arriveMoney}}</span></text>
+      </view>
+      <button style="margin-top: 50rpx; width: 45%; background-color: #5586d3; color: #FFFFFF;" @click="addCashOut()">确认出金</button>
+    </view>
   </view>
 </template>
 
@@ -37,10 +52,55 @@ import https from "../../api/api";
 export default {
 	data() {
 		return {
+		  cashMoney:0,
+      accMoney:undefined,
+      arriveMoney:undefined,
 			cardList: []
 		}
 	},
 	methods: {
+    changeMoney(){
+      if(this.cashMoney != undefined && this.cashMoney != null){
+        if(this.cashMoney > this.accMoney){
+          this.cashMoney = this.accMoney;
+        }
+        this.arriveMoney = this.cashMoney * 0.99 ;
+      }
+    },
+    addCashOut(){
+      if(this.cashMoney != undefined && this.cashMoney != null){
+        if(this.cashMoney > this.accMoney){
+          this.cashMoney = this.accMoney;
+        }
+        if(this.cashMoney > 0){
+          var data = {
+            cashType : 1,
+            cashMoney : this.cashMoney,
+          }
+          https.addCash(data).then((res)=>{
+            if(res != null ){
+              if(res.code == 10000){
+                uni.showToast({
+                  title: '提现成功！',
+                  duration: 1000,
+                })
+              }else {
+                uni.showToast({
+                  title: res.message,
+                  duration: 1000,
+                })
+              }
+            }
+          })
+        }else {
+          uni.showToast({
+            title: '余额不足！',
+            duration: 1000,
+          })
+        }
+      }
+    },
+
 		loadData(){
 			https.myCardList({}).then((res) => {
 				if (res != null) {
@@ -50,6 +110,11 @@ export default {
 					console.log("银行卡数据:" + res.list);
 				}
 			})
+      // 请求用户信息
+      https.getUserInfo().then((res)=> {
+        this.accMoney = res.userMoney;
+      });
+
 		}
 	},
 	onShow() {

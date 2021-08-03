@@ -7,6 +7,7 @@ const urls = {
 	myOrderList: "/orderInfo/queryMyOrder", //获取我的订单
 	myCard: "/bankCardInfo/queryMyBankCard", //查询我的银行卡
 	cashOutIn: "/cashOutIn/myCashOutList", //查询我的提现、充值记录
+	addCash: "/cashOutIn/insertForNew", //提交提现
 	myPosition: "/positionInfo/mySkuForList", //查询我的持仓
 	myCusSku: "/skuCusInfo/queryMySku", //查询我的自选SKUCODE
 	userRegister: "/userInfo/createUserInfo", // H5用户注册
@@ -45,6 +46,9 @@ module.exports = {
 	},
 	myOrderList(data) {
 		return doRequest('POST', urls.myOrderList, data)
+	},
+	addCash(data) {
+		return doRequest('POST', urls.addCash, data)
 	},
 	myCardList(data) {
 		return doRequest('POST', urls.myCard, data)
