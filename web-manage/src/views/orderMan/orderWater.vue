@@ -17,6 +17,16 @@
                           type="date"
                           placeholder="默认查当日">
           </el-date-picker>
+          <div class="app-box-input app-marginR">
+            <div class="app-box-input-txt">代理商：</div>
+            <el-select v-model="userAgentId"  placeholder="请选择代理">
+              <el-option
+                v-for="item in agentOpt"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
           <div class="app-box-select app-marginR">
             <el-select v-model="region" placeholder="查询条件" @change="changeTj">
               <el-option label="用户编号" value="1"></el-option>
@@ -70,6 +80,7 @@
           <div class="app-btn-box">
             <el-button type="primary" icon="el-icon-search" @click="seeOther">查找</el-button>
             <el-button type="primary" icon="el-icon-menu" @click="seeAll">全部</el-button>
+            <el-button type="primary" icon="el-icon-menu" @click="changeTen">{{btnTitle}}十秒自动刷新</el-button>
           </div>
         </div>
         <div class="app-tab-box">
@@ -118,6 +129,12 @@
                 <span v-if="item.prop==='outPoint'">
                              {{ scope.row.outPoint }}
                 </span>
+                <span v-if="item.prop==='investAmount'">
+                             {{ scope.row.investAmount }}
+                </span>
+                <span v-if="item.prop==='expectedReturn'">
+                             {{ scope.row.expectedReturn }}
+                </span>
                 <span v-if="item.prop==='userMoney'">
                              {{ scope.row.userMoney }}
                 </span>
@@ -136,16 +153,25 @@
                 <span v-if="item.prop==='agentName'">
                              {{ scope.row.agentName }}
                 </span>
+                <span v-if="item.prop==='winFlag'">
+                             {{ showDescWin(2,scope.row.winFlag) }}
+                </span>
                 <!-- 正常的其他列 -->
 <!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
               </template>
             </el-table-column>
             <el-table-column
               label="操作"
-              width="180">
+              width="250">
               <template slot-scope="scope">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="showDetail(scope.$index, scope.row)">详情
+                </el-button>
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 1"
+                           @click="changeWin(1, scope.row.orderId)">控赢
+                </el-button>
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 2"
+                           @click="changeWin(2, scope.row.orderId)">控输
                 </el-button>
               </template>
             </el-table-column>
@@ -227,14 +253,19 @@
 
 <script>
 import {removejyList, caozuo} from '@/api/jiaoyi'
-import {orderVoList} from '@/api/adminUser'
+import {editWinFlag, orderVoList, queryOptData1} from '@/api/adminUser'
 
 export default {
   name: 'OrderWater',
   data() {
     return {
+      timer: '',
       value1: '',
       value2: '',
+      btnTitle:'关闭',
+      btnFlag:true,
+      userAgentId: '',
+      agentOpt: [],
       currentPage: 1,
       dialogFormVisible : false,
       orderDetail:{},
@@ -270,7 +301,7 @@ export default {
           label: '方向',
           prop: 'investType'
         }, {
-          label: '时间/点数',
+          label: '点数',
           prop: 'orderCycle'
         }, {
           label: '建仓点位',
@@ -278,6 +309,12 @@ export default {
         }, {
           label: '平仓点位',
           prop: 'outPoint'
+        }, {
+          label: '投资金额',
+          prop: 'investAmount'
+        }, {
+          label: '预期收益',
+          prop: 'expectedReturn'
         }, {
           label: '委托余额',
           prop: 'userMoney'
@@ -294,8 +331,11 @@ export default {
           label: '总盈亏',
           prop: 'allMoney'
         }, {
-          label: '所属代理商',
+          label: '代理商',
           prop: 'agentName'
+        }, {
+          label: '预测输赢',
+          prop: 'winFlag'
         }
       ],
       orderDataList: ''
@@ -303,8 +343,68 @@ export default {
   },
   created() {
     this.queryOrderDataList()
+    this.queryOptData1Met();
+    this.timer = setInterval(this.autoQuery, 10000);
   },
   methods: {
+    changeTen(){
+      if(this.btnFlag){
+        this.btnFlag = false;
+        this.btnTitle='开启';
+      }else {
+        this.btnFlag = true;
+        this.btnTitle='关闭';
+      }
+    },
+    autoQuery(){
+      if(this.btnFlag){
+       // console.log("开始 -- 自动查询")
+        this.seeOther();
+      }
+    },
+    //控输赢
+    changeWin(winFlag, orderId) {
+      // console.log(row)
+      this.$confirm('此操作改变此订单输赢结果, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        var data={winFlag:winFlag,
+          orderId:orderId}
+        editWinFlag(data).then(res=>{
+          if (res.code == 10000) {
+            var re = res.data;
+            if(re ==1){
+              this.$message.info('调整成功');
+            }else if(re == -2){
+              this.$message.error('订单已结算无法调整');
+            }
+          }else {
+            this.$message.error('调整失败')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    //初始化代理商
+    queryOptData1Met(){
+      queryOptData1().then(res =>{
+        if (res.code == 10000) {
+          this.agentOpt = res.data;
+        }else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    showDescWin(val){
+        return  val == 0?"未知":val == 1?"赢":"输";
+    },
     showTodayMoneyDesc(todayMoney){
       return (todayMoney ==null || todayMoney ==undefined) ? 0 :todayMoney;
     },
@@ -338,7 +438,7 @@ export default {
     seeOther() {
       this.currentPage = 1
       var time1 = '', time2 = ''
-      console.log(this.value1)
+      //console.log(this.value1)
       if (this.value1 != '' && this.value1 != null) {
         time1 = this.value1.getTime()
       }
@@ -352,6 +452,7 @@ export default {
         beginDate: time1,
         endDate: time2,
         userId: this.input1,
+        agentId:this.userAgentId,
         userRealName: this.input2,
         orderId: this.input3,
         userType: this.region1,
@@ -381,6 +482,7 @@ export default {
       this.region3 = ''
       this.region4 = ''
       this.region = ''
+      this.userAgentId = undefined
       this.currentPage = 1
       var data = {
         pageNum: this.currentPage
@@ -494,26 +596,26 @@ export default {
     }
 
   },
-  filters: {
-    accountNumber(val) {
-      return val == 1 ? '支付宝' : '银行卡'
-    },
-    payStyle(val) {
-      return val == 1 ? '单笔' : '批量'
-    },
-    payType(val) {
-      return val == 1 ? '支付宝' : '银行卡'
-    },
-    callbackStatus(val) {
-      return val == 1 ? '已回调' : '未回调'
-    },
-    topUpStatus(val) {
-      return val == 0 ? '处理中' : '处理完成'
-    },
-    resultStatus(val) {
-      return val == 0 ? '失败' : val == 1 ? '成功' : '未处理'
-    }
-  }
+  // filters: {
+  //   accountNumber(val) {
+  //     return val == 1 ? '支付宝' : '银行卡'
+  //   },
+  //   payStyle(val) {
+  //     return val == 1 ? '单笔' : '批量'
+  //   },
+  //   payType(val) {
+  //     return val == 1 ? '支付宝' : '银行卡'
+  //   },
+  //   callbackStatus(val) {
+  //     return val == 1 ? '已回调' : '未回调'
+  //   },
+  //   topUpStatus(val) {
+  //     return val == 0 ? '处理中' : '处理完成'
+  //   },
+  //   resultStatus(val) {
+  //     return val == 0 ? '失败' : val == 1 ? '成功' : '未处理'
+  //   }
+  // }
 }
 </script>
 

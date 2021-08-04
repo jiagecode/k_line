@@ -92,7 +92,7 @@
     </update>
     <select id="queryManOrderVoForPage" parameterType="com.line.backstage.entity.sysentity.ManOrderVo" resultMap="ManOrderVoInfoMap">
         select <include refid="orderInfo_Column_List"/>
-        from (SELECT * FROM t_account_record WHERE del = 1 and RECORD_TYPE >2 ) re
+        from (SELECT * FROM t_account_record WHERE del = 1 and RECORD_TYPE = 3 ) re
         left join t_order_info o on re.ORDER_ID = o.ORDER_ID
         left join t_user_info u on o.USER_ID = u.USER_ID
         left join t_account_info a on o.USER_ID = a.USER_ID
@@ -107,6 +107,9 @@
         </if>
         <if test="userType != null ">
             and u.USER_TYPE = #{userType}
+        </if>
+        <if test="agentId != null ">
+            and u.AGENT_ID = #{agentId}
         </if>
         <if test="orderStatus != null ">
             and o.ORDER_STATUS = #{orderStatus}
@@ -132,6 +135,7 @@
         <if test=" endDate != null ">
             and o.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
+        order by o.ORDER_ID desc
     </select>
 
     <select id="countTodayOrderNum" parameterType="java.util.Map" resultType="java.lang.Integer">

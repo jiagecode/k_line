@@ -29,6 +29,7 @@ public class ManOrderVo extends OrderInfo {
 
     private Integer accountId;
     private Integer userType;
+    private Integer agentId;
     private Integer queryDataFlag;
     private Integer todayNum;
 }
