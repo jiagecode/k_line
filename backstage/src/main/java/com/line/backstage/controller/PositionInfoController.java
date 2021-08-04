@@ -87,5 +87,11 @@ public class PositionInfoController {
     public ResponseModel pullList(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户持仓", required = true) @RequestBody ManPosiVo positionInfo) {
         return ResponseHelper.success(positionInfoService.queryManPosiVo(Integer.valueOf(loginUserId), positionInfo));
     }
- 
+
+    @PostMapping("handEnd")
+    @ApiOperation(value = "结算", notes = "结算")
+    public ResponseModel handEnd(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId) {
+        return ResponseHelper.success(positionInfoService.handleEndOrder(Integer.valueOf(loginUserId)));
+    }
+
 }

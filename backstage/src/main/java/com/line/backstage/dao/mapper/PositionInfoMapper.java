@@ -25,4 +25,11 @@ public interface PositionInfoMapper extends TkBaseMapper<PositionInfo> {
      */
     List<ManPosiVo> queryManPosiVo(ManPosiVo vo);
     Integer updateForDiy(@Param("diyId") Integer diyId, @Param("userId") Integer userId, @Param("del") Integer del, @Param("sysUserId")Integer sysUserId);
+
+    /**
+     * 根据用户查询持仓列表
+     * @param loginUserId
+     * @return
+     */
+    List<ManPosiVo> queryManPosiVoList(@Param("userId") Integer loginUserId);
 }

@@ -145,10 +145,10 @@ public class AsyncGenOrderMinAndMilsDataService {
             long tempTime = i % 60;
             if (tempTime == 0) {
                 // 整数分钟，需要同时生成一条分钟数据
-                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), RedisConfig.OVERDUE);
+                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), redisUtil.getOverdue());
             }
 
-            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), RedisConfig.OVERDUE);
+            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), redisUtil.getOverdue());
             orderNum++;
         }
 

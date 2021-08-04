@@ -17,6 +17,7 @@ import com.line.backstage.service.OrderInfoService;
 import com.line.backstage.service.PositionInfoService;
 import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.PageWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ import java.util.Map;
  * @author jack
  * @since 2000-06-29 14:53:18
  */
+@Slf4j
 @Service("orderInfoService")
 public class OrderInfoServiceImpl implements OrderInfoService {
 
@@ -53,6 +55,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private RedisUtil redisUtil;
     @Autowired
     private AsyncGenOrderMinAndMilsDataService dataService;
+
     private static final String ORDER_KEY = "order:ids:";
     /**
      * 冻结标志
@@ -78,29 +81,29 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public int editForWin(Integer loginUserId, OrderInfo orderInfo) {
         OrderInfo o = orderInfoMapper.queryOneById(orderInfo.getOrderId());
-        if(o == null){
+        if (o == null) {
             return -1;
         }
-        if(o.getOrderStatus() == 2){
-            return  -2;
+        if (o.getOrderStatus() == 2) {
+            return -2;
         }
-        if(o.getSettlementDate()!= null && o.getSettlementDate().getTime()<=System.currentTimeMillis()+2000 ){
-            return  -3;
+        if (o.getSettlementDate() != null && o.getSettlementDate().getTime() <= System.currentTimeMillis() + 2000) {
+            return -3;
         }
         Integer winFlag = orderInfo.getWinFlag();
         Integer winOld = o.getWinFlag();
-        if(winFlag.equals(winOld)){
-            return  -4;
+        if (winFlag.equals(winOld)) {
+            return -4;
         }
         Integer investType = o.getInvestType();
         Double inPoint = o.getInPoint();
         boolean isWin = winFlag == 1;
-        double outPont = getEndPoint(isWin,inPoint,investType);
+        double outPont = getEndPoint(isWin, inPoint, investType);
         o.setWinFlag(winFlag);
         o.setOutPoint(outPont);
         int num = orderInfoMapper.updateForWin(o);
-        if(1 == num){
-            Map<String,Object> map = getCallMap(o,loginUserId,isWin);
+        if (1 == num) {
+            Map<String, Object> map = getCallMap(o, loginUserId, isWin);
             //调推送方法
             dataService.autoGenDataMain(map);
         }
@@ -126,6 +129,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> insertForBuy(Integer loginUserId, OrderInfo orderInfo) {
+        // 先尝试结算订单
+        positionInfoService.handleEndOrder(loginUserId);
+
         Map<String, Object> map = new HashMap<>();
         // 查询用户信息
         AccountInfo accountInfo = accountInfoService.queryByLoginUserId(loginUserId);
@@ -148,8 +154,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             return map;
         }
         Integer notEnd = orderInfoMapper.notEndOrderNum(loginUserId);
-        if(notEnd !=null && notEnd >0){
-            //用户资金不足
+        if (notEnd != null && notEnd > 0) {
             map.put("resultCode", "-4");
             map.put("resultDesc", "您有订单未结算,暂时无法下单!");
             return map;
@@ -234,7 +239,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         Integer orderId = orderInfo.getOrderId();
         accountRecord.setOrderId(orderId);
         accountRecordService.insert(loginUserId, accountRecord);
-        map = getCallMap(orderInfo,loginUserId,isWin);
+        map = getCallMap(orderInfo, loginUserId, isWin);
         //下单成功 记录失效时间
         redisUtil.set(ORDER_KEY + orderId, 1, orderCycle);
         //调推送方法
@@ -242,22 +247,23 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         return map;
     }
 
-    private Map<String, Object> getCallMap(OrderInfo o,Integer loginUserId,boolean iswin){
+    private Map<String, Object> getCallMap(OrderInfo o, Integer loginUserId, boolean iswin) {
         Map<String, Object> map = new HashMap<>();
         map.put("resultCode", "1");
         map.put("resultDesc", "下单成功！");
         map.put("orderId", o.getOrderId());
         map.put("userId", loginUserId);
-        map.put("isWin",iswin );
+        map.put("isWin", iswin);
         map.put("investType", o.getInvestType());
         map.put("inPoint", o.getInPoint());
         map.put("outPoint", o.getOutPoint());
         map.put("inDate", DateUtil.dateToTimeStamp(o.getAddDate()));
         map.put("outDate", DateUtil.dateToTimeStamp(o.getSettlementDate()));
         map.put("orderCycle", o.getOrderCycle());
-        map.put("skuCode",o.getSkuCode());
+        map.put("skuCode", o.getSkuCode());
         return map;
     }
+
     /**
      * 计算用户卖出点位
      *

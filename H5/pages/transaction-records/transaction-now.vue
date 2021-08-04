@@ -102,6 +102,7 @@
 						// 100% 时 刷新
 						if (percent >= 100) {
 							that.positionList = [];
+							that.loadData();
 							// 1.5秒后跳转，留出处理时间
 							// setTimeout(() => {
 							// 	uni.redirectTo({

@@ -6,6 +6,9 @@ import com.line.backstage.enums.DataEnum;
 import com.line.backstage.utils.PageWrapper;
 import com.line.backstage.dao.mapper.PositionInfoMapper;
 import com.line.backstage.service.PositionInfoService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,6 +25,7 @@ import javax.annotation.Resource;
  * @author jack
  * @since 2000-07-01 11:34:50
  */
+@Slf4j
 @Service("positionInfoService")
 public class PositionInfoServiceImpl implements PositionInfoService {
 
@@ -30,6 +34,8 @@ public class PositionInfoServiceImpl implements PositionInfoService {
      */
     @Resource
     private PositionInfoMapper positionInfoMapper;
+    @Resource
+    private OrderSettlementServiceImpl orderSettlementService;
 
     /**
      * 保存数据
@@ -113,6 +119,11 @@ public class PositionInfoServiceImpl implements PositionInfoService {
         return new PageWrapper<>(page);
     }
 
+    @Override
+    public List<ManPosiVo>  queryManPosiVoList(Integer loginUserId) {
+        return positionInfoMapper.queryManPosiVoList(loginUserId);
+    }
+
     /**
      * 查询多条数据
      *
@@ -122,6 +133,9 @@ public class PositionInfoServiceImpl implements PositionInfoService {
      */
     @Override
     public PageWrapper<ManPosiVo> list(Integer loginUserId, PositionInfo positionInfo) {
+        // 尝试结算
+        this.handleEndOrder(loginUserId);
+        // 再查询
         PageHelper.startPage(positionInfo.getPageNum(), positionInfo.getPageSize());
         positionInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
         positionInfo.setUserId(loginUserId);
@@ -129,5 +143,30 @@ public class PositionInfoServiceImpl implements PositionInfoService {
         PageInfo<ManPosiVo> page = new PageInfo<>(positionInfoMapper.selectForPage(loginUserId,DataEnum.FLAG_STATUS_INVALID.getCode(),pst));
         PageHelper.clearPage();
         return new PageWrapper<>(page);
+    }
+
+    /**
+     * 尝试结算订单
+     *
+     * @param loginUserId
+     */
+    @Override
+    public int handleEndOrder(Integer loginUserId) {
+        int result = 0;
+        // 查询end订单
+        List<ManPosiVo> endList = this.queryManPosiVoList(loginUserId);
+        if (CollectionUtils.isEmpty(endList)) {
+            return result;
+        }
+        // 结算
+        for (ManPosiVo item : endList) {
+            // 判断是否可以结算
+            log.info("当前时间：{}, 订单时间：{}", System.currentTimeMillis(), item.getEndDate().getTime());
+            if (System.currentTimeMillis() >= item.getEndDate().getTime()) {
+                orderSettlementService.dealSettlementByOrderId(String.valueOf(item.getOrderId()));
+                result += 1;
+            }
+        }
+        return result;
     }
 }

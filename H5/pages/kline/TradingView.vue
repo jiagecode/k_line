@@ -188,8 +188,11 @@
 								</div>
 							</uni-col>
 						</uni-row>
-						<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;" @tap="SelectBuyAccount(inPrice)">
-              <view>￥</view><uni-easyinput @blur="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;" type="number" :inputBorder="false" placeholder="其它金额" v-model="inPrice" />
+						<view class="d-flex j-center a-center page-amount page-amount-7" style="color: #5586d3;"
+							@tap="SelectBuyAccount(inPrice)">
+							<view>￥</view>
+							<uni-easyinput @blur="SelectBuyAccount(inPrice)" class="font-sm" style="color: #5586d3;"
+								type="number" :inputBorder="false" placeholder="其它金额" v-model="inPrice" />
 						</view>
 					</view>
 					<view>
@@ -211,7 +214,7 @@
 							<uni-col :span="6" class="row-page2-item">
 								<div>
 									<view class="uni-col-page2 light-page2-t">名称</view>
-									<view class="uni-col-page2 light-page2-d page-2-name">{{OrderCoin}}</view>
+									<view class="uni-col-page2 light-page2-d page-2-name">{{coinName}}</view>
 								</div>
 							</uni-col>
 							<uni-col :span="6" class="row-page2-item">
@@ -262,14 +265,20 @@
 
 				<!-- 内容2 倒计时 start -->
 				<view v-if="layerTimer">
-					<view class="layer-timer-title">{{OrderCoin}}</view>
+					<view class="layer-timer-title">{{coinName}}</view>
 					<view>
 						<div class="page2-t-line"></div>
 					</view>
 					<view>
 						<!-- <CircleTimer1 :percentage="50"></CircleTimer1> -->
-						<view style="display: block; width: 100%;height: 80upx;font-size: 70upx;font-weight: bold;line-height: 80upx;color: #5586d3;text-align: center;margin-top: 10upx;margin-bottom: 30upx;">{{sec}}</view>
-						<view :class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'" style="width: 100%;display: block;text-align: center;font-size: 12upx;line-height: 40upx;">{{OrderCoinPrice}}</view>
+						<view
+							style="display: block; width: 100%;height: 80upx;font-size: 70upx;font-weight: bold;line-height: 80upx;color: #5586d3;text-align: center;margin-top: 10upx;margin-bottom: 30upx;">
+							{{sec}}
+						</view>
+						<view :class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'"
+							style="width: 100%;display: block;text-align: center;font-size: 12upx;line-height: 40upx;">
+							{{OrderCoinPrice}}
+						</view>
 					</view>
 					<view>
 						<div class="page2-c-line"></div>
@@ -999,7 +1008,7 @@
 						break;
 				}
 
-				if(account === undefined){
+				if (account === undefined) {
 					return;
 				}
 				// 触发预期收益计算
@@ -1141,8 +1150,25 @@
 						// 关闭倒计时
 						clearInterval(interval)
 						// 结算
-						this.layerOrder = true;
-						this.layerTimer = false;
+						https.handEnd({}).then((res) => {
+							// if (res.resultCode === "1") {
+							// 	this.vusui.msg(
+							// 		'结算完成!', {
+							// 			icon: 0,
+							// 			shade: 0.6,
+							// 		}, () => {});
+							// } else {
+							// 	this.vusui.msg(
+							// 		'结算出错!', {
+							// 			icon: 2,
+							// 			shade: 0.6,
+							// 		}, () => {});
+							// }
+
+							// 继续下单
+							this.layerOrder = true;
+							this.layerTimer = false;
+						});
 					}
 				}, 1000)
 			},

@@ -9,6 +9,7 @@ const urls = {
 	cashOutIn: "/cashOutIn/myCashOutList", //查询我的提现、充值记录
 	addCash: "/cashOutIn/insertForNew", //提交提现
 	myPosition: "/positionInfo/mySkuForList", //查询我的持仓
+	handEnd: "/positionInfo/handEnd", //结算
 	myCusSku: "/skuCusInfo/queryMySku", //查询我的自选SKUCODE
 	userRegister: "/userInfo/createUserInfo", // H5用户注册
 	bankCardInfoSave: "/bankCardInfo/save", // 新增银行卡
@@ -24,11 +25,11 @@ const urls = {
 module.exports = {
 	// 返回socket基本地址
 	getBaseSocketUrl(){
-		return 'ws://192.168.1.9:1686/study';
+		return 'ws://192.168.1.7:1686/study';
 	},
 	// 上传文件
 	getUploadFileUrl() {
-		return 'http://192.168.1.9:1686/study/upload';
+		return 'http://192.168.1.:1686/study/upload';
 	},
 	// 返回行情页url
 	getCryptocompareApiUrl(){
@@ -88,5 +89,8 @@ module.exports = {
 	},
 	saveSkuCusInfo(data) {
 		return doRequest('POST', urls.saveSkuCusInfo, data)
+	},
+	handEnd(data) {
+		return doRequest('POST', urls.handEnd, data)
 	}
 }

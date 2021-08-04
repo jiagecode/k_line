@@ -59,6 +59,8 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
             // 查询分钟线
             this.getMinLinData(skuList, stamp);
         } catch (Exception e) {
+            // 异常时将此次时间戳记录删除
+            redisUtil.setRemove("toTs", stamp);
             throw new RuntimeException("查询数据失败：" + e.getMessage());
         }
     }
@@ -83,7 +85,7 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
             List<SkuInfoOhlcvVo> list = getSkuInfoList(sku.getSkuCode(), coinsDataFull);
             // 缓存
             for (SkuInfoOhlcvVo ohlcv : list) {
-                redisUtil.set(ohlcv.getSkuCode() + "_dd_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), RedisConfig.OVERDUE);
+                redisUtil.set(ohlcv.getSkuCode() + "_dd_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), redisUtil.getOverdue());
                 log.info("Day:{} Price: {}" ,ohlcv.getTimeStamp(), ohlcv.getOpenPrice());
             }
             log.info("Day数据：{} 条" ,list.size());
@@ -111,7 +113,7 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
             List<SkuInfoOhlcvVo> list = getSkuInfoList(sku.getSkuCode(), coinsDataFull);
             // 缓存
             for (SkuInfoOhlcvVo ohlcv : list) {
-                redisUtil.set(ohlcv.getSkuCode() + "_hh_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), RedisConfig.OVERDUE);
+                redisUtil.set(ohlcv.getSkuCode() + "_hh_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), redisUtil.getOverdue());
             }
             params.clear();
         }
@@ -137,7 +139,7 @@ public class QueryAndGenDataServiceImpl implements QueryAndGenDataService {
             List<SkuInfoOhlcvVo> list = getSkuInfoList(sku.getSkuCode(), coinsDataFull);
             // 缓存
             for (SkuInfoOhlcvVo ohlcv : list) {
-                redisUtil.set(ohlcv.getSkuCode() + "_mm_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), RedisConfig.OVERDUE);
+                redisUtil.set(ohlcv.getSkuCode() + "_mm_" + ohlcv.getTimeStamp(), JsonUtils.toJsonString(ohlcv), redisUtil.getOverdue());
             }
             // 调用异步线程生成分钟数据
             asyncGenMinDataService.autoGenDataMain(list, sku.getSkuCode());

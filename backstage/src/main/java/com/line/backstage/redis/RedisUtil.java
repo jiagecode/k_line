@@ -5,19 +5,29 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtil {
 
+    /**
+     * 过期时间基数 1天86400
+     */
+    public static int OVERDUE = 85400;
+
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     // =============================common============================
+
+    /**
+     * 返回一个随机过期时间 接近1天
+     * @return
+     */
+    public int getOverdue() {
+        return OVERDUE + new Random().nextInt(1000) + 1;
+    }
 
     /**
      * 指定缓存失效时间

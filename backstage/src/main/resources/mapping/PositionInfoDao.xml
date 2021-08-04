@@ -98,4 +98,15 @@
         </if>
         order by p.POSITION_ID desc
     </select>
+    <select id="queryManPosiVoList" parameterType="java.lang.Integer" resultType="com.line.backstage.entity.sysentity.ManPosiVo">
+        SELECT p.POSITION_ID,p.USER_ID,p.POSITION_STATUS,p.SKU_NAME,p.INVEST_TYPE,p.BEAGIN_PRICE,p.NOW_PRICE,p.END_PRICE,
+        p.INVEST_AMOUNT,p.BEGIN_DATE,p.END_DATE,p.INCOME_AMOUNT,p.INCOME_FLAGE,p.EDIT_DATE,p.END_AMOUT,p.ADD_USER_ID,
+        p.EDIT_USER_ID,p.DEL,o.ORDER_ID,o.ORDER_CYCLE,o.SETTLEMENT_DATE,o.EXPECTED_RETURN,o.WIN_FLAG,u.USER_REAL_NAME,u.AGENT_ID,u.AGENT_NAME
+        FROM t_position_info p
+        LEFT join t_order_info o on p.POSITION_ID = o.POSITION_ID
+        LEFT join t_user_info u on p.USER_ID = u.user_id
+        WHERE p.POSITION_STATUS = 1 and p.DEL =1 and o.ORDER_STATUS = 1
+        and p.USER_ID =  #{userId}
+        order by p.POSITION_ID desc
+    </select>
 </mapper>
