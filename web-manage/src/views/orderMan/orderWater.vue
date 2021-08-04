@@ -154,7 +154,7 @@
                              {{ scope.row.agentName }}
                 </span>
                 <span v-if="item.prop==='winFlag'">
-                             {{ showDescWin(2,scope.row.winFlag) }}
+                             {{ showDescWin(scope.row.winFlag) }}
                 </span>
                 <!-- 正常的其他列 -->
 <!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
@@ -167,10 +167,10 @@
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="showDetail(scope.$index, scope.row)">详情
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 1"
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.orderStatus == 1 && scope.row.winFlag != 1"
                            @click="changeWin(1, scope.row.orderId)">控赢
                 </el-button>
-                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 2"
+                <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.orderStatus == 1 && scope.row.winFlag != 2"
                            @click="changeWin(2, scope.row.orderId)">控输
                 </el-button>
               </template>
