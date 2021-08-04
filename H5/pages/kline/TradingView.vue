@@ -350,6 +350,7 @@
 				// layerOver: false,
 				// 当前倒计时秒
 				sec: 0,
+				// 自定义金额
 				inPrice: undefined,
 				// 商品代码
 				coinCode: 'BTC',
@@ -411,9 +412,9 @@
 				OrderItem: 1,
 				OrderCycle: 30,
 				OrderAmount: 10,
+				OrderExpectEarnings: 18.8,
 				OrderCoin: "Bitcoin",
 				OrderCoinPrice: null,
-				OrderExpectEarnings: 18.8,
 				OrderGuarantee: 0.00,
 				// 预测输赢
 				isWin: true,
@@ -1133,6 +1134,14 @@
 					this.OrderDirection = 2;
 					this.OrderDirectionName = "买跌";
 				}
+				// 重置数据
+				this.OrderCycle = 30;
+				this.OrderItem = 1;
+				this.OrderCycle = 30;
+				this.OrderAmount = 10;
+				this.OrderExpectEarnings = 18.8;
+				this.inPrice = undefined;
+				
 				// slot(插槽) 模式
 				this.vusui.page({});
 			},
