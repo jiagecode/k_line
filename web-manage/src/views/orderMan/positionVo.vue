@@ -114,10 +114,10 @@
               width="200">
               <template slot-scope="scope">
                 <div style="display: flex; justify-content: flex-start;">
-                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.orderStatus == 1 && scope.row.winFlag != 1"
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 1"
                              @click="changeWin(1, scope.row.orderId)">控赢
                   </el-button>
-                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.orderStatus == 1 && scope.row.winFlag != 2"
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 2"
                              @click="changeWin(2, scope.row.orderId)">控输
                   </el-button>
                 </div>
