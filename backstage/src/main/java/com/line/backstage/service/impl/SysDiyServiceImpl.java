@@ -177,6 +177,9 @@ public class SysDiyServiceImpl implements SysDiyService {
             BigDecimal orderMoney = new BigDecimal(moneyStr);
             BigDecimal maxMoney = new BigDecimal(maxPriceStr);
             BigDecimal minMoney = new BigDecimal(minPriceStr);
+            if(maxMoney.compareTo(minMoney) < 1){
+                maxMoney = minMoney.add(new BigDecimal(100));
+            }
             BigDecimal endMoney =  createOrderData(diyUserId,loginUserId,diyId,skuName,skuCode,orderMoney,maxMoney,minMoney,winRate,investType,orderCycle,orderNum,date,skuId);
             //diyInfo.setDiyCashStatus(1);
             diyInfo.setDiyRecordStatus(1);
@@ -418,6 +421,8 @@ public class SysDiyServiceImpl implements SysDiyService {
         Integer accId = acc.getAccountId();
         BigDecimal accBefore = acc.getDiyMoney();
         BigDecimal endMoney = accBefore ;
+        //是否加倍
+        boolean douFlag = false;
         for (int i = 1 ;i<=orderNum;i++){
             Date  endDate = new Date(beginDete.getTime()+orderCycle*1000);
             double rate = Math.random();
@@ -450,15 +455,30 @@ public class SysDiyServiceImpl implements SysDiyService {
                     endMoney = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
                 }
             }
+            if(douFlag){
+                orderMoney = orderMoney.multiply(new BigDecimal("2"));
+            }
+            BigDecimal retMoney = getReturnMoney(orderMoney,orderCycle);
             //持仓信息
             Integer posId = insertPositionInfo(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,winFlag,minMoney,endMoney,orderMoney);
             //订单信息
-            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId,winFlag);
+            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId,winFlag,retMoney);
             //资金记录
             createAccountRecord(accId,amount.doubleValue(),accBefore.doubleValue(),accAfter.doubleValue(),null,diyId,endDate,sysUserId,orderId,3);
             beginDete = new Date(endDate.getTime()+6000);
+            if(!winFlag){douFlag =true;}
         }
         return endMoney;
+    }
+
+    private BigDecimal getReturnMoney(BigDecimal orderMoney,Integer orderCycle){
+        BigDecimal rate = new BigDecimal("1.88");
+        if(orderCycle == 180){
+            rate = new BigDecimal("1.92");
+        }else if(orderCycle == 60){
+            rate = new BigDecimal("1.90");
+        }
+        return orderMoney.multiply(rate).setScale(10,BigDecimal.ROUND_UP);
     }
 
     /**
@@ -482,7 +502,7 @@ public class SysDiyServiceImpl implements SysDiyService {
      */
     private Integer insertOrder(Date beginDete,Integer sysUserId,Date endDate,Integer diyUserId,
                                 Integer diyId,String skuName,Integer investType,Integer orderCycle,BigDecimal amount,
-                                BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId,boolean win){
+                                BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId,boolean win,BigDecimal retMoney){
         OrderInfo info = new OrderInfo();
         info.setPositionId(posId);
         info.setOrderType(1);
@@ -497,14 +517,18 @@ public class SysDiyServiceImpl implements SysDiyService {
         info.setAddDate(beginDete);
         info.setEditUserId(sysUserId);
         info.setOrderCycle(orderCycle);
+        info.setSettlementDate(new Date(beginDete.getTime()+orderCycle*1000));
         info.setDiyId(diyId);
         info.setInvestType(investType);
         info.setIntegral(0.0);
-        info.setSubMoney(amount.doubleValue());
+        info.setSubMoney((win?retMoney.subtract(orderMoney):BigDecimal.ZERO.subtract(orderMoney)).doubleValue());
+        info.setResultMoney(win?retMoney.doubleValue():0.0);
         info.setInPoint(minMoney.doubleValue());
         info.setOrderAmount(orderMoney.doubleValue());
+        info.setInvestAmount(orderMoney.doubleValue());
         info.setOutPoint(endMoney.doubleValue());
         info.setOrderCharge(0.0);
+        info.setExpectedReturn(retMoney.doubleValue());
         //预生成 未入库
         info.setDel(-1);
         info.setWinFlag(win?1:2);

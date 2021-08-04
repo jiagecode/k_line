@@ -63,7 +63,7 @@
     <select id="queryOne" parameterType="java.lang.Integer" resultMap="PositionInfoMap">
         select * from  t_position_info where POSITION_ID = #{posId}
     </select>
-    <select id="selectForPage" parameterType="java.lang.Integer" resultMap="PositionInfoMap">
+    <select id="selectForPage" parameterType="java.lang.Integer" resultMap="PositionInfoVo">
         select p.* ,o.WIN_FLAG from  t_position_info p
         LEFT join t_order_info o on p.POSITION_ID = o.POSITION_ID
         WHERE p.USER_ID = #{userId} and p.DEL = #{del} and p.POSITION_STATUS = #{pst}
