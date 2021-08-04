@@ -30,7 +30,7 @@
           <div class="app-box-select app-marginR">
             <el-select v-model="region" placeholder="查询条件" @change="changeTj">
               <el-option label="用户编号" value="1"></el-option>
-              <el-option label="订单编号" value="2"></el-option>
+              <el-option label="序号" value="2"></el-option>
               <el-option label="用户类型" value="3"></el-option>
               <el-option label="盈亏类型" value="4"></el-option>
               <el-option label="投资类型" value="5"></el-option>
@@ -96,6 +96,7 @@
             :tree-props="{children: 'children'}">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :min-width="columnWidth(item.prop)"
               :prop="item.prop"
               :label="item.label">
               <template slot-scope="scope">
@@ -127,7 +128,7 @@
                              {{ scope.row.inPoint }}
                 </span>
                 <span v-if="item.prop==='outPoint'">
-                             {{ scope.row.outPoint }}
+                             {{ interceptionLength(scope.row.outPoint) }}
                 </span>
                 <span v-if="item.prop==='investAmount'">
                              {{ scope.row.investAmount }}
@@ -162,7 +163,7 @@
             </el-table-column>
             <el-table-column
               label="操作"
-              width="250">
+              width="140">
               <template slot-scope="scope">
                 <el-button type="primary" class="app-tab-btn app-tab-btn2"
                            @click="showDetail(scope.$index, scope.row)">详情
@@ -210,7 +211,7 @@
               <el-form-item label="用户余额：" prop="userMoney">
                 <el-input v-model="orderDetail.userMoney" disabled></el-input>
               </el-form-item>
-              <el-form-item label="订单编号：" prop="orderId">
+              <el-form-item label="序号：" prop="orderId">
                 <el-input v-model.number="orderDetail.orderId"  disabled></el-input>
               </el-form-item>
               <el-form-item label="商品：" prop="skuName">
@@ -279,20 +280,22 @@ export default {
       region4: undefined,
       //  "pageSize": 10,
       tabHead: [
+        // {
+        //   label: '序号',
+        //   prop: 'orderId'
+        // },
+        // {
+        //   label: '交易账户',
+        //   prop: 'accountId'
+        // },
         {
-          label: '订单编号',
-          prop: 'orderId'
-        }, {
-          label: '交易账户',
-          prop: 'accountId'
-        }, {
-          label: '用户姓名',
+          label: '姓名',
           prop: 'userRealName'
         }, {
           label: '订单时间',
           prop: 'addDate'
         }, {
-          label: '产品信息',
+          label: '币种',
           prop: 'skuName'
         }, {
           label: '状态',
@@ -334,7 +337,7 @@ export default {
           label: '代理商',
           prop: 'agentName'
         }, {
-          label: '预测输赢',
+          label: '预测',
           prop: 'winFlag'
         }
       ],
@@ -347,6 +350,46 @@ export default {
     this.timer = setInterval(this.autoQuery, 10000);
   },
   methods: {
+    // 动态设置宽度
+    columnWidth(item) {
+      let widthStr = ''
+      // if(item)
+      switch (item) {
+        case 'orderStatus':
+          widthStr = '50'
+          break
+        case 'investType':
+          widthStr = '50'
+          break
+        case 'orderCycle':
+          widthStr = '50'
+          break
+        case 'winFlag':
+          widthStr = '50'
+          break
+        case 'skuName':
+          widthStr = '50'
+          break
+        case 'userRealName':
+          widthStr = '70'
+          break
+        case 'addDate':
+          widthStr = '155'
+          break
+        case 'inPoint':
+          widthStr = '95'
+          break
+        case 'outPoint':
+          widthStr = '95'
+          break
+        default:
+          widthStr = '80'
+      }
+      return widthStr
+    },
+    interceptionLength(vlaue) {
+      return Math.round(vlaue * Math.pow(10, 4)) / Math.pow(10, 4)
+    },
     changeTen(){
       if(this.btnFlag){
         this.btnFlag = false;

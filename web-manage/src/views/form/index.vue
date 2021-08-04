@@ -86,7 +86,7 @@
             </el-table-column>
             <el-table-column
                     label="操作"
-                    width="300">
+                    width="310">
                 <template slot-scope="scope">
                   <div style="display: flex; justify-content: flex-start;">
                     <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="bjTab(scope.$index, scope.row)">编辑
@@ -299,16 +299,16 @@ export default {
             input2: '',
             region: '',
             tabHead: [
-                {
-                    label: '用户ID',
-                    prop: 'userId'
-                },
+                // {
+                //     label: '用户ID',
+                //     prop: 'userId'
+                // },
                 {
                     label: '用户信息',
                     prop: 'userNickName'
                 },
                 {
-                    label: '客户姓名',
+                    label: '姓名',
                     prop: 'userRealName'
                 },
                 // {
@@ -347,7 +347,7 @@ export default {
                     prop: 'winRate'
                 },
                 {
-                    label: '归属代理商',
+                    label: '归属代理',
                     prop: 'agentName'
                 }
             ],
@@ -443,9 +443,6 @@ export default {
         let widthStr = ''
         // if(item)
         switch (item) {
-          case 'userId':
-            widthStr = '50'
-            break
           case 'userNickName':
             widthStr = '150'
             break
@@ -454,6 +451,12 @@ export default {
           //   break
           case 'lastLoginDate':
             widthStr = '140'
+            break
+          case 'userRealName':
+            widthStr = '60'
+            break
+          case 'userType':
+            widthStr = '60'
             break
           case 'orderNum':
             widthStr = '60'
@@ -468,7 +471,7 @@ export default {
             widthStr = '60'
             break
           default:
-            widthStr = '80'
+            widthStr = '78'
         }
         return widthStr
       },

@@ -20,7 +20,7 @@
           </div>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt" style="width: 40px;">用户：</div>
-            <el-input placeholder="请输入姓名" v-model="input3"></el-input>
+            <el-input placeholder="请输入姓名" v-model="input3" style="width: 150px;"></el-input>
           </div>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt" style="width: 55px;">订单：</div>
@@ -36,7 +36,7 @@
           </div>
           <div class="app-box-input app-marginR">
             <div class="app-box-input-txt" style="width: 55px;">周期：</div>
-            <el-select v-model="region3" placeholder="选择订单周期">
+            <el-select v-model="region3" placeholder="选择周期">
               <el-option label="全部" value="0"></el-option>
               <el-option label="30秒" value="30"></el-option>
               <el-option label="60秒" value="60"></el-option>
@@ -61,6 +61,7 @@
             :tree-props="{children: 'children'}">
             <el-table-column
               v-for="(item,index) in tabHead"
+              :min-width="columnWidth(item.prop)"
               :prop="item.prop"
               :label="item.label">
               <template slot-scope="scope">
@@ -109,17 +110,13 @@
 <!--                <span v-else>{{ scope.row[item.prop] }}</span>-->
               </template>
             </el-table-column>
-            <el-table-column
-              label="操作"
-              width="200">
+            <el-table-column label="操作" width="100">
               <template slot-scope="scope">
-                <div style="display: flex; justify-content: flex-start;">
-                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 1"
-                             @click="changeWin(1, scope.row.orderId)">控赢
-                  </el-button>
-                  <el-button type="primary" class="app-tab-btn app-tab-btn2" v-show="scope.row.winFlag != 2"
-                             @click="changeWin(2, scope.row.orderId)">控输
-                  </el-button>
+                <div v-show="scope.row.winFlag != 1">
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="changeWin(1, scope.row.orderId)">控赢</el-button>
+                </div>
+                <div v-show="scope.row.winFlag != 2">
+                  <el-button type="primary" class="app-tab-btn app-tab-btn2" @click="changeWin(2, scope.row.orderId)">控输 </el-button>
                 </div>
               </template>
             </el-table-column>
@@ -164,25 +161,19 @@ export default {
       region3: undefined,
       tabHead: [
         {
-          label: '持仓编号',
-          prop: 'positionId'
-        }, {
-          label: '用户ID',
-          prop: 'userId'
-        }, {
-          label: '用户姓名',
+          label: '姓名',
           prop: 'userRealName'
         }, {
-          label: '代理名称',
+          label: '代理',
           prop: 'agentName'
         }, {
           label: '订单ID',
           prop: 'orderId'
         }, {
-          label: '商品名称',
+          label: '币种',
           prop: 'skuName'
         }, {
-          label: '投资方向',
+          label: '方向',
           prop: 'investType'
         }, {
           label: '买入价格',
@@ -217,7 +208,25 @@ export default {
     this.queryOptData1Met();
   },
   methods: {
-
+    // 动态设置宽度
+    columnWidth(item) {
+      let widthStr = ''
+      // if(item)
+      switch (item) {
+        case 'beaginPrice':
+          widthStr = '100'
+          break
+        case 'beginDate':
+          widthStr = '155'
+          break
+        case 'settlementDate':
+          widthStr = '155'
+          break
+        default:
+          widthStr = '80'
+      }
+      return widthStr
+    },
     seeOther(){
       var data={
         agentId :this.form.userAgentId,
