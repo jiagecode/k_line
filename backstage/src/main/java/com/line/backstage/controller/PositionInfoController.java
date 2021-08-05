@@ -4,8 +4,10 @@ import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.PositionInfo;
 import com.line.backstage.entity.sysentity.ManPosiVo;
 import com.line.backstage.service.PositionInfoService;
+import com.line.backstage.utils.JsonUtils;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
+import com.line.backstage.vo.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -13,7 +15,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
- 
+import java.util.Map;
+
 /**
  * 用户持仓信息(PositionInfo)表控制层
  *
@@ -90,8 +93,10 @@ public class PositionInfoController {
 
     @PostMapping("handEnd")
     @ApiOperation(value = "结算", notes = "结算")
-    public ResponseModel handEnd(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId) {
-        return ResponseHelper.success(positionInfoService.handleEndOrder(Integer.valueOf(loginUserId)));
+    public ResponseModel handEnd(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单号", required = true) @RequestBody String orderId) {
+        String id = JsonUtils.toJsonNode(orderId).get("orderId").asText("");
+        Map<String, PositionInfo> list = positionInfoService.handleEndOrder(Integer.valueOf(loginUserId), orderId);
+        return ResponseHelper.successWith(list.get(id), ResultCode.SUCCESS);
     }
 
 }

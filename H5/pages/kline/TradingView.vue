@@ -270,16 +270,29 @@
 						<div class="page2-t-line"></div>
 					</view>
 					<view>
-						<!-- <CircleTimer1 :percentage="50"></CircleTimer1> -->
-						<view
-							style="display: block; width: 100%;height: 80upx;font-size: 70upx;font-weight: bold;line-height: 80upx;color: #5586d3;text-align: center;margin-top: 10upx;margin-bottom: 30upx;">
-							{{sec}}
+						<view v-if="page2ContentType == 1">
+							<!-- <CircleTimer1 :percentage="50"></CircleTimer1> -->
+							<view
+								style="display: block; width: 100%;height: 80upx;font-size: 70upx;font-weight: bold;line-height: 80upx;color: #5586d3;text-align: center;margin-top: 10upx;margin-bottom: 30upx;">
+								{{sec}}
+							</view>
+							<view :class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'"
+								style="width: 100%;height: 40upx;display: block;text-align: center;font-size: 12upx;line-height: 40upx;">
+								{{OrderCoinPrice}}
+							</view>
 						</view>
-						<view :class="(OrderDirection == 1)?'page-2-xj-red':'page-2-xj-green'"
-							style="width: 100%;display: block;text-align: center;font-size: 12upx;line-height: 40upx;">
-							{{OrderCoinPrice}}
+						<view v-if="page2ContentType == 2">
+							<view v-if="isEnding"
+								style="display: block; width: 100%;height: 120upx;font-size: 30upx;font-weight: bold;line-height: 120upx;color: #5586d3;text-align: center;margin-top: 10upx;margin-bottom: 10upx;">
+								结算中...
+							</view>
+							<view v-if="!isEnding" :class="(resultIsWin)?'page-2-fx-red':'page-2-fx-green'"
+								style="display: block; width: 100%;height: 120upx;font-size: 50upx;font-weight: bold;line-height: 120upx;text-align: center;margin-top: 10upx;margin-bottom: 10upx;">
+								{{resultAmount}}
+							</view>
 						</view>
 					</view>
+					
 					<view>
 						<div class="page2-c-line"></div>
 					</view>
@@ -300,7 +313,7 @@
 						</uni-col>
 						<uni-col :span="6">
 							<view class="page2-col-info" :class="(isWin == 1)?'page-2-xj-red':'page-2-xj-green'">
-								¥{{getIsWin(submitCoinPrice, OrderCoinPrice)}}
+								{{getIsWin(submitCoinPrice, OrderCoinPrice)}}
 							</view>
 						</uni-col>
 					</uni-row>
@@ -418,6 +431,14 @@
 				OrderGuarantee: 0.00,
 				// 预测输赢
 				isWin: true,
+				// 结算页显示开关
+				page2ContentType:1,
+				// 结算中
+				isEnding:false,
+				// 结算结果
+				resultIsWin:true,
+				resultAmount:0,
+				
 			}
 		},
 		components: {
@@ -1085,8 +1106,6 @@
 				};
 
 				https.submitOrder(data).then((res) => {
-					// orderloading.close();
-					console.clear();
 					if (res != null) {
 						if (res.resultCode === "-1" || res.resultCode === "-2" || res.resultCode === "-3" || res
 							.resultCode === "-4") {
@@ -1111,7 +1130,7 @@
 							// 		// })
 							// 	});
 							// 下单后显示倒计时
-							this.openTimerLayer();
+							this.openTimerLayer(res.orderId);
 						} else {
 							this.vusui.msg("下单失败,未知错误!", {
 								icon: 2,
@@ -1142,11 +1161,16 @@
 				this.OrderExpectEarnings = 18.8;
 				this.inPrice = undefined;
 				
+				// 初始化
+				this.page2ContentType = 1;
+				this.layerOrder = true;
+				this.layerTimer = false;
+
 				// slot(插槽) 模式
 				this.vusui.page({});
 			},
 			// 切换到倒计时
-			openTimerLayer() {
+			openTimerLayer(orderId) {
 				// 修改可视层
 				this.layerOrder = false;
 				this.layerTimer = true;
@@ -1158,37 +1182,60 @@
 					if (this.sec <= 0) {
 						// 关闭倒计时
 						clearInterval(interval)
+						
+						// 打开结果显示
+						this.page2ContentType = 2;
+						// 显示请稍后
+						this.isEnding = true;
+						
 						// 结算
-						https.handEnd({}).then((res) => {
-							// if (res.resultCode === "1") {
-							// 	this.vusui.msg(
-							// 		'结算完成!', {
-							// 			icon: 0,
-							// 			shade: 0.6,
-							// 		}, () => {});
-							// } else {
-							// 	this.vusui.msg(
-							// 		'结算出错!', {
-							// 			icon: 2,
-							// 			shade: 0.6,
-							// 		}, () => {});
-							// }
-
+						https.handEnd({
+							orderId: orderId
+						}).then((res) => {
+							console.clear();
+							this.isEnding = false;
+							// 显示结算结果
+							if(typeof res.incomeAmount == "undefined" || res.incomeAmount == "" || res.incomeAmount == null){
+								this.vusui.msg("结算完成!", {
+										icon: 0,
+										shade: 0.6,
+									}, () => {});
+									
+									this.page2ContentType = 1;
+									this.layerOrder = true;
+									this.layerTimer = false;
+							}
+							// 设置数据
+							if(res.incomeAmount > 0){
+								this.resultIsWin = true;
+								this.resultAmount = "+￥" + MathUtil.getFloat(res.incomeAmount, 2);
+							}else{
+								this.resultIsWin = false;
+								this.resultAmount = "-￥" + MathUtil.getFloat(res.investAmount, 2);
+							}
 							// 继续下单
-							this.layerOrder = true;
-							this.layerTimer = false;
+							// this.layerOrder = true;
+							// this.layerTimer = false;
 						});
 					}
 				}, 1000)
 			},
 			// 继续购买
 			GoONBuy() {
+				// 初始化
+				this.page2ContentType = 1;
 				// 修改可视层
 				this.layerOrder = true;
 				this.layerTimer = false;
 			},
 			// 预测输赢
 			getIsWin(submitPrice, nowPrice) {
+				// 结算时停止计算
+				if(this.page2ContentType == 2){
+					this.isWin = this.resultIsWin;
+					return this.resultAmount;
+				}
+				
 				// 输赢
 				if (this.OrderDirection == 1) {
 					if (parseFloat(nowPrice) > parseFloat(submitPrice)) {
@@ -1206,7 +1253,7 @@
 				}
 				// console.log(this.isWin ? "赢" : "输");
 				if (!this.isWin) {
-					return "-" + this.OrderAmount;
+					return "-￥" + this.OrderAmount;
 				}
 
 				// 收益率
@@ -1221,14 +1268,8 @@
 					rat = 0.92;
 				}
 				// 收益金额 = 投资额 + (投资额 * 收益率);
-				return "+" + MathUtil.add(this.OrderAmount, MathUtil.mul(this.OrderAmount, rat));
+				return "+￥" + MathUtil.add(this.OrderAmount, MathUtil.mul(this.OrderAmount, rat));
 			},
-			// 倒计时结束事件
-			endHandle() {
-				console.log('结束事件')
-				//重新执行
-				this.$refs.countDown.refresh()
-			}
 		},
 
 	}

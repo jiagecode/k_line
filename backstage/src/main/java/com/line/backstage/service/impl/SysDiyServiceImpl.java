@@ -60,8 +60,9 @@ public class SysDiyServiceImpl implements SysDiyService {
               result.put("userType",info.getUserType());
               result.put("trueMoney",acc.getDiyMoney() == null?0:acc.getDiyMoney());
               SysDiyInfo sysDiyInfo = findSysDiyInfo(loginUserId,userId);
-              if(sysDiyInfo != null){
+              if(sysDiyInfo != null && sysDiyInfo.getDiyId() != null){
                   result.put("diyId",sysDiyInfo.getDiyId());
+                  result.put("orders",queryOrders(userId,sysDiyInfo.getDiyId()));
               }
             }
         }
@@ -414,25 +415,38 @@ public class SysDiyServiceImpl implements SysDiyService {
     private BigDecimal createOrderData(Integer diyUserId,Integer sysUserId,Integer diyId,String skuName,String skuCode,
                                  BigDecimal orderMoney,BigDecimal maxMoney, BigDecimal minMoney,Integer winRate,
                                  Integer investType,Integer orderCycle, Integer orderNum,Date date,Integer skuId){
-        //盈利次数
-        int winNum = (winRate * orderNum * 10)/100;
+        //输的次数
+        int failNum ;
+        if(winRate == 0){
+            failNum = orderNum;
+        }else if(winRate == 10){
+            failNum = 0;
+        }else {
+            failNum = ((10 -winRate) * orderNum * 10)/100;
+        }
         Date beginDete = date ;
         AccountInfo acc  = accountInfoMapper.queryByUserId(diyUserId);
         Integer accId = acc.getAccountId();
         BigDecimal accBefore = acc.getDiyMoney();
         BigDecimal endMoney = accBefore ;
+        BigDecimal outPonit = minMoney ;
         //是否加倍
         boolean douFlag = false;
         for (int i = 1 ;i<=orderNum;i++){
+            if(i== 1){
+                minMoney = minMoney.add(new BigDecimal(Math.random()+"")).setScale(10,BigDecimal.ROUND_UP);
+            }else {
+                minMoney = outPonit.add(new BigDecimal(Math.random()+"")).setScale(10,BigDecimal.ROUND_UP);
+            }
             Date  endDate = new Date(beginDete.getTime()+orderCycle*1000);
             double rate = Math.random();
             //此单是否盈利
             boolean winFlag = rate > 0.5;
             //是否买涨
             boolean inestFlag = investType == 1 ;
-            if(winFlag){
-                if(winNum > 0){
-                    winNum --;
+            if(!winFlag){
+                if(failNum >0){
+                    failNum --;
                 }else {
                     winFlag = !winFlag;
                 }
@@ -441,33 +455,39 @@ public class SysDiyServiceImpl implements SysDiyService {
             BigDecimal subMoney = maxMoney.subtract(minMoney).setScale(10,BigDecimal.ROUND_UP);
             //订单结果金额
             BigDecimal amount = subMoney.multiply( new BigDecimal(rate)).setScale(10,BigDecimal.ROUND_UP);
-            BigDecimal accAfter = winFlag? accBefore.add(amount):accBefore.subtract(amount);
             if(winFlag){
                 if(inestFlag){
-                    endMoney = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
+                    outPonit = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
                 }else {
-                    endMoney = minMoney.subtract(amount).setScale(10,BigDecimal.ROUND_UP);
+                    outPonit = minMoney.subtract(amount).setScale(10,BigDecimal.ROUND_UP);
                 }
             }else {
                 if(inestFlag){
-                    endMoney = minMoney.subtract(amount).setScale(10,BigDecimal.ROUND_UP);
+                    outPonit = minMoney.subtract(amount).setScale(10,BigDecimal.ROUND_UP);
                 }else {
-                    endMoney = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
+                    outPonit = minMoney.add(amount).setScale(10,BigDecimal.ROUND_UP);
                 }
             }
             if(douFlag){
                 orderMoney = orderMoney.multiply(new BigDecimal("2"));
             }
             BigDecimal retMoney = getReturnMoney(orderMoney,orderCycle);
+            if(winFlag){
+                endMoney = endMoney.add(retMoney).setScale(4,BigDecimal.ROUND_UP);
+            }else {
+                endMoney = endMoney.subtract(orderMoney).setScale(4,BigDecimal.ROUND_UP);
+            }
             //持仓信息
-            Integer posId = insertPositionInfo(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,winFlag,minMoney,endMoney,orderMoney);
+            Integer posId = insertPositionInfo(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,winFlag,minMoney,outPonit,orderMoney,retMoney);
             //订单信息
-            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,endMoney,orderMoney,posId,skuCode,skuId,winFlag,retMoney);
+            Integer orderId = insertOrder(beginDete,sysUserId,endDate,diyUserId,diyId,skuName,investType,orderCycle,amount,minMoney,outPonit,orderMoney,posId,skuCode,skuId,winFlag,retMoney);
             //资金记录
-            createAccountRecord(accId,amount.doubleValue(),accBefore.doubleValue(),accAfter.doubleValue(),null,diyId,endDate,sysUserId,orderId,3);
+            createAccountRecord(accId,orderMoney.doubleValue(),accBefore.doubleValue(),(accBefore.subtract(orderMoney)).doubleValue(),null,diyId,endDate,sysUserId,orderId,3);
             beginDete = new Date(endDate.getTime()+6000);
-            if(!winFlag){douFlag =true;}
+            douFlag = !winFlag;
         }
+        acc.setDiyMoney(endMoney);
+        accountInfoMapper.updateByPrimaryKeySelective(acc);
         return endMoney;
     }
 
@@ -493,7 +513,7 @@ public class SysDiyServiceImpl implements SysDiyService {
      * @param orderCycle
      * @param amount
      * @param minMoney
-     * @param endMoney
+     * @param outPonit
      * @param orderMoney
      * @param posId
      * @param skuCode
@@ -502,7 +522,7 @@ public class SysDiyServiceImpl implements SysDiyService {
      */
     private Integer insertOrder(Date beginDete,Integer sysUserId,Date endDate,Integer diyUserId,
                                 Integer diyId,String skuName,Integer investType,Integer orderCycle,BigDecimal amount,
-                                BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId,boolean win,BigDecimal retMoney){
+                                BigDecimal minMoney,BigDecimal outPonit,BigDecimal orderMoney,Integer posId,String skuCode,Integer skuId,boolean win,BigDecimal retMoney){
         OrderInfo info = new OrderInfo();
         info.setPositionId(posId);
         info.setOrderType(1);
@@ -517,7 +537,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         info.setAddDate(beginDete);
         info.setEditUserId(sysUserId);
         info.setOrderCycle(orderCycle);
-        info.setSettlementDate(new Date(beginDete.getTime()+orderCycle*1000));
+        info.setSettlementDate(endDate);
         info.setDiyId(diyId);
         info.setInvestType(investType);
         info.setIntegral(0.0);
@@ -526,7 +546,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         info.setInPoint(minMoney.doubleValue());
         info.setOrderAmount(orderMoney.doubleValue());
         info.setInvestAmount(orderMoney.doubleValue());
-        info.setOutPoint(endMoney.doubleValue());
+        info.setOutPoint(outPonit.doubleValue());
         info.setOrderCharge(0.0);
         info.setExpectedReturn(retMoney.doubleValue());
         //预生成 未入库
@@ -546,13 +566,13 @@ public class SysDiyServiceImpl implements SysDiyService {
      * @param investType
      * @param winFlag
      * @param minMoney
-     * @param endMoney
+     * @param outPonit
      * @param orderMoney
      * @return
      */
     private Integer insertPositionInfo(Date beginDete,Integer sysUserId,Date endDate,Integer diyUserId,
                                        Integer diyId,String skuName,Integer investType,boolean winFlag,
-                                       BigDecimal minMoney,BigDecimal endMoney,BigDecimal orderMoney){
+                                       BigDecimal minMoney,BigDecimal outPonit,BigDecimal orderMoney,BigDecimal retMoney){
         PositionInfo pos = new PositionInfo();
         pos.setAddDate(beginDete);
         pos.setAddUserId(sysUserId);
@@ -563,9 +583,11 @@ public class SysDiyServiceImpl implements SysDiyService {
         pos.setSkuName(skuName);
         pos.setInvestType(investType);
         pos.setBeaginPrice(minMoney.doubleValue());
-        pos.setEndPrice(endMoney.doubleValue());
-        pos.setNowPrice(endMoney.doubleValue());
-        pos.setIncomeAmount(orderMoney.doubleValue());
+        pos.setEndPrice(outPonit.doubleValue());
+        pos.setNowPrice(outPonit.doubleValue());
+        pos.setInvestAmount(orderMoney.doubleValue());
+        pos.setIncomeAmount(winFlag?retMoney.doubleValue():0.0);
+        pos.setEndAmout(winFlag?retMoney.doubleValue():0.0);
         pos.setBeginDate(beginDete);
         pos.setEndDate(endDate);
         pos.setIncomeFlage(winFlag?1:0);

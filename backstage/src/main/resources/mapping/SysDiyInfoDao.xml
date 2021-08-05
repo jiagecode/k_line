@@ -57,7 +57,7 @@
 
     <select id="querySkuDataList" resultType="java.util.Map">
         select SKU_ID skuId,SKU_CODE skuCode, SKU_NAME skuName,NOW_PRICE nowPrice
-        from t_sku_info where DEL = 1 ORDER BY SKU_ID DESC
+        from t_sku_info where DEL = 1 ORDER BY SKU_ID ASC
     </select>
 
     <select id="queryOptionsForAgent" resultType="com.line.backstage.entity.sysentity.ManOptionVo">
