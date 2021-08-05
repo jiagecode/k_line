@@ -479,6 +479,8 @@ public class SysDiyServiceImpl implements SysDiyService {
             beginDete = new Date(endDate.getTime()+6000);
             douFlag = !winFlag;
         }
+        acc.setDiyMoney(endMoney);
+        accountInfoMapper.updateByPrimaryKeySelective(acc);
         return endMoney;
     }
 

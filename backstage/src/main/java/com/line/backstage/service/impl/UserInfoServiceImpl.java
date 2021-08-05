@@ -274,15 +274,28 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public UserInfo queryById(Integer userId) {
-        System.out.println("查询用户信息---》");
+       // System.out.println("查询用户信息---》");
         UserInfo dto = userInfoMapper.selectByPrimaryKey(userId);
         if (dto != null) {
 //            UserInfo info = new UserInfo();
 //            info.setUserHeadImg(dto.getUserHeadImg());
 //            info.setUserNickName(dto.getUserNickName());
-            Double money = accountInfoMapper.queryMyMoneyByUserId(userId);
-            if (money == null) {
-                money = 0.0;
+            AccountInfo accountInfo = accountInfoMapper.queryByUserId(userId);
+          double  money = 0.0;
+            if (accountInfo != null && accountInfo.getAccountMoney() !=null ) {
+               money = accountInfo.getAccountMoney();
+            }
+            if(dto.getDiyFlag() != null && dto.getDiyFlag() == 1){
+                if(accountInfo.getDiyMoney() !=null && accountInfo.getDiyMoney().compareTo(new BigDecimal(accountInfo.getAccountMoney())) ==1){
+                    money = accountInfo.getDiyMoney().doubleValue();
+                }
+                if(dto.getDiyUserType()!=null){
+                    dto.setUserType(dto.getDiyUserType());
+                }
+                if(StringUtils.isNotEmpty(dto.getDiyUserName())){
+                    dto.setUserNickName(dto.getDiyUserName());
+                    dto.setUserRealName(dto.getDiyUserName());
+                }
             }
             dto.setUserMoney(money);
             return dto;
