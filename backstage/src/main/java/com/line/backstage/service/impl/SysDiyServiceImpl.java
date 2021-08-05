@@ -60,8 +60,9 @@ public class SysDiyServiceImpl implements SysDiyService {
               result.put("userType",info.getUserType());
               result.put("trueMoney",acc.getDiyMoney() == null?0:acc.getDiyMoney());
               SysDiyInfo sysDiyInfo = findSysDiyInfo(loginUserId,userId);
-              if(sysDiyInfo != null){
+              if(sysDiyInfo != null && sysDiyInfo.getDiyId() != null){
                   result.put("diyId",sysDiyInfo.getDiyId());
+                  result.put("orders",queryOrders(userId,sysDiyInfo.getDiyId()));
               }
             }
         }
@@ -414,8 +415,8 @@ public class SysDiyServiceImpl implements SysDiyService {
     private BigDecimal createOrderData(Integer diyUserId,Integer sysUserId,Integer diyId,String skuName,String skuCode,
                                  BigDecimal orderMoney,BigDecimal maxMoney, BigDecimal minMoney,Integer winRate,
                                  Integer investType,Integer orderCycle, Integer orderNum,Date date,Integer skuId){
-        //盈利次数
-        int winNum = (winRate * orderNum * 10)/100;
+        //输的次数
+        int failNum = ((10 -winRate) * orderNum * 10)/100;
         Date beginDete = date ;
         AccountInfo acc  = accountInfoMapper.queryByUserId(diyUserId);
         Integer accId = acc.getAccountId();
@@ -433,12 +434,12 @@ public class SysDiyServiceImpl implements SysDiyService {
             Date  endDate = new Date(beginDete.getTime()+orderCycle*1000);
             double rate = Math.random();
             //此单是否盈利
-            boolean winFlag = rate > 0.3;
+            boolean winFlag = rate > 0.5;
             //是否买涨
             boolean inestFlag = investType == 1 ;
-            if(winFlag){
-                if(winNum > 0){
-                    winNum --;
+            if(!winFlag){
+                if(failNum >0){
+                    failNum --;
                 }else {
                     winFlag = !winFlag;
                 }
@@ -476,7 +477,7 @@ public class SysDiyServiceImpl implements SysDiyService {
             //资金记录
             createAccountRecord(accId,orderMoney.doubleValue(),accBefore.doubleValue(),(accBefore.subtract(orderMoney)).doubleValue(),null,diyId,endDate,sysUserId,orderId,3);
             beginDete = new Date(endDate.getTime()+6000);
-            if(!winFlag){douFlag =true;}
+            douFlag = !winFlag;
         }
         return endMoney;
     }
@@ -527,7 +528,7 @@ public class SysDiyServiceImpl implements SysDiyService {
         info.setAddDate(beginDete);
         info.setEditUserId(sysUserId);
         info.setOrderCycle(orderCycle);
-        info.setSettlementDate(new Date(beginDete.getTime()+orderCycle*1000));
+        info.setSettlementDate(endDate);
         info.setDiyId(diyId);
         info.setInvestType(investType);
         info.setIntegral(0.0);
