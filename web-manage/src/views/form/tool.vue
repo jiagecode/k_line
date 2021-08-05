@@ -157,19 +157,19 @@
                 </el-col>
                 <el-col :span="6">
                   <el-radio-group v-model="dataCreateObject.orderCycle">
-                    <el-radio :label="1">30秒</el-radio>
-                    <el-radio :label="2">60秒</el-radio>
-                    <el-radio :label="3">180秒</el-radio>
+                    <el-radio :label="30">30秒</el-radio>
+                    <el-radio :label="60">60秒</el-radio>
+                    <el-radio :label="180">180秒</el-radio>
                   </el-radio-group>
                 </el-col>
                 <el-col :span="4">&nbsp;</el-col>
               </el-row>
               <el-row class="tool_row">
                 <el-col :span="2">
-                  <div class="tool_row_title">起始金额</div>
+                  <div class="tool_row_title">订单金额</div>
                 </el-col>
                 <el-col :span="4">
-                  <el-input-number size="mini" label="起始金额" v-model="dataCreateObject.moneyStr" :min="1" :precision="2" style="width: 100%;"></el-input-number>
+                  <el-input-number size="mini" label="订单金额" v-model="dataCreateObject.moneyStr" :min="1" :precision="2" style="width: 100%;"></el-input-number>
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">价格区间</div>
@@ -198,7 +198,11 @@
                       style="width: 94%; margin: 0 auto;">
                 <el-table-column prop="skuName" label="商品名称"></el-table-column>
                 <el-table-column prop="skuCode" label="商品代码"></el-table-column>
-                <el-table-column prop="inPoint" label="买入点位"></el-table-column>
+                <el-table-column label="买入点位">
+                  <template slot-scope="scope">
+                    <span>{{parseFloat(scope.row.inPoint).toFixed(4)}}</span>
+                  </template>
+                </el-table-column>
                 <el-table-column label="投资方向">
                   <template slot-scope="scope">
                     <span v-if="scope.row.investType === 1"><div style="color: red">买涨</div></span>
@@ -207,15 +211,24 @@
                 </el-table-column>
                 <el-table-column prop="orderAmount" label="订单金额"></el-table-column>
                 <!--                <el-table-column prop="orderCharge" label="手续费"></el-table-column>-->
-                <el-table-column label="订单周期(s)">
+                <el-table-column prop="orderCycle" label="订单周期(s)">
+<!--                  <template slot-scope="scope">-->
+<!--                    <span v-if="scope.row.orderCycle === 30">30</span>-->
+<!--                    <span v-if="scope.row.orderCycle === 60">60</span>-->
+<!--                    <span v-if="scope.row.orderCycle === 180">180</span>-->
+<!--                  </template>-->
+                </el-table-column>
+                <el-table-column label="结算点位" width="150px">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.orderCycle === 1">30</span>
-                    <span v-if="scope.row.orderCycle === 2">60</span>
-                    <span v-if="scope.row.orderCycle === 3">180</span>
+                    <span>{{parseFloat(scope.row.outPoint).toFixed(4)}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="outPoint" label="结算点位" width="150px"></el-table-column>
-                <el-table-column prop="subMoney" label="实际盈亏金额" width="150px"></el-table-column>
+                <el-table-column label="实际盈亏金额" width="150px">
+                  <template slot-scope="scope">
+                    <span style="color: red" v-if="parseFloat(scope.row.subMoney) > 0">+{{parseFloat(scope.row.subMoney).toFixed(4)}}</span>
+                    <span style="color: green" v-if="parseFloat(scope.row.subMoney) < 0">{{parseFloat(scope.row.subMoney).toFixed(4)}}</span>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="addDate" label="买入时间" width="160px"></el-table-column>
                 <el-table-column prop="editDate" label="结算时间" width="160px"></el-table-column>
               </el-table>
@@ -226,7 +239,7 @@
                   <div class="tool_row_title">起始金额</div>
                 </el-col>
                 <el-col :span="4">
-                  {{dataCreateObject.moneyStr}}
+                  {{specialUserInfo.trueMoney}}
                 </el-col>
                 <el-col :span="2">
                   <div class="tool_row_title">剩余金额</div>
@@ -427,7 +440,7 @@ export default {
                 minPriceStr: '35000',
                 winRate: 5,
                 investType: 1,
-                orderCycle: 1,
+                orderCycle: 30,
                 orderNum: 1,
                 diyUserType: null,
                 diyUserMoney: ''
@@ -481,7 +494,7 @@ export default {
                 diyUserMoney: this.specialUserInfo.trueMoney
             }
             updateSpecialUserInfo(data).then(res => {
-                if (res.code == 10000) {
+                if (res.code === 10000) {
                     this.$message.success('修改成功！')
                     // 重新查询用户信息
                     this.querySpecialUserInfo()
@@ -501,7 +514,7 @@ export default {
                 pageNum: this.currentPage
             }
             listUser(data).then(res => {
-                if (res.code == 10000) {
+                if (res.code === 10000) {
                     this.userInfoVoList = res.data
                 } else {
                     this.$message.error(res.message)
@@ -513,7 +526,7 @@ export default {
             var data = {}
             querySkuDataList(data).then(res => {
                 console.log(res)
-                if (res.code == 10000) {
+                if (res.code === 10000) {
                     this.skuInfoVoList = res.data
                 } else {
                     this.$message.error(res.message)
@@ -535,6 +548,7 @@ export default {
             }
             this.querySpecialUserInfo()
             this.dialogUserTabVisible = false
+
         },
         // 查询用户信息
         querySpecialUserInfo () {
@@ -543,8 +557,11 @@ export default {
                 diyUserId: this.tempUserInfo.userId
             }
             querySpecialUserInfo(data).then(res => {
-                if (res.code == 10000) {
+                if (res.code === 10000) {
                     this.specialUserInfo = res.data
+                    // 初始化页面数据
+                    this.dataVirtualItem.orders = res.data.orders
+                    this.dataVirtualItem.endMoney = res.data.trueMoney
                 } else {
                     this.$message.error(res.message)
                 }
@@ -575,7 +592,6 @@ export default {
         createMoniData () {
             // 货币种类
             if (this.skuSelectInfo.skuCode == null || typeof this.skuSelectInfo.skuCode == 'undefined' || this.skuSelectInfo.skuCode === '') {
-                console.log('111')
                 this.$message.error('请选择货币种类！')
                 return
             }
@@ -657,7 +673,7 @@ export default {
         // 提交请求
         createImitateData (data) {
             createImitateData(data).then(res => {
-                if (res.code == 10000) {
+                if (res.code === 10000) {
                     if (data.dealType === 1) {
                         this.$message.success('生成模拟数据成功！')
                         this.dataVirtualItem = res.data
@@ -678,12 +694,13 @@ export default {
                 dealType: type
             }
             editDiyRecordByType(data).then(res => {
-                if (res.code == 10000) {
+                if (res.code === 10000) {
                     if (type === 1) {
                         this.$message.success('入库交易记录成功！')
                     }
                     if (type === 2) {
                         this.$message.success('删除交易记录成功！')
+                        this.dataVirtualItem.orders = []
                     }
                     if (type === 3) {
                         this.$message.success('清除提现记录成功！')
