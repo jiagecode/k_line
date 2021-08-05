@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -69,7 +70,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
         if(StringUtils.isNotEmpty(orderIdStr)){
             Integer orderId = Integer.valueOf(orderIdStr);
             OrderInfo orderInfo = orderInfoMapper.queryOneById(orderId);
-            if(orderInfo != null){
+            if(orderInfo != null && orderInfo.getOrderStatus() !=null && orderInfo.getOrderStatus() == 1){
                 Integer todayNum = DateUtil.getTodayIntNum();
                 dealOneOrder(orderInfo,orderInfo.getSettlementDate(),todayNum);
             }
@@ -96,6 +97,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
      * @param orderInfo
      * @param settlementTime 结算时间（参数）
      */
+    @Transactional(rollbackFor = Exception.class)
     private void settlementOne(OrderInfo orderInfo,Date settlementTime,Integer todayNum){
         //查询到的结算时间
         Date settlementDate = orderInfo.getSettlementDate();
