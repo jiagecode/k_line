@@ -416,7 +416,14 @@ public class SysDiyServiceImpl implements SysDiyService {
                                  BigDecimal orderMoney,BigDecimal maxMoney, BigDecimal minMoney,Integer winRate,
                                  Integer investType,Integer orderCycle, Integer orderNum,Date date,Integer skuId){
         //输的次数
-        int failNum = ((10 -winRate) * orderNum * 10)/100;
+        int failNum ;
+        if(winRate == 0){
+            failNum = orderNum;
+        }else if(winRate == 10){
+            failNum = 0;
+        }else {
+            failNum = ((10 -winRate) * orderNum * 10)/100;
+        }
         Date beginDete = date ;
         AccountInfo acc  = accountInfoMapper.queryByUserId(diyUserId);
         Integer accId = acc.getAccountId();
