@@ -98,7 +98,7 @@ public class OrderSettlementServiceImpl implements TaskOrderSettlementService {
      * @param settlementTime 结算时间（参数）
      */
     @Transactional(rollbackFor = Exception.class)
-    private void settlementOne(OrderInfo orderInfo,Date settlementTime,Integer todayNum){
+    public void settlementOne(OrderInfo orderInfo,Date settlementTime,Integer todayNum){
         //查询到的结算时间
         Date settlementDate = orderInfo.getSettlementDate();
         if(settlementDate == null){
