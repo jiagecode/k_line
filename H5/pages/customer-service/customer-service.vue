@@ -16,12 +16,21 @@
 					<view>：我</view>
 				</view>
 				<view class="d-flex j-end" v-if="item.type === 'user' && item.msgType === 'img'" style="margin-top: 20rpx;">
-					<view class="d-flex a-end" style="width: 80%; background-color: #f4f4f4;" @tap="showImg(item.msg)"><image class="v-img" :src="item.msg" mode="aspectFit" /></view>
+					<view class="d-flex a-end" style="width: 80%; background-color: #f4f4f4;" @tap="showImg(item.msg)">
+						<image class="v-img" :src="item.msg" mode="aspectFit" />
+					</view>
 					<view>：我</view>
 				</view>
-				<view class="d-flex font-mdd" v-if="item.type === 'server'" style="margin-top: 20rpx;">
+				<view class="d-flex font-mdd" v-if="item.type === 'server' && item.msgType === 'text'" style="margin-top: 20rpx;">
 					<view>客服：</view>
 					<view style="width: 80%; color: #0078f8;">{{item.msg}}</view>
+				</view>
+				<view class="d-flex font-mdd" v-if="item.type === 'server' && item.msgType === 'img'" style="margin-top: 20rpx;">
+					<view>客服：</view>
+					<!-- <view style="width: 80%; color: #0078f8;">{{item.msg}}</view> -->
+					<view class="d-flex a-end" style="width: 70%; background-color: #f4f4f4;" @tap="showImg('/web-manage' + item.msg)">
+						<image class="v-img" :src="'/web-manage' + item.msg" mode="aspectFit" />
+					</view>
 				</view>
 				<view class="font-mdd" v-if="item.type === 'serviceList' && isShow" style="margin-top: 20rpx;">
 					<view>{{serviceList.length > 0 ? '请选择在线客服：' : '当前客服繁忙，请稍后再试'}}</view>
@@ -129,10 +138,10 @@
 								_this.selectService(toE)
 							}
 						}
-						_this.msgList.push({"type" : "serviceList", "msg" : _this.serviceList});
+						_this.msgList.push({"type" : "serviceList", "msgType" : "text", "msg" : _this.serviceList});
 					
 					} else {
-						_this.msgList.push({"type" : "server", "msg" : res.data.content});
+						_this.msgList.push({"type" : "server", "msgType" : res.data.msgType, "msg" : res.data.content});
 					}
 
 					// 处理消息盒子
@@ -198,7 +207,7 @@
 				this.serviceId = e.id + ',' + e.name
 				this.isShow = !this.isShow;
 				uni.setStorageSync('serviceId', this.serviceId);
-				this.msgList.push({"type" : "server", "msg" : e.name + '很高兴为您服务！'});
+				this.msgList.push({"type" : "server", "msgType" : "text", "msg" : '您好，很高兴为您服务!'});
 			},
 			
 			/**
