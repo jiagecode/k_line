@@ -10,7 +10,6 @@ import com.line.backstage.service.PositionInfoService;
 import com.line.backstage.utils.PageWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -134,7 +133,7 @@ public class PositionInfoServiceImpl implements PositionInfoService {
     @Override
     public PageWrapper<ManPosiVo> list(Integer loginUserId, PositionInfo positionInfo) {
         // 尝试结算
-        this.handleEndOrder(loginUserId, "");
+        this.handleEndOrder(loginUserId);
         // 再查询
         PageHelper.startPage(positionInfo.getPageNum(), positionInfo.getPageSize());
         positionInfo.setDel(DataEnum.FLAG_STATUS_INVALID.getCode());
@@ -152,8 +151,8 @@ public class PositionInfoServiceImpl implements PositionInfoService {
      * @return
      */
     @Override
-    public Map<String, PositionInfo> handleEndOrder(Integer loginUserId, String orderId) {
-        Map<String, PositionInfo> result = new HashMap<>();
+    public int handleEndOrder(Integer loginUserId) {
+        int result = 0;
         // 查询end订单
         List<ManPosiVo> endList = this.queryManPosiVoList(loginUserId);
         if (CollectionUtils.isEmpty(endList)) {
@@ -164,18 +163,24 @@ public class PositionInfoServiceImpl implements PositionInfoService {
         for (ManPosiVo item : endList) {
             // 判断是否可以结算
             log.info("当前时间：{}, 订单时间：{}", System.currentTimeMillis(), item.getEndDate().getTime());
-            if (StringUtils.isNotEmpty(orderId) && String.valueOf(item.getOrderId()).equals(orderId)) {
-                orderSettlementService.dealSettlementByOrderId(String.valueOf(item.getOrderId()));
-                idList.put(String.valueOf(item.getOrderId()), item.getPositionId());
-            } else if (System.currentTimeMillis() >= item.getEndDate().getTime()) {
+            if (System.currentTimeMillis() >= item.getEndDate().getTime()) {
                 orderSettlementService.dealSettlementByOrderId(String.valueOf(item.getOrderId()));
                 idList.put(String.valueOf(item.getOrderId()), item.getPositionId());
             }
         }
-        // 查询结算结果
-        for (String key : idList.keySet()) {
-            result.put(key, positionInfoMapper.queryOne(idList.get(key)));
-        }
         return result;
+    }
+
+    /**
+     * 尝试结算订单
+     *
+     * @param loginUserId
+     * @param vo
+     * @return
+     */
+    @Override
+    public PositionInfo handleEndOrderById(Integer loginUserId, ManPosiVo vo) {
+        orderSettlementService.dealSettlementByOrderId(String.valueOf(vo.getOrderId()));
+        return positionInfoMapper.queryOne(Integer.valueOf(vo.getPositionId()));
     }
 }

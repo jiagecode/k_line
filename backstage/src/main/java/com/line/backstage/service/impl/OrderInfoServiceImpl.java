@@ -130,7 +130,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> insertForBuy(Integer loginUserId, OrderInfo orderInfo) {
         // 先尝试结算订单
-        positionInfoService.handleEndOrder(loginUserId, "");
+        positionInfoService.handleEndOrder(loginUserId);
 
         Map<String, Object> map = new HashMap<>();
         // 查询用户信息
@@ -261,6 +261,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         map.put("outDate", DateUtil.dateToTimeStamp(o.getSettlementDate()));
         map.put("orderCycle", o.getOrderCycle());
         map.put("skuCode", o.getSkuCode());
+        map.put("positionId", o.getPositionId());
         return map;
     }
 

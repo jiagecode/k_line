@@ -5,7 +5,6 @@ import com.line.backstage.entity.sysentity.ManPosiVo;
 import com.line.backstage.utils.PageWrapper;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户持仓信息(PositionInfo)表服务实现类
@@ -78,5 +77,8 @@ public interface PositionInfoService {
      */
     PageWrapper<ManPosiVo> list(Integer loginUserId, PositionInfo positionInfo);
 
-    Map<String, PositionInfo> handleEndOrder(Integer loginUserId, String orderId);
+    int handleEndOrder(Integer loginUserId);
+
+    PositionInfo handleEndOrderById(Integer loginUserId, ManPosiVo orderId);
+
 }
