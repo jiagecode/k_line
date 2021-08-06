@@ -3,6 +3,8 @@ package com.line.backstage.controller;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.enums.DataEnum;
+import com.line.backstage.config.KeyConfig;
+import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
 import com.line.backstage.vo.ResponseHelper;
@@ -12,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.shiro.authc.LockedAccountException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +37,8 @@ public class UserInfoController {
      */
     @Resource
     private UserInfoService userInfoService;
-
+    @Autowired
+    private RedisUtil redisUtil;
     /**
      * H5新增用户
      * @param manUserVo
@@ -132,8 +136,10 @@ public class UserInfoController {
             } else if (Objects.equals(DataEnum.USER_FORBID_FLAG.getCode(), user.getUserForbidFlag())) {
                 throw new LockedAccountException(DataEnum.USER_FORBID_FLAG.getDesc());
             } else {
-                String token = JwtUtil.sign(String.valueOf(user.getUserId()), userInfo.getUserPassword());
+                String uid = String.valueOf(user.getUserId());
+                String token = JwtUtil.sign(uid, userInfo.getUserPassword());
                 userInfoService.updateLastLoginDate(user.getUserId());
+                redisUtil.set(KeyConfig.USER_LOGIN_KEY+uid,token,KeyConfig.USER_LOGIN_TIME);
                 return ResponseHelper.success(token);
             }
         } else {

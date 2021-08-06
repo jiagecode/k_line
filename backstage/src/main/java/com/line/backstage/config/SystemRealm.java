@@ -1,7 +1,9 @@
 package com.line.backstage.config;
 
+import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -24,7 +26,8 @@ public class SystemRealm extends AuthorizingRealm {
 
     @Autowired
     private UserInfoService userInfoService;
-
+    @Autowired
+    private RedisUtil redisUtil;
     @Override
     public boolean supports(AuthenticationToken token) {
         return null != token && token instanceof JwtToken;
@@ -54,6 +57,14 @@ public class SystemRealm extends AuthorizingRealm {
         if (userId == null) {
             throw new AuthenticationException("token失效");
         }
+        //管理员缓存token
+        Object redisTokenSys = redisUtil.get(KeyConfig.SYS_LOGIN_KEY+userId);
+        //用户缓存token
+        Object redisTokenUser = redisUtil.get(KeyConfig.USER_LOGIN_KEY+userId);
+        boolean flag = tokenIsValid(token,redisTokenSys,redisTokenUser);
+        if(!flag){
+            throw new AuthenticationException("token失效,请重新登录!");
+        }
         //FIXME 通过用户ID查询用户信息，可加入缓存
 //        UserInfo user = userInfoService.queryById(Integer.valueOf(userId));
 //        if (user == null) {
@@ -68,5 +79,22 @@ public class SystemRealm extends AuthorizingRealm {
 //            throw new AuthenticationException("用户名或密码错误");
 //        }
         return new SimpleAuthenticationInfo(token, token, getName());
+    }
+
+    /**
+     * 当前登录token是否有效
+     * @param token
+     * @param redisTokenSys
+     * @param redisTokenUser
+     * @return
+     */
+    private boolean tokenIsValid(String token,Object redisTokenSys,Object redisTokenUser){
+        if(redisTokenUser !=null && StringUtils.equals((String)redisTokenUser,token)){
+            return true;
+        }
+        if(redisTokenSys !=null && StringUtils.equals((String)redisTokenSys,token)){
+            return true;
+        }
+            return false;
     }
 }

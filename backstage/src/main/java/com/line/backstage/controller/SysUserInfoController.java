@@ -6,6 +6,8 @@ import com.line.backstage.entity.SysUserInfo;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.entity.sysentity.*;
 import com.line.backstage.enums.DataEnum;
+import com.line.backstage.config.KeyConfig;
+import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.SysUserInfoService;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
@@ -16,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.LockedAccountException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +43,8 @@ public class SysUserInfoController {
     private SysUserInfoService sysUserInfoService;
     @Resource
     private UserInfoService userInfoService;
- 
+    @Autowired
+    private RedisUtil redisUtil;
     /**
      * 新增/修改数据
      *
@@ -223,8 +227,9 @@ public class SysUserInfoController {
             if (Objects.equals(DataEnum.FLAG_STATUS_VALID.getCode(), sysUser.getDel())) {
                 throw new LockedAccountException(DataEnum.FLAG_STATUS_VALID.getDesc());
             } else {
-
-                String token = JwtUtil.sign(String.valueOf(sysUser.getSysUserId()), sysUserInfo.getSysUserPassword());
+                String uid = String.valueOf(sysUser.getSysUserId());
+                String token = JwtUtil.sign(uid, sysUserInfo.getSysUserPassword());
+                redisUtil.set(KeyConfig.SYS_LOGIN_KEY+uid,token,KeyConfig.SYS_LOGIN_TIME);
                 return ResponseHelper.success(token);
             }
         } else {

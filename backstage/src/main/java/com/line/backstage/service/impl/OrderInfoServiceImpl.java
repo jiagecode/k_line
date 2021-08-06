@@ -10,6 +10,7 @@ import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.entity.OrderInfo;
 import com.line.backstage.entity.PositionInfo;
 import com.line.backstage.enums.DataEnum;
+import com.line.backstage.config.KeyConfig;
 import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.AccountInfoService;
 import com.line.backstage.service.AccountRecordService;
@@ -55,8 +56,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     private RedisUtil redisUtil;
     @Autowired
     private AsyncGenOrderMinAndMilsDataService dataService;
-
-    private static final String ORDER_KEY = "order:ids:";
     /**
      * 冻结标志
      */
@@ -241,7 +240,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         accountRecordService.insert(loginUserId, accountRecord);
         map = getCallMap(orderInfo, loginUserId, isWin);
         //下单成功 记录失效时间
-        redisUtil.set(ORDER_KEY + orderId, 1, orderCycle);
+        redisUtil.set(KeyConfig.ORDER_KEY + orderId, 1, orderCycle);
         //调推送方法
         dataService.autoGenDataMain(map);
         return map;
