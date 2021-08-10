@@ -1,14 +1,14 @@
 package com.line.backstage.redis;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.line.backstage.utils.JsonUtils;
 import com.line.backstage.utils.SpringUtils;
 import com.line.backstage.utils.StrUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
@@ -57,19 +57,28 @@ public class SubscribeListener implements MessageListener {
         if (null == this.redisUtil) {
             this.redisUtil = SpringUtils.getBean(RedisUtil.class);
         }
+        if(StringUtils.isEmpty(message.toString())){
+            return;
+        }
         try {
             // 接受到推送时查询该用户是否有消息缓存，有的话优先输出用户缓存消息
-//            System.out.println(redisUtil.msgDeserialize(message));
             JsonNode msgNode = JsonUtils.toJsonNode(redisUtil.msgDeserialize(message));
-            String temp = null;
+            ObjectNode objectNode = (ObjectNode) msgNode;
             if (msgNode.hasNonNull("timeStamp")) {
-                temp = StrUtils.objToStr(redisUtil.get(sid + "_" + code + "_ss_" + msgNode.get("timeStamp").asText("")));
+                String temp = StrUtils.objToStr(redisUtil.get(sid + "_" + code + "_ss_" + msgNode.get("timeStamp").asText("")));
+                // 取出关键数据
+                if (!ObjectUtils.isEmpty(temp)) {
+                    // 取出
+                    JsonNode tempNode = JsonUtils.toJsonNode(temp);
+                    if(tempNode.hasNonNull("nowPrice")){
+                        String nowPrice = tempNode.get("nowPrice").asText("");
+                        // 设置
+                        objectNode.put("nowPrice", nowPrice);
+                        System.out.println("send: " + objectNode.toString());
+                    }
+                }
             }
-            if (!ObjectUtils.isEmpty(temp)) {
-                msgNode = JsonUtils.toJsonNode(temp);
-                System.out.println("send: " + temp);
-            }
-            session.getBasicRemote().sendText(msgNode.toString());
+            session.getBasicRemote().sendText(objectNode.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
