@@ -180,7 +180,17 @@ public class PositionInfoServiceImpl implements PositionInfoService {
      */
     @Override
     public PositionInfo handleEndOrderById(Integer loginUserId, ManPosiVo vo) {
+        // 是否结算
+        PositionInfo info = positionInfoMapper.queryOne(vo.getPositionId());
+        if(info.getPositionStatus() == 2){
+            return info;
+        }
+
+        // 没有结算就再结算一下
         orderSettlementService.dealSettlementByOrderId(String.valueOf(vo.getOrderId()));
-        return positionInfoMapper.queryOne(Integer.valueOf(vo.getPositionId()));
+
+        // 查询结算结果
+        info = positionInfoMapper.queryOne(vo.getPositionId());
+        return info;
     }
 }

@@ -90,7 +90,7 @@ module.exports = {
 	saveSkuCusInfo(data) {
 		return doRequest('POST', urls.saveSkuCusInfo, data)
 	},
-	handEnd(data) {
-		return doRequest('POST', urls.handEnd, data)
-	}
+	async handEnd(data) {
+		return await doRequest('POST', urls.handEnd, data)
+	},
 }

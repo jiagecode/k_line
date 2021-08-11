@@ -96,7 +96,6 @@ public class PositionInfoController {
     @PostMapping("handEnd")
     @ApiOperation(value = "结算", notes = "结算")
     public ResponseModel handEnd(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单号", required = true) @RequestBody ManPosiVo vo) {
-//        String id = JsonUtils.toJsonNode(orderId).get("orderId").asText("");
         return ResponseHelper.successWith(positionInfoService.handleEndOrderById(Integer.valueOf(loginUserId), vo), ResultCode.SUCCESS);
     }
 

@@ -1184,40 +1184,52 @@
 						// 显示请稍后
 						this.isEnding = true;
 
-						// 结算
-						https.handEnd({
-							"orderId": orderId,
-							"positionId": positionId
-						}).then((res) => {
-							console.clear();
-							console.log(res);
+						// 调用结算方法
+						this.getHandEndData(orderId, positionId).then((amount) => {
 							this.isEnding = false;
-							// 显示结算结果
-							if (typeof res.incomeAmount == "undefined" || res.incomeAmount == "" || res
-								.incomeAmount == null) {
-								this.vusui.msg("结算完成!", {
-									icon: 0,
-									shade: 0.6,
-								}, () => {});
-
-								this.page2ContentType = 1;
-								// this.layerOrder = true;
-								// this.layerTimer = false;
-							}
 							// 设置数据
-							if (res.incomeAmount > 0) {
+							if (parseInt(amount) > 0) {
 								this.resultIsWin = true;
-								this.resultAmount = "+￥" + MathUtil.getFloat(res.incomeAmount, 2);
+								this.resultAmount = "+￥" + MathUtil.getFloat(amount, 2);
 							} else {
 								this.resultIsWin = false;
-								this.resultAmount = "-￥" + MathUtil.getFloat(res.investAmount, 2);
+								this.resultAmount = "-￥" + MathUtil.getFloat(this.OrderAmount, 2);
 							}
-							// 继续下单
-							// this.layerOrder = true;
-							// this.layerTimer = false;
 						});
 					}
 				}, 1000)
+			},
+			// 请求方法
+			async request () {
+			    var [error, res] = await uni.request({
+			        url: 'https://www.example.com/request'
+			    });
+			    console.log(res.data);
+			},
+			
+			// 获取结算结果
+			async getHandEndData(orderId, positionId) {
+				var result = null;
+				var isGetData = false;
+				var getTimes = 1;
+				while(!isGetData){
+					await https.handEnd({
+						"orderId": orderId,
+						"positionId": positionId
+					}).then((res) => {
+						if (res != null && typeof res.incomeAmount != "undefined") {
+							result = res.incomeAmount;
+							isGetData = true;
+						}
+					});
+					console.log("结算第"+getTimes+"次", result);
+					// 次数 10
+					if(getTimes >= 10){
+						isGetData = true;
+					}
+					getTimes += 1;
+				}
+				return result;
 			},
 			// 继续购买
 			GoONBuy() {
