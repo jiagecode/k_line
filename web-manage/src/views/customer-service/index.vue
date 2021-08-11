@@ -75,8 +75,7 @@
                 </div>
                 <div v-show="item.type === 'user'" class="d-flex a-center" style="margin-top: 20px;">
                   <img class="kf-img" style="width: 30px; height: 30px;" :src="require('@/assets/im_client_avatar.png')">
-                  <div v-show="item.msgType === 'img'" style="width: 80%; height:auto; margin-left: 20px;">
-                    <!--                    <img :src="item.msg">-->
+                  <div v-show="item.msgType === 'img'" style="width: 30%; height:auto; margin-left: 20px;">
                     <el-image :src="item.msg" :preview-src-list="[item.msg]" />
                   </div>
                   <div v-show="item.msgType === 'text'" style="width: 80%; height:auto; margin-left: 20px;">
@@ -90,16 +89,48 @@
             <div style="width: 95%; height: 100%;">
               <el-input v-model="msg" type="textarea" :autosize="{ minRows: 8, maxRows: 8}" 请输入机构名称="客户就是上帝" />
             </div>
-            <div class="d-flex" style="width: 5%; align-content: flex-end;">
-              <el-button v-if="msg !== ''" style="" @click="sendDataToServer('text')">发送</el-button>
-              <div v-if="msg === ''" class="d-flex j-center a-center" style="width: 100%; font-size: 30px;">
-                <el-upload ref="upload" action="http://localhost:1686/study/upload" :before-upload="checkImgFile" :limit="1" :show-file-list="false" :headers="setHeaders" :on-success="handleAvatarSuccess">+</el-upload>
-<!--                <el-upload ref="upload" action="/upload" :before-upload="checkImgFile" :limit="1" :show-file-list="false" :headers="setHeaders" :on-success="handleAvatarSuccess">+</el-upload>-->
+            <div class="d-flex" style="align-content: flex-end; width: 5%;">
+              <el-button v-if="msg !== ''" size="mini" style="background-color: #409EFF;" @click="sendDataToServer('text')">发送</el-button>
+              <div v-if="msg === ''" style="width:100%;">
+                <div class="d-flex a-center j-center" style="height: 50%;">
+                  <div>
+                    <el-tooltip class="item" effect="dark" content="常用语" placement="top-start">
+                      <el-button type="info" style="background-color: #409EFF;" icon="el-icon-message" circle @click="centerDialogVisible = true" />
+                    </el-tooltip>
+                  </div>
+                </div>
+                <div class="d-flex a-center j-center" style="height: 50%;">
+                  <el-upload ref="upload" action="http://localhost:1686/study/upload" :before-upload="checkImgFile" :limit="1" :show-file-list="false" :headers="setHeaders" :on-success="handleAvatarSuccess">
+                    <el-tooltip class="item" effect="dark" content="发送图片" placement="top-start">
+                      <el-button type="info" icon="el-icon-folder-add" circle style="background-color: #409EFF;" />
+                    </el-tooltip>
+                  </el-upload>
+                </div>
               </div>
             </div>
           </el-col>
         </el-row>
       </el-row>
+
+      <!--常用语弹窗-->
+      <el-dialog title="常用语列表" :visible.sync="centerDialogVisible" center>
+<!--        <span>亲，请问有什么能够帮助您的吗？</span>-->
+        <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName" @current-change="handleCurrentMsgChange">
+          <el-table-column prop="address" label="内容" :min-width="120"/>
+          <el-table-column prop="date" label="时间" :min-width="40" />
+          <el-table-column prop="name" label="姓名" :min-width="40" />
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--          <el-button @click="centerDialogVisible = false">取 消</el-button>-->
+<!--          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>-->
+<!--        </span>-->
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -112,6 +143,24 @@ export default {
   name: 'Index',
   data() {
     return {
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '亲，请问有什么能够帮助您的吗？'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '亲，请问有什么能够帮助您的吗？'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '亲，请问有什么能够帮助您的吗？'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '亲，请问有什么能够帮助您的吗？'
+      }],
+      centerDialogVisible: false,
       imgUrl: '',
       // 默认消息列表第一个
       nowId: undefined,
@@ -155,6 +204,30 @@ export default {
     this.wsInit()
   },
   methods: {
+    handleCurrentMsgChange(val) {
+      console.log(val)
+      this.msg = val.address
+      this.centerDialogVisible = false
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (rowIndex === 1) {
+        console.log(row)
+        console.log('warning-row')
+        return 'warning-row'
+      } else if (rowIndex === 3) {
+        console.log('success-row')
+        return 'success-row'
+      }
+      return ''
+    },
+    handleEdit(index, row) {
+      console.log(index, row)
+      this.$message.info('升级中，敬请期待')
+    },
+    handleDelete(index, row) {
+      console.log(index, row)
+      this.$message.info('升级中，敬请期待')
+    },
     handleAvatarSuccess(res, file) {
       this.msg = URL.createObjectURL(file.raw)
       this.imgUrl = res.data
@@ -279,7 +352,6 @@ export default {
      */
     wsInit() {
       const wsUrl = 'ws://localhost:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys'
-      // const wsUrl = 'ws://108.160.143.167:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys'
       this.ws = wsUrl
       if (!this.wsIsRun) return
       // 销毁ws
@@ -422,6 +494,10 @@ export default {
   flex: 2;
 }
 
+.flex3{
+  flex: 3;
+}
+
 /*垂直【找上下】居中*/
 .a-center {
   align-items: center;
@@ -430,6 +506,11 @@ export default {
 /*水平【找左右】居中*/
 .j-center {
   justify-content: center;
+}
+
+/*块模块改成行模块*/
+.f-wrap {
+  flex-wrap: wrap;
 }
 
 .kf-img {
@@ -441,5 +522,13 @@ export default {
   width: 25px;
   height: 25px;
   margin-left: 20px;
+}
+
+.el-table .warning-row {
+   background: oldlace;
+ }
+
+.el-table .success-row {
+  background: #f0f9eb;
 }
 </style>
