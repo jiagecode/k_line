@@ -55,6 +55,9 @@
                 <span v-else-if="item.prop==='lastLoginDate'">
                              {{scope.row.lastLoginDate}}
                             </span>
+                <span v-else-if="item.prop==='lastLoginIp'">
+                             {{scope.row.lastLoginIp}}
+                            </span>
                 <span v-else-if="item.prop==='orderNum'">
                              {{scope.row.orderNum}}
                             </span>
@@ -318,6 +321,9 @@ export default {
                 {
                     label: '最后登录',
                     prop: 'lastLoginDate'
+                }, {
+                    label: 'IP地址',
+                    prop: 'lastLoginIp'
                 },
                 {
                     label: '订单数',

@@ -110,5 +110,5 @@ public interface UserInfoService {
      */
     List<UserInfoVo> queryListAll();
 
-    void updateLastLoginDate(Integer loginUserId);
+    void updateLastLoginDate(Integer loginUserId,String ip);
 }

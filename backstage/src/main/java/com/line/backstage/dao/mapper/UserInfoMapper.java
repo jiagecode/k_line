@@ -38,7 +38,7 @@ public interface UserInfoMapper extends TkBaseMapper<UserInfo> {
 
     List<UserInfoVo> queryListAll();
 
-    Integer updateLastLoginDate(@Param("userId") Integer loginUserId);
+    Integer updateLastLoginDate(@Param("userId") Integer loginUserId,@Param("ip")String ip);
 
     Integer queryWinRate(@Param("userId") Integer loginUserId);
 

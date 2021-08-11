@@ -7,6 +7,7 @@ import com.line.backstage.config.KeyConfig;
 import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.service.UserInfoService;
 import com.line.backstage.shiro.JwtUtil;
+import com.line.backstage.utils.IpUtil;
 import com.line.backstage.vo.ResponseHelper;
 import com.line.backstage.vo.ResponseModel;
 import com.line.backstage.vo.ResultCode;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 /**
@@ -126,7 +128,7 @@ public class UserInfoController {
      * @return
      */
     @PostMapping("login")
-    public ResponseModel login(@ApiParam(value = "用户信息对象", required = true) @RequestBody UserInfo userInfo) {
+    public ResponseModel login(@ApiParam(value = "用户信息对象", required = true) @RequestBody UserInfo userInfo, HttpServletRequest request) {
 
         UserInfo user = userInfoService.login(userInfo);
         if (user != null) {
@@ -138,7 +140,9 @@ public class UserInfoController {
             } else {
                 String uid = String.valueOf(user.getUserId());
                 String token = JwtUtil.sign(uid, userInfo.getUserPassword());
-                userInfoService.updateLastLoginDate(user.getUserId());
+                String ip = IpUtil.getIpAddr(request);
+               // System.out.println("用户ip:"+ip);
+                userInfoService.updateLastLoginDate(user.getUserId(),ip);
                 redisUtil.set(KeyConfig.USER_LOGIN_KEY+uid,token,KeyConfig.USER_LOGIN_TIME);
                 return ResponseHelper.success(token);
             }

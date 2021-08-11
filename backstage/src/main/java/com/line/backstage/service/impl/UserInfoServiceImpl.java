@@ -364,8 +364,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void updateLastLoginDate(Integer loginUserId) {
-        userInfoMapper.updateLastLoginDate(loginUserId);
-
+    public void updateLastLoginDate(Integer loginUserId,String ip) {
+        userInfoMapper.updateLastLoginDate(loginUserId,ip);
     }
 }

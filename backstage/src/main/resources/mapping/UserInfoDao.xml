@@ -28,6 +28,7 @@
         <result property="diyUserName" column="DIY_USER_NAME" jdbcType="VARCHAR"/>
         <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
         <result property="winRate" column="WIN_RATE" jdbcType="NUMERIC"/>
+        <result property="lastLoginIp" column="LAST_LOGIN_IP" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap type="com.line.backstage.entity.sysentity.ManUserVo" id="ManUserVoInfoMap">
         <result property="userId" column="USER_ID" jdbcType="INTEGER"/>
@@ -57,6 +58,7 @@
         <result property="agentId" column="AGENT_ID" jdbcType="INTEGER"/>
         <result property="agentName" column="AGENT_NAME" jdbcType="VARCHAR"/>
         <result property="remarks" column="REMARKS" jdbcType="VARCHAR"/>
+        <result property="lastLoginIp" column="LAST_LOGIN_IP" jdbcType="VARCHAR"/>
         <result property="agentTime" column="AGENT_TIME" jdbcType="TIMESTAMP"/>
         <result property="bonusRate" column="BONUS_RATE" jdbcType="NUMERIC"/>
         <result property="commissionRate" column="COMMISSION_RATE" jdbcType="NUMERIC"/>
@@ -78,7 +80,7 @@
         u.USER_ID,u.USER_NICK_NAME,u.USER_REAL_NAME,u.USER_GENDER,u.USER_PASSWORD,u.USER_HEAD_IMG,u.USER_PHONE,u.USER_REFEREE_ID,
         u.USER_TYPE,u.USER_LEVEL,u.USER_CARD_NO,u.USER_REGISTER_DATE,u.USER_FORBID_FLAG,u.USER_REFEREE_CODE,u.USER_REFEREE_ABLE,
         u.ADD_DATE,u.ADD_USER_ID,u.EDIT_DATE,u.EDIT_USER_ID,u.LAST_LOGIN_DATE,u.DEL_STATUS,u.DEL,u.AGENT_ID,u.AGENT_NAME,u.AGENT_TIME,
-        u.BONUS_RATE,u.COMMISSION_RATE,u.DIY_FLAG,u.DIY_USER_TYPE,u.DIY_USER_NAME,u.WIN_RATE,a.ACCOUNT_MONEY,a.ALL_MONEY,a.ORDER_NUM,a.ACCOUNT_STATUS,a.MONEY_STATUS
+        u.BONUS_RATE,u.COMMISSION_RATE,u.DIY_FLAG,u.DIY_USER_TYPE,u.DIY_USER_NAME,u.WIN_RATE,u.LAST_LOGIN_IP,a.ACCOUNT_MONEY,a.ALL_MONEY,a.ORDER_NUM,a.ACCOUNT_STATUS,a.MONEY_STATUS
     </sql>
     <select id="queryManUserVoList" parameterType="com.line.backstage.entity.sysentity.ManUserVo" resultMap="ManUserVoInfoMap">
         SELECT
@@ -139,8 +141,8 @@
         from t_user_info where USER_FORBID_FLAG=0 AND DEL_STATUS=0 AND DEL=1
     </select>
 
-    <update id="updateLastLoginDate" parameterType="java.lang.Integer">
-        update  t_user_info set LAST_LOGIN_DATE = now() where USER_ID = #{userId}
+    <update id="updateLastLoginDate" >
+        update  t_user_info set LAST_LOGIN_DATE = now(),LAST_LOGIN_IP = #{ip} where USER_ID = #{userId}
     </update>
 
     <select id="queryWinRate" parameterType="java.lang.Integer" resultType="java.lang.Integer">

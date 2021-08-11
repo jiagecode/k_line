@@ -17,7 +17,7 @@
 				</uni-col>
 				<uni-col :span="8" style="text-align: right;">
 					<view class="font-md" v-show="item.winFlag == '1'" style="height: 40rpx; line-height:40rpx; color: red;">+ {{ item.incomeAmount }}</view>
-					<view class="font-md" v-show="item.winFlag == '2'" style="height: 40rpx; line-height:40rpx; color: #09BB07;">- {{ item.incomeAmount }}</view>
+					<view class="font-md" v-show="item.winFlag == '2'" style="height: 40rpx; line-height:40rpx; color: #09BB07;">- {{ item.investAmount }}</view>
 					<view style="height: 40rpx; line-height:40rpx;">{{ fixedPrice(item.endPrice) }}</view>
 					<view style="height: 40rpx; line-height:40rpx; color: #999999;" class="font-sm">{{ item.endDate }}</view>
 				</uni-col>
