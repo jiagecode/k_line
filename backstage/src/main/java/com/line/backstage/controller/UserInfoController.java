@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.UserInfo;
 import com.line.backstage.enums.DataEnum;
@@ -128,6 +129,7 @@ public class UserInfoController {
      * @return
      */
     @PostMapping("login")
+    @Log(description = "用户H5登录",userType = "0")
     public ResponseModel login(@ApiParam(value = "用户信息对象", required = true) @RequestBody UserInfo userInfo, HttpServletRequest request) {
 
         UserInfo user = userInfoService.login(userInfo);

@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.BankCardInfo;
 import com.line.backstage.service.BankCardInfoService;
@@ -39,6 +40,7 @@ public class BankCardInfoController {
      */
     @PostMapping("save")
     @ApiOperation(value = "新增/修改", notes = "新增/修改银行卡信息的一条数据")
+    @Log(description = "用户保存银行卡信息",userType = "0")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "银行卡信息对象", required = true) @RequestBody @Validated BankCardInfo bankCardInfo) {
             return ResponseHelper.success(bankCardInfoService.save(Integer.valueOf(loginUserId), bankCardInfo));
     }
@@ -52,6 +54,7 @@ public class BankCardInfoController {
      */
     @DeleteMapping("delete/{bankCardId}")
     @ApiOperation(value = "删除单条数据", notes = "删除主键bankCardId的单条数据")
+    @Log(description = "删除银行卡信息",userType = "1")
     public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "银行卡信息主键bankCardId", required = true) @PathVariable("bankCardId") Integer bankCardId) {
             return ResponseHelper.success(bankCardInfoService.delete(Integer.valueOf(loginUserId), bankCardId));
     }
@@ -78,6 +81,7 @@ public class BankCardInfoController {
      */
     @PostMapping("queryMyBankCard")
     @ApiOperation(value = "列表", notes = "查询银行卡信息的多条数据")
+    @Log(description = "用户查询银行卡",userType = "0")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "银行卡信息对象", required = true) @RequestBody BankCardInfo bankCardInfo) {
         return ResponseHelper.success(bankCardInfoService.list(Integer.valueOf(loginUserId), bankCardInfo));
     }

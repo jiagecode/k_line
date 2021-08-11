@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.OrderInfo;
 import com.line.backstage.service.OrderInfoService;
@@ -39,6 +40,7 @@ public class OrderInfoController {
      * @return 是否成功
      */
     @PostMapping("save")
+    @Log(description = "用户下单",userType = "0")
     @ApiOperation(value = "新增/修改", notes = "新增/修改订单信息的一条数据")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "订单信息对象", required = true) @RequestBody @Validated OrderInfo orderInfo) {
 //        int result = orderInfoService.save(Integer.valueOf(loginUserId), orderInfo);

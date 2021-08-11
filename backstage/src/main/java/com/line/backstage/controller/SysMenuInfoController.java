@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysMenuInfo;
 import com.line.backstage.service.SysMenuInfoService;
@@ -39,6 +40,7 @@ public class SysMenuInfoController {
      */
     @PostMapping("addOrUpdateOne")
     @ApiOperation(value = "新增", notes = "新增/修改后台管理系统菜单表的一条数据")
+    @Log(description = "管理员编辑菜单",userType = "1")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统菜单表对象", required = true) @RequestBody @Validated SysMenuInfo sysMenuInfo) {
            if(sysMenuInfo != null && sysMenuInfo.getMenuId() != null){
                return ResponseHelper.success(sysMenuInfoService.updateForOne(Integer.valueOf(loginUserId), sysMenuInfo));
@@ -55,6 +57,7 @@ public class SysMenuInfoController {
      */
     @PostMapping("delOne")
     @ApiOperation(value = "删除单条数据", notes = "删除主键menuId的单条数据")
+    @Log(description = "管理员删除单条菜单数据",userType = "1")
     public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@ApiParam(value = "后台管理系统菜单表对象", required = true) @RequestBody @Validated SysMenuInfo sysMenuInfo) {
             return ResponseHelper.success(sysMenuInfoService.deleteForOne(Integer.valueOf(loginUserId),sysMenuInfo));
     }
@@ -80,6 +83,7 @@ public class SysMenuInfoController {
      */
     @PostMapping("queryList")
     @ApiOperation(value = "列表", notes = "查询后台管理系统菜单表的多条数据")
+    @Log(description = "查询后台管理系统菜单列表",userType = "1")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统菜单表对象", required = true) @RequestBody SysMenuInfo sysMenuInfo) {
         return ResponseHelper.success(sysMenuInfoService.queryMyMenuList(Integer.valueOf(loginUserId), sysMenuInfo));
     }

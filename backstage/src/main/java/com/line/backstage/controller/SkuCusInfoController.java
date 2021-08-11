@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
  
+import com.line.backstage.annotation.Log;
 import com.line.backstage.entity.SkuCusInfo;
 import com.line.backstage.service.SkuCusInfoService;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +76,7 @@ public class SkuCusInfoController {
      */
     @PostMapping("queryMySku")
     @ApiOperation(value = "列表", notes = "查询自选商品信息表的多条数据")
+    @Log(description = "用户查询自选商品",userType = "0")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "自选商品信息表对象", required = true) @RequestBody SkuCusInfo skuCusInfo) {
 //        return ResponseHelper.success(skuCusInfoService.list(Integer.valueOf(loginUserId), skuCusInfo));
         return ResponseHelper.success(skuCusInfoService.queryMyCusCode(Integer.valueOf(loginUserId)));

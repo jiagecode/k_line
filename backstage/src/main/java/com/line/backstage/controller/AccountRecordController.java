@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.AccountRecord;
 import com.line.backstage.service.AccountRecordService;
@@ -76,6 +77,7 @@ public class AccountRecordController {
      * @return 对象列表
      */
     @PostMapping("querylist")
+    @Log(description = "用户查询资金记录",userType = "0")
     @ApiOperation(value = "列表", notes = "查询用户资金账户变动记录的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户资金账户变动记录对象", required = true) @RequestBody AccountRecord accountRecord) {
         return ResponseHelper.success(accountRecordService.list(Integer.valueOf(loginUserId), accountRecord));

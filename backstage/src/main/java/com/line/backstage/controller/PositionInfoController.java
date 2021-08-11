@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.PositionInfo;
 import com.line.backstage.entity.sysentity.ManPosiVo;
@@ -80,6 +81,7 @@ public class PositionInfoController {
      * @return 对象列表
      */
     @PostMapping("mySkuForList")
+    @Log(description = "用户查询持仓消息",userType = "0")
     @ApiOperation(value = "列表", notes = "查询用户持仓信息的多条数据")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户持仓信息对象", required = true) @RequestBody PositionInfo positionInfo) {
         return ResponseHelper.success(positionInfoService.list(Integer.valueOf(loginUserId), positionInfo));

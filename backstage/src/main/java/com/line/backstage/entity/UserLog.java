@@ -43,6 +43,11 @@ public class UserLog extends QueryRequest implements Serializable {
     */            
     @ApiModelProperty("操作描述")
     private String description;
+    /**
+    * 用户类型
+    */
+    @ApiModelProperty("用户类型")
+    private String userType;
     
     /**
     * 请求IP
@@ -96,7 +101,7 @@ public class UserLog extends QueryRequest implements Serializable {
     * 1-成功/0-失败
     */            
     @ApiModelProperty("1-成功/0-失败")
-    private Object executeStatus;
+    private Integer executeStatus;
     
     /**
     * 创建时间

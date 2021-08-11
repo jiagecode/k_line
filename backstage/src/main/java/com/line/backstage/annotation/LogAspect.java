@@ -151,6 +151,7 @@ public class LogAspect {
         userLog.setRequestUrl(request.getRequestURL().toString());
         // 接口描述
         userLog.setDescription(logAnnotation.description());
+        userLog.setUserType(logAnnotation.userType());
         // 设置IP地址
         userLog.setIp(IpUtil.getIpAddr(request));
         userLog.setExecuteTime((double) time);

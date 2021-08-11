@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.BankCardInfo;
 import com.line.backstage.entity.CashOutIn;
@@ -35,6 +36,7 @@ public class SysDIYController {
      * @return
      */
     @GetMapping("diyUserInfo")
+    @Log(description = "管理员查询操作用户信息",userType = "1")
     @ApiOperation(value = "查询操作用户信息", notes = "根据token的用户id}")
     public ResponseModel querySpecialUserInfo(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@RequestParam String diyUserId){
         return ResponseHelper.success(sysDiyService.querySpecialUserInfo(Integer.valueOf(loginUserId),diyUserId));
@@ -47,6 +49,7 @@ public class SysDIYController {
      */
     @GetMapping("sumMoneyForCash")
     @ApiOperation(value = "查询操作用户信息", notes = "根据token的用户id}")
+    @Log(description = "统计提现/充值金额",userType = "1")
     public ResponseModel sumMoneyForCash(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@RequestParam String cashType){
         return ResponseHelper.success(sysDiyService.queryAllCashMoney(Integer.valueOf(loginUserId),Integer.valueOf(cashType)));
     }
@@ -57,6 +60,7 @@ public class SysDIYController {
      * @return
      */
     @GetMapping("orderDetail")
+    @Log(description = "管理员查询订单详情",userType = "1")
     @ApiOperation(value = "查询订单详情", notes = "根据token的用户id}")
     public ResponseModel orderDetail(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId,@RequestParam String orderId){
         return ResponseHelper.success(sysDiyService.queryDetailForOrder(Integer.valueOf(loginUserId),Integer.valueOf(orderId)));
@@ -68,6 +72,7 @@ public class SysDIYController {
      */
     @GetMapping("skuList")
     @ApiOperation(value = "查询SKU下拉列表", notes = "根据token的用户id}")
+    @Log(description = "管理员查询SKU下拉列表",userType = "1")
     public ResponseModel querySkuDataList(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId){
         return ResponseHelper.success(sysDiyService.querySkuDataList(Integer.valueOf(loginUserId)));
     }
@@ -78,47 +83,55 @@ public class SysDIYController {
      */
     @GetMapping("optionList1")
     @ApiOperation(value = "查询代理商下拉列表", notes = "根据token的用户id}")
+    @Log(description = "管理员查询代理商下拉列表",userType = "1")
     public ResponseModel queryOptionList1(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId){
         return ResponseHelper.success(sysDiyService.queryOptionsForAgent(Integer.valueOf(loginUserId)));
     }
     @GetMapping("optionList2")
     @ApiOperation(value = "查询后台角色下拉列表", notes = "根据token的用户id}")
+    @Log(description = "管理员查询角色下拉列表",userType = "1")
     public ResponseModel queryOptionList2(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId){
         return ResponseHelper.success(sysDiyService.queryOptionsForRole(Integer.valueOf(loginUserId)));
     }
 
     @PostMapping("changeInfo")
     @ApiOperation(value = "修改操作用户信息", notes = "修改操作用户信息")
+    @Log(description = "管理员修改用户信息",userType = "1")
     public ResponseModel updateSpecialUserInfo(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String,Object> paramMap){
         return ResponseHelper.success(sysDiyService.updateSpecialUserInfo(Integer.valueOf(loginUserId),paramMap));
     }
 
     @PostMapping("createData")
     @ApiOperation(value = "生成模拟数据并返回", notes = "生成模拟数据并返回")
+    @Log(description = "管理员生成模拟数据并返回",userType = "1")
     public ResponseModel createImitateData(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String,Object> paramMap){
         return ResponseHelper.success(sysDiyService.createImitateData(Integer.valueOf(loginUserId),paramMap));
     }
 
     @PostMapping("editRecord")
     @ApiOperation(value = "编辑操作记录", notes = "修改操作用户信息")
+    @Log(description = "管理员编辑操作记录",userType = "1")
     public ResponseModel editDiyRecordByType(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String,Object> paramMap){
         return ResponseHelper.success(sysDiyService.editDiyRecordByType(Integer.valueOf(loginUserId),paramMap));
     }
 
     @PostMapping("editAccount")
     @ApiOperation(value = "编辑用户资金", notes = "修改资金")
+    @Log(description = "管理员编辑用户资金",userType = "1")
     public ResponseModel editUserMoney(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String,Object> paramMap){
         return ResponseHelper.success(sysDiyService.editUserMoney(Integer.valueOf(loginUserId),paramMap));
     }
 
     @PostMapping("checkForCash")
     @ApiOperation(value = "审核、删除提现/充值", notes = "修改资金")
+    @Log(description = "管理员审核、删除提现/充值",userType = "1")
     public ResponseModel checkForCash(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody CashOutIn cash){
         return ResponseHelper.success(sysDiyService.checkForCashOutIn(Integer.valueOf(loginUserId),cash));
     }
 
     @PostMapping("editBankCard")
     @ApiOperation(value = "银行卡管理", notes = "修改资金")
+    @Log(description = "管理员编辑银行卡信息",userType = "1")
     public ResponseModel editBankCard(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody BankCardInfo bankCardInfo){
         return ResponseHelper.success(bankCardInfoService.save(Integer.valueOf(loginUserId),bankCardInfo));
     }

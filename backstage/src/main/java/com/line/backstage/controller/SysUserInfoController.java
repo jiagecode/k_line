@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.AccountInfo;
 import com.line.backstage.entity.SysUserInfo;
@@ -54,6 +55,7 @@ public class SysUserInfoController {
      */
     @PostMapping("saveSys")
     @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统用户表的一条数据")
+    @Log(description = "创建管理员",userType = "1")
     public ResponseModel saveSys(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统用户表对象", required = true) @RequestBody @Validated SysUserInfo sysUserInfo) {
             return ResponseHelper.success(sysUserInfoService.save(Integer.valueOf(loginUserId), sysUserInfo));
     }
@@ -92,6 +94,7 @@ public class SysUserInfoController {
      */
     @PostMapping("sysList")
     @ApiOperation(value = "列表", notes = "查询后台管理系统用户表的多条数据")
+    @Log(description = "查询后台管理系统用户表的多条数据",userType = "1")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "后台管理系统用户表对象", required = true) @RequestBody SysUserInfo sysUserInfo) {
         return ResponseHelper.success(sysUserInfoService.list(Integer.valueOf(ManageUserId), sysUserInfo));
     }
@@ -104,6 +107,7 @@ public class SysUserInfoController {
      */
     @PostMapping("queryInfoList")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-用户表-的多条数据")
+    @Log(description = "分页查询用户列表",userType = "1")
     public ResponseModel queryInfoList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManUserVo manUserVo) {
         return ResponseHelper.success(sysUserInfoService.queryManUserVoForPage(Integer.valueOf(ManageUserId), manUserVo));
     }
@@ -115,6 +119,7 @@ public class SysUserInfoController {
      */
     @PostMapping("queryCashDetail")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-提现记录-的多条数据")
+    @Log(description = "查询充值列表",userType = "1")
     public ResponseModel queryCashDetail(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManCashVo manCashVo) {
         return ResponseHelper.success(sysUserInfoService.queryManCashVoForPage(Integer.valueOf(ManageUserId), manCashVo));
     }
@@ -126,6 +131,7 @@ public class SysUserInfoController {
      */
     @PostMapping("queryOrderDataList")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-订单表-多条数据")
+    @Log(description = "查询订单列表",userType = "1")
     public ResponseModel queryOrderDataList(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManOrderVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManOrderVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
@@ -136,6 +142,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("queryManRecordVoForPage")
+    @Log(description = "管理端-查询平仓记录",userType = "1")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
     public ResponseModel queryManRecordVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManRecordVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManRecordVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
@@ -148,6 +155,7 @@ public class SysUserInfoController {
      */
     @PostMapping("queryBankVoForPage")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
+    @Log(description = "管理端-查询银行卡",userType = "1")
     public ResponseModel queryBankVoForPage(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManBankVo manOrderVo) {
         return ResponseHelper.success(sysUserInfoService.queryManBankVoForPage(Integer.valueOf(ManageUserId),manOrderVo));
     }
@@ -160,6 +168,7 @@ public class SysUserInfoController {
      */
     @PostMapping("openOrForbidAccount")
     @ApiOperation(value = "列表", notes = "封禁或解封用户账户")
+    @Log(description = "封禁或解封用户账户",userType = "1")
     public ResponseModel openOrForbidAccount(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody AccountInfo accountInfo) {
         return ResponseHelper.success(sysUserInfoService.openOrForbidAccount(Integer.valueOf(ManageUserId),accountInfo));
     }
@@ -170,6 +179,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("moneyTableData")
+    @Log(description = "管理端-资金报表",userType = "1")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-多条数据")
     public ResponseModel queryMoneyTableData(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody AccountInfo accountInfo) {
         return ResponseHelper.success(sysUserInfoService.queryAccountInfoForPage(Integer.valueOf(ManageUserId),accountInfo));
@@ -181,6 +191,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("moneyTableTotal")
+    @Log(description = "管理端-资金汇总",userType = "1")
     @ApiOperation(value = "列表", notes = "查询后台管理系统-资金记录表-汇总数据")
     public ResponseModel moneyTableTotal(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody ManMoneyVo manMoneyVo) {
         return ResponseHelper.success(sysUserInfoService.queryManMoneyVo(Integer.valueOf(ManageUserId),manMoneyVo));
@@ -193,6 +204,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("addNewOne")
+    @Log(description = "管理端-创建新用户",userType = "1")
     @ApiOperation(value = "列表", notes = "后台系统添加用户")
     public ResponseModel addNewUser(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
         if(manUserVo.getUserId()!=null){
@@ -208,6 +220,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("updateUserType")
+    @Log(description = "管理端-签约 改用户为代理商",userType = "1")
     @ApiOperation(value = "改用户为代理商", notes = "改用户为代理商")
     public ResponseModel updateUserType(@ApiParam(value = "用户ID", required = false)@LoginUserId String ManageUserId, @ApiParam(value = "用户表对象", required = true) @RequestBody UserInfo manUserVo) {
         return ResponseHelper.success(userInfoService.updateUserType(Integer.valueOf(ManageUserId),manUserVo));
@@ -219,6 +232,7 @@ public class SysUserInfoController {
      * @return
      */
     @PostMapping("login")
+    @Log(description = "系统管理员登陆",userType = "1")
     public ResponseModel login(@ApiParam(value = "系统用户信息对象", required = true) @RequestBody SysUserInfo sysUserInfo) {
 
         SysUserInfo sysUser = sysUserInfoService.login(sysUserInfo);
@@ -254,6 +268,7 @@ public class SysUserInfoController {
      */
     @GetMapping("queryHomeData")
     @ApiOperation(value = "查询首页统计数据", notes = "根据token的用户id}")
+    @Log(description = "后台系统查询首页统计数据",userType = "1")
     public ResponseModel queryHomeData(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId,@RequestParam String endTime){
 //        return ResponseHelper.success(sysUserInfoService.queryHomePageData());
         return ResponseHelper.success(sysUserInfoService.queryHomePageDataForDate(endTime));
@@ -267,6 +282,7 @@ public class SysUserInfoController {
      */
     @GetMapping("queryAgentData")
     @ApiOperation(value = "代理商统计数据", notes = "根据token的用户id}")
+    @Log(description = "后台系统查询代理商统计数据",userType = "1")
     public ResponseModel queryHomeDataForAgent(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId,@RequestParam String agentId){
         if(StringUtils.isEmpty(agentId)){
             agentId = "-1";
@@ -281,6 +297,7 @@ public class SysUserInfoController {
      */
     @GetMapping("logout")
     @ApiOperation(value = "查询单条数据", notes = "根据token的用户id}")
+    @Log(description = "退出登录",userType = "1")
     public ResponseModel logout(@ApiParam(value = "用户信息主键userId", required = true)@LoginUserId  String loginUserId){
         return ResponseHelper.success(sysUserInfoService.logout(Integer.valueOf(loginUserId)));
     }

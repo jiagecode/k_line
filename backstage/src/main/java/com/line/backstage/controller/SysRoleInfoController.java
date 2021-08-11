@@ -1,6 +1,7 @@
 package com.line.backstage.controller;
 
 import com.google.common.collect.Maps;
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysRoleInfo;
 import com.line.backstage.service.SysRoleInfoService;
@@ -43,6 +44,7 @@ public class SysRoleInfoController {
      */
     @PostMapping("save")
     @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统角色表的一条数据")
+    @Log(description = "新增/修改角色",userType = "1")
     public ResponseModel save(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色表对象", required = true) @RequestBody @Validated SysRoleInfo sysRoleInfo) {
             return ResponseHelper.success(sysRoleInfoService.save(Integer.valueOf(loginUserId), sysRoleInfo));
     }
@@ -56,6 +58,7 @@ public class SysRoleInfoController {
      */
     @PostMapping("delete")
     @ApiOperation(value = "删除单条数据", notes = "删除主键roleId的单条数据")
+    @Log(description = "删除角色",userType = "1")
     public ResponseModel delete(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色表主键roleId", required = true) @RequestBody Map<String ,Object> map) {
         Integer roleId = (Integer) map.get("roleId");
            if(roleId != null){
@@ -90,6 +93,7 @@ public class SysRoleInfoController {
     }
     @PostMapping("authorize")
     @ApiOperation(value = "授权", notes = "角色菜单授权列表")
+    @Log(description = "角色菜单授权",userType = "1")
     public ResponseModel authorize(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @RequestBody Map<String ,String> map) {
         String roleId = map.get("roleId");
         Integer rid = Integer.valueOf(roleId);

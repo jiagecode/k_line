@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.SysPower;
 import com.line.backstage.service.SysPowerService;
@@ -46,6 +47,7 @@ public class SysPowerController {
 
     @PostMapping("saveForAuth")
     @ApiOperation(value = "新增/修改", notes = "新增/修改后台管理系统角色与菜单对应关系的一条数据")
+    @Log(description = "菜单授权",userType = "1")
     public ResponseModel saveForAuth(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "后台管理系统角色与菜单对应关系对象", required = true) @RequestBody Map<String,String> map) {
             return ResponseHelper.success(sysPowerService.saveForAuth(Integer.valueOf(loginUserId), map));
     }

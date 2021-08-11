@@ -1,5 +1,6 @@
 package com.line.backstage.controller;
 
+import com.line.backstage.annotation.Log;
 import com.line.backstage.annotation.LoginUserId;
 import com.line.backstage.entity.CashOutIn;
 import com.line.backstage.service.CashOutInService;
@@ -52,6 +53,7 @@ public class CashOutInController {
      */
     @PostMapping("insertForNew")
     @ApiOperation(value = "新增", notes = "新增用户资金充值或提现记录的一条数据")
+    @Log(description = "创建充值/提现记录",userType = "0")
     public ResponseModel insertForNew(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户资金充值或提现记录对象", required = true) @RequestBody @Validated CashOutIn cashOutIn) {
         int re = cashOutInService.insertForNew(Integer.valueOf(loginUserId), cashOutIn) ;
         if(re == -1){
@@ -98,6 +100,7 @@ public class CashOutInController {
      */
     @PostMapping("myCashOutList")
     @ApiOperation(value = "列表", notes = "查询用户资金充值或提现记录的多条数据")
+    @Log(description = "查询创建充值/提现记录",userType = "0")
     public ResponseModel list(@ApiParam(value = "用户ID", required = false) @LoginUserId String loginUserId, @ApiParam(value = "用户资金充值或提现记录对象", required = true) @RequestBody CashOutIn cashOutIn) {
         return ResponseHelper.success(cashOutInService.list(Integer.valueOf(loginUserId), cashOutIn));
     }
