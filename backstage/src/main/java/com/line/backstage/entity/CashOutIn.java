@@ -8,10 +8,7 @@ import java.io.Serializable;
 import io.swagger.annotations.*;
 import lombok.Data;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 
 /**
  * 用户资金充值或提现记录(CashOutIn)实体类
@@ -127,4 +124,6 @@ public class CashOutIn extends QueryRequest implements Serializable {
     @ApiModelProperty("备注")
     private String remarks;
     private Integer diyId ;
+    @Transient
+    private Integer userId;
 }

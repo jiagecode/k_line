@@ -102,6 +102,7 @@
         <if test=" endDate != null ">
             and c.ADD_DATE <![CDATA[ <= ]]> #{endDate}
         </if>
+        order by c.CASH_ID desc
     </select>
 
     <update id="updateForDiy" parameterType="java.lang.Integer" >
@@ -113,6 +114,10 @@
         values (#{agentId},0,0,now(),now(),#{userId},#{userId},1)
     </insert>
 
+    <select id="queryUserBankCardId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select BANK_CARD_ID from t_bank_card_info where
+        USER_ID = #{uid} and DEL = 1 AND CARD_STATUS = 0 ORDER BY  BANK_CARD_ID DESC LIMIT 1
+    </select>
     <update id="updateAgentScore">
         update t_agent_score
         set IN_CASH = IN_CASH + #{inCash},

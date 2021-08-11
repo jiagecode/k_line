@@ -195,7 +195,7 @@
 <!--              <el-option label="手动入金" value="0"></el-option>-->
               <el-option label="系统加款" value="1"></el-option>
               <el-option label="系统扣款" value="2"></el-option>
-<!--              <el-option label="提现扣款" value="3"></el-option>-->
+              <el-option label="用户充值" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="调后余额：" prop="moeny">
@@ -284,7 +284,7 @@
 </template>
 
 <script>
-import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType,openOrForbid } from '@/api/adminUser'
+import { addUser, changeUserMoney, listUser,queryOptData1,changeUserType,openOrForbid,cashInForUser } from '@/api/adminUser'
 
 export default {
     name: 'index',
@@ -550,23 +550,46 @@ export default {
         submitFormChange (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    console.log(this.changeForm)
-                    var data = {
-                      dealType : this.changeForm.leixing,
-                      userId:this.changeForm.userId,
-                      money:this.changeForm.moeny
-                    }
-                    changeUserMoney(data).then(res => {
+                  var dealType =  this.changeForm.leixing;
+                    if(dealType == 0){
+                      var data = {
+                        userId:this.changeForm.userId,
+                        remarks:this.changeForm.beizhu,
+                        del:1,
+                        exchangeRate:1.0,
+                        checkStatus:0,
+                        cashFee:0.0,
+                        arriveMoney:this.changeForm.moeny,
+                        cashMoney:this.changeForm.moeny,
+                        cashType:2
+                      }
+                      cashInForUser(data).then(res => {
                         if (res.code == 10000) {
-                            this.$message.success(res.message)
-                            this.dialogFormVisibleChange = false
-                            this.$refs[`changeForm`].resetFields()
-                            this.queryListForUserVo()
+                          this.$message.success(res.message)
+                          this.dialogFormVisibleChange = false
+                          this.$refs[`changeForm`].resetFields()
+                          this.queryListForUserVo()
                         } else {
-                            this.$message.error(res.message)
+                          this.$message.error(res.message)
                         }
-                    })
-
+                      })
+                    }else {
+                      var data = {
+                        dealType :dealType,
+                        userId:this.changeForm.userId,
+                        money:this.changeForm.moeny
+                      }
+                      changeUserMoney(data).then(res => {
+                        if (res.code == 10000) {
+                          this.$message.success(res.message)
+                          this.dialogFormVisibleChange = false
+                          this.$refs[`changeForm`].resetFields()
+                          this.queryListForUserVo()
+                        } else {
+                          this.$message.error(res.message)
+                        }
+                      })
+                    }
                 } else {
                     console.log('error submit!!')
                     return false

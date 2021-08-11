@@ -200,6 +200,14 @@ export function changeUserMoney(data) {
     data:data
   })
 }
+//创建用户充值
+export function cashInForUser(data) {
+  return request({
+    url: '/cashOutIn/insertForNew',
+    method: 'post',
+    data:data
+  })
+}
 
 //审核提现、充值
 export function checkCash(data) {

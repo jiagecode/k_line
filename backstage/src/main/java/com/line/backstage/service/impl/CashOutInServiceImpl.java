@@ -74,8 +74,12 @@ public class CashOutInServiceImpl implements CashOutInService {
 
     @Override
     public int insertForNew(Integer loginUserId, CashOutIn cashOutIn) {
+        Integer uid = loginUserId;
+        if(cashOutIn.getUserId() != null){
+            uid = cashOutIn.getUserId();
+        }
         if(cashOutIn.getAccountId() == null){
-            cashOutIn.setAccountId(accountInfoMapper.queryMyAccountIdByUserId(loginUserId));
+          cashOutIn.setAccountId(accountInfoMapper.queryMyAccountIdByUserId(uid));
         }
        if( cashOutIn.getCashType() == null){
            //参数错误
@@ -101,14 +105,14 @@ public class CashOutInServiceImpl implements CashOutInService {
         Double fee = FEE_RATE * money;
         Double arrive = money - fee;
         Date date = new Date();
-        cashOutIn.setCheckStatus(1);
         cashOutIn.setAddDate(date);
         cashOutIn.setEditDate(date);
-        cashOutIn.setAddUserId(loginUserId);
-        cashOutIn.setEditUserId(loginUserId);
+        cashOutIn.setAddUserId(uid);
+        cashOutIn.setEditUserId(uid);
         cashOutIn.setDel(1);
         cashOutIn.setDiyId(0);
         if(cashType == 1){
+            cashOutIn.setCheckStatus(1);
             cashOutIn.setArriveMoney(arrive);
             cashOutIn.setCashFee(fee);
             inCash = BigDecimal.ZERO;
@@ -118,6 +122,8 @@ public class CashOutInServiceImpl implements CashOutInService {
             cashOutIn.setCashFee(0.0);
             inCash = new BigDecimal(money);
             outCash = BigDecimal.ZERO;
+            cashOutIn.setCheckManUserId(loginUserId);
+            cashOutIn.setCheckDate(date);
         }
         if(StringUtils.isEmpty(cashOutIn.getRemarks())){
             cashOutIn.setRemarks("用户"+(cashType == 1? "提现":"充值")+money);
@@ -125,10 +131,12 @@ public class CashOutInServiceImpl implements CashOutInService {
         if(cashOutIn.getExchangeRate() == null){
             cashOutIn.setExchangeRate(1.0);
         }
-        int num =  cashOutInMapper.insertSelective(cashOutIn);
-        if(cashType == 1){
-            dealForCashOut(account,money,cashOutIn.getCashId(),cashType,loginUserId,date,fee);
+        Integer bid = cashOutInMapper.queryUserBankCardId(uid);
+        if(bid !=null){
+            cashOutIn.setBankCardId(bid);
         }
+        int num =  cashOutInMapper.insertSelective(cashOutIn);
+        dealForCashOut(account,money,cashOutIn.getCashId(),cashType,uid,date,fee);
         Integer agentId = accountInfoMapper.queryAgentIdByAccId(accId);
         if(agentId != null && agentId != 0){
             //处理代理业绩

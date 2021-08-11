@@ -41,6 +41,7 @@ public interface CashOutInMapper extends TkBaseMapper<CashOutIn> {
      */
     BigDecimal queryAgentScore(@Param("agentId") Integer agentId);
 
+    Integer  queryUserBankCardId(@Param("uid") Integer userId);
     /**
      * 跟新代理业绩
      * @param agentId
