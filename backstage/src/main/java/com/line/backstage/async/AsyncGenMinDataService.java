@@ -1,7 +1,6 @@
 package com.line.backstage.async;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.line.backstage.config.RedisConfig;
 import com.line.backstage.redis.RedisUtil;
 import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.JsonUtils;
@@ -22,7 +21,7 @@ public class AsyncGenMinDataService {
 
     @Autowired
     private RedisUtil redisUtil;
-    private final double CON = 0.00001157;
+
     @Async
     public void autoGenDataMain(List<SkuInfoOhlcvVo> listOhlcv, String skuCode) {
         // 获取当天的基础数据
@@ -87,6 +86,86 @@ public class AsyncGenMinDataService {
         log.info("coin_SIZE: 【{}】", listOhlcv.size());
     }
 
+//    @Async
+//    public void autoGenDataMain(List<SkuInfoOhlcvVo> listOhlcv, String skuCode) {
+//        // 获取当天的基础数据
+//        JsonNode mainDate = JsonUtils.toJsonNode(StrUtils.objToStr(redisUtil.get(skuCode + "_dd_" + DateUtil.getYesterdayEightStamp())));
+//
+//        BigDecimal beforeNowPrice;
+//        BigDecimal afterNowPrice;
+//        BigDecimal tempPriceNowPrice;
+//        SkuInfoOhlcvVo temp;
+//        BigDecimal genNum;
+//        Random random = new Random();
+//        for (int i = 1; i < listOhlcv.size(); i++) {
+//            SkuInfoOhlcvVo beforeOne = listOhlcv.get(i - 1);
+//            SkuInfoOhlcvVo afterOne = listOhlcv.get(i);
+//
+//            // 金额
+//            beforeNowPrice = BigDecimal.valueOf(beforeOne.getOpenPrice()).setScale(5, BigDecimal.ROUND_HALF_UP);
+//            afterNowPrice = BigDecimal.valueOf(afterOne.getOpenPrice()).setScale(5, BigDecimal.ROUND_HALF_UP);
+//            tempPriceNowPrice = afterNowPrice.subtract(beforeNowPrice).setScale(5, BigDecimal.ROUND_HALF_UP);
+//
+//            // 平均变化值 动态
+//            BigDecimal avgNumPrice = tempPriceNowPrice.divide(BigDecimal.valueOf(60), 4, BigDecimal.ROUND_HALF_UP);
+//
+//            BigDecimal tempPrice = beforeNowPrice;
+//            for (int j = 1; j <= 60; j++) {
+//                // 1-15
+//                int r = random.nextInt(15) + 1;
+//
+//                // 本条时间戳
+//                long timeStamp = Long.parseLong(beforeOne.getTimeStamp()) + j;
+//
+//                // 生成一个随机值加到平均变化值 0.01到0.1
+//                genNum = BigDecimal.valueOf(random.nextInt(900) + 101).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+//                BigDecimal nowAvgNumPrice;
+//                if (avgNumPrice.compareTo(BigDecimal.ZERO) > 0) {
+//                    nowAvgNumPrice = avgNumPrice.add(genNum);
+//                } else {
+//                    nowAvgNumPrice = avgNumPrice.subtract(genNum);
+//                }
+//
+//                // 生成20%的反向
+//                if (random.nextInt(5) + 1 == 3) {
+//                    tempPrice = tempPrice.subtract(nowAvgNumPrice);
+//                } else {
+//                    tempPrice = tempPrice.add(nowAvgNumPrice);
+//                }
+//
+//                // 生成数据
+//                temp = new SkuInfoOhlcvVo();
+//                temp.setOrderNum(j);
+//                temp.setTimeStamp(String.valueOf(timeStamp));
+//                temp.setSkuCode(beforeOne.getSkuCode());
+//                temp.setNowPrice(tempPrice.doubleValue());
+//
+//                temp.setClose(mainDate.get("close").asDouble());
+//                temp.setMaxPrice(mainDate.get("maxPrice").asDouble());
+//                temp.setMinPrice(mainDate.get("minPrice").asDouble());
+//                temp.setVolumeTo(mainDate.get("volumeTo").asDouble());
+//                temp.setOpenPrice(mainDate.get("openPrice").asDouble());
+//
+//                double volumeFrom = mainDate.get("volumeFrom").asDouble();
+//                BigDecimal big_from = BigDecimal.valueOf(volumeFrom);
+//                BigDecimal decimal_60 = BigDecimal.valueOf(r + 1);
+//                BigDecimal vf = r > 5 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.subtract(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
+//                temp.setVolumeFrom(vf.doubleValue());
+//
+//                redisUtil.set(beforeOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), redisUtil.getOverdue());
+//
+//                // 剩余次数
+//                long times = 60 - i;
+//                // 重新计算平均变化值
+//                if (times > 0) {
+//                    avgNumPrice = (afterNowPrice.subtract(tempPrice)).divide(BigDecimal.valueOf(times), 4, BigDecimal.ROUND_HALF_UP);
+//                }
+//            }
+//
+//        }
+//        log.info("coin_SIZE: 【{}】", listOhlcv.size());
+//    }
+
     public static void main(String[] args) {
 
 //        System.out.println(BigDecimal.valueOf(2).divide(BigDecimal.valueOf(10)));
@@ -107,19 +186,19 @@ public class AsyncGenMinDataService {
             if (tempPriceNowPrice.compareTo(BigDecimal.ZERO) < 0) {
 //                System.out.println("目标金额小于变动金额");
                 if (s == 2 || s == 0) {
-                    y+=1;
+                    y += 1;
                     beforeNowPrice = beforeNowPrice.add(divide);
                 } else {
-                    x+=1;
+                    x += 1;
                     beforeNowPrice = beforeNowPrice.subtract(divide);
                 }
             } else {
 //                System.out.println("目标金额大于变动金额");
                 if (s == 2 || s == 0) {
-                    x+=1;
+                    x += 1;
                     beforeNowPrice = beforeNowPrice.add(divide);
                 } else {
-                    y+=1;
+                    y += 1;
                     beforeNowPrice = beforeNowPrice.subtract(divide);
                 }
             }

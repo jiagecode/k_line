@@ -1,9 +1,6 @@
 package com.line.backstage.async;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.line.backstage.config.RedisConfig;
 import com.line.backstage.redis.RedisUtil;
-import com.line.backstage.utils.DateUtil;
 import com.line.backstage.utils.JsonUtils;
 import com.line.backstage.utils.StrUtils;
 import com.line.backstage.vo.SkuInfoOhlcvVo;
@@ -11,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -58,13 +54,19 @@ public class AsyncGenOrderMinAndMilsDataService {
         log.info("预设：{}", isWin);
         log.info("投资方向：{}", investType);
 
-        // 获取开始时间 取当前分钟的起始时间
-        long startTime = Long.parseLong(inDate) - 86400;
-        // 结束时间
-        long endTime = startTime + Long.parseLong(orderCycle);
+        // 订单周期
+        long cycle = Long.parseLong(orderCycle);
+        // 订单半周期
+        long forTimes = (long) Math.floor(cycle / 2);
 
-        // 获取当天的基础数据
-        JsonNode maindata = JsonUtils.toJsonNode(StrUtils.objToStr(redisUtil.get(skuCode + "_dd_" + DateUtil.getYesterdayEightStamp())));
+        // 下单时间
+        long orderTime = Long.parseLong(inDate) - 86400;
+        // 结算时间
+        long targetTime = orderTime + cycle;
+        // 开始生成时间
+        long startTime = targetTime - forTimes;
+        // 结束生成时间
+        long endTime = targetTime + forTimes;
 
         // 根据isWin(true/false)和investType(1up2down)判断生成方向
         boolean isGenUp = true;
@@ -82,148 +84,195 @@ public class AsyncGenOrderMinAndMilsDataService {
             }
         }
 
-        log.info("趋势：{}", isGenUp ? "涨" : "跌");
-
-        // 上次生成的单价，第一次时获取上一秒的数据获取单价
-        JsonNode beforTimeData = null;
-        // 循环10次获取数据，如果都没查到，报错
-        for (int i = 0; i < 10; i++) {
-            Object data = redisUtil.get(skuCode + "_ss_" + (startTime - 1));
-            if (ObjectUtils.isEmpty(data)) {
-                continue;
-            }
-            beforTimeData = JsonUtils.toJsonNode(StrUtils.objToStr(data));
-            if (!ObjectUtils.isEmpty(beforTimeData)) {
-                break;
-            }
-        }
-        if (ObjectUtils.isEmpty(beforTimeData)) {
-            throw new RuntimeException("生成用户数据时查询出错！");
-        }
-        BigDecimal genPrice = new BigDecimal(beforTimeData.get("nowPrice").asText(""));
-
-        // 循环生成 每秒
-        SkuInfoOhlcvVo skuInfoOhlcvVo;
-        int orderNum = 0;
-        boolean isLastGen = false;
-        BigDecimal outPointPrice = new BigDecimal(outPoint);
-        for (long i = startTime; i <= endTime; i++) {
-            skuInfoOhlcvVo = new SkuInfoOhlcvVo();
-            // 是否关键数据 最后3条
-            if (endTime - i <= 3) {
-                isLastGen = true;
-            }
-            // 生成价格
-            genPrice = this.genNowPrice(genPrice, outPoint, isGenUp, isLastGen);
-
-            // 最后一条关键数据时判断
-            if (endTime - i == 0) {
-                if (isGenUp) {
-                    // 生成涨方向 genPrice必须>outPoint
-                    while (genPrice.compareTo(outPointPrice) <= 0) {
-                        genPrice = this.genNowPrice(genPrice, outPoint, true, true);
-                    }
-                } else {
-                    // 生成跌方向 genPrice必须<outPoint
-                    while (genPrice.compareTo(outPointPrice) >= 0) {
-                        genPrice = this.genNowPrice(genPrice, outPoint, false, true);
-                    }
-                }
-            }
-
-            skuInfoOhlcvVo.setOrderNum(orderNum);
-            skuInfoOhlcvVo.setSkuCode(skuCode);
-            skuInfoOhlcvVo.setTimeStamp(String.valueOf(i));
-            skuInfoOhlcvVo.setNowPrice(genPrice.doubleValue());
-            skuInfoOhlcvVo.setOpenPrice(maindata.get("openPrice").asDouble());
-            skuInfoOhlcvVo.setClose(maindata.get("close").asDouble());
-            skuInfoOhlcvVo.setMaxPrice(maindata.get("maxPrice").asDouble());
-            skuInfoOhlcvVo.setMinPrice(maindata.get("minPrice").asDouble());
-            skuInfoOhlcvVo.setVolumeTo(maindata.get("volumeTo").asDouble());
-            skuInfoOhlcvVo.setVolumeFrom(maindata.get("volumeFrom").asDouble());
-
-            long tempTime = i % 60;
-            if (tempTime == 0) {
-                // 整数分钟，需要同时生成一条分钟数据
-                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), redisUtil.getOverdue());
-            }
-
-            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(skuInfoOhlcvVo), redisUtil.getOverdue());
-            orderNum++;
-        }
-
+        // 生成关键点数据
+        BigDecimal targetPrice = this.genTargetPrice(userId, skuCode, targetTime, inPoint, isGenUp);
+        log.info("生成时间范围：{}-{}", startTime, endTime);
+        log.info("结算时间：{}", targetTime);
+        log.info("下单金额：{}", inPoint);
+        log.info("结算金额：{}", targetPrice);
+        log.info("结算前后生成数：{}", forTimes);
+        // 生成关键点前的数据
+        this.genOtherPriceA(userId, skuCode, targetTime, startTime, targetPrice, forTimes);
+        // 生成关键点后的数据
+        this.genOtherPriceB(userId, skuCode, targetTime, endTime, targetPrice, forTimes);
     }
 
     /**
-     * 生成价格
+     * 生成关键点前数据
      *
-     * @param genPrice
-     * @param isLastGen
+     * @param userId
+     * @param skuCode
+     * @param targetTime
+     * @param startTime
+     * @param targetPrice
+     */
+    private void genOtherPriceA(String userId, String skuCode, long targetTime, long startTime, BigDecimal targetPrice, long forTimes) {
+        // 获取第一条原数据
+        SkuInfoOhlcvVo tempFirstVo = JsonUtils.parse(StrUtils.objToStr(redisUtil.get(skuCode + "_ss_" + startTime)), SkuInfoOhlcvVo.class);
+        BigDecimal firstPrice = BigDecimal.valueOf(tempFirstVo.getNowPrice());
+        // 平均变化值 动态
+        BigDecimal avgNumPrice = (targetPrice.subtract(firstPrice)).divide(BigDecimal.valueOf(forTimes), 4, BigDecimal.ROUND_HALF_UP);
+
+        SkuInfoOhlcvVo tempVo = null;
+        BigDecimal genNum = BigDecimal.ZERO;
+        BigDecimal tempPrice = firstPrice;
+        Random random = new Random();
+        for (long i = startTime; i < targetTime; i++) {
+            // 生成一个随机值加到平均变化值 0.01到0.1
+            genNum = BigDecimal.valueOf(random.nextInt(900) + 101).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+            BigDecimal nowAvgNumPrice;
+            if (avgNumPrice.compareTo(BigDecimal.ZERO) > 0) {
+                nowAvgNumPrice = avgNumPrice.add(genNum);
+            } else {
+                nowAvgNumPrice = avgNumPrice.subtract(genNum);
+            }
+
+            // 获取原数据
+            tempVo = JsonUtils.parse(StrUtils.objToStr(redisUtil.get(skuCode + "_ss_" + i)), SkuInfoOhlcvVo.class);
+            // 生成30%的反向
+            if (random.nextInt(5) + 1 == 3) {
+                tempPrice = tempPrice.subtract(nowAvgNumPrice);
+            } else {
+                tempPrice = tempPrice.add(nowAvgNumPrice);
+            }
+
+            tempVo.setNowPrice(tempPrice.doubleValue());
+
+            if (i % 60 == 0) {
+                // 整数分钟，需要同时生成一条分钟数据
+                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(tempVo), redisUtil.getOverdue());
+            }
+            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(tempVo), redisUtil.getOverdue());
+
+            // 剩余次数
+            long times = targetTime-i-1;
+            // 重新计算平均变化值
+            if(times > 0){
+                avgNumPrice = (targetPrice.subtract(tempPrice)).divide(BigDecimal.valueOf(times), 4, BigDecimal.ROUND_HALF_UP);
+            }
+
+            log.info("A-{}: 结算值({}) 对比值({}) 平均变化值({}) 随机值({}) 变化值({}) 生成结果({}) 剩余次数({})", i,targetPrice, firstPrice, avgNumPrice, genNum, nowAvgNumPrice, tempPrice, times);
+        }
+    }
+
+    /**
+     * 生成关键点前数据
+     *
+     * @param userId
+     * @param skuCode
+     * @param targetTime
+     * @param endTime
+     * @param targetPrice
+     */
+    private void genOtherPriceB(String userId, String skuCode, long targetTime, long endTime, BigDecimal targetPrice, long forTimes) {
+        // 获取第一条原数据
+        SkuInfoOhlcvVo tempEndVo = JsonUtils.parse(StrUtils.objToStr(redisUtil.get(skuCode + "_ss_" + endTime)), SkuInfoOhlcvVo.class);
+        BigDecimal endPrice = BigDecimal.valueOf(tempEndVo.getNowPrice());
+        // 平均变化值 动态
+        BigDecimal avgNumPrice = (targetPrice.subtract(endPrice)).divide(BigDecimal.valueOf(forTimes), 4, BigDecimal.ROUND_HALF_UP);
+
+        SkuInfoOhlcvVo tempVo = null;
+        BigDecimal genNum = BigDecimal.ZERO;
+        BigDecimal tempPrice = endPrice;
+        Random random = new Random();
+        // 从后往前生成
+        for (long i = endTime; i > targetTime; i--) {
+            // 生成一个随机值加到平均变化值 0.01到0.1
+            genNum = BigDecimal.valueOf(random.nextInt(900) + 101).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+            BigDecimal nowAvgNumPrice;
+            if (avgNumPrice.compareTo(BigDecimal.ZERO) > 0) {
+                nowAvgNumPrice = avgNumPrice.add(genNum);
+            } else {
+                nowAvgNumPrice = avgNumPrice.subtract(genNum);
+            }
+
+            // 获取原数据
+            tempVo = JsonUtils.parse(StrUtils.objToStr(redisUtil.get(skuCode + "_ss_" + i)), SkuInfoOhlcvVo.class);
+            // 生成20%的反向
+            if (random.nextInt(5) + 1 == 3) {
+                tempPrice = tempPrice.subtract(nowAvgNumPrice);
+            } else {
+                tempPrice = tempPrice.add(nowAvgNumPrice);
+            }
+
+            tempVo.setNowPrice(tempPrice.doubleValue());
+
+            if (i % 60 == 0) {
+                // 整数分钟，需要同时生成一条分钟数据
+                redisUtil.set(userId + "_" + skuCode + "_mm_" + i, JsonUtils.toJsonString(tempVo), redisUtil.getOverdue());
+            }
+            redisUtil.set(userId + "_" + skuCode + "_ss_" + i, JsonUtils.toJsonString(tempVo), redisUtil.getOverdue());
+
+            // 剩余次数
+            long times = i - targetTime;
+            // 重新计算平均变化值
+            if(times > 0){
+                avgNumPrice = (targetPrice.subtract(tempPrice)).divide(BigDecimal.valueOf(times), 4, BigDecimal.ROUND_HALF_UP);
+            }
+
+            log.info("B-{}: 结算值({}) 对比值({}) 平均变化值({}) 随机值({}) 变化值({}) 生成结果({}) 剩余次数({})", i,targetPrice, endPrice, avgNumPrice, genNum, nowAvgNumPrice, tempPrice, times);
+        }
+    }
+
+
+    /**
+     * 返回根据下单点位和输赢生成的结算点位金额
+     *
+     * @param inPoint
+     * @param isGenUp
      * @return
      */
-    private BigDecimal genNowPrice(BigDecimal genPrice, String outPoint, boolean isGenUp, boolean isLastGen) {
-        // 根据位数生成随机数
-        int tempPriceInt = genPrice.intValue();
-        BigDecimal result = genPrice;
-        BigDecimal priceTemp1 = genPrice;
+    public BigDecimal genTargetPrice(String userId, String skuCode, long targetTime, String inPoint, boolean isGenUp) {
+        BigDecimal inPrice = new BigDecimal(inPoint);
         Random random = new Random();
-        // 1位数 0.2以内
-        if (tempPriceInt > 1 && tempPriceInt <= 10) {
-            priceTemp1 = BigDecimal.valueOf(random.nextInt(2000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal genNum = BigDecimal.ZERO;
+        // 大于0 小于1  0.1
+        if (inPrice.compareTo(BigDecimal.ZERO) >= 0 && inPrice.compareTo(BigDecimal.ONE) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(1000) + 1).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
         }
-        // 2位数 0.5以内
-        if (tempPriceInt > 10 && tempPriceInt <= 100) {
-            priceTemp1 = BigDecimal.valueOf(random.nextInt(5000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        // 1位数 0.2以内 大于0.1
+        if (inPrice.compareTo(BigDecimal.ONE) >= 0 && inPrice.compareTo(BigDecimal.TEN) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(1000) + 1001).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
         }
-        // 3位数 1.5以内
-        if (tempPriceInt > 100 && tempPriceInt <= 1000) {
-            priceTemp1 = BigDecimal.valueOf(random.nextInt(15000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        // 2位数 1以内 大于0.2
+        if (inPrice.compareTo(BigDecimal.TEN) >= 0 && inPrice.compareTo(BigDecimal.valueOf(100L)) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(8000) + 2001).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
         }
-        // 4位数 2以内
-        if (tempPriceInt > 1000 && tempPriceInt <= 10000) {
-            priceTemp1 = BigDecimal.valueOf(random.nextInt(20000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        // 3位数 1.5以内 大于1
+        if (inPrice.compareTo(BigDecimal.valueOf(100L)) >= 0 && inPrice.compareTo(BigDecimal.valueOf(1000L)) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(5000) + 10001).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
         }
-        // 5位数 2.5以内
-        if (tempPriceInt > 10000 && tempPriceInt <= 100000) {
-            priceTemp1 = BigDecimal.valueOf(random.nextInt(25000)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        // 4位数 2以内 大于1.5
+        if (inPrice.compareTo(BigDecimal.valueOf(1000L)) >= 0 && inPrice.compareTo(BigDecimal.valueOf(10000L)) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(5000) + 15001).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        }
+        // 5位数 2.5以内 大于2
+        if (inPrice.compareTo(BigDecimal.valueOf(10000L)) >= 0 && inPrice.compareTo(BigDecimal.valueOf(100000L)) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(5000) + 20001).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
+        }
+        // 6位数 3.5以内 大于2.5
+        if (inPrice.compareTo(BigDecimal.valueOf(100000L)) >= 0 && inPrice.compareTo(BigDecimal.valueOf(1000000L)) < 0) {
+            genNum = BigDecimal.valueOf(random.nextInt(5000) + 25001).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP);
         }
 
-        // 关键数据
-        if (isLastGen) {
-            if (isGenUp) {
-                return result.add(BigDecimal.valueOf(new Random().nextInt(150)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP));
-            } else {
-                return result.subtract(BigDecimal.valueOf(new Random().nextInt(150)).divide(BigDecimal.valueOf(10000), 4, BigDecimal.ROUND_HALF_UP));
-            }
-        }
-
-        // 一定的随机增减
-        int randNum = random.nextInt(20);
-        if (randNum > 10) {
-            // 再次随机 保证生成方向上的数据大于反方向
-            int randNum2 = random.nextInt(2);
-            if (randNum2 > 1) {
-                if (randNum > 10) {
-                    result = result.add(priceTemp1);
-                } else {
-                    result = result.subtract(priceTemp1);
-                }
-            } else {
-                if (isGenUp) {
-                    result = result.add(priceTemp1);
-                } else {
-                    result = result.subtract(priceTemp1);
-                }
-            }
+        if (isGenUp) {
+            // 涨 +
+            inPrice = inPrice.add(genNum);
         } else {
-            if (isGenUp) {
-                result = result.add(priceTemp1);
-            } else {
-                result = result.subtract(priceTemp1);
-            }
+            // 跌 -
+            inPrice = inPrice.subtract(genNum);
         }
 
-        return result;
+        // 保存
+        Object targetNowData = redisUtil.get(skuCode + "_ss_" + targetTime);
+        SkuInfoOhlcvVo targetVo = JsonUtils.parse(StrUtils.objToStr(targetNowData), SkuInfoOhlcvVo.class);
+        targetVo.setNowPrice(inPrice.doubleValue());
+        if (targetTime % 60 == 0) {
+            // 整数分钟，需要同时生成一条分钟数据
+            redisUtil.set(userId + "_" + skuCode + "_mm_" + targetTime, JsonUtils.toJsonString(targetVo), redisUtil.getOverdue());
+        }
+        redisUtil.set(userId + "_" + skuCode + "_ss_" + targetTime, JsonUtils.toJsonString(targetVo), redisUtil.getOverdue());
+        return inPrice;
     }
 
 }
