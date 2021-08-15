@@ -2,19 +2,20 @@ package com.line.backstage.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.line.backstage.entity.SendMassage;
+import com.line.backstage.service.SendMassageService;
 import com.line.backstage.vo.SocketMsg;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 /**
  * websocket连接后端服务
@@ -44,6 +45,20 @@ public class WebSocketServer {
     private static final String SERVICE_LIST = "serviceList";
 
     /**
+     * 这里使用静态，让 service 属于类
+     */
+    private static SendMassageService sendMassageService;
+
+    /**
+     * 注入的时候，给类的 service 注入
+     * @param sendMassageService
+     */
+    @Autowired
+    public void setDeviceListenerService(SendMassageService sendMassageService) {
+        WebSocketServer.sendMassageService = sendMassageService;
+    }
+
+    /**
      * 连接建立成功调用的方法
      */
     @OnOpen
@@ -52,7 +67,7 @@ public class WebSocketServer {
             sysSocketMap.put(sid, session);
         } else {
             userSocketMap.put(sid, session);
-            sendMessageInfo(sysSocketMap, session);
+            sendMessageInfo(Integer.valueOf(sid.split(",")[0]), sysSocketMap, session);
         }
         log.info("有[{}]新客户端加入进来[{}]，sysMap大小为【{}】，userMap大小为【{}】", userType, sid, sysSocketMap.size(), userSocketMap.size());
     }
@@ -62,8 +77,7 @@ public class WebSocketServer {
      * @param userSocketMap
      * @param session
      */
-    private void sendMessageInfo(Map<String, Session> userSocketMap, Session session) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    private void sendMessageInfo(Integer sendId, Map<String, Session> userSocketMap, Session session) {
         SocketMsg socketMsg = new SocketMsg();
         socketMsg.setMsdToSid(null);
         socketMsg.setMsdToUserType(SERVICE_LIST);
@@ -74,7 +88,8 @@ public class WebSocketServer {
                 str += s + "|";
             }
             socketMsg.setContent(str);
-            sendMessage(objectMapper.writeValueAsString(socketMsg), session);
+            // 0 默认第一次连接
+            sendMessage(sendId, "0", socketMsg, session);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,9 +101,9 @@ public class WebSocketServer {
     @OnClose
     public void onClose(@PathParam("sid") String sid, @PathParam("userType") String userType) {
         // 从Map中删除
-        if (Objects.equals(USER_TYPE, userType)) {
+        if (Objects.equals(USER_TYPE, userType) && sysSocketMap.size() > 0) {
             sysSocketMap.remove(sid);
-        } else {
+        } else if (userSocketMap.size() > 0) {
             userSocketMap.remove(sid);
         }
         log.info("[{}]客户端[{}]关闭socket连接！", userType, sid);
@@ -124,7 +139,7 @@ public class WebSocketServer {
                         socketMsg.setMsdToSid(null);
                         socketMsg.setMsdToUserType(USER_TYPE);
                         socketMsg.setCreateDate(new Date());
-                        sendMessage(objectMapper.writeValueAsString(socketMsg), session);
+                        sendMessage(Integer.valueOf(sid), socketMsg.getMsdToSid().split(",")[0], socketMsg, session);
                         return;
                     } catch (IOException e) {
                         log.error("话术【当前在线客服繁忙，请稍后再试】异常，【{}】", e.getMessage());
@@ -132,7 +147,21 @@ public class WebSocketServer {
                     }
                 }
             } else {
-                sendToUser(sid, userType, socketMsg);
+                // 是否管理端获取用户在线人数
+                if(Objects.equals(socketMsg.getMsgType(), "getOnlineUsers")){
+                    try {
+                        List<String> list = Lists.newArrayList();
+                        for (String s : userSocketMap.keySet()) {
+                            list.add(s);
+                        }
+                        session.getBasicRemote()
+                                .sendText("{\"msgType\":\"getOnlineUsers\", \"content\":\"" + list + "\"}");
+                    } catch (IOException e) {
+                        log.error("发送在线人数异常【{}】", e.getMessage());
+                    }
+                } else {
+                    sendToUser(sid, socketMsg.getMsdToSid().split(",")[0], userType, socketMsg);
+                }
             }
         } catch (JsonProcessingException e) {
             log.error("websocket消息对象转换异常【{}】", e.getMessage());
@@ -151,9 +180,29 @@ public class WebSocketServer {
     /**
      * 实现服务器主动推送
      */
-    public void sendMessage(String message, Session session) throws IOException {
-        log.info(message);
-        session.getBasicRemote().sendText(message);
+    public void sendMessage(Integer sendId, String receiveId, SocketMsg message, Session session) throws IOException {
+
+        ObjectMapper objectMapper;
+        try {
+            objectMapper = new ObjectMapper();
+            String content = objectMapper.writeValueAsString(message);
+            log.info(content);
+            // 新增插入聊天记录
+            if(!Objects.equals(message.getMsdToUserType(), "serviceList")){
+                SendMassage sendMassage = new SendMassage();
+                sendMassage.setSend(sendId);
+                sendMassage.setReceive(Integer.valueOf(receiveId));
+                // 发送用户角色类型 1-管理员/ 0-用户
+                sendMassage.setEditUserId(Objects.equals(message.getMsdToUserType(), "user") ? 0 : 1);
+                sendMassage.setAddTime(new Date());
+                sendMassage.setContent(content);
+                // 插入
+                sendMassageService.save(sendId, sendMassage);
+            }
+            session.getBasicRemote().sendText(content);
+        } catch (Exception e) {
+            log.error("sendMessage中对象转【{}】", e.getMessage());
+        }
     }
 
     /**
@@ -162,7 +211,7 @@ public class WebSocketServer {
      * @param socketMsg 消息内容上下文
      * @return
      */
-    public boolean sendToUser(String sid, String userType, SocketMsg socketMsg) {
+    public boolean sendToUser(String sid, String receiveId, String userType, SocketMsg socketMsg) {
         log.info("用户类型[{}]推送消息[{}]到客户端[{}]", socketMsg.getMsdToUserType(), socketMsg.getContent(), socketMsg.getMsdToSid());
         Session session = null;
         if (Objects.equals(USER_TYPE, socketMsg.getMsdToUserType())) {
@@ -177,7 +226,7 @@ public class WebSocketServer {
                 socketMsg.setMsdToUserType(userType);
                 socketMsg.setCreateDate(new Date());
 
-                sendMessage(new ObjectMapper().writeValueAsString(socketMsg), session);
+                sendMessage(Integer.valueOf(sid.split(",")[0]), receiveId, socketMsg, session);
                 return true;
             } catch (IOException e) {
                 log.error("给客户端[{sid}]发送消息失败", e);

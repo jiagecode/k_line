@@ -22,7 +22,7 @@ export function getInfo() {
   })
 }
 
-//获取组织结构列表
+// 获取组织结构列表
 export function getoffice(data) {
   return request({
     url: '/office/list',
@@ -58,7 +58,7 @@ export function removemenu(data) {
 
 
 
-//首页
+// 首页
 export function getHome(params) {
   return request({
     url: '/osIndex/count',
@@ -72,5 +72,14 @@ export function getIp(params) {
     url: '/whitelist/verificationIp',
     method: 'get',
     params
+  })
+}
+
+// 用户聊天记录
+export function getMessageList(data) {
+  return request({
+    url: '/sendMassage/list',
+    method: 'POST',
+    data
   })
 }

@@ -17,7 +17,7 @@
                                                                                 class="ry-img"
                                                                                 :src="require('@/assets/im_client_avatar.png')"
                                                                               >
-              <div style="margin-left: 8px;">{{ this.userList.length }} 人</div>
+              <div style="margin-left: 8px;">{{ this.onlineUsers }} 人</div>
             </el-col>
           </el-row>
           <el-col :style="setBackgroundImg">
@@ -31,7 +31,7 @@
                 <!-- 用户名称 -->
                 <div class="d-flex flex2 a-center" style="flex-wrap:wrap; padding: 5px 0px;">
                   <div style="font-size: 14px; width: 100%; font-weight: bolder;">{{ item.userName }}</div>
-                  <div style="font-size: 12px; color: #8d8d8d;">客户在线</div>
+                  <div style="font-size: 12px; color: #8d8d8d;">{{ item.isOnline ? '在线' : '离线' }}</div>
                 </div>
                 <!-- 用户消息数 -->
                 <div class="d-flex flex1 a-center" style="flex-wrap:wrap; padding: 5px 0px;">
@@ -100,7 +100,7 @@
                   </div>
                 </div>
                 <div class="d-flex a-center j-center" style="height: 50%;">
-                  <el-upload ref="upload" action="http://localhost:1686/study/upload" :before-upload="checkImgFile" :limit="1" :show-file-list="false" :headers="setHeaders" :on-success="handleAvatarSuccess">
+                  <el-upload ref="upload" :action="uploadUrl" :before-upload="checkImgFile" :limit="1" :show-file-list="false" :headers="setHeaders" :on-success="handleAvatarSuccess">
                     <el-tooltip class="item" effect="dark" content="发送图片" placement="top-start">
                       <el-button type="info" icon="el-icon-folder-add" circle style="background-color: #409EFF;" />
                     </el-tooltip>
@@ -114,9 +114,9 @@
 
       <!--常用语弹窗-->
       <el-dialog title="常用语列表" :visible.sync="centerDialogVisible" center>
-<!--        <span>亲，请问有什么能够帮助您的吗？</span>-->
+        <!--        <span>亲，请问有什么能够帮助您的吗？</span>-->
         <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName" @current-change="handleCurrentMsgChange">
-          <el-table-column prop="address" label="内容" :min-width="120"/>
+          <el-table-column prop="address" label="内容" :min-width="120" />
           <el-table-column prop="date" label="时间" :min-width="40" />
           <el-table-column prop="name" label="姓名" :min-width="40" />
           <el-table-column label="操作">
@@ -126,10 +126,10 @@
             </template>
           </el-table-column>
         </el-table>
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="centerDialogVisible = false">取 消</el-button>-->
-<!--          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>-->
-<!--        </span>-->
+        <!--        <span slot="footer" class="dialog-footer">-->
+        <!--          <el-button @click="centerDialogVisible = false">取 消</el-button>-->
+        <!--          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>-->
+        <!--        </span>-->
       </el-dialog>
     </div>
   </div>
@@ -138,6 +138,7 @@
 <script>
 
 import store from '@/store'
+import { getMessageList } from '@/api/user'
 
 export default {
   name: 'Index',
@@ -195,15 +196,141 @@ export default {
       // 用户会话列表
       userList: [],
       // 当前用户信息
-      nowUserInfo: {}
+      nowUserInfo: {},
+      // 在线人数
+      onlineUsers: 0,
+      // 在线人数
+      onlineUsersList: undefined,
+      uploadUrl: 'http://localhost:1686/study/upload'
     }
   },
   watch: {},
+  created() {
+  },
   async mounted() {
     this.wsIsRun = true
     this.wsInit()
+    this.getMessageInfoList()
   },
   methods: {
+    // 获取在线人数
+    getOnlineUsers() {
+      if (this.onlineUsers === 0) {
+        this.webSocket.send(JSON.stringify({ 'msgType': 'getOnlineUsers', 'content': 'getOnlineUsers' }))
+      }
+    },
+    // 根据消息生产聊天列表
+    createMsgList(obj) {
+      this.socketMsg = obj
+
+      // 拆分用户名和id
+      const info = obj.msdToSid.split(',')
+
+      // 更新消息列表
+      if (this.userList.length === 0) {
+        // 用户列表新增一个用户聊天信息
+        this.userList.push({
+          id: this.userList.length + 1,
+          userId: parseInt(info[0]),
+          userName: info[1],
+          msgSize: 1,
+          userListMsg: [{ 'type': 'user', 'msgType': obj.msgType, 'msg': obj.content, 'createDate': null }],
+          isShow: true,
+          createDate: new Date(obj.createDate).toLocaleString()
+        })
+      } else {
+        // 先判断是否存在，存在追加一个用户聊天信息
+        let isNotSave = true
+        for (const u of this.userList) {
+          // 判断聊天列表是否存在
+          if (u.userId === parseInt(info[0])) {
+            // 消息数自增
+            u.msgSize = u.msgSize + 1
+            // 新消息追加
+            u.userListMsg.push({ 'type': 'user', 'msgType': obj.msgType, 'msg': obj.content, 'createDate': null })
+            // 更新最新消息时间
+            u.createDate = new Date(obj.createDate).toLocaleString()
+            // 显示消息数
+            if (this.nowUserInfo.id !== u.id) {
+              u.isShow = true
+            }
+            // 存在
+            isNotSave = false
+          }
+        }
+        // 不存在
+        if (isNotSave) {
+          const size = this.userList.length + 1
+          const u = {
+            id: size,
+            userId: parseInt(info[0]),
+            userName: info[1],
+            msgSize: 1,
+            userListMsg: [{ 'type': 'user', 'msgType': obj.msgType, 'msg': obj.content, 'createDate': null }],
+            isShow: true,
+            createDate: new Date(obj.createDate).toLocaleString()
+          }
+          // 追加
+          this.userList.push(u)
+        }
+      }
+    },
+    createUserListInfo(obj, userType, sendId) {
+      if (this.onlineUsersList === undefined) {
+        this.onlineUsersList = ''
+      }
+      // 拆分用户名和id
+      this.userList.push({
+        id: this.userList.length + 1,
+        userId: parseInt(sendId),
+        userName: obj.msdToSid.split(',')[1],
+        msgSize: 1,
+        userListMsg: [{ 'type': userType, 'msgType': obj.msgType, 'msg': obj.content, 'createDate': null }],
+        createDate: new Date(obj.createDate).toLocaleString(),
+        // isOnline: this.onlineUsersList.includes(obj.msdToSid)
+        isOnline: this.onlineUsersList.includes(obj.msdToSid)
+      })
+    },
+    createSaveMsgList(sendId, userType, obj) {
+      if (this.userList.length === 0) {
+        this.createUserListInfo(obj, userType, sendId)
+      } else {
+        let isNotSave = true
+        for (const u of this.userList) {
+          if (parseInt(u.userId) === sendId) {
+            u.userListMsg.push({ 'type': userType, 'msgType': obj.msgType, 'msg': obj.content, 'createDate': null })
+            u.createDate = new Date(obj.createDate).toLocaleString()
+            u.isShow = false
+            // 存在
+            isNotSave = false
+          }
+        }
+        // 不存在
+        if (isNotSave) {
+          this.createUserListInfo(obj, userType, sendId)
+        }
+      }
+    },
+    // 字符串转对象
+    findObject(str) {
+      let jsonStr = str.replace(' ', '')
+      jsonStr = jsonStr.replace(/\ufeff/g, '') // 重点
+      return JSON.parse(jsonStr)
+    },
+    getMessageInfoList() {
+      getMessageList({}).then(response => {
+        for (const d of response.data.list.reverse()) {
+          // 判断接收方和发送方
+          if (d.send === store.getters.account) {
+            this.createSaveMsgList(d.receive, 'sys', this.findObject(d.content))
+          } else {
+            this.createSaveMsgList(d.send, 'user', this.findObject(d.content))
+          }
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     handleCurrentMsgChange(val) {
       console.log(val)
       this.msg = val.address
@@ -212,10 +339,8 @@ export default {
     tableRowClassName({ row, rowIndex }) {
       if (rowIndex === 1) {
         console.log(row)
-        console.log('warning-row')
         return 'warning-row'
       } else if (rowIndex === 3) {
-        console.log('success-row')
         return 'success-row'
       }
       return ''
@@ -302,6 +427,11 @@ export default {
 
       // 将选中的聊天对象赋值
       this.nowUserInfo = nowUser
+
+      // 对话框滚动条
+      this.$nextTick(() => {
+        this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight
+      })
     },
     checkImgFile(file) {
       if (this.nowUserInfo.id === undefined) {
@@ -310,7 +440,7 @@ export default {
         return false
       }
       console.log(file.type)
-      const isJPG = file.type === 'image/jpeg'
+      const isJPG = file.type === 'image/jpeg' ? true : file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 4
 
       if (!isJPG) {
@@ -351,6 +481,7 @@ export default {
      * 初始化ws
      */
     wsInit() {
+      // 108.160.143.167
       const wsUrl = 'ws://localhost:1686/study/websocket/' + store.getters.account + ',' + store.getters.name + '/sys'
       this.ws = wsUrl
       if (!this.wsIsRun) return
@@ -381,73 +512,33 @@ export default {
     },
     wsOpenHandler(event) {
       console.log('ws建立连接成功' + event)
+      this.getOnlineUsers()
     },
     // 接收消息
     wsMessageHandler(e) {
       // console.log('接收消息');
-      let str = e.data
-      let jsonStr = str.replace(' ', '')
-      if (typeof jsonStr !== 'object') {
-        jsonStr = jsonStr.replace(/\ufeff/g, '') // 重点
-        const jj = JSON.parse(jsonStr)
-        str = jj
-      }
-      this.socketMsg = str
-      // 拆分用户名和id
-      const info = str.msdToSid.split(',')
-
-      // 更新消息列表
-      if (this.userList.length === 0) {
-        // 用户列表新增一个用户聊天信息
-        this.userList.push({
-          id: this.userList.length + 1,
-          userId: info[0],
-          userName: info[1],
-          msgSize: 1,
-          userListMsg: [{ 'type': 'user', 'msgType': str.msgType, 'msg': str.content, 'createDate': null }],
-          isShow: true,
-          createDate: new Date(str.createDate).toLocaleString()
-        })
+      console.log('接收消息')
+      console.log(e.data)
+      // let str = e.data
+      // let jsonStr = str.replace(' ', '')
+      // if (typeof jsonStr !== 'object') {
+      //   jsonStr = jsonStr.replace(/\ufeff/g, '') // 重点
+      //   const jj = JSON.parse(jsonStr)
+      //   str = jj
+      // }
+      const obj = this.findObject(e.data)
+      if (obj.msgType === 'getOnlineUsers') {
+        // 在线人数处理
+        this.onlineUsers = parseInt(obj.content === '{}' ? 0 : obj.content.split(',').length / 2)
+        // 在线人数列表
+        this.onlineUsersList = obj.content
       } else {
-        // 先判断是否存在，存在追加一个用户聊天信息
-        let isNotSave = true
-        for (const u of this.userList) {
-          // 判断聊天列表是否存在
-          if (u.userId === info[0]) {
-            // 消息数自增
-            u.msgSize = u.msgSize + 1
-            // 新消息追加
-            u.userListMsg.push({ 'type': 'user', 'msgType': str.msgType, 'msg': str.content, 'createDate': null })
-            // 更新最新消息时间
-            u.createDate = new Date(str.createDate).toLocaleString()
-            // 显示消息数
-            if (this.nowUserInfo.id !== u.id) {
-              u.isShow = true
-            }
-            // 存在
-            isNotSave = false
-          }
-        }
-        // 不存在
-        if (isNotSave) {
-          const size = this.userList.length + 1
-          const u = {
-            id: size,
-            userId: info[0],
-            userName: info[1],
-            msgSize: 1,
-            userListMsg: [{ 'type': 'user', 'msgType': str.msgType, 'msg': str.content, 'createDate': null }],
-            isShow: true,
-            createDate: new Date(str.createDate).toLocaleString()
-          }
-          // 追加
-          this.userList.push(u)
-        }
+        this.createMsgList(obj)
+        // 滚动条
+        this.$nextTick(() => {
+          this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight
+        })
       }
-      // 滚动条
-      this.$nextTick(() => {
-        this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight
-      })
     },
     /**
      * ws通信发生错误

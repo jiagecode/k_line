@@ -316,9 +316,9 @@
 							</view>
 						</uni-col>
 						<uni-col :span="6">
-							<view class="page2-col-info" :class="(isWin == 1)?'page-2-xj-red':'page-2-xj-green'">
+					<!-- 	FIXME 取消预测值	<view class="page2-col-info" :class="(isWin == 1)?'page-2-xj-red':'page-2-xj-green'">
 								{{getIsWin(submitCoinPrice, OrderCoinPrice)}}
-							</view>
+							</view> -->
 						</uni-col>
 					</uni-row>
 					<view>

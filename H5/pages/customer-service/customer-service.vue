@@ -86,6 +86,11 @@
     onShow() {
       document.title = '币安秒合约';
     },
+    onUnload() {
+		// 监听页面卸载
+		console.log('onUnload');
+		this.closeSocket();
+    },
 		methods:{
             // 进入这个页面的时候创建websocket连接【整个页面随时使用】
             connectSocketInit() {
@@ -157,9 +162,10 @@
             },
             // 关闭websocket【离开这个页面的时候执行关闭】
             closeSocket() {
-                this.socketTask.close({
+				let _this = this;
+                _this.socketTask.close({
                     success(res) {
-                        this.is_open_socket = false;
+                        _this.is_open_socket = false;
                         console.log("关闭成功", res)
                     },
                     fail(err) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.line.backstage.dao.mapper.SendMassageMapper">
+
+    <resultMap type="com.line.backstage.entity.SendMassage" id="SendMassageMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="send" column="SEND" jdbcType="INTEGER"/>
+        <result property="receive" column="RECEIVE" jdbcType="INTEGER"/>
+        <result property="content" column="CONTENT" jdbcType="VARCHAR"/>
+        <result property="addUserId" column="ADD_USER_ID" jdbcType="INTEGER"/>
+        <result property="addTime" column="ADD_TIME" jdbcType="TIMESTAMP"/>
+        <result property="editUserId" column="EDIT_USER_ID" jdbcType="INTEGER"/>
+        <result property="editTime" column="EDIT_TIME" jdbcType="TIMESTAMP"/>
+        <result property="del" column="DEL" jdbcType="INTEGER"/>
+    </resultMap>
+</mapper>
