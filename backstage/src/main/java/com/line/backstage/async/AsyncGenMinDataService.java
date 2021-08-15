@@ -26,6 +26,8 @@ public class AsyncGenMinDataService {
     public void autoGenDataMain(List<SkuInfoOhlcvVo> listOhlcv, String skuCode) {
         // 获取当天的基础数据
         JsonNode mainDate = JsonUtils.toJsonNode(StrUtils.objToStr(redisUtil.get(skuCode + "_dd_" + DateUtil.getYesterdayEightStamp())));
+        log.info("列表条数：{} ", listOhlcv.size());
+        log.info("商品名称：{} 时间：{} 基础数据：{}", skuCode, DateUtil.getYesterdayEightStamp(), mainDate);
 
         BigDecimal beforeNowPrice;
         BigDecimal afterNowPrice;
@@ -69,13 +71,13 @@ public class AsyncGenMinDataService {
                 temp.setSkuCode(beforeOne.getSkuCode());
                 temp.setNowPrice(beforeNowPrice.doubleValue());
 
-                temp.setClose(mainDate.get("close").asDouble());
-                temp.setMaxPrice(mainDate.get("maxPrice").asDouble());
-                temp.setMinPrice(mainDate.get("minPrice").asDouble());
-                temp.setVolumeTo(mainDate.get("volumeTo").asDouble());
-                temp.setOpenPrice(mainDate.get("openPrice").asDouble());
+                temp.setClose(mainDate.get("close").asDouble(0d));
+                temp.setMaxPrice(mainDate.get("maxPrice").asDouble(0d));
+                temp.setMinPrice(mainDate.get("minPrice").asDouble(0d));
+                temp.setVolumeTo(mainDate.get("volumeTo").asDouble(0d));
+                temp.setOpenPrice(mainDate.get("openPrice").asDouble(0d));
 
-                double volumeFrom = mainDate.get("volumeFrom").asDouble();
+                double volumeFrom = mainDate.get("volumeFrom").asDouble(0d);
                 BigDecimal big_from = BigDecimal.valueOf(volumeFrom);
                 BigDecimal decimal_60 = BigDecimal.valueOf(r + 1);
                 BigDecimal vf = r > 5 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.subtract(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
