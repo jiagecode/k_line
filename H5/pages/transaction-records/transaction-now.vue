@@ -66,13 +66,13 @@
 			fixedPrice(price){
 				return MathUtil.toFixed(price, 4);
 			},
-			
+
 			autoPercentage() {
 				var that = this;
 				var interval = setInterval(function() {
 					// 列表没有数据就不处理
 					if (that.positionList.length > 0) {
-						// 只处理第一条 
+						// 只处理第一条
 						var positionData = that.positionList[0];
 						var startDate = positionData.beginDate;
 						var endDate = positionData.endDate;

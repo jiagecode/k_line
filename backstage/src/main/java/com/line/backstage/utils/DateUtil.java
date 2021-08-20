@@ -665,6 +665,25 @@ public class DateUtil {
     }
 
     /**
+     * 取得昨天此时时间戳 整分钟
+     *
+     * @return
+     */
+    public static String getYesterdayFullMinute() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        // 设置分 提前3分钟
+        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) - 3);
+        // 设置秒
+        calendar.set(Calendar.SECOND, 0);
+        // 设置毫秒
+        calendar.set(Calendar.MILLISECOND, 0);
+        long ss = calendar.getTime().getTime() / 1000;
+        long mm = ss - (ss % 60);
+        return String.valueOf(mm);
+    }
+
+    /**
      * 取得昨天此时时间戳 小时
      *
      * @return

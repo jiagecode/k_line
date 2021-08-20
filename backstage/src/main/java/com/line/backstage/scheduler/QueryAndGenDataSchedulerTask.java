@@ -21,4 +21,12 @@ public class QueryAndGenDataSchedulerTask {
     public void proces() {
         queryAndGenDataService.queryAndGen();
     }
+
+    /**
+     * 每小时生成币种秒线
+     */
+    @Scheduled(cron = "0 0 0/1 * * ? ")
+    public void generateCurrencySeconds() {
+        queryAndGenDataService.generateCurrencySeconds();
+    }
 }

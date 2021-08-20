@@ -146,7 +146,7 @@ export default {
     cz() {
 		// 提示用户
 		uni.showToast({
-			title: '暂未开放',
+			title: '您好，由于充值人数过多，请点击客服在线充值',
 			duration: 1000,
 			icon: 'none'
 		})

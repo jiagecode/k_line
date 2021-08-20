@@ -82,7 +82,7 @@ public class AsyncGenMinDataService {
                 BigDecimal decimal_60 = BigDecimal.valueOf(r + 1);
                 BigDecimal vf = r > 5 ? big_from.add(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP)) : big_from.subtract(big_from.divide(decimal_60, 5, BigDecimal.ROUND_HALF_UP));
                 temp.setVolumeFrom(vf.doubleValue());
-                redisUtil.set(beforeOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), redisUtil.getOverdue());
+                redisUtil.set(beforeOne.getSkuCode() + "_ss_" + timeStamp, JsonUtils.toJsonString(temp), redisUtil.getSecondOverdue());
             }
         }
         log.info("coin_SIZE: 【{}】", listOhlcv.size());

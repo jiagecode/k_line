@@ -30,6 +30,14 @@ public class RedisUtil {
     }
 
     /**
+     * 返回一个秒线过期时间
+     * @return
+     */
+    public int getSecondOverdue() {
+        return 60 * 63;
+    }
+
+    /**
      * 指定缓存失效时间
      *
      * @param key  键

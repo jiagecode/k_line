@@ -1,7 +1,7 @@
 
 // 请求跟地址
-// const baseUrl = 'h5'
-const baseUrl = 'http://192.168.1.9:1686/study'
+const baseUrl = 'h5'
+// const baseUrl = 'http://192.168.1.9:1686/study'
 
 /*
 	method: get post
@@ -9,10 +9,10 @@ const baseUrl = 'http://192.168.1.9:1686/study'
 	data：  请求参数
 */
 const doRequest = (method, url, data) => {
-	
+
     // uni.showLoading({title: '加载中', mask: true});
     return new Promise((resolve, reject) => {
-		
+
         uni.request({
             url: baseUrl + url,
             method: method || 'get',
@@ -29,7 +29,7 @@ const doRequest = (method, url, data) => {
                     resolve(res.data.data);
                 } else {
 					uni.showToast({
-						icon: 'none',   
+						icon: 'none',
 						duration: 1000,
 						title: res.data.message
 					});
