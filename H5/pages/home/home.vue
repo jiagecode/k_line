@@ -10,7 +10,7 @@
 			</view>
 			<view style="margin-top: 45rpx;">
 				<block v-for="(item, index) of marketsListTwo" :key="index">
-					<view class="d-flex" style="height: 115rpx;" @tap="toKline(item)">
+					<view v-if="item.DISPLAY !== undefined" class="d-flex" style="height: 115rpx;" @tap="toKline(item)">
 						<view style="margin-top: -4rpx; margin-left: 30rpx; width: 60rpx;">{{index + 1}}</view>
 						<!-- 市值 -->
 						<view style="width: 200rpx; ">

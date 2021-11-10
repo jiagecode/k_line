@@ -18,7 +18,7 @@
 						<uni-icons type="arrowdown" color="#5586d3" style="margin-left: 10rpx;"/>
 					</navigator>
 					<uni-forms-item label="" name="" style="margin-top: 50rpx;">
-						<uni-easyinput style="margin-left: 15rpx;" type="number" :inputBorder="false" placeholder="请输入手机号" v-model="phone" />
+						<uni-easyinput style="margin-left: 15rpx;" type="number" :inputBorder="false" placeholder="请输入手机号" v-model="phone" @blur="blur(phone)" />
 					</uni-forms-item>
 				</view>
 				<!-- 密码 -->
@@ -140,7 +140,59 @@
 				
 			// 同意协议
 			xy() {
-				this.isXy = !this.isXy;
+				if (this.phone === '') {
+					// 提示用户
+					uni.showToast({
+						title: '请先输入手机号！',
+						duration: 1000,
+						icon: 'none'
+					})
+				} else if (this.countryAndCode === '+86') {
+					this.showMsg();
+				} else {
+					this.isXy = !this.isXy;
+				}
+			},
+			blur(phone) {
+
+				if (phone === '') {
+					callback1(new Error('手机号不可为空'));
+				} else {
+					var reg = /^1[3456789]\d{9}$/;
+					if (reg.test(phone)) {
+						// 判断是否86手机号
+						this.isPhone(phone);
+					} else {
+						callback(new Error('请输入有效的手机号码'));
+					}
+				}
+
+				function callback1(Error) {
+					console.log("name", Error);
+					uni.showModal({
+						title: '手机号码不能为空',
+					});
+				}
+
+				function callback(Error) {
+					console.log("name", Error);
+					uni.showModal({
+						title: '请输入有效的手机号码',
+					});
+				}
+			},
+			isPhone(phone) {
+				console.log('有效手机号为：', phone);
+				if (this.countryAndCode === '+86') {
+					this.showMsg();
+				}
+			},
+			showMsg() {
+				uni.showModal({
+					content: '平台不持支大陆的手机号，请使用其它手机号！',
+					showCancel: false,
+					confirmText: '我已知晓'
+				})
 			}
 		}
 	}
