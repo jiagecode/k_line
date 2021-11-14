@@ -199,6 +199,17 @@
             }
             
         }
+        ,{
+            "path" : "pages/down/down",
+            "style" :                                                                                    
+            {
+				// 取消导航栏
+				"navigationStyle": "custom",
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	// 全局配置
 	"globalStyle": {
